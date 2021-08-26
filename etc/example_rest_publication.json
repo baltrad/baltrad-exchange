@@ -1,0 +1,32 @@
+{
+"publication":{
+   "_comment_":"All files matching filter should be sent to an external recipient using this rest protocol",
+   "active":false,
+   "connection":{
+     "protocol":"rest",
+     "protocol_version":"1.0",
+     "address":"https://localhost:8443",
+     "crypto":{
+       "sign":true,
+       "libname":"keyczar",
+       "privkey":"/opt/baltrad2/etc/bltnode-keys/anders-nzxt.priv",
+       "nodename":"anders-nzxt"
+     }
+   },
+   "filter":{
+  	 "filter_type": "and_filter", 
+  	 "value": [
+  	   {"filter_type": "attribute_filter", 
+  	    "name": "_bdb/source_name", 
+        "operation": "in", 
+        "value_type": "string", 
+        "value": ["sehem","seang"]}, 
+  	   {"filter_type": "attribute_filter", 
+        "name": "/what/object", 
+        "operation": "=", 
+        "value_type": "string", 
+        "value": ["SCAN"]}
+    ]
+  }
+}
+}
