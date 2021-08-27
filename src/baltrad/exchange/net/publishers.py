@@ -70,12 +70,13 @@ class null_publisher(publisher):
 
 class dex_publisher(publisher):
     """Publishes a file to a DEX node"""
-    def __init__(self, ifilter, active, address, nodename, privatekey):
+    def __init__(self, ifilter, active, address, nodename, privatekey, nrthreads=2):
         super(dex_publisher, self).__init__(ifilter, active)
         self.address = address
         self.nodename = nodename
         self.privatekey = privatekey
         self._signer = keyczar.Signer.Read(self.privatekey)
+        self.nrthreads = nrthreads
         self.threads=[]
         self.queue = Queue()
     
@@ -139,7 +140,7 @@ class dex_publisher(publisher):
                 self.queue.task_done()
             
     def start(self):
-        for i in range(2):
+        for i in range(self.nrthreads):
             t = Thread(target=self.consumer)
             t.daemon = True
             self.threads.append(t)
@@ -153,6 +154,10 @@ class dex_publisher(publisher):
     def from_conf(cls, ifilter, active, config):
         if "protocol" not in config or config["protocol"] != "dex":
             raise RuntimeError("Invalid connection config used for dex publisher")
+        
+        nrthreads = 2
+        if "nrthreads" in config:
+            nrthreads=config["nrthreads"]
         
         address = config["address"]
         cr = config["crypto"]
@@ -169,18 +174,104 @@ class dex_publisher(publisher):
 
         #server = rest.RestfulServer(server_url, auth)
     
-        publisher = dex_publisher(ifilter, active, address, nodename, privkey)
+        publisher = dex_publisher(ifilter, active, address, nodename, privkey, nrthreads)
         publisher.start()
         return publisher
 
 class rest_publisher(publisher):
     """Publishes a file using the rest protocol"""
     
-    def __init__(self, ifilter):
-        super(rest_publisher, self).__init__(ifilter)
-    
+    def __init__(self, ifilter, active, address, nodename, privatekey, sign, protocol_version, nrthreads=2):
+        """Constructor
+        :param matching.filters.filter ifilter: the filter associated with this publisher
+        :param bool active: If this publisher is active or not
+        :param str address: The destination address for this publisher
+        :param str nodename: The node name of this node. Used together with privatekey so that destination can verify origin
+        :param str privatekey: Path to the private key used for signing
+        :param bool sign: If message should be signed or not. In most cases this should be set to True
+        :param str protocol_version: Currently only supported version of the rest-protocol is 1.0 but there will probably be more
+        :param int nrthreads: Number of threads this published uses to publish to destination.
+        """
+        super(rest_publisher, self).__init__(ifilter, active)
+        self.address = address
+        self.nodename = nodename
+        self.privatekey = privatekey
+        self._signer = keyczar.Signer.Read(self.privatekey)
+        self.threads=[]
+        self.sign = sign
+        self.protocol_version = protocol_version
+        self.nrthreads = nrthreads
+        self.queue = Queue()
+
     def publish(self, file):
-        pass
+        """publishes a file by adding it to the worker queue
+        :param str file: Path to the file to be published
+        """
+        tmpfile = NamedTemporaryFile()
+        with open(file, "rb") as fp:
+            shutil.copyfileobj(fp, tmpfile)
+        tmpfile.flush()
+        self.queue.put(tmpfile)
+  
+    def send_file(self, path):
+        try:
+            auth = rest.KeyczarAuth(self.privatekey, self.nodename)
+            server = rest.RestfulServer(self.address, auth)
+            with open(path.name, "rb") as data:
+                entry = server.store(data)
+        finally:
+            path.close()
+
+    def consumer(self):
+        while True:
+            f = self.queue.get()
+            try:
+                self.send_file(f)
+            except:
+                logger.exception("Failed to publish file: %s to %s"%(f, self.address))
+            finally:
+                self.queue.task_done()
+            
+    def start(self):
+        for i in range(self.nrthreads):
+            t = Thread(target=self.consumer)
+            t.daemon = True
+            self.threads.append(t)
+            t.start() 
+
+    def stop(self):
+        for t in self.threads:
+            t.join()
+
+    @classmethod
+    def from_conf(cls, ifilter, active, config):
+        if "protocol" not in config or config["protocol"] != "rest":
+            raise RuntimeError("Invalid connection config used for rest publisher")
+        
+        protocol_version="1.0"
+        if "protocol_version" in config:
+            protocol_version=config["protocol_version"]
+        
+        nrthreads = 2
+        if "nrthreads" in config:
+            nrthreads=config["nrthreads"]
+        
+        address = config["address"]
+        cr = config["crypto"]
+        if "libname" in cr and cr["libname"] != "keyczar":
+            raise RuntimeError("Only valid crypto type for dex protocol is keyczar")
+        privkey = cr["privatekey"]
+        if not os.path.exists(privkey):
+            raise RuntimeError("Keyczar private key doesn't exist or is not readable: %s"%privkey)
+        nodename = cr["nodename"]
+
+        sign = False
+        if "sign" in cr and cr["sign"] == True:
+            sign = True
+    
+        publisher = rest_publisher(ifilter, active, address, nodename, privkey, sign, protocol_version, nrthreads)
+        publisher.start()
+        return publisher
 
 class publisher_manager:
     def __init__(self):
@@ -203,7 +294,7 @@ class publisher_manager:
                 if protocol == "dex":
                     return dex_publisher.from_conf(filter_manager.from_value(config["filter"]), active, config["connection"])
                 elif protocol == "rest":
-                    return null_publisher(filter_manager.from_value(config["filter"]), active)
+                    return rest_publisher.from_conf(filter_manager.from_value(config["filter"]), active, config["connection"])
                 elif protocol == "null":
                     return null_publisher(filter_manager.from_value(config["filter"]), active)
         raise Exception("Unsupported connection type")

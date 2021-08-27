@@ -31,7 +31,9 @@ from baltrad.exchange.net import publishers
 import glob
 import json
 import time, datetime
+import threading
 import os,stat
+import uuid
 from types import SimpleNamespace
 import logging
 from baltrad.bdbcommon import oh5, expr
@@ -47,6 +49,27 @@ from baltrad.exchange.net.publishers import publisher_manager
 
 logger = logging.getLogger("baltrad.exchange.server.backend")
 
+class HandledFiles(object):
+    """Keeps track of recently handled files. Probably should be either a sqlite db or
+    a dictionary variant with an aged limit.
+    """
+    def __init__(self, limit=500):
+        self.limit = limit
+        self._handled = []
+        self.lock = threading.Lock()
+        
+    def handled(self, bdbhash):
+        return bdbhash in self._handled
+
+    def add(self, bdbhash):
+        with self.lock:
+            if bdbhash in self._handled:
+                return False
+            self._handled.insert(0, bdbhash)
+            if len(self._handled) > self.limit:
+                self._handled.pop()
+        return True
+
 class SimpleBackend(backend.Backend):
     """A backend taking care of the exchange
 
@@ -57,6 +80,10 @@ class SimpleBackend(backend.Backend):
         self.confdirs = confdirs
         self.nodename = nodename
         self.privatekey = privatekey
+        
+        self.handled_files = HandledFiles()
+        
+        self._hasher = oh5.MetadataHasher()
         
         self.subscriptions = []
         self.publications = []
@@ -125,6 +152,12 @@ class SimpleBackend(backend.Backend):
         meta = self.metadata_from_file_internal(path)
         metadataTime = time.time()
         
+        logger.info("File with: %s, %s" % (meta.bdb_metadata_hash, meta.bdb_source_name))
+        
+        if not self.handled_files.add(meta.bdb_metadata_hash):
+            logger.info("File recently handled, ignoring it: %s, %s" % (meta.bdb_metadata_hash, meta.bdb_source_name))
+            return None
+        
         for subscription in self.subscriptions: # Should only be passive subscriptions here. Active subscriptions should be handled in separate threads.
             #if credentials is not None:
             #    if "crypto" in subscription:
@@ -143,7 +176,7 @@ class SimpleBackend(backend.Backend):
                         for storage in stores:
                             self.storage_manager.store(storage, path, meta)
                     self.publish(path, meta)
-                    
+
         return meta
 
     def publish(self, path, meta):
@@ -160,13 +193,15 @@ class SimpleBackend(backend.Backend):
         if not meta.what_source:
             raise LookupError("No source in metadata")
         
+        metadata_hash = self._hasher.hash(meta)
         source = self.source_manager.get_source(meta)
+        
         meta.bdb_source = source.to_string()
         meta.bdb_source_name = source.name
-            
-        logger.debug("Got a source identifier: %s"%str(meta.bdb_source))
-        
+        meta.bdb_metadata_hash = metadata_hash
         meta.bdb_file_size = os.stat(path)[stat.ST_SIZE]
+        
+        logger.debug("Got a source identifier: %s"%str(meta.bdb_source))
 
         stored_timestamp = datetime.datetime.utcnow()
         meta.bdb_stored_date = stored_timestamp.date()

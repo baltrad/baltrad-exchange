@@ -4,6 +4,7 @@
    "active":true,
    "connection":{
      "protocol":"dex",
+     "nrthreads":2,
      "address":"http://localhost:8080",
      "crypto":{
        "sign":true,
