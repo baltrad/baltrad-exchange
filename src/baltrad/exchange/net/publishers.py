@@ -45,9 +45,10 @@ logger = logging.getLogger("baltrad.exchange.server.backend")
 class publisher(object):
     """Base class used by all publishers
     """
-    def __init__(self, ifilter, active):
+    def __init__(self, ifilter, active, decorators=[]):
         self._filter = ifilter
         self._active = active
+        self._decorators = decorators
     
     def publish(self, file):
         raise RuntimeError("Not implemented")
@@ -57,6 +58,9 @@ class publisher(object):
     
     def active(self):
         return self._active
+    
+    def decorators(self):
+        return self._decorators
 
 ##
 # 
@@ -70,11 +74,12 @@ class null_publisher(publisher):
 
 class dex_publisher(publisher):
     """Publishes a file to a DEX node"""
-    def __init__(self, ifilter, active, address, nodename, privatekey, nrthreads=2):
+    def __init__(self, ifilter, active, decorators, address, nodename, privatekey, nrthreads=2):
         super(dex_publisher, self).__init__(ifilter, active)
         self.address = address
         self.nodename = nodename
         self.privatekey = privatekey
+        self._decorators = decorators
         self._signer = keyczar.Signer.Read(self.privatekey)
         self.nrthreads = nrthreads
         self.threads=[]
@@ -120,7 +125,6 @@ class dex_publisher(publisher):
         finally:
             path.close()
             fp.close()
-        
     
     def publish(self, file):
         tmpfile = NamedTemporaryFile()
@@ -151,7 +155,7 @@ class dex_publisher(publisher):
             t.join()
 
     @classmethod
-    def from_conf(cls, ifilter, active, config):
+    def from_conf(cls, ifilter, active, decorators, config):
         if "protocol" not in config or config["protocol"] != "dex":
             raise RuntimeError("Invalid connection config used for dex publisher")
         
@@ -174,14 +178,14 @@ class dex_publisher(publisher):
 
         #server = rest.RestfulServer(server_url, auth)
     
-        publisher = dex_publisher(ifilter, active, address, nodename, privkey, nrthreads)
+        publisher = dex_publisher(ifilter, active, decorators, address, nodename, privkey, nrthreads)
         publisher.start()
         return publisher
 
 class rest_publisher(publisher):
     """Publishes a file using the rest protocol"""
     
-    def __init__(self, ifilter, active, address, nodename, privatekey, sign, protocol_version, nrthreads=2):
+    def __init__(self, ifilter, active, decorators, address, nodename, privatekey, sign, protocol_version, nrthreads=2):
         """Constructor
         :param matching.filters.filter ifilter: the filter associated with this publisher
         :param bool active: If this publisher is active or not
@@ -196,6 +200,7 @@ class rest_publisher(publisher):
         self.address = address
         self.nodename = nodename
         self.privatekey = privatekey
+        self._decorators = decorators
         self._signer = keyczar.Signer.Read(self.privatekey)
         self.threads=[]
         self.sign = sign
@@ -244,7 +249,7 @@ class rest_publisher(publisher):
             t.join()
 
     @classmethod
-    def from_conf(cls, ifilter, active, config):
+    def from_conf(cls, ifilter, active, decorators, config):
         if "protocol" not in config or config["protocol"] != "rest":
             raise RuntimeError("Invalid connection config used for rest publisher")
         
@@ -269,7 +274,7 @@ class rest_publisher(publisher):
         if "sign" in cr and cr["sign"] == True:
             sign = True
     
-        publisher = rest_publisher(ifilter, active, address, nodename, privkey, sign, protocol_version, nrthreads)
+        publisher = rest_publisher(ifilter, active, decorators, address, nodename, privkey, sign, protocol_version, nrthreads)
         publisher.start()
         return publisher
 
@@ -281,20 +286,24 @@ class publisher_manager:
     def from_conf(self, config):
         filter_manager = filters.filter_manager()
         active = False
+        decorators = []
         if "connection" not in config or "filter" not in config:
             raise AttributeError("connection and filter must exist in configuration")
         
         if "active" in config:
             active = config["active"]
         
+        if "decorators" in config:
+            decorators = config["decorators"]
+        
         if "connection" in config:
             conn = config["connection"]
             if "protocol" in conn:
                 protocol = conn["protocol"]
                 if protocol == "dex":
-                    return dex_publisher.from_conf(filter_manager.from_value(config["filter"]), active, config["connection"])
+                    return dex_publisher.from_conf(filter_manager.from_value(config["filter"]), active, decorators, config["connection"])
                 elif protocol == "rest":
-                    return rest_publisher.from_conf(filter_manager.from_value(config["filter"]), active, config["connection"])
+                    return rest_publisher.from_conf(filter_manager.from_value(config["filter"]), active, decorators, config["connection"])
                 elif protocol == "null":
                     return null_publisher(filter_manager.from_value(config["filter"]), active)
         raise Exception("Unsupported connection type")

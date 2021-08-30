@@ -27,6 +27,13 @@
         "value_type": "string", 
         "value": ["SCAN"]}
     ]
-  }
+  },
+  "decorators":[
+    { "decorator":"baltrad.exchange.decorators.decorator.example_filter",
+      "arguments":[
+        ["arg","1"]
+      ]
+    }
+  ]
 }
 }
