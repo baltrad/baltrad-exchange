@@ -51,3 +51,20 @@ class Backend(object):
         :type path: string
         """
         raise NotImplementedError()
+
+    @abstractmethod
+    def metadata_from_file(self, path):
+        """Parses a file and returns the metadata for this file.
+        :param path: path to the file
+        :type path: string
+        :return the metadata for this file
+        """
+        raise NotImplementedError()
+    
+    @abstractmethod
+    def get_storage_manager(self):
+        """Returns the storage manager
+        :return the storage manager
+        """
+        raise NotImplementedError()    
+        

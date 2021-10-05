@@ -25,17 +25,19 @@ import os
 
 from baltrad.exchange.client import rest
 from threading import Thread
-from queue import Queue
+from queue import Queue, Full
 from keyczar import keyczar 
 import http.client as httplib
 import urllib.parse as urlparse
 import logging
 import datetime
 import base64
+import importlib
 from baltrad.exchange.matching import filters
 from baltrad.exchange.matching.filters import filter_manager
 from tempfile import NamedTemporaryFile
 import shutil
+from baltrad.exchange.decorators.decorator import decorator_manager
 
 logger = logging.getLogger("baltrad.exchange.server.backend")
 
@@ -45,56 +47,221 @@ logger = logging.getLogger("baltrad.exchange.server.backend")
 class publisher(object):
     """Base class used by all publishers
     """
-    def __init__(self, ifilter, active, decorators=[]):
-        self._filter = ifilter
+    def __init__(self, backend, name, active, ifilter, connections, decorators):
+        """constructor
+
+        :param backend: The backend implementation
+        :param name: The name identifying this publication
+        :param active: If this publication is active or not
+        :param ifilter: The baltrad.exchange.matching.filters.filter
+        :param connections: The connection(s) to use.
+        :param decorators: A list of decorators that will modify file before publishing it.
+        """
+        self._backend = backend
+        self._name = name
         self._active = active
+        self._filter = ifilter
+        self._connections = connections
         self._decorators = decorators
     
-    def publish(self, file):
+    def publish(self, file, meta):
+        """publishes a file
+
+        :param file: The temp file instance
+        :param meta: The metadata
+        :return: metadata extracted from the file
+        """
         raise RuntimeError("Not implemented")
     
-    def filter(self):
-        return self._filter
+    def backend(self):
+        """Returns the backend
+        :return: the backend
+        """
+        return self._backend
+    
+    def name(self):
+        """Returns the name
+        :return: the name
+        """
+        return self._name
     
     def active(self):
+        """Returns if this publication is active or not
+        :return: if this publication is active or not
+        """
         return self._active
     
+    def filter(self):
+        """Returns the filter
+        :return: the filter
+        """
+        return self._filter
+    
+    def connections(self):
+        """Returns the connection(s)
+        :return: the connection(s)
+        """
+        return self._connections
+    
     def decorators(self):
+        """Returns the decorator(s)
+        :return: the decorator(s)
+        """
         return self._decorators
 
-##
-# 
-class null_publisher(publisher):
-    """Does not publish anything"""
-    def __init__(self, ifilter, active):
-        super(null_publisher, self).__init__(ifilter, active)
-    
-    def publish(self, file):
-        pass
+    def start(self):
+        """A publisher should most likely be managing threads and as such a start method is needed
+        """
+        raise RuntimeError("Not implemented")
 
-class dex_publisher(publisher):
-    """Publishes a file to a DEX node"""
-    def __init__(self, ifilter, active, decorators, address, nodename, privatekey, nrthreads=2):
-        super(dex_publisher, self).__init__(ifilter, active)
-        self.address = address
-        self.nodename = nodename
-        self.privatekey = privatekey
-        self._decorators = decorators
-        self._signer = keyczar.Signer.Read(self.privatekey)
-        self.nrthreads = nrthreads
-        self.threads=[]
-        self.queue = Queue()
+    def stop(self):
+        """A publisher should most likely be managing threads and as such a stop method is needed joining the threads
+        """
+        raise RuntimeError("Not implemented")
+
+class standard_publisher(publisher):
+    """Standard publisher used for most situations. Provides two arguments. One is threads. The other is queue_size.
+    """
+    def __init__(self, backend, name, active, ifilter, connections, decorators, extra_arguments):
+        """constructor
+
+        :param backend: The backend implementation
+        :param name: The name identifying this publication
+        :param active: If this publication is active or not
+        :param ifilter: The baltrad.exchange.matching.filters.filter
+        :param connections: The connection(s) to use.
+        :param decorators: A list of decorators that will modify file before publishing it.
+        :param extra_arguments: A dictionary containing attributes. 
+                               "threads" is used to describe how many threads that should be used
+                               "queue_size" describes how big the queue can be before publications are discarded.
+        """
+
+        super(standard_publisher, self).__init__(backend, name, active, ifilter, connections, decorators)
+        nrthreads=1
+        queue_size=100
+        if "threads" in extra_arguments:
+            nrthreads = extra_arguments["threads"]
+        if "queue_size" in extra_arguments:
+            queue_size = extra_arguments["queue_size"]
+            
+        self._nrthreads = nrthreads
+        self._queue_size = queue_size
+        self._threads=[]
+        self._queue = Queue(self._queue_size)
+
+    def publish(self, file, meta):
+        tmpfile = NamedTemporaryFile()
+        with open(file, "rb") as fp:
+            shutil.copyfileobj(fp, tmpfile)
+        tmpfile.flush()
+        
+        logger.info("Decorating file with %d decorators before adding it on queue"%len(self._decorators))
+        if len(self._decorators) > 0:
+            for d in self._decorators:
+                logger.info("Decorator %s"%type(d))
+                tmpfile = d.decorate(tmpfile)
+            tmpfile.flush()
+            meta = self.backend().metadata_from_file(tmpfile.name)
+        
+        try:
+            self._queue.put((tmpfile, meta), False)
+        except Full as e:
+            logger.exception("Queue for publisher %s is full."%self.name())
+
+    def do_publish(self, tmpfile, meta):
+        for c in self._connections:
+            c.publish(tmpfile.name, meta)
+        tmpfile.close()
+        
+    def consumer(self):
+        while True:
+            tmpfile, meta = self._queue.get()
+            try:
+                self.do_publish(tmpfile, meta)
+            except:
+                logger.exception("Failed to publish file %s"%(tmpfile.name))
+            finally:
+                self._queue.task_done()
+
+    def start(self):
+        for i in range(self._nrthreads):
+            t = Thread(target=self.consumer)
+            t.daemon = True
+            self._threads.append(t)
+            t.start() 
+
+    def stop(self):
+        for t in self._threads:
+            t.join()
+
+
+class publisher_connection(object):
+    def __init__(self, backend):
+        self._backend = backend
     
+    def publish(self, path, meta):
+        pass
+    
+    def get_backend(self):
+        return self._backend
+    
+class file_copy(publisher_connection):
+    """Publishes a file to the file system. Either by using specific rule or using a file storage
+    """
+    def __init__(self, backend, arguments):
+        """Constructor
+        :param storage: The storage
+        """
+        super(file_copy, self).__init__(backend)
+        self._storages = []
+        if "file_storage" in arguments:
+            self._storages = arguments["file_storage"]
+    
+    def publish(self, file, meta):
+        sm = self.get_backend().get_storage_manager()
+        for s in self._storages:
+            if sm.has_storage(s):
+                storage = sm.get_storage(s)
+                storage.store(file, meta)
+
+class dex_connection(publisher_connection):
+    def __init__(self, backend, arguments):
+        """Constructor
+        :param storage: The storage
+        """
+        super(dex_connection, self).__init__(backend)
+        self._address = None
+        self._nodename = None
+        self._privatekey = None
+        if "crypto" not in arguments:
+            raise RuntimeError("Must provide crypto object when initializing a dex connection")
+        if "address" not in arguments:
+            raise RuntimeError("Must provide address when initializing a dex connection")
+        
+        self._address = arguments["address"]
+        
+        cr = arguments["crypto"]
+        if "libname" in cr and cr["libname"] != "keyczar":
+            raise RuntimeError("Only valid crypto type for dex protocol is keyczar")
+        
+        self._privatekey = cr["privatekey"]
+        
+        if not os.path.exists(self._privatekey):
+            raise RuntimeError("Keyczar private key doesn't exist or is not readable: %s"%self._privatekey)
+        self._nodename = cr["nodename"]
+        
+        self._signer = keyczar.Signer.Read(self._privatekey)
+        
     def _generate_headers(self, uri):
         datestr = datetime.datetime.now().strftime("%a, %e %B %Y %H:%M:%S")
         contentMD5 = base64.b64encode(uri.encode("utf-8"))
         message = (b"POST" + b'\n' + uri.encode("utf-8") + b'\n' + b"application/x-hdf5" + b'\n' + contentMD5 + b'\n' + datestr.encode("utf-8"))
         signature = self._signer.Sign(message)
-        headers = {"Node-Name": self.nodename, 
+        headers = {"Node-Name": self._nodename, 
                    "Content-Type": "application/x-hdf5",
                    "Content-MD5": contentMD5, 
                    "Date": datestr, 
-                   "Authorization": self.nodename + ':' + signature}
+                   "Authorization": self._nodename + ':' + signature}
         return headers
   
     def _split_uri(self, uri):
@@ -113,198 +280,133 @@ class dex_publisher(publisher):
       
         return response.status, response.reason, response.read()
   
-    def send_file(self, path):
-        uri = "%s/BaltradDex/post_file.htm"%self.address
+    def publish(self, path, meta):
+        uri = "%s/BaltradDex/post_file.htm"%self._address
         (host, query) = self._split_uri(uri)
         headers = self._generate_headers(uri)
  
-        fp = open(path.name, 'rb')
+        fp = open(path, 'rb')
     
         try:
             return self._post(host, query, fp, headers)
         finally:
-            path.close()
-            fp.close()
-    
-    def publish(self, file):
-        tmpfile = NamedTemporaryFile()
-        with open(file, "rb") as fp:
-            shutil.copyfileobj(fp, tmpfile)
-        tmpfile.flush()
-        self.queue.put(tmpfile)
+            fp.close()    
 
-    def consumer(self):
-        while True:
-            f = self.queue.get()
-            try:
-                self.send_file(f)
-            except:
-                logger.exception("Failed to publish file: %s to %s"%(f, self.address))
-            finally:
-                self.queue.task_done()
-            
-    def start(self):
-        for i in range(self.nrthreads):
-            t = Thread(target=self.consumer)
-            t.daemon = True
-            self.threads.append(t)
-            t.start() 
-
-    def stop(self):
-        for t in self.threads:
-            t.join()
-
-    @classmethod
-    def from_conf(cls, ifilter, active, decorators, config):
-        if "protocol" not in config or config["protocol"] != "dex":
-            raise RuntimeError("Invalid connection config used for dex publisher")
-        
-        nrthreads = 2
-        if "nrthreads" in config:
-            nrthreads=config["nrthreads"]
-        
-        address = config["address"]
-        cr = config["crypto"]
-        if "libname" in cr and cr["libname"] != "keyczar":
-            raise RuntimeError("Only valid crypto type for dex protocol is keyczar")
-        privkey = cr["privatekey"]
-        if not os.path.exists(privkey):
-            raise RuntimeError("Keyczar private key doesn't exist or is not readable: %s"%privkey)
-        nodename = cr["nodename"]
-
-        #auth = rest.NoAuth()
-        #if "sign" in cr and cr["sign"] == True:
-        #    auth = rest.KeyczarAuth(privkey, nodename)
-
-        #server = rest.RestfulServer(server_url, auth)
-    
-        publisher = dex_publisher(ifilter, active, decorators, address, nodename, privkey, nrthreads)
-        publisher.start()
-        return publisher
-
-class rest_publisher(publisher):
-    """Publishes a file using the rest protocol"""
-    
-    def __init__(self, ifilter, active, decorators, address, nodename, privatekey, sign, protocol_version, nrthreads=2):
+class rest_connection(publisher_connection):
+    def __init__(self, backend, arguments):
         """Constructor
-        :param matching.filters.filter ifilter: the filter associated with this publisher
-        :param bool active: If this publisher is active or not
-        :param str address: The destination address for this publisher
-        :param str nodename: The node name of this node. Used together with privatekey so that destination can verify origin
-        :param str privatekey: Path to the private key used for signing
-        :param bool sign: If message should be signed or not. In most cases this should be set to True
-        :param str protocol_version: Currently only supported version of the rest-protocol is 1.0 but there will probably be more
-        :param int nrthreads: Number of threads this published uses to publish to destination.
         """
-        super(rest_publisher, self).__init__(ifilter, active)
-        self.address = address
-        self.nodename = nodename
-        self.privatekey = privatekey
-        self._decorators = decorators
-        self._signer = keyczar.Signer.Read(self.privatekey)
-        self.threads=[]
-        self.sign = sign
-        self.protocol_version = protocol_version
-        self.nrthreads = nrthreads
-        self.queue = Queue()
+        super(rest_connection, self).__init__(backend)
+        self._address = None
+        self._nodename = None
+        self._privatekey = None
+        self._version = "1.0"
 
-    def publish(self, file):
-        """publishes a file by adding it to the worker queue
-        :param str file: Path to the file to be published
-        """
-        tmpfile = NamedTemporaryFile()
-        with open(file, "rb") as fp:
-            shutil.copyfileobj(fp, tmpfile)
-        tmpfile.flush()
-        self.queue.put(tmpfile)
-  
-    def send_file(self, path):
-        try:
-            auth = rest.KeyczarAuth(self.privatekey, self.nodename)
-            server = rest.RestfulServer(self.address, auth)
-            with open(path.name, "rb") as data:
-                entry = server.store(data)
-        finally:
-            path.close()
-
-    def consumer(self):
-        while True:
-            f = self.queue.get()
-            try:
-                self.send_file(f)
-            except:
-                logger.exception("Failed to publish file: %s to %s"%(f, self.address))
-            finally:
-                self.queue.task_done()
-            
-    def start(self):
-        for i in range(self.nrthreads):
-            t = Thread(target=self.consumer)
-            t.daemon = True
-            self.threads.append(t)
-            t.start() 
-
-    def stop(self):
-        for t in self.threads:
-            t.join()
-
-    @classmethod
-    def from_conf(cls, ifilter, active, decorators, config):
-        if "protocol" not in config or config["protocol"] != "rest":
-            raise RuntimeError("Invalid connection config used for rest publisher")
+        if "crypto" not in arguments:
+            raise RuntimeError("Must provide crypto object when initializing a rest connection")
         
-        protocol_version="1.0"
-        if "protocol_version" in config:
-            protocol_version=config["protocol_version"]
-        
-        nrthreads = 2
-        if "nrthreads" in config:
-            nrthreads=config["nrthreads"]
-        
-        address = config["address"]
-        cr = config["crypto"]
+        if "address" not in arguments:
+            raise RuntimeError("Must provide address when initializing a rest connection")
+
+        cr = arguments["crypto"]
         if "libname" in cr and cr["libname"] != "keyczar":
             raise RuntimeError("Only valid crypto type for dex protocol is keyczar")
-        privkey = cr["privatekey"]
-        if not os.path.exists(privkey):
-            raise RuntimeError("Keyczar private key doesn't exist or is not readable: %s"%privkey)
-        nodename = cr["nodename"]
+        
+        self._privatekey = cr["privatekey"]
+        if not os.path.exists(self._privatekey):
+            raise RuntimeError("Keyczar private key doesn't exist or is not readable: %s"%self._privatekey)
 
-        sign = False
-        if "sign" in cr and cr["sign"] == True:
-            sign = True
-    
-        publisher = rest_publisher(ifilter, active, decorators, address, nodename, privkey, sign, protocol_version, nrthreads)
-        publisher.start()
-        return publisher
+        self._nodename = cr["nodename"]
+        self._address = arguments["address"]
+        
+        if "version" in arguments:
+            self._version = arguments["version"]
+                
+        self._signer = keyczar.Signer.Read(self._privatekey)
+            
+    def publish(self, path, meta):
+        auth = rest.KeyczarAuth(self._privatekey, self._nodename)
+        server = rest.RestfulServer(self._address, auth)
+        with open(path, "rb") as data:
+            entry = server.store(data)
 
 class publisher_manager:
     def __init__(self):
         pass
 
     @classmethod
-    def from_conf(self, config):
+    def create(self, clz, backend, arguments):
+        """Creates an instance of clz with specified arguments
+        :param clz: class name specified as <module>.<classname>
+        :param arguments: a list of arguments that should be used to initialize the class       
+        """
+        if clz.find(".") > 0:
+            logger.info("Creating publisher connection '%s'"%clz)
+            lastdot = clz.rfind(".")
+            module = importlib.import_module(clz[:lastdot])
+            classname = clz[lastdot+1:]
+            print("%s"%str(arguments))
+            return getattr(module, classname)(backend, arguments)
+        else:
+            raise Exception("Must specify class as module.class")
+
+    @classmethod
+    def create_publisher(self, name, clz, backend, active, filter, connections, decorators, extra_arguments):
+        """Creates an instance of clz with specified arguments
+        :param clz: class name specified as <module>.<classname>
+        :param arguments: a list of arguments that should be used to initialize the class       
+        """
+        if clz.find(".") > 0:
+            logger.info("Creating publisher '%s'"%clz)
+            lastdot = clz.rfind(".")
+            module = importlib.import_module(clz[:lastdot])
+            classname = clz[lastdot+1:]
+            print("%s"%str(extra_arguments))
+            return getattr(module, classname)(backend, name, active, filter, connections, decorators, extra_arguments)
+        else:
+            raise Exception("Must specify class as module.class")
+    
+    @classmethod
+    def from_conf(self, config, backend):
         filter_manager = filters.filter_manager()
+        name = "unknown"
+        publisher_clazz = "baltrad.exchange.net.publishers.standard_publisher"
         active = False
+        connections = []
+        ifilter = None
         decorators = []
-        if "connection" not in config or "filter" not in config:
-            raise AttributeError("connection and filter must exist in configuration")
+        extra_arguments = {}
         
+        if "name" in config:
+            name = config["name"]
+        
+        if "class" in config:
+            publisher_clazz = config["class"]
+
+        if "extra_arguments" in config:
+            extra_arguments = config["extra_arguments"]
+
         if "active" in config:
             active = config["active"]
         
-        if "decorators" in config:
-            decorators = config["decorators"]
-        
         if "connection" in config:
-            conn = config["connection"]
-            if "protocol" in conn:
-                protocol = conn["protocol"]
-                if protocol == "dex":
-                    return dex_publisher.from_conf(filter_manager.from_value(config["filter"]), active, decorators, config["connection"])
-                elif protocol == "rest":
-                    return rest_publisher.from_conf(filter_manager.from_value(config["filter"]), active, decorators, config["connection"])
-                elif protocol == "null":
-                    return null_publisher(filter_manager.from_value(config["filter"]), active)
-        raise Exception("Unsupported connection type")
+            conncfg = config["connection"]
+            if "class" in conncfg:
+                args = []
+                if "arguments" in conncfg:
+                    args = conncfg["arguments"]
+                connection = self.create(conncfg["class"], backend, args)
+                connections.append(connection)
+
+        if "decorators" in config:
+            decoratorconf =  config["decorators"]
+            for ds in decoratorconf:
+                decorator = decorator_manager.create(ds["decorator"], ds["arguments"])
+                decorators.append(decorator)
+
+        if "filter" in config:
+            ifilter = filter_manager.from_value(config["filter"])
         
+        p = self.create_publisher(name, publisher_clazz, backend, active, ifilter, connections, decorators, extra_arguments)
+        p.start()
+        return p

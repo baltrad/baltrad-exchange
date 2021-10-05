@@ -1,26 +1,23 @@
 {
-"publication":{
+"publication": {
    "_comment_":"Usually publications should use this publisher. Extra arguments is number of threads and queue_size.",
+   "name":"Copy file to storage publication",
    "class":"baltrad.exchange.net.publishers.standard_publisher",
    "extra_arguments": {
-  	 "threads":2,
+  	 "threads":1,
   	 "queue_size":50
    },
    "active":true,
    "connection":{
-     "_comment_":"This is a connection used for publishing files using the rest protocol",
-     "class":"baltrad.exchange.net.publishers.rest_connection",
+     "_comment_":"This is a connection used when publishing files using file copy",
+     "class":"baltrad.exchange.net.publishers.file_copy",
      "arguments":{
-       "address":"https://localhost:8091",
-       "protocol_version":"1.0",
-       "crypto":{
-         "sign":true,
-         "libname":"keyczar",
-         "nodename":"anders-nzxt",
-         "privatekey":"/opt/baltrad2/etc/bltnode-keys/anders-nzxt.priv"
-       }
+       "file_storage":[
+         "exporting_storage"
+       ],
+       "nesse":"nisse"
      }
-   },   
+   },
    "filter":{
   	 "filter_type": "and_filter", 
   	 "value": [
@@ -37,6 +34,11 @@
     ]
   },
   "decorators":[
+    { "decorator":"rave_be_decorator.keep_quantities_decorator",
+      "arguments":[
+      	["DBZH", "VRADH", "TH"]
+      ]
+    }
   ]
 }
 }

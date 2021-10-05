@@ -89,13 +89,17 @@ class SimpleBackend(backend.Backend):
         self.publications = []
         self.storage_manager = storages.storage_manager()
         
-        self.initialize_configuration(self.confdirs)
-        
         self.odim_source_file = odim_source_file
         self.source_manager = sqlbackend.SqlAlchemySourceManager()
         self.source_manager.add_sources(self.read_bdb_sources(self.odim_source_file))
         self.filter_manager = filters.filter_manager()
-        
+
+        self.initialize_configuration(self.confdirs)
+    
+    def get_storage_manager(self):
+        return self.storage_manager    
+
+     
     def initialize_configuration(self, confdirs):
         for d in confdirs:
             logger.info("Processing directory: %s" % d)
@@ -112,7 +116,7 @@ class SimpleBackend(backend.Backend):
             with open(f,"r") as fp:
                 data = json.load(fp)
                 if "publication" in data:
-                    p = publisher_manager.from_conf(data["publication"])
+                    p = publisher_manager.from_conf(data["publication"], self)
                     self.publications.append(p)
                 elif "subscription" in data:
                     self.subscriptions.append(data["subscription"])
@@ -149,7 +153,7 @@ class SimpleBackend(backend.Backend):
 
     def store_file(self, path, credentials):
         st = time.time()
-        meta = self.metadata_from_file_internal(path)
+        meta = self.metadata_from_file(path)
         metadataTime = time.time()
         
         logger.info("File with: %s, %s" % (meta.bdb_metadata_hash, meta.bdb_source_name))
@@ -183,7 +187,10 @@ class SimpleBackend(backend.Backend):
         for publication in self.publications:
                 matcher = metadata_matcher.metadata_matcher()
                 if publication.active() and matcher.match(meta, publication.filter().to_xpr()):
-                    publication.publish(path)
+                    publication.publish(path, meta)
+    
+    def metadata_from_file(self, path):
+        return self.metadata_from_file_internal(path)
     
     def metadata_from_file_bdb(self, path):
         pass

@@ -1,6 +1,7 @@
 {
-"publication":{
+"publication": {
    "_comment_":"Usually publications should use this publisher. Extra arguments is number of threads and queue_size.",
+   "name":"Inject files into DEX",
    "class":"baltrad.exchange.net.publishers.standard_publisher",
    "extra_arguments": {
   	 "threads":2,
@@ -8,11 +9,10 @@
    },
    "active":true,
    "connection":{
-     "_comment_":"This is a connection used for publishing files using the rest protocol",
-     "class":"baltrad.exchange.net.publishers.rest_connection",
+     "_comment_":"This is a connection used for publishing files using the dex protocol",
+     "class":"baltrad.exchange.net.publishers.dex_connection",
      "arguments":{
-       "address":"https://localhost:8091",
-       "protocol_version":"1.0",
+       "address":"http://localhost:8080",
        "crypto":{
          "sign":true,
          "libname":"keyczar",
@@ -20,7 +20,7 @@
          "privatekey":"/opt/baltrad2/etc/bltnode-keys/anders-nzxt.priv"
        }
      }
-   },   
+   },
    "filter":{
   	 "filter_type": "and_filter", 
   	 "value": [
@@ -37,6 +37,6 @@
     ]
   },
   "decorators":[
-  ]
+  ]  
 }
 }
