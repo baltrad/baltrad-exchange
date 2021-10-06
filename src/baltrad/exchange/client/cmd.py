@@ -31,6 +31,8 @@ import os
 import socket
 import urllib.parse as urlparse
 import pkg_resources
+import datetime,time
+from tempfile import NamedTemporaryFile
 
 from http import client as httplibclient
 from keyczar import keyczar
@@ -78,6 +80,10 @@ class Command(object):
         except ImportError:
             raise LookupError(name)
 
+    @classmethod
+    def get_commands(cls):
+        return pkg_resources.get_entry_map("baltrad.exchange")["baltrad.exchange.client.commands"].keys()
+
 class StoreFile(Command):
     def update_optionparser(self, parser):
         parser.set_usage(parser.get_usage().strip() + " FILE [, FILE]")
@@ -87,3 +93,82 @@ class StoreFile(Command):
             with open(path, "rb") as data:
                 entry = server.store(data)
             print("%s stored"%(path))
+
+class BatchTest(Command):
+    SRC_MAPPING={
+        "sekrn":"WMO:02032,RAD:SE40,PLC:Kiruna,CMT:sekrn,NOD:sekrn",
+        "sella":"WMO:02092,RAD:SE41,PLC:Luleå,CMT:sella,NOD:sella",
+        "seosd":"WMO:02200,RAD:SE42,PLC:Östersund,CMT:seosd,NOD:seosd",
+        "seoer":"WMO:02262,RAD:SE43,PLC:Örnsköldsvik,CMT:seoer,NOD:seoer",
+        "sehuv":"WMO:02334,RAD:SE44,PLC:Hudiksvall,CMT:sehuv,NOD:sehuv",
+        "selek":"WMO:02430,RAD:SE45,PLC:Leksand,CMT:selek,NOD:selek",
+        "sehem":"WMO:02588,RAD:SE47,PLC:Hemse,CMT:sehem,NOD:sehem",
+        "seatv":"WMO:02570,RAD:SE48,PLC:Åtvidaberg,CMT:seatv,NOD:seatv",
+        "sevax":"WMO:02600,RAD:SE49,PLC:Vara,CMT:sevax,NOD:sevax",
+        "seang":"WMO:02606,RAD:SE50,PLC:Ängelholm,CMT:seang,NOD:seang",
+        "sekaa":"WMO:02666,RAD:SE51,PLC:Karlskrona,CMT:sekaa,NOD:sekaa",
+        "sebaa":"WMO:00000,RAD:SE52,PLC:Bålsta,CMT:sebaa,NOD:sebaa",
+        }
+    def update_optionparser(self, parser):
+        parser.add_option(
+            "--basefile", dest="basefile",
+            help="Basefile that should be modified and injected")
+        
+        parser.add_option(
+            "--datetime", dest="datetime",
+            help="Datetime")
+
+        parser.add_option(
+            "--sources", dest="sources",
+            default="sekrn,sella,seosd,seoer,sehuv,selek,sehem,seatv,sevax,seang,sekaa,sebaa",
+            help="The sources")
+    
+        parser.add_option(
+            "--periods", dest="periods", type="int",
+            default=1,
+            help="Number of periods")
+        
+        parser.add_option(
+            "--interval", dest="interval", type="int",
+            default=5,
+            help="Minutes between each period")
+    
+    def execute(self, server, opts, args):
+        import _raveio, _polarvolume, _polarscan
+        if not opts.basefile:
+            raise "No basefile provided"
+        
+        dt = self.parse_datetime_str(opts.datetime, opts.interval)
+        if not opts.datetime:
+            dt = self.get_closest_time(opts.interval)
+        
+        for pindex in range(opts.periods):
+            tstr = (dt + datetime.timedelta(minutes = pindex*opts.interval)).strftime("%Y%m%d%H%M%S")
+            o = _raveio.open(opts.basefile).object
+            d = tstr[:8]
+            t = tstr[8:]
+            o.date = d
+            o.time = t
+            
+            for src in opts.sources.split(","):
+                o.source = self.SRC_MAPPING[src]
+                rio = _raveio.new()
+                rio.object = o
+                with NamedTemporaryFile() as f:
+                    rio.save(f.name)
+                    with open(f.name, "rb") as data:
+                        entry = server.store(data)                    
+
+    def get_closest_time(self, interval):
+        t = time.localtime()
+        oz = t.tm_min%interval
+        return datetime.datetime(t.tm_year,t.tm_mon,t.tm_mday,t.tm_hour,t.tm_min-oz,0)
+
+    def parse_datetime_str(self, dtstr, interval):
+        year = int(dtstr[:4])
+        month = int(dtstr[4:6])
+        mday = int(dtstr[6:8])
+        hour = int(dtstr[8:10])
+        minute = int(dtstr[10:12])
+        minute = minute - minute%interval
+        return datetime.datetime(year,month,mday,hour,minute,0)

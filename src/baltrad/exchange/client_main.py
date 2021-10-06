@@ -42,11 +42,14 @@ def extract_command(args):
 
 def run():
     optparser = optparse.create_parser()
-    optparser.set_usage(
-        "%s COMMAND [--url=SERVER_URL] [ARGS]" % (
-            os.path.basename(sys.argv[0])
-        )
-    )
+    usgstr = "%s COMMAND [ARGS]\n" % (os.path.basename(sys.argv[0]))
+    usgstr = usgstr + "\nwhere COMMAND can be one of:\n"
+    for k in cmd.Command.get_commands():
+        usgstr = usgstr + " - %s\n"%k
+    usgstr = usgstr + "\nto get more information about a specific command, write %s <COMMAND> --help\n"%(os.path.basename(sys.argv[0]))
+    
+    optparser.set_usage(usgstr)
+    
     optparser.add_option(
         "--url", dest="server_url",
         default="https://localhost:8089",
@@ -69,7 +72,6 @@ def run():
     command_name, args = extract_command(sys.argv[1:])
 
     if not command_name:
-        print("missing command\n", file=sys.stderr)
         optparser.print_usage()
         raise SystemExit(1)
 
