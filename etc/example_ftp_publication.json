@@ -7,19 +7,19 @@
   	 "threads":1,
   	 "queue_size":50
    },
-   "active":false,
+   "active":true,
    "connection":{
-     "_comment_":"This is a connection used when publishing files using sftp",
+     "_comment_":"This is a connection used when publishing files using ftp",
      "class":"baltrad.exchange.net.publishers.uri_connection",
      "arguments":{
        "primary": {
-         "uri":"sftp://sftpuploader:secret@localhost/tmp/primary_sftp/${_baltrad/datetime:%Y/%m/%d/%H/%M}.interval_l(15)/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.replace('.','_').h5",
+         "uri":"ftp://sftpuploader:secret@localhost/tmp/primary_ftp/${_baltrad/datetime:%Y/%m/%d/%H/%M}.interval_l(15)/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.replace('.','_').h5",
          "create_missing_directories":true
        },
-       "secondary": {
-         "uri":"sftp://sftpuploader:secret@localhost/tmp/secondary_sftp/${_baltrad/datetime:%Y/%m/%d/%H/%M}.interval_l(15)/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.replace('.','_').h5",
-         "create_missing_directories":true,
-         "failover":false
+       "_secondary": {
+         "uri":"ftp://sftpuploader:secret@localhost/tmp/secondary_ftp/${_baltrad/datetime:%Y/%m/%d/%H/%M}.interval_l(15)/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.replace('.','_').h5",
+         "create_missing_directories":false,
+         "failover":true
        }
      }
    },
