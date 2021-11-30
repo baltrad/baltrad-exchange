@@ -1,21 +1,26 @@
 {
 "publication": {
    "_comment_":"Usually publications should use this publisher. Extra arguments is number of threads and queue_size.",
-   "name":"Copy file to storage publication",
+   "name":"SFTP file to remote server",
    "class":"baltrad.exchange.net.publishers.standard_publisher",
    "extra_arguments": {
   	 "threads":1,
   	 "queue_size":50
    },
-   "active":false,
+   "active":true,
    "connection":{
-     "_comment_":"This is a connection used when publishing files using file copy",
-     "class":"baltrad.exchange.net.publishers.file_copy",
+     "_comment_":"This is a connection used when publishing files using sftp",
+     "class":"baltrad.exchange.net.publishers.sftp_connection",
      "arguments":{
-       "file_storage":[
-         "exporting_storage"
-       ],
-       "nesse":"nisse"
+       "primary": {
+         "uri":"sftp://sftpuploader:secret@localhost/tmp/primary_sftp/${_baltrad/datetime:%Y/%m/%d/%H/%M}.interval_l(15)/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.replace('.','_').h5",
+         "create_missing_directories":true
+       },
+       "secondary": {
+         "uri":"sftp://sftpuploader:secret@localhost/tmp/secondary_sftp/${_baltrad/datetime:%Y/%m/%d/%H/%M}.interval_l(15)/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.replace('.','_').h5",
+         "create_missing_directories":true,
+         "failover":true
+       }
      }
    },
    "filter":{

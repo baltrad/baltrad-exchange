@@ -28,6 +28,7 @@ from threading import Thread
 from queue import Queue, Full
 from keyczar import keyczar 
 import http.client as httplib
+import pysftp
 import urllib.parse as urlparse
 import logging
 import datetime
@@ -35,6 +36,7 @@ import base64
 import importlib
 from baltrad.exchange.matching import filters
 from baltrad.exchange.matching.filters import filter_manager
+from baltrad.exchange.naming.namer import metadata_namer
 from tempfile import NamedTemporaryFile
 import shutil
 from baltrad.exchange.decorators.decorator import decorator_manager
@@ -223,6 +225,116 @@ class file_copy(publisher_connection):
             if sm.has_storage(s):
                 storage = sm.get_storage(s)
                 storage.store(file, meta)
+
+class connection_info:
+    def __init__(self, host, port, user, password, key, metanamer, create_missing_directories=True, failover=False):
+        self._host = host
+        self._port = port
+        self._user = user
+        self._password = password
+        self._key= key
+        self._namer = metanamer
+        self._create_missing_directories = create_missing_directories
+        self._failover = failover
+    
+    def hostname(self):
+        return self._host
+    
+    def port(self):
+        return self._port
+    
+    def user(self):
+        return self._user
+    
+    def name(self, metadata):
+        return self._namer.name(metadata)
+    
+    def create_missing_directories(self):
+        return self._create_missing_directories
+    
+    def isfailover(self):
+        return self._failover
+    
+    def isbackup(self):
+        return not self.isfailover()
+    
+class sftp_connection(publisher_connection):
+    """Publishes a file over sftp to a remote system. Can both specify primary and secondary connection and if secondary should be used
+    as fail-over or as a mirror.
+    """
+    def __init__(self, backend, arguments):
+        super(sftp_connection, self).__init__(backend)
+        self._primarynamer = None
+        self._secondarynamer = None
+        if "primary" in arguments:
+            self._primary = self.create_connection_info(arguments["primary"])
+        if "secondary" in arguments and arguments["secondary"]:
+            self._secondary = self.create_connection_info(arguments["secondary"])
+
+    def create_connection_info(self, arguments):
+        scheme = "sftp"
+        host = None
+        port = 22
+        user = None
+        password = None
+        key = None
+        namer = None
+        failover = False
+        create_missing_directories = True
+        if "failover" in arguments:
+            failover = arguments["failover"]
+        if "create_missing_directories" in arguments:
+            create_missing_directories = arguments["create_missing_directories"]
+
+        if "uri" in arguments and arguments["uri"]:
+            uri = urlparse.urlparse(arguments["uri"])
+            scheme = uri.scheme
+            host = uri.hostname
+            if uri.port:
+                port = uri.port
+            if uri.username:
+                user = uri.username
+            if uri.password:
+                password = uri.password
+            namer = metadata_namer(uri.path)
+            print("host=%s, port=%d, user='%s', password='%s', key=%s"%(host, port, user, password, key))
+            return connection_info(host, port, user, password, key, namer, create_missing_directories, failover)
+         
+
+    def publish(self, path, meta):
+        primaryname = self._primary.name(meta)
+        secondaryname = None
+        if self._secondary:
+            secondaryname = self._secondary.name(meta)
+
+        primary_failed = True
+                    
+        try:
+            print("Connection to: host=%s, port=%d, user=%s, password = <masked>"%(self._primary._host, self._primary._port, self._primary._user))
+            with pysftp.Connection(self._primary._host, port=self._primary._port, username=self._primary._user, password=self._primary._password) as c:
+                bdir = os.path.dirname(primaryname)
+                fname = os.path.basename(primaryname)
+                logger.info("Connected to %s"%self._primary._host)
+                if self._primary.create_missing_directories():
+                    c.makedirs(bdir)
+                c.chdir(bdir)
+                logger.info("Uploading %s as %s"%(path, fname))
+                c.put(path, fname)
+        except:
+            logger.error("Failed to upload %s to %s"%(primaryname, self._primary.hostname()))
+            primary_failed = True
+                
+        if primary_failed or self._secondary.isbackup():
+            print("Connection to: host=%s, port=%d, user=%s, password = <masked>"%(self._secondary._host, self._secondary._port, self._secondary._user))
+            with pysftp.Connection(self._secondary._host, port=self._secondary._port, username=self._secondary._user, password=self._secondary._password) as c:
+                bdir = os.path.dirname(secondaryname)
+                fname = os.path.basename(secondaryname)
+                logger.info("Connected to %s"%self._secondary._host)
+                if self._secondary.create_missing_directories():
+                    c.makedirs(bdir)
+                c.chdir(bdir)
+                logger.info("Uploading %s as %s"%(path, fname))
+                c.put(path, fname)
 
 class dex_connection(publisher_connection):
     def __init__(self, backend, arguments):

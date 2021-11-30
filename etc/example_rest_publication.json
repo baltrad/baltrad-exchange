@@ -6,7 +6,7 @@
   	 "threads":2,
   	 "queue_size":50
    },
-   "active":true,
+   "active":false,
    "connection":{
      "_comment_":"This is a connection used for publishing files using the rest protocol",
      "class":"baltrad.exchange.net.publishers.rest_connection",

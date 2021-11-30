@@ -27,12 +27,11 @@ from datetime import datetime
 from baltrad.bdbcommon.oh5 import (
     Source,
 )
-
 PATTERN = re.compile("\\$(?:" + "(\\$)|" +
-                     "\\{([_/a-z][_:/a-z0-9 #@+\\-\\.%]*)\\}((.(tolower|toupper|substring|trim|rtrim|ltrim|interval_u|interval_l)(\\((([0-9]+)(,([0-9]+))?)?\\)))*)" +
+                     "\\{([_/a-z][_:/a-z0-9 #@+\\-\\.%]*)\\}((.(tolower|toupper|substring|trim|rtrim|ltrim|interval_u|interval_l|replace)(\\((([0-9]+|'[^']*')(,([0-9]+|'[^']*'))?)?\\)))*)" +
                      ")", flags=re.IGNORECASE)
 
-SUBOP_PATTERN = re.compile(".(tolower|toupper|substring|trim|rtrim|ltrim|interval_u|interval_l)(\\((([0-9]+)(,([0-9]+))?)?\\))", flags=re.IGNORECASE)
+SUBOP_PATTERN = re.compile(".(tolower|toupper|substring|trim|rtrim|ltrim|interval_u|interval_l|replace)(\\((([0-9]+|'[^']*')(,([0-9]+|'[^']*'))?)?\\))", flags=re.IGNORECASE)
 
 BALTRAD_DATETIME_PATTERN=re.compile("^_baltrad/datetime(:[A-Za-z0-9\\-/: _%]+)?$", flags=re.IGNORECASE)
 
@@ -80,6 +79,21 @@ class suboperation_helper:
         if end is not None:
             return self.eval_value[start:end+1]
         return self.eval_value[start:]
+
+    def replace(self, c1, c2):
+        if c1.startswith("'"):
+            c1=c1[1:]
+        if c1.endswith("'"):
+            c1=c1[0:-1]
+        if c2.startswith("'"):
+            c2=c2[1:]
+        if c2.endswith("'"):
+            c2=c2[0:-1]
+            
+        x = self.eval_value
+        if isinstance(x, float) or isinstance(x, int):
+            x=str(x)
+        return x.replace(c1, c2)
 
     def trim(self):
         return self.eval_value.strip()
