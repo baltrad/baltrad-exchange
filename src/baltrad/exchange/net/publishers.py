@@ -246,7 +246,6 @@ class publisher_manager:
                 args = []
                 if "arguments" in conncfg:
                     args = conncfg["arguments"]
-                #connection = self.create(conncfg["class"], backend, args)
                 connection = connection_manager.from_conf(backend, conncfg["class"], args)
                 connections.append(connection)
 
