@@ -1,0 +1,41 @@
+{
+"publication": {
+   "_comment_":"Usually publications should use this publisher. Extra arguments is number of threads and queue_size.",
+   "name":"SCP file to remote server",
+   "class":"baltrad.exchange.net.publishers.standard_publisher",
+   "extra_arguments": {
+  	 "threads":1,
+  	 "queue_size":50
+   },
+   "active":true,
+   "connection":{
+     "_comment_":"This is a connection used when publishing files to ftp server using a failover",
+     "class":"baltrad.exchange.net.connections.simple_connection",
+     "arguments":{
+       "adaptor": { "class":"baltrad.exchange.net.adaptors.scp_adaptor",
+          "arguments": {
+            "uri":"scp://sftpuploader:secret@localhost:/tmp/primary_scp/${_baltrad/datetime:%Y/%m/%d/%H/%M}.interval_l(15)/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.replace('.','_').h5",
+            "create_missing_directories":true
+          }
+       }
+     }
+   },
+   "filter":{
+  	 "filter_type": "and_filter", 
+  	 "value": [
+  	   {"filter_type": "attribute_filter", 
+  	    "name": "_bdb/source_name", 
+        "operation": "in", 
+        "value_type": "string", 
+        "value": ["sehem","seang"]}, 
+  	   {"filter_type": "attribute_filter", 
+        "name": "/what/object", 
+        "operation": "=", 
+        "value_type": "string", 
+        "value": ["SCAN"]}
+    ]
+  },
+  "decorators":[
+  ]
+}
+}

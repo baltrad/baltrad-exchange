@@ -33,6 +33,8 @@ import uuid
 import pysftp
 import ftplib
 import shutil
+from paramiko import SSHClient
+from scp import SCPClient
 
 from baltrad.exchange.naming.namer import metadata_namer
 from baltrad.exchange.client import rest
@@ -340,7 +342,46 @@ class sftp_adaptor(baseuri_adaptor):
             c.chdir(bdir)
             logger.info("Uploading %s as %s to %s"%(path, fname, self.hostname()))
             c.put(path, fname)
-            
+
+class scp_adaptor(baseuri_adaptor):
+    """Publishes files over scp
+    """
+    def __init__(self, backend, aid, arguments):
+        """Constructor
+        :param backend: The backend
+        :param aid: Id for this adaptor
+        :param arguments: Dictionary containg at least:
+         {
+           "uri":"....",
+           "create_missing_directory":true
+         }
+        """
+        super(scp_adaptor, self).__init__(backend, aid, arguments)
+        
+    def publish(self, path, meta):
+        """Publishes the file using sftp.
+        :param file: path to file that should be published
+        :param meta: the meta object for all metadata of file
+        """
+        ssh = None
+        scp = None
+        try:
+            ssh = SSHClient()
+            ssh.load_system_host_keys()
+            ssh.connect(self.hostname(), self.port(), self.username(), self.password());
+            scp = SCPClient(ssh.get_transport())
+            publishedname = self.name(meta)
+            if self.create_missing_directories():
+                dirname = os.path.dirname(publishedname)
+                ssh.exec_command("test -d %s || mkdir -p %s"%(dirname, dirname))
+            scp.put(path, publishedname)
+        finally:
+            if scp:
+                try:
+                    scp.close()
+                except:
+                    pass
+
 class ftp_adaptor(baseuri_adaptor):
     """Publishes files over ftp
     """
