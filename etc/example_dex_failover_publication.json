@@ -1,27 +1,32 @@
 {
 "publication": {
    "_comment_":"Usually publications should use this publisher. Extra arguments is number of threads and queue_size.",
-   "name":"FTP file to remote server with failover",
+   "name":"DEX publishing with failover to a ftp server for later distribution",
    "class":"baltrad.exchange.net.publishers.standard_publisher",
    "extra_arguments": {
   	 "threads":1,
   	 "queue_size":50
    },
-   "active":true,
+   "active":false,
    "connection":{
-     "_comment_":"This is a connection used when publishing files to ftp server using a failover",
+     "_comment_":"This is a connection used when publishing files to a dex server",
      "class":"baltrad.exchange.net.connections.failover_connection",
      "arguments":{
        "adaptors":[
-         { "class":"baltrad.exchange.net.adaptors.ftp_adaptor",
+         { "class":"baltrad.exchange.net.adaptors.dex_adaptor",
            "arguments": {
-             "uri":"ftp://sftpuploader:secret@localhost/tmp/primary_ftp/${_baltrad/datetime:%Y/%m/%d/%H/%M}.interval_l(15)/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.replace('.','_').h5",
-             "create_missing_directories":true
+             "address":"http://localhost:8080",
+             "crypto":{
+               "sign":true,
+               "libname":"keyczar",
+               "nodename":"anders-nzxt",
+               "privatekey":"/opt/baltrad2/etc/bltnode-keys/anders-nzxt.priv"
+             }         
            }
          },
          { "class":"baltrad.exchange.net.adaptors.ftp_adaptor",
            "arguments": {
-             "uri":"ftp://sftpuploader:secret@localhost/tmp/secondary_ftp/${_baltrad/datetime:%Y/%m/%d/%H/%M}.interval_l(15)/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.replace('.','_').h5",
+             "uri":"ftp://sftpuploader:secret@localhost/tmp/dex_failover/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.replace('.','_').h5",
              "create_missing_directories":true
            }
          }

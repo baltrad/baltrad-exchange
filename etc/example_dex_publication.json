@@ -1,23 +1,29 @@
 {
 "publication": {
    "_comment_":"Usually publications should use this publisher. Extra arguments is number of threads and queue_size.",
-   "name":"Inject files into DEX",
+   "name":"Simple DEX publishing simulating old behaviour except that we don't keep track of redirect information",
    "class":"baltrad.exchange.net.publishers.standard_publisher",
    "extra_arguments": {
-  	 "threads":2,
+  	 "threads":1,
   	 "queue_size":50
    },
    "active":false,
    "connection":{
-     "_comment_":"This is a connection used for publishing files using the dex protocol",
-     "class":"baltrad.exchange.net.publishers.dex_connection",
+     "_comment_":"This is a connection used when publishing files to a dex server",
+     "class":"baltrad.exchange.net.connections.simple_connection",
      "arguments":{
-       "address":"http://localhost:8080",
-       "crypto":{
-         "sign":true,
-         "libname":"keyczar",
-         "nodename":"anders-nzxt",
-         "privatekey":"/opt/baltrad2/etc/bltnode-keys/anders-nzxt.priv"
+       "adaptor":{
+	     "id":"dex adaptor to localhost",
+         "class":"baltrad.exchange.net.adaptors.dex_adaptor",
+         "arguments": {
+           "address":"http://localhost:8080",
+           "crypto":{
+             "sign":true,
+             "libname":"keyczar",
+             "nodename":"anders-nzxt",
+             "privatekey":"/opt/baltrad2/etc/bltnode-keys/anders-nzxt.priv"
+           }         
+         }
        }
      }
    },
@@ -37,6 +43,6 @@
     ]
   },
   "decorators":[
-  ]  
+  ]
 }
 }

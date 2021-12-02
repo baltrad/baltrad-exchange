@@ -113,6 +113,7 @@ class SimpleBackend(backend.Backend):
         files = glob.glob("%s/*.json"%d)
         
         for f in files:
+            logger.info("Processing configuration file: %s"%f)
             with open(f,"r") as fp:
                 data = json.load(fp)
                 if "publication" in data:

@@ -8,16 +8,22 @@
    },
    "active":false,
    "connection":{
-     "_comment_":"This is a connection used for publishing files using the rest protocol",
-     "class":"baltrad.exchange.net.publishers.rest_connection",
+     "_comment_":"This is a connection used for publishing files using the rest protocol using a simple connection. No failover or similar.",
+     "class":"baltrad.exchange.net.connections.simple_connection",
      "arguments":{
-       "address":"https://localhost:8091",
-       "protocol_version":"1.0",
-       "crypto":{
-         "sign":true,
-         "libname":"keyczar",
-         "nodename":"anders-nzxt",
-         "privatekey":"/opt/baltrad2/etc/bltnode-keys/anders-nzxt.priv"
+       "adaptor":{
+         "id":"rest-adaptor 1",
+         "class":"baltrad.exchange.net.adaptors.rest_adaptor",
+         "arguments":{
+           "address":"https://localhost:8089",
+       	   "protocol_version":"1.0",
+       	   "crypto":{
+             "sign":true,
+             "libname":"keyczar",
+             "nodename":"anders-nzxt",
+             "privatekey":"/opt/baltrad2/etc/bltnode-keys/anders-nzxt.priv"
+           }
+         }
        }
      }
    },   

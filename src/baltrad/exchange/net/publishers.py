@@ -41,8 +41,9 @@ from baltrad.exchange.naming.namer import metadata_namer
 from tempfile import NamedTemporaryFile
 import shutil
 from baltrad.exchange.decorators.decorator import decorator_manager
+from baltrad.exchange.net.connections import connection_manager
 
-logger = logging.getLogger("baltrad.exchange.server.backend")
+logger = logging.getLogger("baltrad.exchange.net.publishers")
 
 ##
 # Base class used by all publishers
@@ -197,321 +198,9 @@ class standard_publisher(publisher):
         for t in self._threads:
             t.join()
 
-
-class publisher_connection(object):
-    def __init__(self, backend):
-        self._backend = backend
-    
-    def publish(self, path, meta):
-        pass
-    
-    def get_backend(self):
-        return self._backend
-    
-class file_copy(publisher_connection):
-    """Publishes a file to the file system. Either by using specific rule or using a file storage
-    """
-    def __init__(self, backend, arguments):
-        """Constructor
-        :param storage: The storage
-        """
-        super(file_copy, self).__init__(backend)
-        self._storages = []
-        if "file_storage" in arguments:
-            self._storages = arguments["file_storage"]
-    
-    def publish(self, file, meta):
-        sm = self.get_backend().get_storage_manager()
-        for s in self._storages:
-            if sm.has_storage(s):
-                storage = sm.get_storage(s)
-                storage.store(file, meta)
-
-class adapter(object):
-    def __init__(self, host, metanamer, create_missing_directories=True, failover=False):
-        super(adapter, self).__init__()
-        self._host = host
-        self._namer = metanamer
-        self._create_missing_directories = create_missing_directories
-        self._failover = failover
-
-    def hostname(self):
-        return self._host
-
-    def name(self, metadata):
-        return self._namer.name(metadata)
-    
-    def create_missing_directories(self):
-        return self._create_missing_directories
-    
-    def isfailover(self):
-        return self._failover
-    
-    def isbackup(self):
-        return not self.isfailover()
-
-    def publish(self, path, meta):
-        raise Exception("Not implemented")
-
-class sftp_adapter(adapter):
-    def __init__(self, host, port, user, password, key, metanamer, create_missing_directories=True, failover=False):
-        super(sftp_adapter, self).__init__(host, metanamer, create_missing_directories, failover)
-        self._port = port
-        self._user = user
-        self._password = password
-        self._key= key
-    
-    def port(self):
-        return self._port
-    
-    def user(self):
-        return self._user
-    
-    def password(self):
-        return self._password
-
-    def publish(self, path, meta):
-        publishedname = self.name(meta)
-        logger.debug("sftp_adapter: connecting to: host=%s, port=%d, user=%s"%(self.hostname(), self.port(), self.user()))
-        with pysftp.Connection(self.hostname(), port=self.port(), username=self.user(), password=self.password()) as c:
-            bdir = os.path.dirname(publishedname)
-            fname = os.path.basename(publishedname)
-            logger.info("Connected to %s"%self.hostname())
-            if self.create_missing_directories():
-                c.makedirs(bdir)
-            c.chdir(bdir)
-            logger.info("Uploading %s as %s to %s"%(path, fname, self.hostname()))
-            c.put(path, fname)
-
-class ftp_adapter(adapter):
-    def __init__(self, host, port, user, password, metanamer, create_missing_directories=True, failover=False):
-        super(ftp_adapter, self).__init__(host, metanamer, create_missing_directories, failover)
-        self._port = port
-        self._user = user
-        self._password = password
-    
-    def port(self):
-        return self._port
-    
-    def user(self):
-        return self._user
-    
-    def password(self):
-        return self._password
-
-    def publish(self, path, meta):
-        publishedname = self.name(meta)
-        print("ftp_adapter: connecting to: host=%s, port=%d, user=%s"%(self.hostname(), self.port(), self.user()))
-        bdir = os.path.dirname(publishedname)
-        fname = os.path.basename(publishedname)
-        print("bdir=%s, fname=%s"%(bdir, fname))
-        ftp = self.connect()
-        if bdir != "/":
-            try:
-                logger.info("CWD: %s"%bdir)
-                ftp.cwd(bdir)
-            except ftplib.Error as e :
-                if self.create_missing_directories():
-                    ftp.mkd(bdir)
-                    ftp.cwd(bdir)
-                else:
-                    raise e
-        try:
-            ftp.storbinary("STOR %s"%fname, open(path, "rb"))
-            logger.info("Published %s to %s"%(fname, self.hostname()))
-        finally:
-            ftp.quit()
-        
-    ##
-    # Connects to remote server
-    def connect(self):
-        ftp = ftplib.FTP(self.hostname())
-        ftp.login(self._user, self._password)
-        return ftp
-        
-class uri_connection(publisher_connection):
-    """Publishes a file over sftp to a remote system. Can both specify primary and secondary connection and if secondary should be used
-    as fail-over or as a mirror.
-    """
-    def __init__(self, backend, arguments):
-        super(uri_connection, self).__init__(backend)
-        self._primary = None
-        self._secondary = None
-        if "primary" in arguments:
-            self._primary = self.create_connection_adapter(arguments["primary"])
-        if "secondary" in arguments and arguments["secondary"]:
-            self._secondary = self.create_connection_adapter(arguments["secondary"])
-
-    def create_connection_adapter(self, arguments):
-        scheme = "sftp"
-        host = None
-        port = 22
-        user = None
-        password = None
-        key = None
-        namer = None
-        failover = False
-        create_missing_directories = True
-        if "failover" in arguments:
-            failover = arguments["failover"]
-        if "create_missing_directories" in arguments:
-            create_missing_directories = arguments["create_missing_directories"]
-
-        if "uri" in arguments and arguments["uri"]:
-            uri = urlparse.urlparse(arguments["uri"])
-            scheme = uri.scheme
-            host = uri.hostname
-            if uri.port:
-                port = uri.port
-            if uri.username:
-                user = uri.username
-            if uri.password:
-                password = uri.password
-            namer = metadata_namer(uri.path)
-            if scheme == "sftp":
-                return sftp_adapter(host, port, user, password, key, namer, create_missing_directories, failover)
-            elif scheme == "ftp":
-                return ftp_adapter(host, port, user, password, namer, create_missing_directories, failover)
-
-    def publish(self, path, meta):
-        primary_failed=False
-        try:
-            self._primary.publish(path, meta)
-        except:
-            logger.exception("Failed to upload %s to %s"%(self._primary.name(meta), self._primary.hostname()))
-            primary_failed=True
-        
-        if self._secondary and (primary_failed or self._secondary.isbackup()):
-            try:
-                self._secondary.publish(path, meta)
-            except:
-                logger.exception("Failed to upload %s to %s"%(self._secondary.name(meta), self._secondary.hostname()))
-
-class dex_connection(publisher_connection):
-    def __init__(self, backend, arguments):
-        """Constructor
-        :param storage: The storage
-        """
-        super(dex_connection, self).__init__(backend)
-        self._address = None
-        self._nodename = None
-        self._privatekey = None
-        if "crypto" not in arguments:
-            raise RuntimeError("Must provide crypto object when initializing a dex connection")
-        if "address" not in arguments:
-            raise RuntimeError("Must provide address when initializing a dex connection")
-        
-        self._address = arguments["address"]
-        
-        cr = arguments["crypto"]
-        if "libname" in cr and cr["libname"] != "keyczar":
-            raise RuntimeError("Only valid crypto type for dex protocol is keyczar")
-        
-        self._privatekey = cr["privatekey"]
-        
-        if not os.path.exists(self._privatekey):
-            raise RuntimeError("Keyczar private key doesn't exist or is not readable: %s"%self._privatekey)
-        self._nodename = cr["nodename"]
-        
-        self._signer = keyczar.Signer.Read(self._privatekey)
-        
-    def _generate_headers(self, uri):
-        datestr = datetime.datetime.now().strftime("%a, %e %B %Y %H:%M:%S")
-        contentMD5 = base64.b64encode(uri.encode("utf-8"))
-        message = (b"POST" + b'\n' + uri.encode("utf-8") + b'\n' + b"application/x-hdf5" + b'\n' + contentMD5 + b'\n' + datestr.encode("utf-8"))
-        signature = self._signer.Sign(message)
-        headers = {"Node-Name": self._nodename, 
-                   "Content-Type": "application/x-hdf5",
-                   "Content-MD5": contentMD5, 
-                   "Date": datestr, 
-                   "Authorization": self._nodename + ':' + signature}
-        return headers
-  
-    def _split_uri(self, uri):
-        urlparts = urlparse.urlsplit(uri)
-        host = urlparts[1]
-        query = urlparts[2]    
-        return (host, query)
-  
-    def _post(self, host, query, data, headers):
-        conn = httplib.HTTPConnection(host)
-        try:
-            conn.request("POST", query, data, headers)
-            response = conn.getresponse()
-        finally:
-            conn.close();
-      
-        return response.status, response.reason, response.read()
-  
-    def publish(self, path, meta):
-        uri = "%s/BaltradDex/post_file.htm"%self._address
-        (host, query) = self._split_uri(uri)
-        headers = self._generate_headers(uri)
- 
-        fp = open(path, 'rb')
-    
-        try:
-            return self._post(host, query, fp, headers)
-        finally:
-            fp.close()    
-
-class rest_connection(publisher_connection):
-    def __init__(self, backend, arguments):
-        """Constructor
-        """
-        super(rest_connection, self).__init__(backend)
-        self._address = None
-        self._nodename = None
-        self._privatekey = None
-        self._version = "1.0"
-
-        if "crypto" not in arguments:
-            raise RuntimeError("Must provide crypto object when initializing a rest connection")
-        
-        if "address" not in arguments:
-            raise RuntimeError("Must provide address when initializing a rest connection")
-
-        cr = arguments["crypto"]
-        if "libname" in cr and cr["libname"] != "keyczar":
-            raise RuntimeError("Only valid crypto type for dex protocol is keyczar")
-        
-        self._privatekey = cr["privatekey"]
-        if not os.path.exists(self._privatekey):
-            raise RuntimeError("Keyczar private key doesn't exist or is not readable: %s"%self._privatekey)
-
-        self._nodename = cr["nodename"]
-        self._address = arguments["address"]
-        
-        if "version" in arguments:
-            self._version = arguments["version"]
-                
-        self._signer = keyczar.Signer.Read(self._privatekey)
-            
-    def publish(self, path, meta):
-        auth = rest.KeyczarAuth(self._privatekey, self._nodename)
-        server = rest.RestfulServer(self._address, auth)
-        with open(path, "rb") as data:
-            entry = server.store(data)
-
 class publisher_manager:
     def __init__(self):
         pass
-
-    @classmethod
-    def create(self, clz, backend, arguments):
-        """Creates an instance of clz with specified arguments
-        :param clz: class name specified as <module>.<classname>
-        :param arguments: a list of arguments that should be used to initialize the class       
-        """
-        if clz.find(".") > 0:
-            logger.info("Creating publisher connection '%s'"%clz)
-            lastdot = clz.rfind(".")
-            module = importlib.import_module(clz[:lastdot])
-            classname = clz[lastdot+1:]
-            print("%s"%str(arguments))
-            return getattr(module, classname)(backend, arguments)
-        else:
-            raise Exception("Must specify class as module.class")
 
     @classmethod
     def create_publisher(self, name, clz, backend, active, filter, connections, decorators, extra_arguments):
@@ -524,7 +213,6 @@ class publisher_manager:
             lastdot = clz.rfind(".")
             module = importlib.import_module(clz[:lastdot])
             classname = clz[lastdot+1:]
-            print("%s"%str(extra_arguments))
             return getattr(module, classname)(backend, name, active, filter, connections, decorators, extra_arguments)
         else:
             raise Exception("Must specify class as module.class")
@@ -558,7 +246,8 @@ class publisher_manager:
                 args = []
                 if "arguments" in conncfg:
                     args = conncfg["arguments"]
-                connection = self.create(conncfg["class"], backend, args)
+                #connection = self.create(conncfg["class"], backend, args)
+                connection = connection_manager.from_conf(backend, conncfg["class"], args)
                 connections.append(connection)
 
         if "decorators" in config:

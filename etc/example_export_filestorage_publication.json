@@ -1,7 +1,7 @@
 {
 "publication": {
    "_comment_":"Usually publications should use this publisher. Extra arguments is number of threads and queue_size.",
-   "name":"SFTP file to remote server",
+   "name":"Copy file to storage publication",
    "class":"baltrad.exchange.net.publishers.standard_publisher",
    "extra_arguments": {
   	 "threads":1,
@@ -9,14 +9,16 @@
    },
    "active":false,
    "connection":{
-     "_comment_":"This is a connection used when publishing files to ftp server using a failover",
+     "_comment_":"Export files to a storage as a publisher.",
      "class":"baltrad.exchange.net.connections.simple_connection",
      "arguments":{
-       "adaptor": { "class":"baltrad.exchange.net.adaptors.sftp_adaptor",
-          "arguments": {
-            "uri":"sftp://sftpuploader:secret@localhost/tmp/primary_sftp/${_baltrad/datetime:%Y/%m/%d/%H/%M}.interval_l(15)/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.replace('.','_').h5",
-            "create_missing_directories":true
-          }
+       "adaptor":{
+	     "class":"baltrad.exchange.net.adaptors.storage_adaptor",
+	     "arguments":{
+	     	"file_storage":[
+    	    	 "exporting_storage"
+       	 	]
+       	 }
        }
      }
    },
@@ -36,6 +38,11 @@
     ]
   },
   "decorators":[
+    { "decorator":"rave_be_decorator.keep_quantities_decorator",
+      "arguments":[
+      	["DBZH", "VRADH", "TH"]
+      ]
+    }
   ]
 }
 }
