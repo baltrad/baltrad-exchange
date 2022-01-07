@@ -25,7 +25,8 @@
 from werkzeug import serving, exceptions as wzexc
 import urllib.parse as urlparse
 
-from baltrad.exchange.web import auth, routing, util as webutil
+from baltrad.exchange.web import auth, routing
+from baltrad.exchange.web import util as webutil
 from baltrad.exchange.server import backend
 
 import logging

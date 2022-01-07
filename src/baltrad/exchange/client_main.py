@@ -27,7 +27,7 @@ import logging
 import os
 import sys
 
-from baltrad.exchange import optparse
+from baltrad.exchange import exchange_optparse
 from baltrad.exchange.client import cmd,rest
 
 def extract_command(args):
@@ -41,7 +41,7 @@ def extract_command(args):
     return command, result_args
 
 def run():
-    optparser = optparse.create_parser()
+    optparser = exchange_optparse.create_parser()
     usgstr = "%s COMMAND [ARGS]\n" % (os.path.basename(sys.argv[0]))
     usgstr = usgstr + "\nwhere COMMAND can be one of:\n"
     for k in cmd.Command.get_commands():

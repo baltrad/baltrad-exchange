@@ -31,7 +31,7 @@ import sys
 import daemon
 from daemon.pidfile import TimeoutPIDLockFile
 import lockfile
-from baltrad.exchange import config,optparse
+from baltrad.exchange import config,exchange_optparse
 from baltrad.exchange.web import app
 
 from cherrypy import wsgiserver
@@ -48,7 +48,7 @@ def excepthook(*exc_info):
     sys.exit(1)
 
 def create_optparser():
-    optparser = optparse.create_parser()
+    optparser = exchange_optparse.create_parser()
     optparser.set_usage(
         "%s [--conf=CONFFILE] [ARGS]" % (
             os.path.basename(sys.argv[0])
