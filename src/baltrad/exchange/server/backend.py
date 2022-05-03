@@ -27,6 +27,7 @@ from baltrad.exchange.server import sqlbackend
 from baltrad.exchange.matching import filters, metadata_matcher
 from baltrad.exchange.storage import storages
 from baltrad.exchange.net import publishers
+from baltrad.exchange import auth
 
 import glob
 import json
@@ -76,10 +77,10 @@ class SimpleBackend(backend.Backend):
     :param engine_or_url: an SqlAlchemy engine or a database url
     :param storage: a `~.storage.FileStorage` instance to use.
     """
-    def __init__(self, confdirs, nodename, privatekey, odim_source_file):
+    def __init__(self, confdirs, nodename, authmgr, odim_source_file):
         self.confdirs = confdirs
         self.nodename = nodename
-        self.privatekey = privatekey
+        self.authmgr = authmgr
         
         self.handled_files = HandledFiles()
         
@@ -99,7 +100,9 @@ class SimpleBackend(backend.Backend):
     def get_storage_manager(self):
         return self.storage_manager    
 
-     
+    def get_auth_manager(self):
+        return self.authmgr
+
     def initialize_configuration(self, confdirs):
         for d in confdirs:
             logger.info("Processing directory: %s" % d)
@@ -121,10 +124,8 @@ class SimpleBackend(backend.Backend):
                     self.publications.append(p)
                 elif "subscription" in data:
                     self.subscriptions.append(data["subscription"])
-                    #if "crypto" in data["subscription"]:
-                    #    c = data["subscription"]["crypto"]
-                    #    if "libname" in c and c["libname"] == "keyczar":
-                    #        pass
+                    if "crypto" in data["subscription"]:
+                        self.authmgr.add_key_config(data["subscription"]["crypto"])
                 
                 elif "storage" in data:
                     s = self.storage_manager.from_value(data["storage"])
@@ -140,7 +141,7 @@ class SimpleBackend(backend.Backend):
         
         fconf = conf.filter("baltrad.exchange.server.")
         
-        privatekey = conf.get("baltrad.exchange.key.private", default="/etc/baltrad/exchange/keys/%s.priv"%nodename)
+        authmgr = auth.auth_manager.from_conf(conf)
         
         configdirs = fconf.get_list("config.dirs", default="/etc/baltrad/exchange/config", sep=",") #fconf.get("config.dirs", default="/etc/baltrad/exchange/config")
 
@@ -148,7 +149,7 @@ class SimpleBackend(backend.Backend):
         return SimpleBackend(
             configdirs,
             nodename,
-            privatekey,
+            authmgr,
             odim_source_file
           )
 
@@ -164,12 +165,6 @@ class SimpleBackend(backend.Backend):
             return None
         
         for subscription in self.subscriptions: # Should only be passive subscriptions here. Active subscriptions should be handled in separate threads.
-            #if credentials is not None:
-            #    if "crypto" in subscription:
-            #        c = subscription["crypto"]
-            #        if c["libname"] == "keyzcar":
-            #            if len(credentials) > 1 and credentials[0] == "keyczar":
-            #                ka = auth.KeyczarAuth()
             if "filter" in subscription:
                 filter_ = self.filter_manager.from_value(subscription["filter"])
                 matcher = metadata_matcher.metadata_matcher()

@@ -67,4 +67,10 @@ class Backend(object):
         :return the storage manager
         """
         raise NotImplementedError()    
-        
+    
+    @abstractmethod
+    def get_auth_manager(self):
+        """Returns the auth manager
+        :return the auth manager
+        """
+        raise NotImplementedError()    

@@ -28,9 +28,10 @@ setuptools.setup(name="baltrad.exchange",
     },
     install_requires=REQUIRED_PACKAGES,
     entry_points = {
-        "baltrad.exchange.web.auth": [
-            "noauth = baltrad.exchange.web.auth:NoAuth",
-            "keyczar = baltrad.exchange.web.auth:KeyczarAuth",
+        "baltrad.exchange.auth": [
+            "noauth = baltrad.exchange.auth:NoAuth",
+            "keyczar = baltrad.exchange.auth.keyczarauth:KeyczarAuth",
+            "tink = baltrad.exchange.auth.tinkauth:TinkAuth"
         ],
         "baltrad.exchange.client.commands": [
             "store = baltrad.exchange.client.cmd:StoreFile",

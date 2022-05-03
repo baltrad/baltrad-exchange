@@ -61,11 +61,15 @@ def run():
         help="be verbose",
     )
     optparser.add_option(
-        "-k", "--keyczar-key", dest="keyczar_key",
-        help="path to keyczar key to sign messages with"
+        "-t", "--type", dest="type", default="tink",
+        help="Type of encryption to use, currently keyczar or tink. Default: tink")
+    
+    optparser.add_option(
+        "-k", "--key", dest="key",
+        help="path to public key to sign messages with"
     )
     optparser.add_option(
-        "-n", "--keyczar-name", dest="keyczar_name",
+        "-n", "--name", dest="name",
         help="the name to use (if it differs from the key path basename)"
     )
 
@@ -94,11 +98,20 @@ def run():
     logging.basicConfig(format="%(message)s")
     if opts.verbose:
         logging.getLogger().setLevel(logging.DEBUG)
-
-    if opts.keyczar_key:
-        auth = rest.KeyczarAuth(opts.keyczar_key, opts.keyczar_name)
-    else:
-        auth = rest.NoAuth()
+    
+    if opts.key:
+        if opts.type=="keyczar":
+            auth = rest.KeyczarAuth(opts.key, opts.name)
+        elif opts.type=="tink":
+            auth = rest.TinkAuth(opts.key, opts.name)
+        else:
+            auth = rest.NoAuth()
+    
+    #
+    #if opts.keyczar_key:
+    #    auth = rest.KeyczarAuth(opts.keyczar_key, opts.keyczar_name)
+    #else:
+    #    auth = rest.NoAuth()
 
     database = rest.RestfulServer(opts.server_url, auth)
     

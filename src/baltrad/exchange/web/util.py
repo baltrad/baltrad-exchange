@@ -25,12 +25,8 @@ else:
     import urllib.parse as urlparse
 
 
-from werkzeug.wrappers import (
-    BaseRequest,
-    BaseResponse,
-    CommonRequestDescriptorsMixin,
-    CommonResponseDescriptorsMixin,
-)
+from werkzeug.wrappers import Request as WerkzeugRequest
+from werkzeug.wrappers import Response as WerkzeugResponse
 
 from werkzeug.exceptions import HTTPException
 
@@ -52,11 +48,11 @@ class JsonRequestMixin(object):
         except ValueError:
             raise HttpBadRequest("invalid json: " + self.data)
 
-class Request(BaseRequest,
-              CommonRequestDescriptorsMixin,
+class Request(WerkzeugRequest,
               JsonRequestMixin):
     def __init__(self, environ):
-        BaseRequest.__init__(self, environ)
+        WerkzeugRequest.__init__(self, environ)
+
 
 class RequestContext(object):
     def __init__(self, request, backend):
@@ -67,28 +63,25 @@ class RequestContext(object):
     def make_url(self, path):
         return "/" + path
 
-class Response(BaseResponse,
-               CommonResponseDescriptorsMixin):
+class Response(WerkzeugResponse):
     def __init__(self, response, content_type="text/plain", status=httplibclient.OK):
-        BaseResponse.__init__(
+        WerkzeugResponse.__init__(
             self, response,
             content_type=content_type,
             status=status
         )
 
-class NoContentResponse(BaseResponse,
-                        CommonResponseDescriptorsMixin):
+class NoContentResponse(WerkzeugResponse):
     
     def __init__(self):
-        BaseResponse.__init__(self, None, status=httplibclient.NO_CONTENT)
+        WerkzeugResponse.__init__(self, None, status=httplibclient.NO_CONTENT)
 
-class JsonResponse(BaseResponse,
-                   CommonResponseDescriptorsMixin):
+class JsonResponse(WerkzeugResponse):
     def __init__(self, response, status=httplibclient.OK):
         if not isinstance(response, str):
             response = json.dumps(response, allow_nan=False, sort_keys=True)
         
-        BaseResponse.__init__(
+        WerkzeugResponse.__init__(
             self, response,
             content_type="application/json",
             status=status,
@@ -124,7 +117,7 @@ class HttpUnauthorized(HTTPException):
             challenge = [challenge]
         self._challenges = challenge
     
-    def get_headers(self, environ):
+    def get_headers(self, environ, scope = None):
         headers = HTTPException.get_headers(self, environ)
         for challenge in self._challenges:
             headers.append(("www-authenticate", challenge))

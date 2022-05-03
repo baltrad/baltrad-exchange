@@ -25,8 +25,10 @@
 from werkzeug import serving, exceptions as wzexc
 import urllib.parse as urlparse
 
-from baltrad.exchange.web import auth, routing
+from baltrad.exchange import auth
+from baltrad.exchange.web import routing
 from baltrad.exchange.web import util as webutil
+from baltrad.exchange.web import auth as webauth
 from baltrad.exchange.server import backend
 
 import logging
@@ -50,6 +52,9 @@ class Application(object):
         except Exception as e:
             logger.exception("Unknown exception")
             raise
+
+    def get_backend(self):
+        return self.backend
     
     def __call__(self, env, start_response):
         request = webutil.Request(env)
@@ -69,8 +74,10 @@ def from_conf(conf):
     """create the entire WSGI application from conf
     this will wrap the application with necessary middleware
     """
+    #auth_mgr = auth.auth_manager.from_conf(conf)
     app = Application.from_conf(conf)
-    authmw = auth.AuthMiddleware.from_conf(app, conf)
+    #authmw = webauth.AuthMiddleware.from_conf(app, conf)
+    authmw = webauth.AuthMiddleware(app, app.get_backend().get_auth_manager())
     return authmw
  
 def serve(uri, app):

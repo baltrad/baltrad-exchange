@@ -3,7 +3,7 @@
   "_comment_":"We expect to receive files matching filter for specified node",
   "nodename":"anders-silent",
   "storage":["default_storage", "none_storage"],
-  "_comment_filter":{
+  "filter":{
   	"filter_type": "and_filter", 
   	"value": [
   		{"filter_type": "attribute_filter", 
@@ -18,25 +18,33 @@
   		 "value": ["SCAN","PVOL"]}
     ]
   },
-  "filter":{
+  "_comment_filter":{
     "filter_type": "attribute_filter", 
   	"name": "/what/object", 
   	"operation": "in", 
   	"value_type": "string", 
   	"value": ["SCAN","PVOL"]
-  },  
+  }, 
   "crypto":{
-    "libname":"keyczar",
-   	"data":{
-   	  "meta":{"name": "anders-nzxt", "purpose": "VERIFY", "type": "DSA_PUB", "encrypted": false, "versions": [{"versionNumber": 1, "status": "PRIMARY", "exportable": false}]},
-      "1":{
-        "p": "AIAAAAAAAAA83Gj325w7M34thouttR2iC-VJk_lYtjUO2d6o9BKZxC9ogS0CEMRnrXMQVyH36LOOW5mRJJqBZE037jq_DtVBqVMVvPdW_kLfuY30MZFK-M-n9VCW3jJzBSwmjyDSFk8Z6-JfW2rhlAX2txiV4EIl5k3PGb6WSmfz", 
-        "q": "AKn5bTyqQto1O0Lg2EDKvE122FTz", 
-        "g": "Ehy7Ch__j1BZ-NbHFKs6WCNAn6Syva4hdMVkSICZnMRPCOsWnOpD9pOWPvY22CZI9SIbjI0FGGGkmLkypR_rMLt0afcQA-n9n7Ujjveipy4IdPN2rthhdnxAl9wumYBfwgs0TSpYdpNPgD3eUJTYxDbFBiJBY_Ze_F9A4xFSy6s", 
-        "y": "T0smX6RRMmcs79ffavbSwv9H3hF9jm9EPZ6BLU1dwnCzT0qCZHS5Gu84hifGFpQtjNDkX2os9yZHktOK0jd8WQNpXSppSzRsD5y4zqZYbnTzJVEJbJPGf5yCBoU2kZufQs2u3lD6HfKJY3TVhPB07yoHOBzoOKkYlGRzSf6Rb9U", 
-        "size": 1024
-      }
+  	"auth":"tink",
+  	"conf":{
+        "name":"localhost",
+        "key": {
+            "primaryKeyId": 1998837241,
+            "key": [
+            {
+                "keyData": {
+                    "typeUrl": "type.googleapis.com/google.crypto.tink.Ed25519PublicKey",
+                    "value": "EiD0P1/b8GxKt34uLNP93WJhiwPemTXubkLRsvxQXhnxIw==",
+                    "keyMaterialType": "ASYMMETRIC_PUBLIC"
+                },
+                "status": "ENABLED",
+                "keyId": 1998837241,
+                "outputPrefixType": "TINK"
+            }
+            ]
+        }
     }
-  }
+  } 
 }
 }

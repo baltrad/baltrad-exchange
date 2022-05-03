@@ -34,7 +34,7 @@ import lockfile
 from baltrad.exchange import config,exchange_optparse
 from baltrad.exchange.web import app
 
-from cherrypy import wsgiserver
+#from cherrypy import wsgiserver
 
 import urllib.parse as urlparse
     
@@ -178,7 +178,16 @@ def run():
     server_uri = conf["baltrad.exchange.uri"]
 
     with daemon_ctx:
-        from cherrypy.wsgiserver.ssl_builtin import BuiltinSSLAdapter
+        try:
+            from cheroot.wsgi import WSGIServer
+        except:
+            from cherrypy.wsgiserver import CherryPyWSGIServer as WSGIServer
+
+        try:
+            from cheroot.ssl.builtin import BuiltinSSLAdapter
+        except:
+            from cherrypy.wsgiserver.ssl_builtin import BuiltinSSLAdapter
+            
         logtype = conf.get("baltrad.exchange.log.type", "logfile")
         logid = conf.get("baltrad.exchange.log.id", "baltrad.exchange")
         configure_logging(opts, logtype, logid, get_logging_level(conf))
@@ -190,7 +199,7 @@ def run():
         nbacklog = cherryconf.get_int("backlog", 5)
         ntimeout = cherryconf.get_int("timeout", 10)
 
-        server = wsgiserver.CherryPyWSGIServer((parsedurl.hostname, parsedurl.port), application,
+        server = WSGIServer((parsedurl.hostname, parsedurl.port), application,
             numthreads=nthreads, request_queue_size=nbacklog, timeout=ntimeout)
         if parsedurl.scheme == "https":
             # Generate test certificate / key by:

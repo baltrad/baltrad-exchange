@@ -37,7 +37,7 @@
         "value": ["SCAN"]}
     ]
   },
-  "decorators":[
+  "__decorators":[
     { "decorator":"rave_be_decorator.keep_quantities_decorator",
       "arguments":[
       	["DBZH", "VRADH", "TH"]

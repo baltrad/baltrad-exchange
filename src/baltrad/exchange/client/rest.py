@@ -29,9 +29,20 @@ import socket
 import urllib.parse as urlparse
 import pkg_resources
 import ssl
+import base64
 
 from http import client as httplibclient
-from keyczar import keyczar
+try:
+    from keyczar import keyczar
+except:
+    pass
+
+try:
+    import tink
+    from tink import cleartext_keyset_handle
+    from tink import signature
+except:
+    pass
 
 class Request(object):
     def __init__(self, method, path, data=None, headers={}):
@@ -122,6 +133,27 @@ class KeyczarAuth(Auth):
         signable = create_signable_string(req)
         signature = self._signer.Sign(signable)
         auth = "exchange-keyczar %s:%s" % (self._key_name, signature)
+        req.headers["authorization"] = auth
+
+class TinkAuth(Auth):
+    """authenicate by signing messages with Tink
+    """
+    def __init__(self, key_path, key_name=None):
+        signature.register()
+        with open(key_path, "rt") as kf:
+            handle = cleartext_keyset_handle.read(tink.JsonKeysetReader(kf.read()))
+            self._signer = handle.primitive(signature.PublicKeySign)
+
+        if key_name:
+            self._key_name = key_name
+        else:
+            self._key_name = os.path.basename(os.path.dirname(key_path))
+
+    def add_credentials(self, req):
+        signable = create_signable_string(req)
+        signature = self._signer.sign(bytes(signable, "utf-8"))
+        signature = str(base64.b64encode(signature), "utf-8")
+        auth = "exchange-tink %s:%s" % (self._key_name, signature)
         req.headers["authorization"] = auth
 
 def create_signable_string(req):

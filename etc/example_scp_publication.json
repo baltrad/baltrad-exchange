@@ -7,7 +7,7 @@
   	 "threads":1,
   	 "queue_size":50
    },
-   "active":true,
+   "active":false,
    "connection":{
      "_comment_":"This is a connection used when publishing files to ftp server using a failover",
      "class":"baltrad.exchange.net.connections.simple_connection",
