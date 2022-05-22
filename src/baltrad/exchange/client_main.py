@@ -99,13 +99,12 @@ def run():
     if opts.verbose:
         logging.getLogger().setLevel(logging.DEBUG)
     
+    auth = rest.NoAuth()
     if opts.key:
         if opts.type=="keyczar":
             auth = rest.KeyczarAuth(opts.key, opts.name)
         elif opts.type=="tink":
             auth = rest.TinkAuth(opts.key, opts.name)
-        else:
-            auth = rest.NoAuth()
     
     #
     #if opts.keyczar_key:

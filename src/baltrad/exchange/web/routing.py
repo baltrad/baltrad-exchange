@@ -59,6 +59,11 @@ URL_MAP = Map(
                 endpoint="handler.post_file"
             ),
         ]),
+        Submount("/BaltradDex", [    # For backward compatibility
+            Rule("/post_file.htm", methods=["POST"],
+                endpoint="handler.post_dex_file"
+            ),
+        ]),
     ],
     converters={
         "uuid": UuidConverter,

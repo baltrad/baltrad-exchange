@@ -74,9 +74,7 @@ def from_conf(conf):
     """create the entire WSGI application from conf
     this will wrap the application with necessary middleware
     """
-    #auth_mgr = auth.auth_manager.from_conf(conf)
     app = Application.from_conf(conf)
-    #authmw = webauth.AuthMiddleware.from_conf(app, conf)
     authmw = webauth.AuthMiddleware(app, app.get_backend().get_auth_manager())
     return authmw
  

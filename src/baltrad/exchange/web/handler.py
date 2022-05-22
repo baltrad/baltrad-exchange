@@ -72,5 +72,12 @@ def post_file(ctx):
         metadata = ctx.backend.store_file(tmp.name, ctx.backend.get_auth_manager().get_credentials(ctx.request))
 
     return Response("", status=httplibclient.OK)
-    #response.headers["Location"] = ctx.make_url("file/" + metadata.bdb_uuid)
-    #return NoContentResponse()
+
+def post_dex_file(ctx):
+    logger.debug("bdb.handler.post_dex_file(ctx)")
+    with NamedTemporaryFile() as tmp:
+        shutil.copyfileobj(ctx.request.stream, tmp)
+        tmp.flush()
+        metadata = ctx.backend.store_file(tmp.name, ctx.backend.get_auth_manager().get_credentials(ctx.request))
+
+    return Response("", status=httplibclient.OK)

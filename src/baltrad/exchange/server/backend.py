@@ -157,8 +157,8 @@ class SimpleBackend(backend.Backend):
         st = time.time()
         meta = self.metadata_from_file(path)
         metadataTime = time.time()
-        
-        logger.info("File with: %s, %s" % (meta.bdb_metadata_hash, meta.bdb_source_name))
+
+        logger.info("Received file: %s, %s, %s %s" % (meta.bdb_metadata_hash, meta.bdb_source_name, meta.what_date, meta.what_time))
         
         if not self.handled_files.add(meta.bdb_metadata_hash):
             logger.info("File recently handled, ignoring it: %s, %s" % (meta.bdb_metadata_hash, meta.bdb_source_name))

@@ -7,7 +7,7 @@
   	 "threads":1,
   	 "queue_size":50
    },
-   "active":false,
+   "active":true,
    "connection":{
      "_comment_":"This is a connection used when publishing files to a dex server",
      "class":"baltrad.exchange.net.connections.simple_connection",
@@ -34,12 +34,12 @@
   	    "name": "_bdb/source_name", 
         "operation": "in", 
         "value_type": "string", 
-        "value": ["sehem","seang"]}, 
+        "value": ["sehem","seang","sella"]}, 
   	   {"filter_type": "attribute_filter", 
         "name": "/what/object", 
-        "operation": "=", 
+        "operation": "in", 
         "value_type": "string", 
-        "value": ["SCAN"]}
+        "value": ["SCAN","PVOL"]}
     ]
   },
   "decorators":[

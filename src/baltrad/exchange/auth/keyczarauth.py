@@ -77,6 +77,7 @@ class KeyczarAuth(coreauth.Auth):
             verifier = self._verifiers[keyname]
         except KeyError:
             raise coreauth.AuthError("no verifier for key: %s" % keyname)
+
         signed_str = self.create_signable_string(req)
         try:
             result = verifier.Verify(signed_str, signature)
@@ -90,8 +91,8 @@ class KeyczarAuth(coreauth.Auth):
 
         See :ref:`doc-rest-authentication` for details.
         """
-        fragments = [req.method, req.path]
-        for key in ("content-md5", "content-type", "date"):
+        fragments = [req.method, req.url]
+        for key in ("content-type", "content-md5", "date"):
             if req.headers.has_key(key):
                 value = req.headers[key].strip()
                 if value:

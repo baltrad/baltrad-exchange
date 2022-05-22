@@ -158,12 +158,17 @@ class dex_adaptor(adaptor):
   
     def _split_uri(self, uri):
         urlparts = urlparse.urlsplit(uri)
+        scheme = urlparts[0]
         host = urlparts[1]
         query = urlparts[2]    
-        return (host, query)
+        return (scheme, host, query)
   
-    def _post(self, host, query, data, headers):
-        conn = httplib.HTTPConnection(host)
+    def _post(self, scheme, host, query, data, headers):
+        if scheme == "https":
+            conn = httplib.HTTPSConnection(host, context = ssl._create_unverified_context())
+        else:
+            conn = httplib.HTTPConnection(host)
+
         try:
             conn.request("POST", query, data, headers)
             response = conn.getresponse()
@@ -178,13 +183,13 @@ class dex_adaptor(adaptor):
         :param meta: the meta object for all metadata of file
         """
         uri = "%s/BaltradDex/post_file.htm"%self._address
-        (host, query) = self._split_uri(uri)
+        (scheme, host, query) = self._split_uri(uri)
         headers = self._generate_headers(uri)
  
         fp = open(path, 'rb')
     
         try:
-            return self._post(host, query, fp, headers)
+            return self._post(scheme, host, query, fp.read(), headers)
         finally:
             fp.close()    
 

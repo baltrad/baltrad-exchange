@@ -85,7 +85,12 @@ class auth_manager(object):
         try:
             provider, credentials = authstr.split(" ")
         except ValueError:
-            raise AuthError("invalid Authorization header: %s" % authstr)
+            if "Node-Name" in req.headers and req.base_url.endswith("post_file.htm"):
+                provider = "exchange-keyczar" # Backward compatibility
+                credentials = authstr
+            else: 
+                raise AuthError("invalid Authorization header: %s" % authstr)
+        
         provider = provider.strip()
         if not provider.startswith("exchange-"):
             raise AuthError(

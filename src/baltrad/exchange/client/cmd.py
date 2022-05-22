@@ -35,7 +35,21 @@ import datetime,time
 from tempfile import NamedTemporaryFile
 
 from http import client as httplibclient
-from keyczar import keyczar
+
+try:
+    from keyczar import keyczar
+except:
+    pass
+
+try:
+    import tink
+    from tink import signature
+    from tink import aead
+    from tink import core
+    from tink import cleartext_keyset_handle
+except:
+    pass
+
 
 class ExecutionError(RuntimeError):
     pass
@@ -172,3 +186,39 @@ class BatchTest(Command):
         minute = int(dtstr[10:12])
         minute = minute - minute%interval
         return datetime.datetime(year,month,mday,hour,minute,0)
+
+class CreateKeys(Command):
+    def update_optionparser(self, parser):
+        signature.register()
+        
+        parser.add_option(
+            "--library", dest="library",
+            help="Library to use for generating key-pair to create. Currently only tink is supported.")
+
+        parser.add_option(
+            "--encryption", dest="encryption", default="ed25519",
+            help="Encryption method to use. Default is: ed25519")
+
+        parser.add_option(
+            "--nodename", dest="nodename",
+            help="Name of the node for this server.")
+        
+    
+    def execute(self, server, opts, args):
+        if not opts.nodename:
+            raise Exception("Must specify --nodename")
+        privkey = "private_%s.json"%opts.nodename
+        pubkey = "public_%s.json"%opts.nodename
+        
+        handle = tink.new_keyset_handle(signature.signature_key_templates.ECDSA_P256)
+        #handle = tink.new_keyset_handle(signature.signature_key_templates.ED25519)
+        public_handle = handle.public_keyset_handle()
+  
+        with open(privkey, "wt") as kf:
+            cleartext_keyset_handle.write(tink.JsonKeysetWriter(kf), handle)
+    
+        with open(pubkey, "wt") as kf:
+            writer = tink.JsonKeysetWriter(kf)
+            cleartext_keyset_handle.write(tink.JsonKeysetWriter(kf), public_handle)
+
+

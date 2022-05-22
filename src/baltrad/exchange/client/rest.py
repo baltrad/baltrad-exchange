@@ -130,7 +130,7 @@ class KeyczarAuth(Auth):
             self._key_name = os.path.basename(key_path)
 
     def add_credentials(self, req):
-        signable = create_signable_string(req)
+        signable = create_keyczar_signable_string(req)
         signature = self._signer.Sign(signable)
         auth = "exchange-keyczar %s:%s" % (self._key_name, signature)
         req.headers["authorization"] = auth
@@ -163,6 +163,20 @@ def create_signable_string(req):
     """
     fragments = [req.method, req.path]
     for key in ("content-md5", "content-type", "date"):
+        if key in req.headers:
+            value = req.headers[key].strip()
+            if value:
+                fragments.append(value)
+
+    return "\n".join(fragments)
+
+def create_keyczar_signable_string(req):
+    """construct a signable string from a :class:`.Request`
+
+    See :ref:`doc-rest-authentication` for details.
+    """
+    fragments = [req.method, req.url]
+    for key in ("content-type", "content-md5", "date"):
         if key in req.headers:
             value = req.headers[key].strip()
             if value:
