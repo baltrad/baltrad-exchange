@@ -109,8 +109,7 @@ class failover_connection(publisher_connection):
             raise Exception("Failed to publish using the failover connection")
 
 class backup_connection(publisher_connection):
-    """Backup connection, expects a list of adaptors in arguments. Where they are tried in 
-    order until one works. 
+    """Backup connection, expects a list of adaptors in arguments. Where all adaptors are run. 
     """
     def __init__(self, backend, arguments):
         super(backup_connection, self).__init__(backend)

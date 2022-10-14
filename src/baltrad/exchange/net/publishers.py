@@ -154,6 +154,10 @@ class standard_publisher(publisher):
         self._queue = Queue(self._queue_size)
 
     def publish(self, file, meta):
+        """Passes on a file to the consumer queue that will be consumed and passed on to the connections.
+        :param file: Actual file to be duplicated and sent.
+        :param meta: The metadata to be verified by the connections
+        """
         tmpfile = NamedTemporaryFile()
         with open(file, "rb") as fp:
             shutil.copyfileobj(fp, tmpfile)
@@ -173,11 +177,15 @@ class standard_publisher(publisher):
             logger.exception("Queue for publisher %s is full."%self.name())
 
     def do_publish(self, tmpfile, meta):
+        """Passes a file to all connections
+        """
         for c in self._connections:
             c.publish(tmpfile.name, meta)
         tmpfile.close()
         
     def consumer(self):
+        """ The consumer called by the individual threads. Will grab one entry from the queue and pass it on to the connections.
+        """
         while True:
             tmpfile, meta = self._queue.get()
             try:

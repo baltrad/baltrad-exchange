@@ -210,8 +210,8 @@ class CreateKeys(Command):
         privkey = "private_%s.json"%opts.nodename
         pubkey = "public_%s.json"%opts.nodename
         
-        handle = tink.new_keyset_handle(signature.signature_key_templates.ECDSA_P256)
-        #handle = tink.new_keyset_handle(signature.signature_key_templates.ED25519)
+        #handle = tink.new_keyset_handle(signature.signature_key_templates.ECDSA_P256)
+        handle = tink.new_keyset_handle(signature.signature_key_templates.ED25519)
         public_handle = handle.public_keyset_handle()
   
         with open(privkey, "wt") as kf:

@@ -26,6 +26,7 @@ from baltrad.exchange import backend
 from baltrad.exchange.server import sqlbackend
 from baltrad.exchange.matching import filters, metadata_matcher
 from baltrad.exchange.storage import storages
+from baltrad.exchange.processor import processors
 from baltrad.exchange.net import publishers
 from baltrad.exchange import auth
 
@@ -89,7 +90,7 @@ class SimpleBackend(backend.Backend):
         self.subscriptions = []
         self.publications = []
         self.storage_manager = storages.storage_manager()
-        
+        self.processor_manager = processors.processor_manager()
         self.odim_source_file = odim_source_file
         self.source_manager = sqlbackend.SqlAlchemySourceManager()
         self.source_manager.add_sources(self.read_bdb_sources(self.odim_source_file))
@@ -122,6 +123,7 @@ class SimpleBackend(backend.Backend):
                 if "publication" in data:
                     p = publisher_manager.from_conf(data["publication"], self)
                     self.publications.append(p)
+
                 elif "subscription" in data:
                     self.subscriptions.append(data["subscription"])
                     if "crypto" in data["subscription"]:
@@ -131,6 +133,11 @@ class SimpleBackend(backend.Backend):
                     s = self.storage_manager.from_value(data["storage"])
                     logger.info("Adding storage: %s of type %s"%(s.name(), s.type))
                     self.storage_manager.add_storage(s)
+                
+                elif "processor" in data:
+                    p = processors.processor_manager.from_conf(data["processor"], self)
+                    logger.info("Adding processor: %s"%(p.name()))
+                    self.processor_manager.add_processor(p)
 
     @classmethod
     def from_conf(cls, conf):
@@ -173,10 +180,13 @@ class SimpleBackend(backend.Backend):
                         stores = subscription["storage"]
                         if not isinstance(stores, list):
                             stores = [stores]
+                            
                         for storage in stores:
                             self.storage_manager.store(storage, path, meta)
-                    self.publish(path, meta)
 
+                    self.publish(path, meta)
+                    
+                    self.processor_manager.process(path, meta)
         return meta
 
     def publish(self, path, meta):
