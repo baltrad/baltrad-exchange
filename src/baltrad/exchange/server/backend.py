@@ -27,6 +27,7 @@ from baltrad.exchange.server import sqlbackend
 from baltrad.exchange.matching import filters, metadata_matcher
 from baltrad.exchange.storage import storages
 from baltrad.exchange.processor import processors
+from baltrad.exchange.server.subscription import subscription_manager
 from baltrad.exchange.net import publishers
 from baltrad.exchange import auth
 
@@ -125,9 +126,8 @@ class SimpleBackend(backend.Backend):
                     self.publications.append(p)
 
                 elif "subscription" in data:
-                    self.subscriptions.append(data["subscription"])
-                    if "crypto" in data["subscription"]:
-                        self.authmgr.add_key_config(data["subscription"]["crypto"])
+                    subs = subscription_manager.from_conf(data["subscription"], self)
+                    self.subscriptions.append(subs)
                 
                 elif "storage" in data:
                     s = self.storage_manager.from_value(data["storage"])
@@ -160,40 +160,35 @@ class SimpleBackend(backend.Backend):
             odim_source_file
           )
 
-    def store_file(self, path, credentials):
+    def store_file(self, path, nodename):
         st = time.time()
         meta = self.metadata_from_file(path)
         metadataTime = time.time()
 
-        logger.info("Received file: %s, %s, %s %s" % (meta.bdb_metadata_hash, meta.bdb_source_name, meta.what_date, meta.what_time))
+        logger.info("Received file from %s: %s, %s, %s %s" % (nodename, meta.bdb_metadata_hash, meta.bdb_source_name, meta.what_date, meta.what_time))
         
         if not self.handled_files.add(meta.bdb_metadata_hash):
             logger.info("File recently handled, ignoring it: %s, %s" % (meta.bdb_metadata_hash, meta.bdb_source_name))
             return None
         
         for subscription in self.subscriptions: # Should only be passive subscriptions here. Active subscriptions should be handled in separate threads.
-            if "filter" in subscription:
-                filter_ = self.filter_manager.from_value(subscription["filter"])
-                matcher = metadata_matcher.metadata_matcher()
-                if matcher.match(meta, filter_.to_xpr()):
-                    if "storage" in subscription:
-                        stores = subscription["storage"]
-                        if not isinstance(stores, list):
-                            stores = [stores]
-                            
-                        for storage in stores:
-                            self.storage_manager.store(storage, path, meta)
+            if len(subscription.nodenames()) > 0 and nodename not in subscription.nodenames():
+                continue
+            
+            if subscription.filter_matching(meta):
+                for storage in subscription.storages():
+                    self.storage_manager.store(storage, path, meta)
 
-                    self.publish(path, meta)
+                self.publish(path, meta)
                     
-                    self.processor_manager.process(path, meta)
+                self.processor_manager.process(path, meta)
         return meta
 
     def publish(self, path, meta):
         for publication in self.publications:
-                matcher = metadata_matcher.metadata_matcher()
-                if publication.active() and matcher.match(meta, publication.filter().to_xpr()):
-                    publication.publish(path, meta)
+            matcher = metadata_matcher.metadata_matcher()
+            if publication.active() and matcher.match(meta, publication.filter().to_xpr()):
+                publication.publish(path, meta)
     
     def metadata_from_file(self, path):
         return self.metadata_from_file_internal(path)
@@ -202,6 +197,8 @@ class SimpleBackend(backend.Backend):
         pass
     
     def metadata_from_file_internal(self, path):
+        import shutil
+        shutil.copy(path, "/tmp/newfile.h5")
         meta = oh5.Metadata.from_file(path)
         if not meta.what_source:
             raise LookupError("No source in metadata")

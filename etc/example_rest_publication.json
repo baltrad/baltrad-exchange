@@ -1,6 +1,7 @@
 {
 "publication":{
    "_comment_":"Usually publications should use this publisher. Extra arguments is number of threads and queue_size.",
+   "name":"Use the internal rest protocol",
    "class":"baltrad.exchange.net.publishers.standard_publisher",
    "extra_arguments": {
   	 "threads":2,
@@ -18,10 +19,9 @@
            "address":"https://localhost:8089",
        	   "protocol_version":"1.0",
        	   "crypto":{
-             "sign":true,
-             "libname":"keyczar",
-             "nodename":"anders-nzxt",
-             "privatekey":"/opt/baltrad2/etc/bltnode-keys/anders-nzxt.priv"
+             "libname":"crypto",
+             "nodename":"anders-silent",
+             "privatekey":"/projects/baltrad/baltrad-exchange/etc/exchange-keys/anders-silent.private"
            }
          }
        }

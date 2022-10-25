@@ -7,9 +7,9 @@ REQUIRED_PACKAGES= [
     "baltrad.bdbcommon",
     "jprops >= 2.0.2",
     "pyasn1",
-    "pycrypto >= 2.4",
+    #"pycrypto >= 2.4",
     "python-daemon >= 1.6",
-    "python3-keyczar >= 0.71rc0",
+    #"python3-keyczar >= 0.71rc0",
     "werkzeug >= 1.0.1"
 ]
 
@@ -31,7 +31,8 @@ setuptools.setup(name="baltrad.exchange",
         "baltrad.exchange.auth": [
             "noauth = baltrad.exchange.auth:NoAuth",
             "keyczar = baltrad.exchange.auth.keyczarauth:KeyczarAuth",
-            "tink = baltrad.exchange.auth.tinkauth:TinkAuth"
+            "tink = baltrad.exchange.auth.tinkauth:TinkAuth",
+            "crypto = baltrad.exchange.auth.coreauth:CryptoAuth"
         ],
         "baltrad.exchange.client.commands": [
             "store = baltrad.exchange.client.cmd:StoreFile",

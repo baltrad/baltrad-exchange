@@ -29,6 +29,7 @@ import os
 
 from baltrad.exchange import util
 from baltrad.exchange import config
+from baltrad.exchange import crypto
 
 logger = logging.getLogger("baltard.exchange.auth")
 
@@ -99,6 +100,17 @@ class auth_manager(object):
         else:
             provider = provider[9:]
         return provider, credentials.strip()
+    
+    def get_nodename(self, req):
+        """Returns the node name from the credentials / request
+        :param req: The request
+        :return the nodename if found, otherwise None
+        """
+        provider, credentials = self.get_credentials(req)
+        # Currently we know that node name always exist in the credentials so take it from there
+        if credentials and credentials.find(":") > 0:
+            return credentials.split(":")[0]
+        return None
         
     @classmethod
     def from_conf(cls, conf):
@@ -140,8 +152,13 @@ class auth_manager(object):
         logger.info("Added provider: %s as %s"%(provider, name))
 
     def add_key_config(self, conf):
+        """Adds a key from key config
+        :param conf: The key config
+        :return the node name this key should be associated with
+        """ 
         if conf["auth"] in self._providers:
-            self.get_provider(conf["auth"]).add_key_config(conf["conf"])
+            return self.get_provider(conf["auth"]).add_key_config(conf["conf"])
+        return None
 
     def get_provider(self, name):
         return self._providers[name]
@@ -168,7 +185,11 @@ class Auth(object):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def add_json_config(self, json):
+    def add_key_config(self, jsonstr):
+        """Adds a key config to this provider
+        :param jsonstr: THe key config
+        :return the nodename this key should be associated with
+        """
         raise NotImplementedError()
 
     @util.abstractclassmethod
@@ -198,3 +219,105 @@ class NoAuth(Auth):
     @classmethod
     def from_conf(cls, conf):
         return NoAuth()
+
+class CryptoAuth(Auth):
+    """Provide authentication through the internal crypto
+
+        registered as *exchange-crypto* in *baltrad.bdbserver.web.auth* entry-point
+    """
+    def __init__(self, key_root):
+        """
+        :param key_root: default path to search keys from
+        """
+        if not os.path.isabs(key_root):
+            raise ValueError("key_root must be an absolute path")
+        self._key_root = key_root
+        self._private_key = None
+        self._verifiers = {}
+    
+    def add_key_config(self, conf):
+        if "creator" in conf and conf["creator"] == "baltrad.exchange.crypto":
+            if conf["type"] == "public":
+                key = crypto.import_key(conf["key"])
+                logger.info("adding key config %s", conf["nodename"])
+                self._verifiers[conf["nodename"]] = key
+                return conf["nodename"]
+            else:
+                raise AuthError("Exchange auth expects public keys")
+        else:
+            raise AuthError("Could not handle config")
+    
+    def add_key(self, name, path):
+        """
+        :param name: the name to associate the key with for lookups
+        :param path: an absolute or relative path to the key.
+
+        :raise: :class:`Exception` if the key can not be read
+
+        creates a :class:`public key verifier` from the key located at
+        *path*
+        """
+        if not os.path.isabs(path):
+            path = os.path.join(self._key_root, path)
+            
+        logger.info("adding key %s from %s", name, path)
+        
+        key = crypto.load_key(path)
+        if not isinstance(key, crypto.public_key):
+            raise AuthError("Exchange auth expects public keys")
+        self._verifiers[name] = key
+    
+    def authenticate(self, req, credentials):
+        logger.debug("CryptoAuth - authenticate: %s"%credentials)
+        try:
+            keyname, sig = credentials.rsplit(":")
+        except ValueError:
+            raise AuthError("invalid credentials: %s" % credentials)
+        try:
+            verifier = self._verifiers[keyname]
+        except Exception:
+            raise AuthError("no verifier for key: %s" % keyname)
+        
+        try:
+            return verifier.verify(self.create_signable_string(req), sig)
+        except Exception as e:
+            logger.exception("Failed to verify message")
+        return False
+
+    def create_signable_string(self, req):
+        """construct a signable string from a :class:`~.util.Request`
+
+        See :ref:`doc-rest-authentication` for details.
+        """
+        fragments = [req.method, req.path]
+        for key in ("content-md5", "content-type", "date"):
+            if key in req.headers:
+                value = req.headers[key].strip()
+                if value:
+                    fragments.append(value)
+        return "\n".join(fragments)
+
+    @classmethod
+    def from_conf(cls, conf):
+        """Create from configuration.
+
+        :param conf: a :class:`~.config.Properties` instance
+        :raise: :class:`LookupError` if a required configuration parameter
+                is missing.
+
+        All keys are accessed with prefix *baltrad.bdb.server.auth.keyczar.*.
+        The value of `keystore_root` is passed to the constructor. All values
+        under `keys` are passed to :meth:`add_key` where the configuration
+        key is used as a name and the value is used as the path for the key
+        lookup.
+        """
+        conf = conf.filter("baltrad.exchange.auth.crypto.")
+        
+        result = CryptoAuth(conf.get("root"))
+        keyconf = conf.filter("keys.")
+        for key in keyconf.get_keys():
+            result.add_key(key, keyconf.get(key))
+            
+        result._private_key = conf.get("private.key")
+
+        return result

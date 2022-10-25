@@ -1,5 +1,5 @@
 {
-"publication": {
+"publication_": {
    "_comment_":"Usually publications should use this publisher. Extra arguments is number of threads and queue_size.",
    "name":"DEX publishing with failover to a ftp server for later distribution",
    "class":"baltrad.exchange.net.publishers.standard_publisher",

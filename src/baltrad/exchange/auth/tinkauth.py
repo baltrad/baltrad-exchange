@@ -54,6 +54,7 @@ class TinkAuth(coreauth.Auth):
         handle = cleartext_keyset_handle.read(tink.JsonKeysetReader(json.dumps(conf["key"])))
         verifier = handle.primitive(signature.PublicKeyVerify)
         self._verifiers[conf["name"]] = verifier
+        return conf["name"]
     
     def add_key(self, name, path):
         """

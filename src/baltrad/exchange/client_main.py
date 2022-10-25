@@ -61,8 +61,8 @@ def run():
         help="be verbose",
     )
     optparser.add_option(
-        "-t", "--type", dest="type", default="tink",
-        help="Type of encryption to use, currently keyczar or tink. Default: tink")
+        "-t", "--type", dest="type", default="crypto",
+        help="Type of encryption to use, currently the internal crypto or tink. Default: crypto")
     
     optparser.add_option(
         "-k", "--key", dest="key",
@@ -101,16 +101,10 @@ def run():
     
     auth = rest.NoAuth()
     if opts.key:
-        if opts.type=="keyczar":
-            auth = rest.KeyczarAuth(opts.key, opts.name)
+        if opts.type == "crypto":
+            auth = rest.CryptoAuth(opts.key, opts.name)
         elif opts.type=="tink":
             auth = rest.TinkAuth(opts.key, opts.name)
-    
-    #
-    #if opts.keyczar_key:
-    #    auth = rest.KeyczarAuth(opts.keyczar_key, opts.keyczar_name)
-    #else:
-    #    auth = rest.NoAuth()
 
     database = rest.RestfulServer(opts.server_url, auth)
     

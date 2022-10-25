@@ -25,14 +25,11 @@
 import os
 import logging
 from baltrad.exchange.auth import coreauth
+from baltrad.exchange import crypto
 
-from keyczar import (
-    errors as kzerrors,
-    keyczar,
-)
+from baltrad.exchange.crypto import keyczarcrypto
 
 logger = logging.getLogger("baltard.exchange.auth")
-
 
 class KeyczarAuth(coreauth.Auth):
     """Provide authentication through Keyczar
@@ -62,11 +59,22 @@ class KeyczarAuth(coreauth.Auth):
         if not os.path.isabs(path):
             path = os.path.join(self._keystore_root, path)
         logger.info("adding key %s from %s", name, path)
-        verifier = keyczar.Verifier.Read(path)
+        verifier = keyczarcrypto.keyczar_verifier.read(path)
         self._verifiers[name] = verifier
     
     def add_key_config(self, conf):
-        logger.info("KeyczarAuth does not implement add_key_config")
+        try:
+            pubkey = conf["pubkey"]
+            nodename = conf["nodename"]
+        except:
+            raise coreauth.AuthError("Missing pubkey and/or nodename in key config")
+        if not os.path.isabs(pubkey):
+            pubkey = os.path.join(self._keystore_root, pubkey)
+            
+        logger.info("adding key config %s", conf["nodename"])
+        verifier = keyczarcrypto.keyczar_verifier.read(pubkey)
+        self._verifiers[nodename] = verifier
+        return nodename
     
     def authenticate(self, req, credentials):
         try:
@@ -80,10 +88,10 @@ class KeyczarAuth(coreauth.Auth):
 
         signed_str = self.create_signable_string(req)
         try:
-            result = verifier.Verify(signed_str, signature)
+            result = verifier.verify(signed_str, signature)
             return result
-        except kzerrors.KeyczarError as e:
-            logger.exception("unhandled Keyczar error %s", e.__str__())
+        except Exception as e:
+            logger.exception("unhandled Exception error %s", e.__str__())
             return False
 
     def create_signable_string(self, req):
@@ -93,7 +101,7 @@ class KeyczarAuth(coreauth.Auth):
         """
         fragments = [req.method, req.url]
         for key in ("content-type", "content-md5", "date"):
-            if req.headers.has_key(key):
+            if key in req.headers:
                 value = req.headers[key].strip()
                 if value:
                     fragments.append(value)

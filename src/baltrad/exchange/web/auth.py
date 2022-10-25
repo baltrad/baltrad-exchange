@@ -26,11 +26,6 @@ import logging
 import pkg_resources
 import os
 
-from keyczar import (
-    errors as kzerrors,
-    keyczar,
-)
-
 from baltrad.exchange import util
 from baltrad.exchange import config
 from baltrad.exchange import auth

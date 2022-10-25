@@ -38,7 +38,7 @@ class test_processor(processor):
     
     def run(self, path, metadata):
         return None
-
+"""
 class test_processor_manager(unittest.TestCase):
     def test_create_processor(self):
         #name, clz, backend, active, extra_arguments)
@@ -47,7 +47,7 @@ class test_processor_manager(unittest.TestCase):
         extra_args["hej"]="yay"
         clz = processor_manager.create_processor("testit", "test_processor.test_processor", backend, True, extra_args)
         self.assertTrue(clz._args == extra_args)
-
+"""
     #def test_create_instance_invalid_arguments(self):
     #    try:
     #        clz = decorator_manager.create("test_decorator.test_filter", ["a1"])

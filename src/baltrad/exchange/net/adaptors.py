@@ -23,7 +23,6 @@
 ## @date 2021-12-01
 import logging
 import importlib
-from keyczar import keyczar 
 import urllib.parse as urlparse
 import http.client as httplib
 import datetime
@@ -38,6 +37,8 @@ from scp import SCPClient
 
 from baltrad.exchange.naming.namer import metadata_namer
 from baltrad.exchange.client import rest
+from baltrad.exchange import crypto
+from baltrad.exchange.crypto.keyczarcrypto import keyczar_signer
 
 logger = logging.getLogger("baltrad.exchange.net.adaptors")
 
@@ -126,6 +127,7 @@ class dex_adaptor(adaptor):
         self._privatekey = None
         if "crypto" not in arguments:
             raise RuntimeError("Must provide crypto object when initializing a dex connection")
+        
         if "address" not in arguments:
             raise RuntimeError("Must provide address when initializing a dex connection")
 
@@ -142,13 +144,13 @@ class dex_adaptor(adaptor):
         
         self._nodename = cr["nodename"]
         
-        self._signer = keyczar.Signer.Read(self._privatekey)
+        self._signer = keyczar_signer.read(self._privatekey)
 
     def _generate_headers(self, uri):
         datestr = datetime.datetime.now().strftime("%a, %e %B %Y %H:%M:%S")
         contentMD5 = base64.b64encode(uri.encode("utf-8"))
-        message = (b"POST" + b'\n' + uri.encode("utf-8") + b'\n' + b"application/x-hdf5" + b'\n' + contentMD5 + b'\n' + datestr.encode("utf-8"))
-        signature = self._signer.Sign(message)
+        message = ("POST" + '\n' + uri + '\n' + "application/x-hdf5" + '\n' + str(contentMD5, "utf-8") + '\n' + datestr)
+        signature = self._signer.sign(message)
         headers = {"Node-Name": self._nodename, 
                    "Content-Type": "application/x-hdf5",
                    "Content-MD5": contentMD5, 
@@ -194,7 +196,8 @@ class dex_adaptor(adaptor):
             fp.close()    
 
 class rest_adaptor(adaptor):
-    """Publishes a file to another node that is running baltrad-exchange.
+    """Publishes a file to another node that is running baltrad-exchange. The rest adaptor uses the internal crypto library for signing messages
+    which currently supports DSA & RSA keys. DSA uses DSS, RSA uses pkcs1_15.
     """
     def __init__(self, backend, aid, arguments):
         """Constructor
@@ -205,10 +208,9 @@ class rest_adaptor(adaptor):
            "address":"http://localhost:8080",
            "protocol_version":"1.0",
            "crypto":{
-             "sign":true,
-             "libname":"keyczar",
-             "nodename":"anders-nzxt",
-             "privatekey":"/opt/baltrad2/etc/bltnode-keys/anders-nzxt.priv"
+             "libname":"exchange-crypto",
+             "nodename":"anders-silent",
+             "privatekey":"/projects/baltrad/baltrad-exchange/etc/exchange-crypto/anders-silent.private"
            }         
          }
         """
@@ -224,27 +226,28 @@ class rest_adaptor(adaptor):
             raise RuntimeError("Must provide address when initializing a rest connection")
 
         cr = arguments["crypto"]
-        if "libname" in cr and cr["libname"] != "keyczar":
-            raise RuntimeError("Only valid crypto type for dex protocol is keyczar")
+        if "libname" in cr and cr["libname"] != "crypto":
+            raise RuntimeError("Only valid crypto type for protocol is currently the internal crypto")
         
         self._privatekey = cr["privatekey"]
         if not os.path.exists(self._privatekey):
-            raise RuntimeError("Keyczar private key doesn't exist or is not readable: %s"%self._privatekey)
+            raise RuntimeError("The private key doesn't exist or is not readable: %s"%self._privatekey)
 
         self._nodename = cr["nodename"]
         self._address = arguments["address"]
         
         if "version" in arguments:
             self._version = arguments["version"]
-                
-        self._signer = keyczar.Signer.Read(self._privatekey)
+        self._signer = crypto.load_key(self._privatekey)
+        if not isinstance(self._signer, crypto.private_key):
+            raise Exception("Can't use key: %s for signing"%self._privatekey)
             
     def publish(self, path, meta):
         """Publishes the file to the baltrad-exchange server
         :param file: path to file that should be published
         :param meta: the meta object for all metadata of file
         """        
-        auth = rest.KeyczarAuth(self._privatekey, self._nodename)
+        auth = rest.CryptoAuth(self._privatekey, self._nodename)
         server = rest.RestfulServer(self._address, auth)
         with open(path, "rb") as data:
             entry = server.store(data)

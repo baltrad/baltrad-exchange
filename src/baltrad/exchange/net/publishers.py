@@ -26,7 +26,6 @@ import os
 from baltrad.exchange.client import rest
 from threading import Thread
 from queue import Queue, Full
-from keyczar import keyczar 
 import http.client as httplib
 import pysftp
 import ftplib

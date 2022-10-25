@@ -30,12 +30,12 @@ import urllib.parse as urlparse
 import pkg_resources
 import ssl
 import base64
+from datetime import datetime
+import hashlib
 
 from http import client as httplibclient
-try:
-    from keyczar import keyczar
-except:
-    pass
+
+from baltrad.exchange.crypto import keyczarcrypto
 
 try:
     import tink
@@ -43,6 +43,8 @@ try:
     from tink import signature
 except:
     pass
+
+from baltrad.exchange import crypto
 
 class Request(object):
     def __init__(self, method, path, data=None, headers={}):
@@ -59,6 +61,9 @@ class RestfulServer(object):
         self._server_url = urlparse.urlparse(server_url)
         self._auth = auth
     
+    def server_url(self):
+        return self._server_url_str
+    
     def store(self, data):
         """stores the data in the exchange server.
         :param data: The data
@@ -67,6 +72,7 @@ class RestfulServer(object):
             "POST", "/file/", data.read(),
             headers={
                 "content-type": "application/x-hdf5",
+                "date":datetime.utcnow().strftime("%Y%m%d%H%M%S%f")
             }
         )
 
@@ -119,20 +125,24 @@ class NoAuth(Auth):
     def add_credentials(self, req):
         pass
 
-class KeyczarAuth(Auth):
-    """authenicate by signing messages with Keyczar
+class CryptoAuth(Auth):
+    """authenicate by signing messages with internal crypto-functionality
     """
-    def __init__(self, key_path, key_name=None):
-        self._signer = keyczar.Signer.Read(key_path)
-        if key_name:
-            self._key_name = key_name
+    def __init__(self, signer, nodename):
+        if isinstance(signer, crypto.private_key):
+            self._signer = signer
+        elif isinstance(signer, str):
+            self._signer = crypto.load_key(signer)
+            if not isinstance(self._signer, crypto.private_key):
+                raise Exception("Can't use key: %s for signing"%signer)
         else:
-            self._key_name = os.path.basename(key_path)
+            raise Exception("Unknown signer format")
+        self._nodename = nodename
 
     def add_credentials(self, req):
-        signable = create_keyczar_signable_string(req)
-        signature = self._signer.Sign(signable)
-        auth = "exchange-keyczar %s:%s" % (self._key_name, signature)
+        signable = create_signable_string(req)
+        signature = self._signer.sign(signable)
+        auth = "exchange-crypto %s:%s" % (self._nodename, signature)
         req.headers["authorization"] = auth
 
 class TinkAuth(Auth):
@@ -163,20 +173,6 @@ def create_signable_string(req):
     """
     fragments = [req.method, req.path]
     for key in ("content-md5", "content-type", "date"):
-        if key in req.headers:
-            value = req.headers[key].strip()
-            if value:
-                fragments.append(value)
-
-    return "\n".join(fragments)
-
-def create_keyczar_signable_string(req):
-    """construct a signable string from a :class:`.Request`
-
-    See :ref:`doc-rest-authentication` for details.
-    """
-    fragments = [req.method, req.url]
-    for key in ("content-type", "content-md5", "date"):
         if key in req.headers:
             value = req.headers[key].strip()
             if value:

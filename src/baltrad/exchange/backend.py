@@ -45,10 +45,11 @@ class Backend(object):
     __metaclass__ = ABCMeta
 
     @abstractmethod
-    def store(self, path):
+    def store_file(self, path, nodename):
         """store a file in the database
         :param path: path to the file
         :type path: string
+        :param nodename: The origin that tries to store the file
         """
         raise NotImplementedError()
 
