@@ -41,7 +41,7 @@ except:
     from Crypto.Math.Numbers import Integer
     from Crypto.PublicKey import DSA
     
-import hashlib, base64
+import hashlib, base64, json, os
 
 from baltrad.exchange.crypto import keyczarutil
 from baltrad.exchange.crypto.keyczarutil import TrimBytes, BigIntToBytes, PrefixHash, RawString, Base64WSDecode, Base64WSEncode, BytesToLong
@@ -82,11 +82,43 @@ class keyczar_signer(object):
 
     @staticmethod
     def read(keypath):
+        """Loads a keyczar signer key Note. This function only supports version 1, meaning the meta is in "meta" and keydata in "1".
+        :param keypath: the folder where the meta and data can be found.
+        :return the read key
+        :throws Exception if key not could be loaded
+        """
         readkey = load_key(keypath)
         if isinstance(readkey, keyczar_signer):
             return readkey
         raise Exception("Read key is not capable of signing")
+
+    def export(self, foldername, nodename="unknown"):
+        """Exports the keyczar signer key.  This function only supports version 1, meaning the meta is in "meta" and keydata in "1".
+        :param foldername: where the key folder should be created
+        :param nodename: the name that should be added inside the meta at "name" position
+        """
+        data = json.dumps({"publicKey": {"p": Base64WSEncode(BigIntToBytes(self._key.p)),
+                                         "q": Base64WSEncode(BigIntToBytes(self._key.q)),
+                                         "g": Base64WSEncode(BigIntToBytes(self._key.g)),
+                                         "y": Base64WSEncode(BigIntToBytes(self._key.y)),
+                                         "size": 1024},
+                            "size":1024,
+                            "x":Base64WSEncode(BigIntToBytes(self._key.x))})
+
+        meta = json.dumps({"name":nodename,
+                "purpose":"SIGN_AND_VERIFY",
+                "type":"DSA_PRIV",
+                "encrypted":"false",
+                "versions":[{"versionNumber":1,"status":"PRIMARY","exportable":False}]})
         
+        os.makedirs(foldername, exist_ok=True)
+        
+        with open("%s/1"%(foldername), "w") as fp:
+            fp.write(data)
+        with open("%s/meta"%(foldername), "w") as fp:
+            fp.write(meta)
+
+
 class keyczar_verifier(object):
     """Wrapper around Cryptodome that implements support for verifying according to Keyczar implementation
     """
@@ -115,11 +147,40 @@ class keyczar_verifier(object):
 
     @staticmethod
     def read(keypath):
+        """Loads a keyczar verifier key Note. This function only supports version 1, meaning the meta is in "meta" and keydata in "1".
+        :param keypath: the folder where the meta and data can be found.
+        :return the read key
+        :throws Exception if key not could be loaded
+        """
         readkey = load_key(keypath)
         if isinstance(readkey, keyczar_verifier):
             return readkey
         else:
             return keyczar_verifier(readkey._key)
+
+    def export(self, foldername, nodename="unknown"):
+        """Exports the keyczar verifier key.  This function only supports version 1, meaning the meta is in "meta" and keydata in "1".
+        :param foldername: where the key folder should be created
+        :param nodename: the name that should be added inside the meta at "name" position
+        """
+        data = json.dumps({"p": Base64WSEncode(BigIntToBytes(self._key.p)),
+                           "q": Base64WSEncode(BigIntToBytes(self._key.q)),
+                           "g": Base64WSEncode(BigIntToBytes(self._key.g)),
+                           "y": Base64WSEncode(BigIntToBytes(self._key.y)),
+                           "size": 1024})
+
+        meta = json.dumps({"name":nodename,
+                "purpose":"VERIFY",
+                "type":"DSA_PUB",
+                "encrypted":"false",
+                "versions":[{"versionNumber":1,"status":"PRIMARY","exportable":False}]})
+        
+        os.makedirs(foldername, exist_ok=True)
+        
+        with open("%s/1"%(foldername), "w") as fp:
+            fp.write(data)
+        with open("%s/meta"%(foldername), "w") as fp:
+            fp.write(meta)
             
 def import_keyczar_key(keytype, keydata):
     """Create a DSA - key from keytype and keydata
