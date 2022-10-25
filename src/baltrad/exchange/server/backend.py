@@ -80,6 +80,12 @@ class SimpleBackend(backend.Backend):
     :param storage: a `~.storage.FileStorage` instance to use.
     """
     def __init__(self, confdirs, nodename, authmgr, odim_source_file):
+        """Constructor
+        :param confdirs: a list of directories where the configuration (.json) files can be found
+        :param nodename: name of this node
+        :param authmgr: the authorization manager for registering keys
+        :param odim_source_file: the file containing odim sources for identification of incomming files
+        """
         self.confdirs = confdirs
         self.nodename = nodename
         self.authmgr = authmgr
@@ -100,21 +106,38 @@ class SimpleBackend(backend.Backend):
         self.initialize_configuration(self.confdirs)
     
     def get_storage_manager(self):
+        """
+        :returns the storage manager used
+        """
         return self.storage_manager    
 
     def get_auth_manager(self):
+        """
+        :returns the authorization manager used
+        """
         return self.authmgr
 
     def initialize_configuration(self, confdirs):
+        """Initializes the configuration from each dir
+        :param confdirs: a list of directories where the configuration (.json) files can be found
+        """
         for d in confdirs:
             logger.info("Processing directory: %s" % d)
             self.process_conf_dir(d.strip())
     
     def read_bdb_sources(self, odim_source_file):
+        """Reads and parses the odim sources
+        :param odim_source_file: file containing the odim source definitions
+        :returns a list of odim sources
+        """
         with open(odim_source_file) as f:
             return oh5.Source.from_rave_xml(f.read())
     
     def process_conf_dir(self, d):
+        """process one configuration dir. Will scan for all .json files in provided directory and determine
+        if the files can be used for configuration or not.
+        :param d: a directory containing configuration files
+        """
         files = glob.glob("%s/*.json"%d)
         
         for f in files:
@@ -161,9 +184,12 @@ class SimpleBackend(backend.Backend):
           )
 
     def store_file(self, path, nodename):
-        st = time.time()
+        """handles an incomming file and determines if it should be managed by the subscriptions or not.
+        :param path: the full path to the file to be handled
+        :param nodename: the name of the node that the file comes from
+        :returns the metadata from the file
+        """
         meta = self.metadata_from_file(path)
-        metadataTime = time.time()
 
         logger.info("Received file from %s: %s, %s, %s %s" % (nodename, meta.bdb_metadata_hash, meta.bdb_source_name, meta.what_date, meta.what_time))
         
@@ -185,20 +211,34 @@ class SimpleBackend(backend.Backend):
         return meta
 
     def publish(self, path, meta):
+        """publishes the file on each interested publisher
+        :param path: full path to the file to be published
+        :param meta: meta of file to be published
+        """
         for publication in self.publications:
             matcher = metadata_matcher.metadata_matcher()
             if publication.active() and matcher.match(meta, publication.filter().to_xpr()):
                 publication.publish(path, meta)
     
     def metadata_from_file(self, path):
+        """creates metadata from the file
+        :param path: full path to the file
+        :returns the metadata
+        """
         return self.metadata_from_file_internal(path)
     
     def metadata_from_file_bdb(self, path):
+        """creates metadata from the file by adding it to the bdb
+        :param path: full path to the file
+        :returns the metadata
+        """
         pass
     
     def metadata_from_file_internal(self, path):
-        import shutil
-        shutil.copy(path, "/tmp/newfile.h5")
+        """creates metadata from the file
+        :param path: full path to the file
+        :returns the metadata
+        """
         meta = oh5.Metadata.from_file(path)
         if not meta.what_source:
             raise LookupError("No source in metadata")
