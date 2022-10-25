@@ -93,8 +93,7 @@ class public_key(object):
             verifier.verify(hashed, uncodedsignature)
             return True
         except:
-            import traceback
-            traceback.print_exc()
+            pass
         return False
 
     

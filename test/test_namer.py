@@ -28,7 +28,6 @@ from baltrad.bdbcommon.oh5.node import Attribute, Group
 
 import datetime
 
-"""
 class test_namer(unittest.TestCase):
     def test_replace_attribute(self):
         meta = oh5.Metadata()
@@ -156,4 +155,4 @@ class test_namer(unittest.TestCase):
         namer = metadata_namer("${_baltrad/datetime:%Y/%m/%d/%H/%M}.interval_u(15)/${what/source:WIGOS}_${/what/date}T${/what/time}.interval_l(15)Z_${/what/object}.tolower().toupper(0)_${/dataset1/data1/what/quantity}_${_baltrad/datetime:%Y%m%d%H%M}.interval_u(15).h5")
 
         assert("2000/01/01/12/15/undefined_20000101T120000Z_Pvol_DBZH_200001011215.h5" == namer.name(meta))
-"""        
+  
