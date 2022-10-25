@@ -27,7 +27,4 @@ for distributing files in various ways. Files can be identified by using metadat
 has been added when files has to be fetched from remote servers. The exchange can be run without an external
 database (instead a local sqlite database is used for lookups).
 
-# Create the key and cert if you dont have one
-openssl req  -nodes -new -x509  -keyout server.key -out server.cert
-
 
