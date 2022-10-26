@@ -22,10 +22,6 @@
 ## @author Anders Henja, SMHI
 ## @date 2022-05-02
 
-from tink import signature
-from tink import core
-from tink import cleartext_keyset_handle
-import tink
 from baltrad.exchange.auth import coreauth
 import os
 import base64
@@ -34,6 +30,14 @@ import json
 import logging
 
 logger = logging.getLogger("baltard.exchange.auth")
+
+try:
+    from tink import signature
+    from tink import core
+    from tink import cleartext_keyset_handle
+    import tink
+except:
+    logger.warn("Tink not found. Can't enable support")
 
 class TinkAuth(coreauth.Auth):
     """Provide authentication through Tink
