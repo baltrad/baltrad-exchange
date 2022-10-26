@@ -13,9 +13,9 @@ REQUIRED_PACKAGES= [
 ]
 
 setuptools.setup(name="baltrad.exchange",
-    version="0.1-dev",
+    version="0.1",
     namespace_packages=["baltrad"],
-    setup_requires=['nose>=1.0'],
+    setup_requires=[],
     packages=setuptools.find_packages(
         "src",
     ),
