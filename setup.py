@@ -4,7 +4,7 @@ import setuptools
 import sys
 
 REQUIRED_PACKAGES= [
-    "baltrad.bdbcommon",
+    #"baltrad.bdbcommon",
     "jprops >= 2.0.2",
     "pyasn1",
     "pycryptodomex",

@@ -6,6 +6,7 @@ create_and_init_venv() {
   echo "Creating virtual environment"
   envpath=$1
   python3 -m venv --system-site-packages "$envpath"
+  python3 setup.py develop
   source $envpath/bin/activate
   $envpath/bin/pip3 install "nose2 >= 0.12" --trusted-host pypi.python.org
   $envpath/bin/pip3 install "mock >= 1.0" --trusted-host pypi.python.org
