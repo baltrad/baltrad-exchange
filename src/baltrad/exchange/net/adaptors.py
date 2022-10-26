@@ -28,8 +28,9 @@ import http.client as httplib
 import datetime
 import base64
 import os
+import stat
 import uuid
-import pysftp
+import paramiko
 import ftplib
 import shutil
 from paramiko import SSHClient
@@ -319,6 +320,113 @@ class baseuri_adaptor(adaptor):
     def password(self):
         return self._password
 
+class sftpclient(object):
+    def __init__(self, host, port, username, password, timeout=30.0, banner_timeout=30):
+        self._host = host
+        self._port = port
+        self._username = username
+        self._password = password
+        self._timeout = timeout
+        self._banner_timeout = banner_timeout
+        self._sftp = None
+        self._client = None
+
+    def hostname(self):
+        return self._host
+    
+    def port(self):
+        return self._port
+    
+    def username(self):
+        return self._username
+    
+    def password(self):
+        return self._password
+        
+    def disconnect(self):
+        if self._sftp:
+            try:
+                self._sftp.close()
+            except:
+                logger.exception("Failed to close sftp connection")
+            self._sftp = None
+
+        if self._client:
+            try:
+                self._client.close()
+            except:
+                logger.exception("Failed to close client connection")
+            self._client = None        
+    
+    def connect(self):
+        """
+        Connects to the sftp host
+        """
+        self.disconnect()
+        try:
+            self._client = paramiko.SSHClient()
+            self._client.load_system_host_keys()
+            self._client.connect(self.hostname(), port=self.port(), username=self.username(), banner_timeout=self._banner_timeout)
+            self._sftp = self._client.open_sftp()
+            self._sftp.get_channel().settimeout(self._timeout)
+        except:
+            self._sftp = None
+            self._client = None
+            raise
+
+    def isfile(self, path):
+        """
+        :param path: Path name to check
+        :return if specified path is a file or not
+        """
+        try:
+            result = stat.S_ISREG(self._sftp.stat(path).st_mode)
+        except:
+            result = False
+        return result
+
+    def isdir(self, path):
+        """
+        :param path: Path name to check
+        :return if specified path is a dir or not
+        """
+        try:
+            result = stat.S_ISDIR(self._sftp.stat(path).st_mode)
+        except:
+            result = False
+        return result
+    
+    def makedirs(self, targetdir):
+        if self.isdir(targetdir):
+            pass
+        elif self.isfile(targetdir):
+            raise Exception("Can not create directory with same name as file: %s"%targetdir)
+        else:
+            bdir, bname = os.path.split(targetdir)
+            if bdir and not self.isdir(bdir):
+                self.makedirs(bdir)
+            if bname:
+                self._sftp.mkdir(targetdir)
+                         
+    def chdir(self, dirname):
+        self._sftp.chdir(dirname)
+        
+    def put(self, filename, targetname):
+        self._sftp.put(filename, targetname)
+
+    def __enter__(self):
+        """
+        Enter part when using with ...
+        """
+        self.connect()
+        return self
+  
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        """
+        Exit part when using with ...
+        """
+        self.disconnect()
+  
 class sftp_adaptor(baseuri_adaptor):
     """Publishes files over sftp
     """
@@ -341,7 +449,7 @@ class sftp_adaptor(baseuri_adaptor):
         """        
         publishedname = self.name(meta)
         logger.debug("sftp_adapter: connecting to: host=%s, port=%d, user=%s"%(self.hostname(), self.port(), self.username()))
-        with pysftp.Connection(self.hostname(), port=self.port(), username=self.username(), password=self.password()) as c:
+        with sftpclient(self.hostname(), port=self.port(), username=self.username(), password=self.password()) as c:
             bdir = os.path.dirname(publishedname)
             fname = os.path.basename(publishedname)
             logger.info("Connected to %s"%self.hostname())

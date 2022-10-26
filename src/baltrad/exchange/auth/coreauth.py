@@ -50,14 +50,14 @@ class auth_manager(object):
         except AuthError as e:
             logger.error("failed to parse authorization credentials: %s" % e)
             return False
- 
+
         try:
             provider = self._providers[provider_key]
         except LookupError:
             logger.error("auth provider not available: %s" % provider_key)
             return False
-         
-        logger.debug("authenticating with %s: %s", provider_key, credentials)
+
+        logger.info("authenticating with %s: %s", provider_key, credentials)
         try:
             return provider.authenticate(req, credentials)
         except AuthError as e:
@@ -268,7 +268,7 @@ class CryptoAuth(Auth):
         self._verifiers[name] = key
     
     def authenticate(self, req, credentials):
-        logger.debug("CryptoAuth - authenticate: %s"%credentials)
+        logger.info("CryptoAuth - authenticate: %s"%credentials)
         try:
             keyname, sig = credentials.rsplit(":")
         except ValueError:

@@ -27,7 +27,6 @@ from baltrad.exchange.client import rest
 from threading import Thread
 from queue import Queue, Full
 import http.client as httplib
-import pysftp
 import ftplib
 import urllib.parse as urlparse
 import logging
