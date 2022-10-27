@@ -25,6 +25,7 @@ import json
 import logging
 import os
 import shutil
+import stat
 from baltrad.exchange.naming import namer
 logger = logging.getLogger("baltrad.exchange.server.backend")
 
@@ -69,6 +70,7 @@ class file_store:
         if not os.path.exists(dname):
             os.makedirs(dname, exist_ok=True)    
         shutil.copy(path, oname)        
+        os.chmod(oname, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH)
         logger.info("Stored file: %s"%(oname))
 
 class file_storage(storage):
