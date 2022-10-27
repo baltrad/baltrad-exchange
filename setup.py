@@ -30,7 +30,8 @@ setuptools.setup(name="baltrad.exchange",
         "baltrad.exchange.auth": [
             "noauth = baltrad.exchange.auth:NoAuth",
             "tink = baltrad.exchange.auth.tinkauth:TinkAuth",
-            "crypto = baltrad.exchange.auth.coreauth:CryptoAuth"
+            "crypto = baltrad.exchange.auth.coreauth:CryptoAuth",
+            "keyczar = baltrad.exchange.auth.keyczarauth:KeyczarAuth"
         ],
         "baltrad.exchange.client.commands": [
             "store = baltrad.exchange.client.cmd:StoreFile",
