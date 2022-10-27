@@ -79,11 +79,12 @@ class SimpleBackend(backend.Backend):
     :param engine_or_url: an SqlAlchemy engine or a database url
     :param storage: a `~.storage.FileStorage` instance to use.
     """
-    def __init__(self, confdirs, nodename, authmgr, odim_source_file):
+    def __init__(self, confdirs, nodename, authmgr, source_db_uri, odim_source_file):
         """Constructor
         :param confdirs: a list of directories where the configuration (.json) files can be found
         :param nodename: name of this node
         :param authmgr: the authorization manager for registering keys
+        :param source_db_uri: The uri to the source db
         :param odim_source_file: the file containing odim sources for identification of incomming files
         """
         self.confdirs = confdirs
@@ -99,7 +100,7 @@ class SimpleBackend(backend.Backend):
         self.storage_manager = storages.storage_manager()
         self.processor_manager = processors.processor_manager()
         self.odim_source_file = odim_source_file
-        self.source_manager = sqlbackend.SqlAlchemySourceManager()
+        self.source_manager = sqlbackend.SqlAlchemySourceManager(source_db_uri)
         self.source_manager.add_sources(self.read_bdb_sources(self.odim_source_file))
         self.filter_manager = filters.filter_manager()
 
@@ -175,11 +176,14 @@ class SimpleBackend(backend.Backend):
         
         configdirs = fconf.get_list("config.dirs", default="/etc/baltrad/exchange/config", sep=",") #fconf.get("config.dirs", default="/etc/baltrad/exchange/config")
 
+        source_db_uri = fconf.get("source_db_uri", default="sqlite:///var/cache/baltrad/exchange/source.db")
+
         odim_source_file = fconf.get("odim_source")
         return SimpleBackend(
             configdirs,
             nodename,
             authmgr,
+            source_db_uri,
             odim_source_file
           )
 
