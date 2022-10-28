@@ -23,7 +23,7 @@
 ## @date 2021-08-18
 import re
 from io import StringIO
-from datetime import datetime
+from datetime import datetime, timedelta
 from baltrad.bdbcommon.oh5 import (
     Source,
 )
@@ -34,6 +34,10 @@ PATTERN = re.compile("\\$(?:" + "(\\$)|" +
 SUBOP_PATTERN = re.compile(".(tolower|toupper|substring|trim|rtrim|ltrim|interval_u|interval_l|replace)(\\((([0-9]+|'[^']*')(,([0-9]+|'[^']*'))?)?\\))", flags=re.IGNORECASE)
 
 BALTRAD_DATETIME_PATTERN=re.compile("^_baltrad/datetime(:[A-Za-z0-9\\-/: _%]+)?$", flags=re.IGNORECASE)
+
+BALTRAD_DATETIMEU_PATTERN=re.compile("^_baltrad/datetime_u:([0-9]{2})(:[A-Za-z0-9\\-/: _%]+)?$", flags=re.IGNORECASE)
+
+BALTRAD_DATETIMEL_PATTERN=re.compile("^_baltrad/datetime_l:([0-9]{2})(:[A-Za-z0-9\\-/: _%]+)?$", flags=re.IGNORECASE)
 
 class suboperation_helper:
     """Used to simplify suboperation execution in a name pattern. Each suboperation is implemented as a method in this function and called by eval upon execution
@@ -56,6 +60,12 @@ class suboperation_helper:
         return self.eval_value
     
     def tolower(self,start=None,end=None):
+        """ Changes to lower case between start and end position. If start and end is given, then 
+        a subset is changed.
+        :param start: Start position
+        :param end: End position
+        :return new value
+        """
         if start is not None:
             if end is None:
                 if start >= 0 and start < len(self.eval_value):
@@ -66,6 +76,12 @@ class suboperation_helper:
         return self.value.lower()
 
     def toupper(self,start=None,end=None):
+        """ Changes to upper case between start and end position. If start and end is given, then 
+        a subset is changed.
+        :param start: Start position
+        :param end: End position
+        :return new value
+        """
         if start is not None:
             if end is None:
                 if start >= 0 and start < len(self.eval_value):
@@ -76,6 +92,11 @@ class suboperation_helper:
         return self.value.upper()
 
     def substring(self,start,end=None):
+        """Returns a substring between start & end.
+        :param start: The start position
+        :param end: End position (if specified, otherwise rest of string)
+        :return the substring 
+        """
         if end is not None:
             return self.eval_value[start:end+1]
         return self.eval_value[start:]
@@ -104,16 +125,29 @@ class suboperation_helper:
     def ltrim(self):
         return self.eval_value.lstrip()
 
-    def interval_u(self, interval):
+    def interval_u(self, interval, limit=60):
+        """Assumes that the 2 last characters in eval value is a integer, (00, 01, 10...). Then
+        this value is modified to upper part of that interval. For example assuming that it is
+        minutes that are evaluated and interval = 15 and limit = 60. Then the following modification will be
+        performed.
+        00-14 => 15
+        15-29 => 30
+        30-44 => 45
+        45-59 => 00. Since limit is 60, the value will be put back to 0
+        :param interval: Interval
+        :param limit: Limit for a wrap around
+        """
         minute=int(self.eval_value[-2:])
-        period = minute/int(interval)
+        period = int(minute/interval)
         nminute = (period+1)*int(interval)
+        if nminute >= limit:
+            nminute = 0
         return self.eval_value[:-2] + "%02d"%nminute
 
     def interval_l(self, interval):
         minute=int(self.eval_value[-2:])
-        period = minute/int(interval)
-        nminute = (period)*int(interval)
+        period = int(minute/interval)
+        nminute = period*int(interval)
         return self.eval_value[:-2] + "%02d"%nminute
 
 ##
@@ -152,6 +186,35 @@ class metadata_namer:
                 if not t:
                     t = "%Y%m%d%H%M%S"
                 dt = datetime(meta.what_date.year, meta.what_date.month, meta.what_date.day, meta.what_time.hour, meta.what_time.minute, meta.what_time.second, 0)
+                replacement_value = dt.strftime(t)
+            elif BALTRAD_DATETIMEU_PATTERN.search(placeholder):
+                m = BALTRAD_DATETIMEU_PATTERN.match(placeholder)
+                i = int(m.group(1))
+                t = m.group(2)
+                if t and t.find(":") >= 0:
+                    t = t[t.find(":")+1:]
+                if not t:
+                    t = "%Y%m%d%H%M%S"
+                    
+                dt = datetime(meta.what_date.year, meta.what_date.month, meta.what_date.day, meta.what_time.hour, meta.what_time.minute, meta.what_time.second, 0)
+                period = int(meta.what_time.minute/i)
+                nminute = (period+1)*int(i)
+                dt = dt + timedelta(minutes=nminute - meta.what_time.minute)
+                    
+                replacement_value = dt.strftime(t)
+            elif BALTRAD_DATETIMEL_PATTERN.search(placeholder):
+                m = BALTRAD_DATETIMEL_PATTERN.match(placeholder)
+                i = int(m.group(1))
+                t = m.group(2)
+                if t and t.find(":") >= 0:
+                    t = t[t.find(":")+1:]
+                if not t:
+                    t = "%Y%m%d%H%M%S"
+                    
+                dt = datetime(meta.what_date.year, meta.what_date.month, meta.what_date.day, meta.what_time.hour, meta.what_time.minute, meta.what_time.second, 0)
+                nminute = meta.what_time.minute%int(i)
+                dt = dt - timedelta(minutes=nminute)
+                    
                 replacement_value = dt.strftime(t)
             else:
                 replacement_value = self.get_attribute_value(placeholder, meta)

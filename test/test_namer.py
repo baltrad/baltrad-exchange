@@ -120,6 +120,24 @@ class test_namer(unittest.TestCase):
         
         assert("2000/01/01/12/15/setst_20000101T120000Z_Pvol_DBZH_200001011215.h5" == namer.name(meta))
 
+    def test_complex_name_2(self):
+        meta = oh5.Metadata()
+        meta.add_node("/", Group("what"))
+        meta.add_node("/what", Attribute("object", "PVOL"))
+        meta.add_node("/what", Attribute("date", datetime.date(2000, 1, 1)))
+        meta.add_node("/what", Attribute("time", datetime.time(12, 4)))
+        meta.add_node("/", Group("dataset1"))
+        meta.add_node("/dataset1", Group("data1"))
+        meta.add_node("/dataset1/data1", Group("what"))
+        meta.add_node("/dataset1/data1/what", Attribute("quantity", "DBZH"))
+        meta.bdb_source = "NOD:setst,WMO:12345,RAD:SE52,WIGOS:12345"
+        meta.what_source = "NOD:setst,WMO:12345,RAD:SE52"
+        meta.bdb_source_name = "setst"
+
+        namer = metadata_namer("${_baltrad/datetime:%Y/%m/%d/%H/%M}.interval_l(15)/${_bdb/source_name}_${/what/date}T${/what/time}.interval_l(15)Z_${/what/object}.tolower().toupper(0)_${/dataset1/data1/what/quantity}_${_baltrad/datetime:%Y%m%d%H%M}.interval_l(15).h5")
+
+        assert("2000/01/01/12/00/setst_20000101T120400Z_Pvol_DBZH_200001011200.h5" == namer.name(meta))
+
     def test_complex_name_bdb_source_NOD(self):
         meta = oh5.Metadata()
         meta.add_node("/", Group("what"))
@@ -135,7 +153,7 @@ class test_namer(unittest.TestCase):
         meta.bdb_source_name = "setst"
 
         namer = metadata_namer("${_baltrad/datetime:%Y/%m/%d/%H/%M}.interval_u(15)/${_bdb/source:NOD}_${/what/date}T${/what/time}.interval_l(15)Z_${/what/object}.tolower().toupper(0)_${/dataset1/data1/what/quantity}_${_baltrad/datetime:%Y%m%d%H%M}.interval_u(15).h5")
-        
+
         assert("2000/01/01/12/15/setst_20000101T120000Z_Pvol_DBZH_200001011215.h5" == namer.name(meta))
 
     def test_complex_name_what_source_WIGOS(self):
@@ -155,4 +173,49 @@ class test_namer(unittest.TestCase):
         namer = metadata_namer("${_baltrad/datetime:%Y/%m/%d/%H/%M}.interval_u(15)/${what/source:WIGOS}_${/what/date}T${/what/time}.interval_l(15)Z_${/what/object}.tolower().toupper(0)_${/dataset1/data1/what/quantity}_${_baltrad/datetime:%Y%m%d%H%M}.interval_u(15).h5")
 
         assert("2000/01/01/12/15/undefined_20000101T120000Z_Pvol_DBZH_200001011215.h5" == namer.name(meta))
+    
+    def create_metadata(self, year, month, day, hour, minute):
+        meta = oh5.Metadata()
+        meta.add_node("/", Group("what"))
+        meta.add_node("/what", Attribute("object", "PVOL"))
+        meta.add_node("/what", Attribute("date", datetime.date(year, month, day)))
+        meta.add_node("/what", Attribute("time", datetime.time(hour, minute)))
+        meta.add_node("/", Group("dataset1"))
+        meta.add_node("/dataset1", Group("data1"))
+        meta.add_node("/dataset1/data1", Group("what"))
+        meta.add_node("/dataset1/data1/what", Attribute("quantity", "DBZH"))
+        meta.bdb_source = "NOD:setst,WMO:12345,RAD:SE52,WIGOS:12345"
+        meta.what_source = "NOD:setst,WMO:12345,RAD:SE52"
+        meta.bdb_source_name = "setst"
+        return meta
+        
+    def test_baltrad_datetime_u(self):
+        namer = metadata_namer("${_baltrad/datetime_u:15:%Y%m%d%H%M}")
+
+        for i in range(60):
+            meta = self.create_metadata(2000, 1, 1, 12, i)
+            name = namer.name(meta)
+            if i >= 0 and i < 15:
+                self.assertEqual("200001011215", name)
+            elif i >= 15 and i < 30:
+                self.assertEqual("200001011230", name)
+            elif i >= 30 and i < 45:
+                self.assertEqual("200001011245", name)
+            elif i >= 45 and i < 60:
+                self.assertEqual("200001011300", name)
+        
+    def test_baltrad_datetime_l(self):
+        namer = metadata_namer("${_baltrad/datetime_l:15:%Y%m%d%H%M}")
+
+        for i in range(60):
+            meta = self.create_metadata(2000, 1, 1, 12, i)
+            name = namer.name(meta)
+            if i >= 0 and i < 15:
+                self.assertEqual("200001011200", name)
+            elif i >= 15 and i < 30:
+                self.assertEqual("200001011215", name)
+            elif i >= 30 and i < 45:
+                self.assertEqual("200001011230", name)
+            elif i >= 45 and i < 60:
+                self.assertEqual("200001011245", name)
   
