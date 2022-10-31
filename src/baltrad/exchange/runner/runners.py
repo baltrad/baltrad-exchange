@@ -47,22 +47,42 @@ class runner(object):
 
 class inotify_runner_event_handler(pyinotify.ProcessEvent):
     def __init__(self, inotify_runner):
+        """Constructor
+        :param inotify_runner: The inotify runner that will be called
+        """
         self._runner = inotify_runner
     
     def process_IN_CLOSE_WRITE(self, event):
-        logger.info("IN_CLOSE_WRITE: %s"%event.pathname)
+        """Will be called by the inotify notifier when file event occurs.
+        :param event: The file event
+        """
+        logger.debug("IN_CLOSE_WRITE: %s"%event.pathname)
         if not self._runner.is_ignored(event.pathname):  # avoid temporary file
             self._runner.handle_file(event.pathname)
 
     def process_IN_MOVED_TO(self, event):
-        logger.info("IN_MOVED_WRITE: %s"%event.pathname)
+        """Will be called by the inotify notifier when file event occurs.
+        :param event: The file event
+        """
+        logger.debug("IN_MOVED_WRITE: %s"%event.pathname)
         if not self._runner.is_ignored(event.pathname):  # avoid temporary file
             self._runner.handle_file(event.pathname)
 
 class inotify_runner(runner):
+    """The inotify runner is used to monitor folders and trigger "store" events
+    """
     MASK = pyinotify.IN_CLOSE_WRITE | pyinotify.IN_MOVED_TO
     
     def __init__(self, backend, active, **args):
+        """Constructor
+        :param backend: The backend
+        :param active: If this runner is active or not. NOT USED
+        :param **args: A number of arguments can be provided
+          folders        - a list of folder names to monitor
+          ignore-pattern - If files matching the provided pattern should be ignored or not
+          pattern        - The pattern to check for files to ignore
+          name           - The name this inotify runner should be using
+        """
         super(inotify_runner, self).__init__(backend, active)
         self._name = "inotify-runner"
         self._folders = args["folders"]
@@ -79,21 +99,30 @@ class inotify_runner(runner):
         self._notifier = pyinotify.Notifier(self._wm, inotify_runner_event_handler(self))
 
     def is_ignored(self, filename):
-        logger.info("is_ignored %s"%filename)
+        """Checks if the specified file should be ignored or not, for example when a tmpfile is written.
+        the check is performed on basename.
+        :param filename: The filename to be checked
+        :return True if file should be ignored otherwise False
+        """
         if self._ignore_pattern:
             return False
         bname = os.path.basename(filename)
         return re.match(self._pattern, bname) != None
     
     def handle_file(self, filename):
-        logger.info("Storing file: %s"%filename)
+        """Handles the file (by sending it to the backend using the name given to this runner
+        :param filename: The filename to handle
+        """
         self._backend.store_file(filename, self._name)
 
-
     def run(self):
+        """The runner for the thread. Starts the inotify notifier loop
+        """
         self._notifier.loop()
 
     def start(self):
+        """Starts this runner by adding the watched folders and then starting a daemonized thread.
+        """
         for folder in self._folders:
             logger.info("inotify_runner(%s) watching '%s'"%(self._name, folder))
             self._wm.add_watch(folder, self.MASK)
@@ -117,6 +146,8 @@ class runner_manager:
         self._runners.append(runner)
 
     def start(self):
+        """Starts all runners
+        """
         for r in self._runners:
             r.start()
 
@@ -137,6 +168,13 @@ class runner_manager:
     
     @classmethod
     def from_conf(self, config, backend):
+        """Creates a runner from the specified configuration if it is possible
+        :param config: A runner config pattern. Should at least contain the following
+        { "class":"<packagename>.<classname>"
+          "active":<true or false>
+          "extra_arguments":{}"
+        }
+        """
         active = False
         extra_arguments = {}
         
