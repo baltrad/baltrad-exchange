@@ -29,6 +29,7 @@ from baltrad.exchange.storage import storages
 from baltrad.exchange.processor import processors
 from baltrad.exchange.server.subscription import subscription_manager
 from baltrad.exchange.net import publishers
+from baltrad.exchange.runner import runners
 from baltrad.exchange import auth
 
 import glob
@@ -103,6 +104,7 @@ class SimpleBackend(backend.Backend):
         self.source_manager = sqlbackend.SqlAlchemySourceManager(source_db_uri)
         self.source_manager.add_sources(self.read_bdb_sources(self.odim_source_file))
         self.filter_manager = filters.filter_manager()
+        self.runner_manager = runners.runner_manager()
 
         self.initialize_configuration(self.confdirs)
     
@@ -158,10 +160,17 @@ class SimpleBackend(backend.Backend):
                     logger.info("Adding storage: %s of type %s"%(s.name(), s.type))
                     self.storage_manager.add_storage(s)
                 
+                elif "runner" in data:
+                    runner = self.runner_manager.from_conf(data["runner"], self)
+                    logger.info("Adding runner: %s"%(str(runner)))
+                    self.runner_manager.add_runner(runner)
+                
                 elif "processor" in data:
                     p = processors.processor_manager.from_conf(data["processor"], self)
                     logger.info("Adding processor: %s"%(p.name()))
                     self.processor_manager.add_processor(p)
+        
+        self.runner_manager.start()
 
     @classmethod
     def from_conf(cls, conf):
