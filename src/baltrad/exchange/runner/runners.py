@@ -28,21 +28,37 @@ import os, re
 from threading import Thread
 
 from baltrad.exchange.naming import namer
+from baltrad.exchange.util import message_aware
 
-logger = logging.getLogger("baltrad.exchange.processor")
+logger = logging.getLogger("baltrad.exchange.runner")
+
 class runner(object):
+    """Base class for any runner
+    """
     def __init__(self, backend, active):
+        """Constructor
+        :param backend: The backend
+        :param active: If this runner should be active or not
+        """
         super(runner,self).__init__()
         self._backend = backend
         self._active = active
         
     def active(self):
+        """
+        :return if this runner is active or not
+        """
         return self._active
     
     def setactive(self, active):
+        """
+        :param active: If this runner should be active or not
+        """
         self._active = active
 
     def start(self):
+        """Abstract start method. Will start the runner. Typically by setting up some event listening or starting a thread.
+        """
         raise Exception("Not implemented")
 
 class inotify_runner_event_handler(pyinotify.ProcessEvent):
@@ -88,7 +104,6 @@ class inotify_runner(runner):
         self._folders = args["folders"]
         self._ignore_pattern = True
         self._pattern = ""
-        logger.info("inotify_runner: ARGS=%s"%str(args))
         if "ignore-pattern" in args:
             self._ignore_pattern = args["ignore-pattern"]
         if "pattern" in args:
@@ -131,6 +146,26 @@ class inotify_runner(runner):
         self._thread.daemon = True
         self._thread.start()
 
+class triggered_fetch_runner(runner, message_aware):
+    """A triggered runner. This runner implements 'message_aware' so that a json-message
+    can be handled.
+    """
+    def __init__(self, backend, active, **args):
+        """Constructor
+        :param backend: The backend
+        :param active: If this runner is active or not. NOT USED
+        :param **args: A number of arguments can be provided
+        """
+        super(triggered_fetch_runner, self).__init__(backend, active)
+    
+    def start(self):
+        """NOOP
+        """
+        pass
+    
+    def handle_message(self, json_message, nodename):
+        logger.info("NODE: %s => JSON_MESSAGE: %s"%(nodename, json_message))
+
 class runner_manager:
     """ The runner manager. Will create and register the runner
     """
@@ -150,6 +185,12 @@ class runner_manager:
         """
         for r in self._runners:
             r.start()
+
+    def get_runners(self):
+        """
+        :return the runners
+        """
+        return self._runners
 
     @classmethod
     def create_runner(self, clz, backend, active, extra_arguments):

@@ -64,6 +64,11 @@ URL_MAP = Map(
                 endpoint="handler.post_dex_file"
             ),
         ]),
+        Submount("/json_message", [
+            Rule("/", methods=["POST"],
+                endpoint="handler.post_json_message"
+            ),
+        ]),
     ],
     converters={
         "uuid": UuidConverter,

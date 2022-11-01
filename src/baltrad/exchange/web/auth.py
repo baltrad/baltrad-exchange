@@ -55,9 +55,9 @@ class AuthMiddleware(object):
 
     def __call__(self, env, start_response):
         req = webutil.Request(env)
-        if self.authenticate(req):
-            logger.debug("Authenticated and invoking self.app with %s"%str(start_response))
-            return self.app(env, start_response)
+        authenticated, provider = self.authenticate(req) 
+        if authenticated and provider is not None:
+            return self.app(env, start_response, provider)
         else:
             challenge = ["exchange-" + key for key in self.authmgr.get_providers()]
             return webutil.HttpUnauthorized(challenge)(env, start_response)

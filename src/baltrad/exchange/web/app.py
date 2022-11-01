@@ -39,9 +39,9 @@ class Application(object):
         self.url_map = routing.URL_MAP
         self.backend = backend
     
-    def dispatch_request(self, request):
+    def dispatch_request(self, request, provider):
         adapter = self.url_map.bind_to_environ(request.environ)
-        ctx = webutil.RequestContext(request, self.backend)
+        ctx = webutil.RequestContext(request, self.backend, provider)
         try:
             endpoint, values = adapter.match()
             handler = routing.get_handler(endpoint)
@@ -56,9 +56,9 @@ class Application(object):
     def get_backend(self):
         return self.backend
     
-    def __call__(self, env, start_response):
+    def __call__(self, env, start_response, provider):
         request = webutil.Request(env)
-        response = self.dispatch_request(request)
+        response = self.dispatch_request(request, provider)
         return response(env, start_response)
     
     @classmethod

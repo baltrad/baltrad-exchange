@@ -49,22 +49,23 @@ class auth_manager(object):
             provider_key, credentials = self.get_credentials(req)
         except AuthError as e:
             logger.error("failed to parse authorization credentials: %s" % e)
-            return False
+            return False, None
 
+        logger.debug("provider_key=%s, credentials=%s"%(provider_key, credentials))
         try:
             provider = self._providers[provider_key]
         except LookupError:
             logger.error("auth provider not available: %s" % provider_key)
-            return False
+            return False, None
 
-        logger.info("authenticating with %s: %s", provider_key, credentials)
+        logger.debug("authenticating with %s: %s", provider_key, credentials)
         try:
-            return provider.authenticate(req, credentials)
+            return provider.authenticate(req, credentials), provider_key
         except AuthError as e:
             logger.warning("authentication failed: %s", e)
         except Exception as e:
             logger.exception("unhandled error while authenticating %s", e)
-        return False
+        return False, None
     
     def get_credentials(self, req):
         """get authorization credentials from a :class:`~.util.Request`

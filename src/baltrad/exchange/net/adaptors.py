@@ -43,7 +43,7 @@ from baltrad.exchange.crypto.keyczarcrypto import keyczar_signer
 
 logger = logging.getLogger("baltrad.exchange.net.adaptors")
 
-class adaptor(object):
+class publish_adaptor(object):
     """Base adaptor. All classes implementing this should publish the specified file path to a recipient over a specific protocol. 
     """
     def __init__(self, backend, aid):
@@ -51,7 +51,7 @@ class adaptor(object):
         :param backend: The server backend
         :param aid: An id identifying this adaptor
         """
-        super(adaptor, self).__init__()
+        super(publish_adaptor, self).__init__()
         self._backend = backend
         self._id = aid
         
@@ -72,7 +72,7 @@ class adaptor(object):
         """
         raise Exception("Not implemented")
 
-class storage_adaptor(adaptor):
+class storage_adaptor(publish_adaptor):
     """Publishes files using a number of storages.
     """
     def __init__(self, backend, aid, arguments):
@@ -104,7 +104,7 @@ class storage_adaptor(adaptor):
                 storage.store(file, meta)    
     
 
-class dex_adaptor(adaptor):
+class dex_adaptor(publish_adaptor):
     """Legacy DEX communication publishing files to old nodes.
     """
     def __init__(self, backend, aid, arguments):
@@ -175,6 +175,8 @@ class dex_adaptor(adaptor):
         try:
             conn.request("POST", query, data, headers)
             response = conn.getresponse()
+        except Exception as e:
+            raise Exception("Failed to post message to: %s"%self._nodename, e)
         finally:
             conn.close();
       
@@ -196,7 +198,7 @@ class dex_adaptor(adaptor):
         finally:
             fp.close()    
 
-class rest_adaptor(adaptor):
+class rest_adaptor(publish_adaptor):
     """Publishes a file to another node that is running baltrad-exchange. The rest adaptor uses the internal crypto library for signing messages
     which currently supports DSA & RSA keys. DSA uses DSS, RSA uses pkcs1_15.
     """
@@ -253,7 +255,7 @@ class rest_adaptor(adaptor):
         with open(path, "rb") as data:
             entry = server.store(data)
 
-class baseuri_adaptor(adaptor):
+class baseuri_adaptor(publish_adaptor):
     """Base class for basic file transmission protocols like sftp, ftp, ...
     """
     def __init__(self, backend, aid, arguments):
@@ -575,7 +577,7 @@ class ftp_adaptor(baseuri_adaptor):
         ftp.login(self.username(), self.password())
         return ftp
 
-class copy_adaptor(adaptor):
+class copy_adaptor(publish_adaptor):
     """Publishes files by copying files
     """
     def __init__(self, backend, aid, arguments):

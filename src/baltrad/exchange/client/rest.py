@@ -85,6 +85,27 @@ class RestfulServer(object):
                 "Unhandled response code: %s" % response.status
             )
 
+    def post_json_message(self, json_message):
+        """posts a json message to the exchange server. 
+        :param data: The data
+        """
+        request = Request(
+            "POST", "/json_message/", json_message,
+            headers={
+                "content-type": "application/json",
+                "date":datetime.utcnow().strftime("%Y%m%d%H%M%S%f")
+            }
+        )
+
+        response = self.execute_request(request)
+        
+        if response.status == httplibclient.OK:
+            return True
+        else:
+            raise RuntimeError(
+                "Unhandled response code: %s" % response.status
+            )
+
     def execute_request(self, req):
         """Exececutes the actual rest request over http or https. Will also add credentials to the request
         :param req: The REST request

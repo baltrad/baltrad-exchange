@@ -50,6 +50,8 @@ from baltrad.bdbcommon.oh5 import (
 )
 #from symbol import subscript
 from baltrad.exchange.net.publishers import publisher_manager
+from builtins import issubclass
+from baltrad.exchange.util import message_aware
 
 logger = logging.getLogger("baltrad.exchange.server.backend")
 
@@ -222,6 +224,16 @@ class SimpleBackend(backend.Backend):
                     
                 self.processor_manager.process(path, meta)
         return meta
+
+    def post_message(self, json_message, nodename):
+        """ensures that a posted message arrives to interested parties
+        :param json_message: The json message
+        :type path: string
+        :param nodename: The origin that sent the message
+        """
+        for r in self.runner_manager.get_runners():
+            if isinstance(r, message_aware):
+                r.handle_message(json_message, nodename)
 
     def publish(self, path, meta):
         """publishes the file on each interested publisher

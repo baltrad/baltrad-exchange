@@ -21,6 +21,8 @@
 ## @file
 ## @author Anders Henja, SMHI
 ## @date 2021-08-18
+from abc import ABC, abstractmethod
+
 class abstractclassmethod(classmethod):
     """A decorator indicating abstract classmethods.
 
@@ -39,3 +41,12 @@ class abstractclassmethod(classmethod):
     def __init__(self, callable):
         callable.__isabstractmethod__ = True
         super(abstractclassmethod, self).__init__(callable)
+
+class message_aware(ABC):
+    @abstractmethod
+    def handle_message(self, json_message, nodename):
+        """Implement to handle the json message
+        :param json_message: The json message
+        """
+        raise NotImplementedError("Not implemented handle_message")
+    

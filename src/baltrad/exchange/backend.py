@@ -54,6 +54,16 @@ class Backend(object):
         raise NotImplementedError()
 
     @abstractmethod
+    def post_message(self, json_message, node_name):
+        """ensures that a posted message arrives to interested parties
+        :param json_message: The json message
+        :type path: string
+        :param nodename: The origin that sent the message
+        """
+        raise NotImplementedError()
+
+
+    @abstractmethod
     def metadata_from_file(self, path):
         """Parses a file and returns the metadata for this file.
         :param path: path to the file

@@ -17,6 +17,7 @@
 
 import json
 import sys
+
 if sys.version_info < (3,):
     import httplib as httplibclient
     import urlparse
@@ -55,10 +56,16 @@ class Request(WerkzeugRequest,
 
 
 class RequestContext(object):
-    def __init__(self, request, backend):
+    def __init__(self, request, backend, provider):
         self.enable_remove_all_files = False
         self.request = request
         self.backend = backend
+        self.provider = provider
+    
+    def is_anonymous(self):
+        if self.provider != None and self.provider != "noauth":
+            return False
+        return True
     
     def make_url(self, path):
         return "/" + path

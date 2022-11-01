@@ -65,7 +65,10 @@ def post_file(ctx):
 
     See :ref:`doc-rest-op-store-file` for details
     """
-    logger.debug("bdb.handler.post_file(ctx)")
+    logger.debug("baltrad.exchange.handler.post_file(ctx)")
+    if ctx.is_anonymous(): # We don't want unauthorized messages in here unless it has been explicitly allowed
+        logger.info("post_file: anonymous calls are not allowed")
+        return Response("", status=httplibclient.UNAUTHORIZED)
     with NamedTemporaryFile() as tmp:
         shutil.copyfileobj(ctx.request.stream, tmp)
         tmp.flush()
@@ -74,10 +77,34 @@ def post_file(ctx):
     return Response("", status=httplibclient.OK)
 
 def post_dex_file(ctx):
-    logger.debug("bdb.handler.post_dex_file(ctx)")
+    logger.debug("baltrad.exchange.handler.post_dex_file(ctx)")
+    if ctx.is_anonymous(): # We don't want unauthorized messages in here unless it has been explicitly allowed
+        logger.info("post_dex_file: anonymous calls are not allowed")
+        return Response("", status=httplibclient.UNAUTHORIZED)
+
     with NamedTemporaryFile() as tmp:
         shutil.copyfileobj(ctx.request.stream, tmp)
         tmp.flush()
         metadata = ctx.backend.store_file(tmp.name, ctx.backend.get_auth_manager().get_nodename(ctx.request))
 
+    return Response("", status=httplibclient.OK)
+
+def post_json_message(ctx):
+    """A trigger message used to trigger different jobs from the outside
+
+    :param ctx: the request context
+    :type ctx: :class:`~.util.RequestContext`
+    :return: :class:`~.util.JsonResponse` with status
+             *201 Created* and metadata in body
+    :raise: :class:`~.util.HttpConflict` when file already
+            stored
+
+    See :ref:`doc-rest-op-store-file` for details
+    """
+    logger.debug("baltrad.exchange.handler.post_json_message(ctx)")
+    if ctx.is_anonymous():
+        logger.info("post_json_message: anonymous calls are not allowed")
+        return Response("", status=httplibclient.UNAUTHORIZED)
+    data = ctx.request.get_json_data()
+    ctx.backend.post_message(data, ctx.backend.get_auth_manager().get_nodename(ctx.request))
     return Response("", status=httplibclient.OK)

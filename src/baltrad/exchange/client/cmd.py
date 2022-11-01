@@ -292,3 +292,14 @@ class CreateKeys(Command):
     #                   
     #def create_keyczar_keys(self, opts):
     #    pass
+
+class PostJsonMessage(Command):
+    def update_optionparser(self, parser):
+        parser.set_usage(parser.get_usage().strip() + " MESSAGE")
+
+    def execute(self, server, opts, args):
+        entry = server.post_json_message(args[0])
+        #for path in args: 
+        #    with open(path, "rb") as data:
+        #        entry = server.store(data)
+        #    print("%s stored"%(path))
