@@ -29,8 +29,9 @@ from threading import Thread
 
 from baltrad.exchange.naming import namer
 from baltrad.exchange.util import message_aware
+from baltrad.exchange.net.fetchers import fetcher_manager
 
-logger = logging.getLogger("baltrad.exchange.runner")
+logger = logging.getLogger("baltrad.exchange.runner.runners")
 
 class runner(object):
     """Base class for any runner
@@ -157,14 +158,26 @@ class triggered_fetch_runner(runner, message_aware):
         :param **args: A number of arguments can be provided
         """
         super(triggered_fetch_runner, self).__init__(backend, active)
-    
+        if not "fetcher" in args:
+            raise Exception("Expected an fetcher in config")
+        if "invoker_names" not in args or len(args["invoker_names"]) == 0:
+            raise Exception("Expected invoker_names in config")
+        if "trigger_names" not in args:
+            raise Exception("Expected trigger_names in config")
+        self._fetcher = fetcher_manager.from_conf(backend, args["fetcher"])
+        self._invoker_names = args["invoker_names"]
+        self._trigger_names = args["trigger_names"]
+ 
     def start(self):
-        """NOOP
+        """Not used
         """
         pass
     
     def handle_message(self, json_message, nodename):
         logger.info("NODE: %s => JSON_MESSAGE: %s"%(nodename, json_message))
+        if nodename in self._invoker_names and \
+           (len(self._trigger_names)==0 or json_message["trigger"] in self._trigger_names):
+            self._fetcher.fetch()
 
 class runner_manager:
     """ The runner manager. Will create and register the runner
