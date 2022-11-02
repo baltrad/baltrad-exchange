@@ -37,17 +37,9 @@ from tempfile import NamedTemporaryFile
 
 from http import client as httplibclient
 
-try:
-    import tink
-    from tink import signature
-    from tink import aead
-    from tink import core
-    from tink import cleartext_keyset_handle
-except:
-    pass
-
 # This should always be available
 from baltrad.exchange import crypto
+from baltrad.exchange.crypto import keyczarcrypto
 
 class ExecutionError(RuntimeError):
     pass
@@ -185,121 +177,10 @@ class BatchTest(Command):
         minute = minute - minute%interval
         return datetime.datetime(year,month,mday,hour,minute,0)
 
-class CreateKeys(Command):
-    def update_optionparser(self, parser):
-        parser.add_option(
-            "--library", dest="library", default="internal",
-            help="Library to use for generating key-pair to create. Default: Use internal key generation. Other libraries can be tink ")
-
-        parser.add_option(
-            "--encryption", dest="encryption", default="dsa",
-            help="Encryption method to use. For internal use you can either choose dsa or rsa. Default is: dsa")
-
-        parser.add_option(
-            "--destination", dest="destination", default=".",
-            help="Directory where the keys should be placed. Default is current directory.")
-
-        parser.add_option(
-            "--nodename", dest="nodename",
-            help="Name of the node for this server.")
-        
-    
-    def execute(self, server, opts, args):
-        if not opts.nodename:
-            raise Exception("Must specify --nodename")
-        
-        if opts.library == "internal":
-            self.create_internal_key(opts)
-        elif opts.library == "tink":
-            self.create_tink_key(opts)
-        #elif opts.library == "keyczar":
-        #    self.create_keyczar_keys(opts)
-        else:
-            print("Unsupported encryption library: %s"%opts.library)
-
-    def create_internal_key(self, opts):
-        if opts.encryption != "dsa" and opts.encryption != "rsa":
-            print("Only supported encryption are dsa or rsa when using internal crypto")
-        privatek = crypto.create_key(encryption=opts.encryption)
-        
-        if not os.path.exists(opts.destination):
-            os.makedirs(opts.destination)
-        
-        privatek.exportPEM("%s/%s.private"%(opts.destination, opts.nodename))
-        privatek.publickey().exportPEM("%s/%s.public"%(opts.destination, opts.nodename))
-        privatek.publickey().exportJSON("%s/%s_public.json"%(opts.destination, opts.nodename), opts.nodename)
-
-        print("Created: ")
-        print("  Private key: %s/%s.private"%(opts.destination, opts.nodename))
-        print("  Public  key: %s/%s.public"%(opts.destination, opts.nodename))
-        print("  Public json: %s/%s_public.json"%(opts.destination, opts.nodename))
-
-    def create_tink_key(self, opts):
-        signature.register()
-
-        #parser.add_option(
-        #    "--encryption", dest="encryption", default="ed25519",
-        #    help="Encryption method to use. Default is: ed25519")
-        
-        privkey = "private_%s.json"%opts.nodename
-        pubkey = "public_%s.json"%opts.nodename
-        
-        #handle = tink.new_keyset_handle(signature.signature_key_templates.ECDSA_P256)
-        handle = tink.new_keyset_handle(signature.signature_key_templates.ED25519)
-        public_handle = handle.public_keyset_handle()
-  
-        with open(privkey, "wt") as kf:
-            cleartext_keyset_handle.write(tink.JsonKeysetWriter(kf), handle)
-    
-        with open(pubkey, "wt") as kf:
-            writer = tink.JsonKeysetWriter(kf)
-            cleartext_keyset_handle.write(tink.JsonKeysetWriter(kf), public_handle)
-
-    def createdir(self, d):
-        if not os.path.exists(d):
-            os.mkdir(dir)
-        elif not os.path.isdir(d):
-            raise Exception("%s exists but is not a directory"%d)
-
-    #def keyczar_tool(self, *module_args):
-    #    python_bin = sys.executable
-    #    keytool = "keyczar.tool.keyczart"
-    #    args = [python_bin, "-m", keytool]
-    #    args.extend(module_args)
-    #    ocode = subprocess.call(args)
-    #    if ocode != 0:
-    #        raise Exception("keytool command failed")
-    #  
-    #def create_priv_pub_keys(self, keys_root, nodename):
-    #    priv_nodekey = "%s/%s.priv"%(keys_root, nodename)
-    #    pub_nodekey = "%s/%s.pub"%(keys_root, nodename)
-    #    if not os.path.exists(priv_nodekey):
-    #        self.createdir(priv_nodekey)
-    #        self.keyczar_tool("create",
-    #            "--location=%s" % priv_nodekey,
-    #            "--purpose=sign",
-    #            "--name=%s" % nodename,
-    #            "--asymmetric=dsa")
-    #        self.keyczar_tool("addkey",
-    #            "--location=%s" % priv_nodekey,
-    #            "--status=primary")
-    # 
-    #    if not os.path.exists(pub_nodekey):
-    #        self.createdir(pub_nodekey)
-    #        self.keyczar_tool("pubkey",
-    #            "--location=%s" % priv_nodekey,
-    #            "--destination=%s" % pub_nodekey)
-    #                   
-    #def create_keyczar_keys(self, opts):
-    #    pass
-
 class PostJsonMessage(Command):
     def update_optionparser(self, parser):
         parser.set_usage(parser.get_usage().strip() + " MESSAGE")
 
     def execute(self, server, opts, args):
         entry = server.post_json_message(args[0])
-        #for path in args: 
-        #    with open(path, "rb") as data:
-        #        entry = server.store(data)
-        #    print("%s stored"%(path))
+

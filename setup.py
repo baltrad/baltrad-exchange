@@ -36,12 +36,15 @@ setuptools.setup(name="baltrad.exchange",
         "baltrad.exchange.client.commands": [
             "store = baltrad.exchange.client.cmd:StoreFile",
             "batchtest = baltrad.exchange.client.cmd:BatchTest",
-            "create_keys = baltrad.exchange.client.cmd:CreateKeys",
             "post_message = baltrad.exchange.client.cmd:PostJsonMessage"
+        ],
+        "baltrad.exchange.config.commands": [
+            "create_keys = baltrad.exchange.client.cfgcmd:CreateKeys",
         ],
         "console_scripts" : [
             "baltrad-exchange-server = baltrad.exchange.server_main:run",
-            "baltrad-exchange-client = baltrad.exchange.client_main:run"
+            "baltrad-exchange-client = baltrad.exchange.client_main:run",
+            "baltrad-exchange-config = baltrad.exchange.config_main:run"
         ]
     },
     test_suite="nose.collector",

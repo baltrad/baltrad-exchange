@@ -220,4 +220,8 @@ def load_key(keypath):
     with open("%s/1"%keypath) as fp:
         keydata = json.load(fp)
     return import_keyczar_key(meta["type"], keydata)
-    
+
+def create_keyczar_key():
+    key = DSA.generate(1024)
+    print("KEY: %s"%key)
+    return keyczar_signer(key)

@@ -58,12 +58,15 @@ The exchange of any files can be divided into a number of different steps.
 ========================
 Authorization
 ========================
+
 There are several different ways to ensure that the sender and receiver knows about each other and in this software we have used basic signature handling. That is, you as a sender signs a message
 using your private key and the receiver verifies the sent data using the senders public key. Hence, each installation of a node needs to have at least one private/public-key. The private key should be
 kept at a safe place with read-only permissions for the user that is running the system. Typically 600 or possibly 660 if the group should be trusted as well.
 
-Since we have to be backward compatible with earlier DEX-variants we have at this time added two different ways to handle private/public keys. If you know that you aren't going to receive or send files
-to a DEX-installation then you should be fine using the internal crypto variant which is just called **crypto** within in the configuration. 
+Since we have to be backward compatible with earlier DEX-variants we have at this time added two different ways to handle private/public keys. The standard solution is to use the internal crypto
+handling which is just called **crypto** in the configuration. The other variant is named **keyczar** since DEX signatures is based on that implementation. 
+
+
 
 
 =================

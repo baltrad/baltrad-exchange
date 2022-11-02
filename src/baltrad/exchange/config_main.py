@@ -16,11 +16,11 @@
 # along with baltrad-exchange.  If not, see <http://www.gnu.org/licenses/>.
 ###############################################################################
 
-## Main functions for the baltrad-exchange-client
+## Main functions for the baltrad-exchange-config command
 
 ## @file
 ## @author Anders Henja, SMHI
-## @date 2021-08-18
+## @date 2022-11-02
 from __future__ import print_function
 
 import logging
@@ -28,7 +28,7 @@ import os
 import sys
 
 from baltrad.exchange import exchange_optparse
-from baltrad.exchange.client import cmd,rest
+from baltrad.exchange.client import cfgcmd
 
 def extract_command(args):
     command = None
@@ -44,33 +44,16 @@ def run():
     optparser = exchange_optparse.create_parser()
     usgstr = "%s COMMAND [ARGS]\n" % (os.path.basename(sys.argv[0]))
     usgstr = usgstr + "\nwhere COMMAND can be one of:\n"
-    for k in cmd.Command.get_commands():
+    for k in cfgcmd.Command.get_commands():
         usgstr = usgstr + " - %s\n"%k
     usgstr = usgstr + "\nto get more information about a specific command, write %s <COMMAND> --help\n"%(os.path.basename(sys.argv[0]))
     
     optparser.set_usage(usgstr)
     
     optparser.add_option(
-        "--url", dest="server_url",
-        default="https://localhost:8089",
-        help="Exchange server URL",
-    )
-    optparser.add_option(
         "-v", "--verbose", dest="verbose",
         action="store_true",
         help="be verbose",
-    )
-    optparser.add_option(
-        "-t", "--type", dest="type", default="crypto",
-        help="Type of encryption to use, currently the internal crypto or keyczar. Default: crypto")
-    
-    optparser.add_option(
-        "-k", "--key", dest="key",
-        help="path to public key to sign messages with"
-    )
-    optparser.add_option(
-        "-n", "--name", dest="name",
-        help="the name to use (if it differs from the key path basename)"
     )
 
     command_name, args = extract_command(sys.argv[1:])
@@ -80,17 +63,11 @@ def run():
         raise SystemExit(1)
 
     try:
-        command = cmd.Command.get_implementation_by_name(command_name)()
+        command = cfgcmd.Command.get_implementation_by_name(command_name)()
     except LookupError:
         print("'%s' is not a valid command." % command_name, file=sys.stderr)
         raise SystemExit(1)
     
-    optparser.set_usage(
-        "%s %s [--url=SERVER_URL]" % (
-            os.path.basename(sys.argv[0]),
-            command_name
-        )
-    )
     command.update_optionparser(optparser)
 
     opts, args = optparser.parse_args(args)
@@ -99,16 +76,8 @@ def run():
     if opts.verbose:
         logging.getLogger().setLevel(logging.DEBUG)
     
-    auth = rest.NoAuth()
-    if opts.key:
-        if opts.type == "crypto":
-            auth = rest.CryptoAuth(opts.key, opts.name)
-        elif opts.type=="tink":
-            auth = rest.TinkAuth(opts.key, opts.name)
-
-    database = rest.RestfulServer(opts.server_url, auth)
     
     try:
-        return command.execute(database, opts, args)
-    except cmd.ExecutionError as e:
+        return command.execute(opts, args)
+    except cfgcmd.ExecutionError as e:
         raise SystemExit(e)
