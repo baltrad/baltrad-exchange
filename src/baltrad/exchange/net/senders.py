@@ -16,11 +16,12 @@
 # along with baltrad-exchange.  If not, see <http://www.gnu.org/licenses/>.
 ###############################################################################
 
-## Provides support for creating different type of adaptors
+## Provides support for creating different type of senders
 
 ## @file
 ## @author Anders Henja, SMHI
 ## @date 2021-12-01
+from abc import abstractmethod
 import logging
 import importlib
 import urllib.parse as urlparse
@@ -42,22 +43,22 @@ from baltrad.exchange import crypto
 from baltrad.exchange.crypto.keyczarcrypto import keyczar_signer
 from baltrad.exchange.net.sftpclient import sftpclient
 
-logger = logging.getLogger("baltrad.exchange.net.adaptors")
+logger = logging.getLogger("baltrad.exchange.net.senders")
 
-class publish_adaptor(object):
-    """Base adaptor. All classes implementing this should publish the specified file path to a recipient over a specific protocol. 
+class sender(object):
+    """Base sender. All classes implementing this should send the specified file path to a recipient over a specific protocol. 
     """
     def __init__(self, backend, aid):
         """Constructor
         :param backend: The server backend
-        :param aid: An id identifying this adaptor
+        :param aid: An id identifying this sender
         """
-        super(publish_adaptor, self).__init__()
+        super(sender, self).__init__()
         self._backend = backend
         self._id = aid
         
     def id(self):
-        """Returns this adaptors id
+        """Returns this uploader id
         """
         return self._id
 
@@ -66,20 +67,21 @@ class publish_adaptor(object):
         """
         return self._backend
 
-    def publish(self, path, meta):
-        """Publishes path with the metadata meta
-        :param path: Path to file to be published
-        :param meta: Metadata of the published file
+    @abstractmethod
+    def send(self, path, meta):
+        """Sends path with the metadata meta
+        :param path: Path to file to be uploaded
+        :param meta: Metadata of the uploaded file
         """
         raise Exception("Not implemented")
 
-class storage_adaptor(publish_adaptor):
-    """Publishes files using a number of storages.
+class storage_sender(sender):
+    """Sends files using a number of storages.
     """
     def __init__(self, backend, aid, arguments):
         """Constructor
         :param backend: The backend
-        :param aid: Id for this adaptor
+        :param aid: Id for this sender
         :param arguments: Dictionary containg at least:
         {
           "file_storage":[
@@ -88,14 +90,14 @@ class storage_adaptor(publish_adaptor):
           ]
         }
         """
-        super(storage_adaptor, self).__init__(backend, aid)
+        super(storage_sender, self).__init__(backend, aid)
         self._storages = []
         if "file_storage" in arguments:
             self._storages = arguments["file_storage"]
     
-    def publish(self, file, meta):
-        """Publishes the file on all storages associated with self
-        :param file: path to file that should be published
+    def send(self, file, meta):
+        """Sends the file on all storages associated with self
+        :param file: path to file that should be sent
         :param meta: the meta object for all metadata of file
         """
         sm = self.backend().get_storage_manager()
@@ -105,13 +107,13 @@ class storage_adaptor(publish_adaptor):
                 storage.store(file, meta)    
     
 
-class dex_adaptor(publish_adaptor):
-    """Legacy DEX communication publishing files to old nodes.
+class dex_sender(sender):
+    """Legacy DEX communication sending files to old nodes.
     """
     def __init__(self, backend, aid, arguments):
         """Constructor
         :param backend: The backend
-        :param aid: Id for this adaptor
+        :param aid: Id for this sender
         :param arguments: Dictionary containg at least:
          {
            "address":"http://localhost:8080",
@@ -123,7 +125,7 @@ class dex_adaptor(publish_adaptor):
            }         
          }
         """
-        super(dex_adaptor, self).__init__(backend, aid)
+        super(dex_sender, self).__init__(backend, aid)
         self._address = None
         self._nodename = None
         self._privatekey = None
@@ -183,9 +185,9 @@ class dex_adaptor(publish_adaptor):
       
         return response.status, response.reason, response.read()
   
-    def publish(self, path, meta):
-        """Publishes the file to the dex server
-        :param file: path to file that should be published
+    def send(self, path, meta):
+        """Sends the file to the dex server
+        :param file: path to file that should be sent
         :param meta: the meta object for all metadata of file
         """
         uri = "%s/BaltradDex/post_file.htm"%self._address
@@ -199,14 +201,14 @@ class dex_adaptor(publish_adaptor):
         finally:
             fp.close()    
 
-class rest_adaptor(publish_adaptor):
-    """Publishes a file to another node that is running baltrad-exchange. The rest adaptor uses the internal crypto library for signing messages
+class rest_sender(sender):
+    """Sends a file to another node that is running baltrad-exchange. The rest sender uses the internal crypto library for signing messages
     which currently supports DSA & RSA keys. DSA uses DSS, RSA uses pkcs1_15.
     """
     def __init__(self, backend, aid, arguments):
         """Constructor
         :param backend: The backend
-        :param aid: Id for this adaptor
+        :param aid: Id for this sender
         :param arguments: Dictionary containg at least:
          {
            "address":"http://localhost:8080",
@@ -218,7 +220,7 @@ class rest_adaptor(publish_adaptor):
            }         
          }
         """
-        super(rest_adaptor, self).__init__(backend, aid)
+        super(rest_sender, self).__init__(backend, aid)
         self._address = None
         self._nodename = None
         self._privatekey = None
@@ -246,9 +248,9 @@ class rest_adaptor(publish_adaptor):
         if not isinstance(self._signer, crypto.private_key):
             raise Exception("Can't use key: %s for signing"%self._privatekey)
             
-    def publish(self, path, meta):
-        """Publishes the file to the baltrad-exchange server
-        :param file: path to file that should be published
+    def send(self, path, meta):
+        """Sends the file to the baltrad-exchange server
+        :param file: path to file that should be sent
         :param meta: the meta object for all metadata of file
         """        
         auth = rest.CryptoAuth(self._privatekey, self._nodename)
@@ -256,22 +258,22 @@ class rest_adaptor(publish_adaptor):
         with open(path, "rb") as data:
             entry = server.store(data)
 
-class baseuri_adaptor(publish_adaptor):
+class baseuri_sender(sender):
     """Base class for basic file transmission protocols like sftp, ftp, ...
     """
     def __init__(self, backend, aid, arguments):
         """Constructor
         :param backend: The backend
-        :param aid: Id for this adaptor
+        :param aid: Id for this sender
         :param arguments: Dictionary containg at least:
          {
            "uri":"....",
            "create_missing_directory":true
          }
          This is a base class so the uri is parsed and appropriate members are set. There is no support for any sort of 
-         routing appropriate scheme to correct adaptor. For that you can use uri_adaptor
+         routing appropriate scheme to correct sender.
         """
-        super(baseuri_adaptor, self).__init__(backend, aid)
+        super(baseuri_sender, self).__init__(backend, aid)
         self._arguments = arguments
         self._uri = None
         self._hostname = None
@@ -324,24 +326,24 @@ class baseuri_adaptor(publish_adaptor):
         return self._password
 
 
-class sftp_adaptor(baseuri_adaptor):
-    """Publishes files over sftp
+class sftp_sender(baseuri_sender):
+    """Sends files over sftp
     """
     def __init__(self, backend, aid, arguments):
         """Constructor
         :param backend: The backend
-        :param aid: Id for this adaptor
+        :param aid: Id for this sender
         :param arguments: Dictionary containg at least:
          {
            "uri":"....",
            "create_missing_directory":true
          }
         """
-        super(sftp_adaptor, self).__init__(backend, aid, arguments)
+        super(sftp_sender, self).__init__(backend, aid, arguments)
 
-    def publish(self, path, meta):
-        """Publishes the file using sftp.
-        :param file: path to file that should be published
+    def send(self, path, meta):
+        """Sends the file using sftp.
+        :param file: path to file that should be sent
         :param meta: the meta object for all metadata of file
         """        
         publishedname = self.name(meta)
@@ -356,24 +358,24 @@ class sftp_adaptor(baseuri_adaptor):
             logger.info("Uploading %s as %s to %s"%(path, fname, self.hostname()))
             c.put(path, fname)
 
-class scp_adaptor(baseuri_adaptor):
+class scp_sender(baseuri_sender):
     """Publishes files over scp
     """
     def __init__(self, backend, aid, arguments):
         """Constructor
         :param backend: The backend
-        :param aid: Id for this adaptor
+        :param aid: Id for this sender
         :param arguments: Dictionary containg at least:
          {
            "uri":"....",
            "create_missing_directory":true
          }
         """
-        super(scp_adaptor, self).__init__(backend, aid, arguments)
+        super(scp_sender, self).__init__(backend, aid, arguments)
         
-    def publish(self, path, meta):
-        """Publishes the file using sftp.
-        :param file: path to file that should be published
+    def send(self, path, meta):
+        """Sends the file using sftp.
+        :param file: path to file that should be sent
         :param meta: the meta object for all metadata of file
         """
         ssh = None
@@ -395,32 +397,32 @@ class scp_adaptor(baseuri_adaptor):
                 except:
                     pass
 
-class ftp_adaptor(baseuri_adaptor):
+class ftp_sender(baseuri_sender):
     """Publishes files over ftp
     """
     def __init__(self, backend, aid, arguments):
         """Constructor
         :param backend: The backend
-        :param aid: Id for this adaptor
+        :param aid: Id for this sender
         :param arguments: Dictionary containg at least:
          {
            "uri":"....",
            "create_missing_directory":true
          }
         """
-        super(ftp_adaptor, self).__init__(backend, aid, arguments)
+        super(ftp_sender, self).__init__(backend, aid, arguments)
         if self._uri:
             uri = urlparse.urlparse(self._uri)
             if not uri.port:
                 self._port = 21
         
-    def publish(self, path, meta):
-        """Publishes the file using ftp.
+    def send(self, path, meta):
+        """Sends the file using ftp.
         :param file: path to file that should be published
         :param meta: the meta object for all metadata of file
         """        
         publishedname = self.name(meta)
-        logger.info("ftp_adaptor: connecting to: host=%s, port=%d, user=%s"%(self.hostname(), self.port(), self.username()))
+        logger.info("ftp_sender: connecting to: host=%s, port=%d, user=%s"%(self.hostname(), self.port(), self.username()))
         bdir = os.path.dirname(publishedname)
         fname = os.path.basename(publishedname)
         ftp = self.connect()
@@ -435,7 +437,7 @@ class ftp_adaptor(baseuri_adaptor):
                     raise e
         try:
             ftp.storbinary("STOR %s"%fname, open(path, "rb"))
-            logger.info("Published %s to %s"%(fname, self.hostname()))
+            logger.info("Sent %s to %s"%(fname, self.hostname()))
         finally:
             ftp.quit()
 
@@ -472,20 +474,20 @@ class ftp_adaptor(baseuri_adaptor):
         ftp.login(self.username(), self.password())
         return ftp
 
-class copy_adaptor(publish_adaptor):
-    """Publishes files by copying files
+class copy_sender(sender):
+    """Sends files by copying them
     """
     def __init__(self, backend, aid, arguments):
         """Constructor
         :param backend: The backend
-        :param aid: Id for this adaptor
+        :param aid: Id for this sender
         :param arguments: Dictionary containg at least:
          {
            "path":"....",
            "create_missing_directory":true
          }
         """
-        super(copy_adaptor, self).__init__(backend, aid)
+        super(copy_sender, self).__init__(backend, aid)
         self._path = arguments["path"]
         self._create_missing_directories = True
         if "create_missing_directories" in arguments:
@@ -498,20 +500,20 @@ class copy_adaptor(publish_adaptor):
     def create_missing_directories(self):
         return self._create_missing_directories
     
-    def publish(self, path, meta):
-        """Publishes the file using copy.
-        :param file: path to file that should be published
+    def send(self, path, meta):
+        """Sends the file using copy.
+        :param file: path to file that should be sent
         :param meta: the meta object for all metadata of file
         """        
         publishedname = self.name(meta)
         dirname = os.path.dirname(publishedname)
         filename = os.path.basename(publishedname)
-        logger.info("copy_adaptor: copying %s to %s"%(filename, dirname))
+        logger.info("copy_sender: copying %s to %s"%(filename, dirname))
         if not os.path.exists(dirname) and self.create_missing_directories():
             os.makedirs(dirname)
         shutil.copyfile(path, publishedname)
 
-class adaptor_manager:
+class sender_manager:
     def __init__(self):
         pass
 
@@ -527,15 +529,15 @@ class adaptor_manager:
         else:
             aid = "%s-%s"%(clz, str(uuid.uuid4())) # If id not specified, then we create an id 
            
-        adaptorargs = {}
+        senderargs = {}
         if "arguments" in arguments:
-            adaptorargs = arguments["arguments"]
+            senderargs = arguments["arguments"]
         if clz.find(".") > 0:
-            logger.info("Creating adaptor '%s'"%clz)
+            logger.info("Creating sender '%s'"%clz)
             lastdot = clz.rfind(".")
             module = importlib.import_module(clz[:lastdot])
             classname = clz[lastdot+1:]
 
-            return getattr(module, classname)(backend, aid, adaptorargs)
+            return getattr(module, classname)(backend, aid, senderargs)
         else:
             raise Exception("Must specify class as module.class")

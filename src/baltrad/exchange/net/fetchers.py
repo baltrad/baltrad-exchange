@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 import logging
 import importlib
 import uuid
@@ -34,7 +34,7 @@ class fetcher(object):
         return self._backend
 
     @abstractmethod
-    def fetch(self):
+    def fetch(self, **kwargs):
         """Fetches some files
         """
         raise NotImplementedError("Not implemented")
@@ -122,7 +122,7 @@ class sftp_fetcher(baseuri_fetcher):
             self._pattern_matcher = re.compile(self._pattern)
         
         
-    def fetch(self):
+    def fetch(self, **kwargs):
         """Publishes the file using sftp.
         :param file: path to file that should be published
         :param meta: the meta object for all metadata of file
@@ -138,9 +138,8 @@ class sftp_fetcher(baseuri_fetcher):
                 fullname = "%s/%s"%(self.path(), f)
                 if not c.isfile(fullname):
                     continue
-                kwargs={}
-                #kwargs["dir"] = "" when specifying a target dir where all temp files should be placed
-                with NamedTemporaryFile(**kwargs) as tfo:
+                ntfargs={}
+                with NamedTemporaryFile(**ntfargs) as tfo:
                     c.getfo(fullname, tfo)
                     self.backend().store_file(fullname, self.id())
         

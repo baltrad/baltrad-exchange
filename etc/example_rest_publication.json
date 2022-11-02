@@ -12,9 +12,9 @@
      "_comment_":"This is a connection used for publishing files using the rest protocol using a simple connection. No failover or similar.",
      "class":"baltrad.exchange.net.connections.simple_connection",
      "arguments":{
-       "adaptor":{
-         "id":"rest-adaptor 1",
-         "class":"baltrad.exchange.net.adaptors.rest_adaptor",
+       "sender":{
+         "id":"rest-sender 1",
+         "class":"baltrad.exchange.net.senders.rest_sender",
          "arguments":{
            "address":"https://localhost:8089",
        	   "protocol_version":"1.0",

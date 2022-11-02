@@ -174,10 +174,17 @@ class triggered_fetch_runner(runner, message_aware):
         pass
     
     def handle_message(self, json_message, nodename):
-        logger.info("NODE: %s => JSON_MESSAGE: %s"%(nodename, json_message))
+        """Handles the message if the json message contains a trigger that matches trigger names and
+        that the nodename is allowed within the invoker_names by invoking the fetch method in fetcher
+        using "arguments" in the json-message.
+        """
         if nodename in self._invoker_names and \
            (len(self._trigger_names)==0 or json_message["trigger"] in self._trigger_names):
-            self._fetcher.fetch()
+            kwargs = {}
+            if "arguments" in json_message:
+                if isinstance(json_message["arguments"], dict):
+                    kwargs = json_message["arguments"]
+            self._fetcher.fetch(**kwargs)
 
 class runner_manager:
     """ The runner manager. Will create and register the runner

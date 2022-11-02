@@ -12,8 +12,8 @@
      "_comment_":"This is a connection used when publishing files to a dex server",
      "class":"baltrad.exchange.net.connections.failover_connection",
      "arguments":{
-       "adaptors":[
-         { "class":"baltrad.exchange.net.adaptors.dex_adaptor",
+       "senders":[
+         { "class":"baltrad.exchange.net.senders.dex_sender",
            "arguments": {
              "address":"http://localhost:8080",
              "crypto":{
@@ -24,7 +24,7 @@
              }         
            }
          },
-         { "class":"baltrad.exchange.net.adaptors.ftp_adaptor",
+         { "class":"baltrad.exchange.net.adaptors.ftp_sender",
            "arguments": {
              "uri":"ftp://sftpuploader:secret@localhost/tmp/dex_failover/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.replace('.','_').h5",
              "create_missing_directories":true

@@ -12,14 +12,14 @@
      "_comment_":"This is a connection used when publishing files to ftp server using a failover",
      "class":"baltrad.exchange.net.connections.failover_connection",
      "arguments":{
-       "adaptors":[
-         { "class":"baltrad.exchange.net.adaptors.ftp_adaptor",
+       "senders":[
+         { "class":"baltrad.exchange.net.senders.ftp_sender",
            "arguments": {
              "uri":"ftp://sftpuploader:secret@localhost/tmp/primary_ftp/${_baltrad/datetime:%Y/%m/%d/%H/%M}.interval_l(15)/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.replace('.','_').h5",
              "create_missing_directories":true
            }
          },
-         { "class":"baltrad.exchange.net.adaptors.ftp_adaptor",
+         { "class":"baltrad.exchange.net.senders.ftp_sender",
            "arguments": {
              "uri":"ftp://sftpuploader:secret@localhost/tmp/secondary_ftp/${_baltrad/datetime:%Y/%m/%d/%H/%M}.interval_l(15)/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.replace('.','_').h5",
              "create_missing_directories":true

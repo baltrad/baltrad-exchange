@@ -21,15 +21,15 @@
 ## @file
 ## @author Anders Henja, SMHI
 ## @date 2021-12-01
-from baltrad.exchange.net.adaptors import adaptor_manager
+from baltrad.exchange.net.senders import sender_manager
 import logging
 import importlib
 
-logger = logging.getLogger("baltrad.exchange.net.adaptors")
+logger = logging.getLogger("baltrad.exchange.net.connections")
 
 class publisher_connection(object):
-    """publisher connections are used for publishing files in various ways without taking the protocol / adaptor into account.
-    Each (or most) publisher_connection is associated with one or more adaptors.
+    """publisher connections are used for publishing files in various ways without taking the protocol / sender into account.
+    Each (or most) publisher_connection is associated with one or more senders.
     """
     def __init__(self, backend):
         """Constructor
@@ -50,83 +50,83 @@ class publisher_connection(object):
         return self._backend
 
 class simple_connection(publisher_connection):
-    """Simple connection, only parsing arguments according to. adapter class + arguments. 
+    """Simple connection, only parsing arguments according to. sender class + arguments. 
     """
     def __init__(self, backend, arguments):
         """Constructor
         :param backend: The backend
         :param arguments: A dictionary with relevant arguments. At least
-        {"adaptor":...}
+        {"sender":...}
         """
         super(simple_connection, self).__init__(backend)
-        if "adaptor" in arguments:
-            self._adaptor = adaptor_manager.from_conf(backend, arguments["adaptor"])
+        if "sender" in arguments:
+            self._sender = sender_manager.from_conf(backend, arguments["sender"])
         else:
-            raise Exception("Requires 'adaptor' in arguments")
+            raise Exception("Requires 'sender' in arguments")
     
     def publish(self, path, meta):
-        """Publishes the file using the adaptor
+        """Publishes the file using the sender
         :param path: The path to the file
         :param meta: The metadata of the file
         """
-        self._adaptor.publish(path, meta)
+        self._sender.send(path, meta)
 
 class failover_connection(publisher_connection):
-    """Failover connection, expects a list of adaptors in arguments. Where they are tried in 
+    """Failover connection, expects a list of senders in arguments. Where they are tried in 
     order until one works. 
     """
     def __init__(self, backend, arguments):
         """Constructor
         :param backend: The backend
         :param arguments: A dictionary with relevant arguments. At least
-        {"adaptors":[...]}
+        {"senders":[...]}
         """
         super(failover_connection, self).__init__(backend)
-        self._adaptors = []
-        if "adaptors" in arguments:
-            for adaptor_conf in arguments["adaptors"]:
-                self._adaptors.append(adaptor_manager.from_conf(backend, adaptor_conf))
+        self._senders = []
+        if "senders" in arguments:
+            for sender_conf in arguments["senders"]:
+                self._senders.append(sender_manager.from_conf(backend, sender_conf))
         else:
-            raise Exception("Requires 'adaptors' in arguments")
+            raise Exception("Requires 'senders' in arguments")
         
     def publish(self, path, meta):
-        """Publishes the file using the adaptors. When first successful publishing has successfully
-        been transmitted, the method returns. If on the other hand no adaptors are successfully used
+        """Publishes the file using the senders. When first successful publishing has successfully
+        been transmitted, the method returns. If on the other hand no senders are successfully used
         an exception will be thrown.
         :param path: The path to the file
         :param meta: The metadata of the file
         """
         successful = False
-        for adaptor in self._adaptors:
+        for sender in self._senders:
             try:
-                adaptor.publish(path, meta)
-                logger.info("Successfully published %s to %s"%(path, adaptor.id()))
+                sender.send(path, meta)
+                logger.info("Successfully sent %s to %s"%(path, sender.id()))
                 successful = True
                 break
             except Exception as e:
-                logger.exception("Failed to publish %s to %s"%(path, adaptor.id()), e);
+                logger.exception("Failed to send %s to %s"%(path, sender.id()), e);
         if not successful:
             raise Exception("Failed to publish using the failover connection")
 
 class backup_connection(publisher_connection):
-    """Backup connection, expects a list of adaptors in arguments. Where all adaptors are run. 
+    """Backup connection, expects a list of senders in arguments. Where all senders are run. 
     """
     def __init__(self, backend, arguments):
         super(backup_connection, self).__init__(backend)
-        self._adaptors = []
-        if "adaptors" in arguments:
-            for adaptor_conf in arguments["adaptors"]:
-                self._adaptors.append(adaptor_manager.from_conf(backend, adaptor_conf))
+        self._senders = []
+        if "senders" in arguments:
+            for sender_conf in arguments["senders"]:
+                self._senders.append(sender_manager.from_conf(backend, sender_conf))
         else:
-            raise Exception("Requires 'adaptors' in arguments")
+            raise Exception("Requires 'senders' in arguments")
         
     def publish(self, path, meta):
-        for adaptor in self._adaptors:
+        for sender in self._senders:
             try:
-                adaptor.publish(path, meta)
-                logger.info("Successfully published %s to %s"%(path, adaptor.id()))
+                sender.send(path, meta)
+                logger.info("Successfully sent %s to %s"%(path, sender.id()))
             except Exception as e:
-                logger.exception("Failed to publish %s to %s"%(path, adaptor.id()), e);
+                logger.exception("Failed to send %s to %s"%(path, sender.id()), e);
     
 class connection_manager(object):
     def __init__(self):

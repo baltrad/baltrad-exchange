@@ -12,9 +12,9 @@
      "_comment_":"This is a connection used when publishing files to a dex server",
      "class":"baltrad.exchange.net.connections.simple_connection",
      "arguments":{
-       "adaptor":{
+       "sender":{
 	     "id":"dex adaptor to localhost",
-         "class":"baltrad.exchange.net.adaptors.dex_adaptor",
+         "class":"baltrad.exchange.net.senders.dex_sender",
          "arguments": {
            "address":"http://localhost:8080",
            "crypto":{

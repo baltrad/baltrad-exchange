@@ -12,7 +12,7 @@
      "_comment_":"This is a connection used when publishing files to ftp server using a failover",
      "class":"baltrad.exchange.net.connections.simple_connection",
      "arguments":{
-       "adaptor": { "class":"baltrad.exchange.net.adaptors.sftp_adaptor",
+       "sender": { "class":"baltrad.exchange.net.senders.sftp_sender",
           "arguments": {
             "uri":"sftp://sftpuploader:secret@localhost/tmp/primary_sftp/${_baltrad/datetime:%Y/%m/%d/%H/%M}.interval_l(15)/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.replace('.','_').h5",
             "create_missing_directories":true
