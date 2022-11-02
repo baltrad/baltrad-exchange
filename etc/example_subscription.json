@@ -20,7 +20,7 @@
       }
     ]
   },
-  "nodenames":["anders-other"],
+  "allowed_ids":["anders-other"],
   "cryptos":[
     {
       "auth":"keyczar",

@@ -29,16 +29,16 @@ import logging
 logger = logging.getLogger("baltrad.exchange.server.subscription")
 
 class subscription(object):
-    def __init__(self, storages, active=True, ifilter=None, nodenames=[]):
+    def __init__(self, storages, active=True, ifilter=None, allowed_ids=[]):
         """Constructor
         :param storages: List of storage names
         :param filter: A filter instance
-        :param nodenames: A list of nodenames that should be allowed. 
+        :param allowed_ids: A list of nodenames that should be allowed. 
         """
         self._storages = storages
         self._active = active
         self._filter = ifilter
-        self._nodenames = nodenames
+        self._allowed_ids = allowed_ids
     
     def storages(self):
         """
@@ -64,11 +64,11 @@ class subscription(object):
         """
         return self._filter
     
-    def nodenames(self):
+    def allowed_ids(self):
         """
         :return the nodenames
         """
-        return self._nodenames
+        return self._allowed_ids
 
     def filter_matching(self, meta):
         """Matches the meta against the filter.
@@ -86,14 +86,14 @@ class subscription_manager:
         pass
 
     @classmethod
-    def create_subscription(self, storages, active, ifilter, nodenames):
+    def create_subscription(self, storages, active, ifilter, allowed_ids):
         """Creates a subscription instance
         :param storages: List of storage names
         :param active: If subscription should be set to active or not
         :param ifilter: A filter instances
-        :param nodenames: A list of nodenames that should be allowed for this subscription
+        :param allowed_ids: A list of ids that should be allowed for this subscription
         """
-        return subscription(storages, active, ifilter, nodenames)
+        return subscription(storages, active, ifilter, allowed_ids)
     
     @classmethod
     def from_conf(self, config, backend):
@@ -101,7 +101,7 @@ class subscription_manager:
         storages=[]
         active=True
         ifilter = None
-        nodenames = []
+        allowed_ids = []
         
         if "storage" in config:
             storages = config["storage"]
@@ -114,14 +114,14 @@ class subscription_manager:
         if "filter" in config:
             ifilter = filter_manager.from_value(config["filter"])
         
-        if "nodenames" in config:
-            nodenames.extend(config["nodenames"])
+        if "allowed_ids" in config:
+            allowed_ids.extend(config["allowed_ids"])
         
         if "cryptos" in config:
             for crypto in config["cryptos"]:
                 nodename = backend.get_auth_manager().add_key_config(crypto)
-                if nodename not in nodenames:
-                    nodenames.append(nodename)
+                if nodename not in allowed_ids:
+                    allowed_ids.append(nodename)
 
-        s = self.create_subscription(storages, active, ifilter, nodenames)
+        s = self.create_subscription(storages, active, ifilter, allowed_ids)
         return s
