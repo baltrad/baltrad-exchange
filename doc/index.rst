@@ -338,5 +338,134 @@ Whenever a subscription has approved an incoming file, this file will be posted 
 distributed or not depending on the file content. Obviously, this might cause some problems if not configuring the system properly since if more than one
 subscription approves the same file, then this file might be sent twice. In the same way, if a publication filter is to generic files might be sent more than once.
 
-  
+A publication uses a publisher that will take care of the sending the file. Each publisher should support handling of connections,
+filters and decorators. Currently, there is only one publisher distributed in baltrad-exchange and that is the **baltrad.exchange.net.publishers.standard_publisher"**. 
+This publisher uses a threaded producer/consumer approach.
 
+**filters** 
+  The filters are working in the same way as they are for subscriptions and are used for matching.
+
+**connections**
+   A connection will take care of distribution of the file to it's destination. A connection is usually using one or more **senders** to distribute the file and will
+   be explained further down.
+
+**decorators**
+  Are used to modify the outgoing file in some way. The decorators are most likely plugins using ODIM-H5 manipulating software like rave or h5py.
+
+.. code-block:: json
+
+  {
+  "publication":{
+     "_comment_":"Usually publications should use this publisher. Extra arguments is number of threads and queue_size.",
+     "name":"Send file to localhost",
+     "class":"baltrad.exchange.net.publishers.standard_publisher",
+     "extra_arguments": {
+  	   "threads":2,
+  	   "queue_size":50
+     },
+     "active":false,
+     "connection":{
+       "class":"baltrad.exchange.net.connections.simple_connection",
+       "arguments":{
+         "sender":{
+           "id":"rest-sender 1",
+           "class":"baltrad.exchange.net.senders.rest_sender",
+           "arguments":{
+             "address":"https://localhost:8089",
+       	     "protocol_version":"1.0",
+       	     "crypto":{
+               "libname":"crypto",
+               "nodename":"anders-silent",
+               "privatekey":"/projects/baltrad/baltrad-exchange/etc/exchange-keys/anders-silent.private"
+             }
+           }
+         }
+       }
+     },   
+     "filter":{
+  	   "filter_type": "and_filter", 
+  	   "value": [
+  	     {"filter_type": "attribute_filter", 
+  	      "name": "_bdb/source_name", 
+          "operation": "in", 
+          "value_type": "string", 
+          "value": ["sehem","seang"]}, 
+  	     {"filter_type": "attribute_filter", 
+          "name": "/what/object", 
+          "operation": "=", 
+          "value_type": "string", 
+          "value": ["SCAN"]}
+      ]
+    },
+    "decorators":[
+    ]
+  }
+  }
+
+Connections
+-----------
+
+As mentioned earlier a connection takes one ore more senders. So what is the difference between a connection and a sender. In short, a
+connection is just determining how to ensure the transmission. The sender is actually taking care of the transmission protocol and
+how to get the data to it's location. 
+
+This first example just shows that we are using a simple_connection which only supports one sender.
+The sender used will be a *baltrad.exchange.net.senders.rest_sender* which uses the "stock" baltrad-exchange exchange protocol.
+
+When the publisher sends a file to the simple_connection it will be passed to the sender that will atempt to send the message to the
+destination.
+
+.. code-block:: json
+
+  "connection":{
+    "class":"baltrad.exchange.net.connections.simple_connection",
+    "arguments":{
+      "sender":{
+        "id":"rest-sender 1",
+        "class":"baltrad.exchange.net.senders.rest_sender",
+        "arguments":{
+          "address":"https://some.remove.server:8443",
+          "protocol_version":"1.0",
+       	  "crypto":{
+            "libname":"crypto",
+            "nodename":"anders-silent",
+            "privatekey":"/projects/baltrad/baltrad-exchange/etc/exchange-keys/anders-silent.private"
+          }
+        }
+      }
+    }
+  }   
+
+If the sender for some reason fails to send the data to it's intended target, this publication will be failed. Now, assume that we know that the destination server
+is known to be under heavy load at times and that there is a backup sftp-server where we can put the files whenever the destination server is unavailable. In that case
+we can use a failover_connection instead. This connection type allows a list of senders that will be executed in sequence until the first sender succeeds.
+
+.. code-block:: json
+
+   "connection":{
+     "_comment_":"This is a connection used when publishing files to a dex server",
+     "class":"baltrad.exchange.net.connections.failover_connection",
+     "arguments":{
+       "senders":[
+         {
+           "id":"rest-sender 1",
+           "class":"baltrad.exchange.net.senders.rest_sender",
+           "arguments":{
+             "address":"https://some.remove.server:8443",
+             "protocol_version":"1.0",
+       	     "crypto":{
+               "libname":"crypto",
+               "nodename":"anders-silent",
+               "privatekey":"/projects/baltrad/baltrad-exchange/etc/exchange-keys/anders-silent.private"
+             }
+           }
+         },
+         { "class":"baltrad.exchange.net.senders.ftp_sender",
+           "arguments": {
+             "uri":"sftp://sftpuploader@some.remove.server/dex_failover/${_baltrad/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.replace('.','_').h5",
+             "create_missing_directories":true
+           }
+         }
+       ]
+     }
+   }
