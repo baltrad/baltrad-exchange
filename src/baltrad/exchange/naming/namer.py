@@ -102,6 +102,11 @@ class suboperation_helper:
         return self.eval_value[start:]
 
     def replace(self, c1, c2):
+        """Replace one string with a different one
+        :param c1: string to replace
+        :param c2: string to replace with
+        :return the string that has been modified
+        """
         if c1.startswith("'"):
             c1=c1[1:]
         if c1.endswith("'"):
@@ -117,12 +122,21 @@ class suboperation_helper:
         return x.replace(c1, c2)
 
     def trim(self):
+        """ Trims both ends of the eval-value from whitespaces
+        :return the trimmed string
+        """
         return self.eval_value.strip()
 
     def rtrim(self):
+        """ Trims right side of the eval-value from whitespaces
+        :return the trimmed string
+        """
         return self.eval_value.rstrip()
 
     def ltrim(self):
+        """ Trims left side of the eval-value from whitespaces
+        :return the trimmed string
+        """
         return self.eval_value.lstrip()
 
     def interval_u(self, interval, limit=60):
@@ -145,6 +159,16 @@ class suboperation_helper:
         return self.eval_value[:-2] + "%02d"%nminute
 
     def interval_l(self, interval):
+        """Assumes that the 2 last characters in eval value is a integer, (00, 01, 10...). Then
+        this value is modified to lower part of that interval. For example assuming that it is
+        minutes that are evaluated and interval = 15 and limit = 60. Then the following modification will be
+        performed.
+        00-14 => 00
+        15-29 => 15
+        30-44 => 30
+        45-59 => 45.
+        :param interval: Interval
+        """
         minute=int(self.eval_value[-2:])
         period = int(minute/interval)
         nminute = period*int(interval)
@@ -170,9 +194,9 @@ class metadata_namer:
             
             # This is the beginning of the name until the first match
             buffer.write(parsed_tmpl[0:span[0]])
-            if placeholder.startswith("_bdb/source:"):
+            if placeholder.startswith("_baltrad/source:"):
                 replacement_value = self.get_source_item(placeholder[12:], Source.from_string(meta.bdb_source))
-            elif placeholder.startswith("_bdb/source_name"):
+            elif placeholder.startswith("_baltrad/source_name"):
                 replacement_value = meta.bdb_source_name
             elif placeholder.startswith("what/source:"):
                 replacement_value = self.get_source_item(placeholder[12:], Source.from_string(meta.what_source))

@@ -14,7 +14,7 @@
      "arguments":{
        "sender": { "class":"baltrad.exchange.net.senders.copy_sender",
           "arguments": {
-            "path":"/tmp/primary_copy/${_baltrad/datetime:%Y/%m/%d/%H/%M}.interval_l(15)/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.replace('.','_').h5",
+            "path":"/tmp/primary_copy/${_baltrad/datetime:%Y/%m/%d/%H/%M}.interval_l(15)/${_baltrad/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.replace('.','_').h5",
             "create_missing_directories":true
           }
        }

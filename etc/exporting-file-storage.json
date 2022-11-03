@@ -1,13 +1,15 @@
 {"storage":{
-     "storage_type":"file_storage",
-     "name":"exporting_storage",
+   "class":"baltrad.exchange.storage.storages.file_storage",
+   "name":"exporting_storage",
+   "arguments":{
      "structure":[
-       {"object":"SCAN",
-        "path":"/tmp/exported_storage",
-        "name_pattern":"${_baltrad/datetime:%Y/%m/%d/%H/%M}.interval_l(15)/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.h5"
+       { "object":"SCAN",
+         "path":"/tmp/exported_storage",
+         "name_pattern":"${_baltrad/datetime:%Y/%m/%d/%H/%M}.interval_l(15)/${_baltrad/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.h5"
        },
-       {"path":"/tmp/exported_storage",
-        "name_pattern":"${_baltrad/datetime:%Y/%m/%d/%H/%M}.interval_l(15)/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z.h5"
-       }]
-     }
+       { "path":"/tmp/exported_storage",
+         "name_pattern":"${_baltrad/datetime:%Y/%m/%d/%H/%M}.interval_l(15)/${_baltrad/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z.h5"
+     }]
+   }
+ }
 }

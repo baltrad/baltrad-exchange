@@ -158,8 +158,9 @@ class SimpleBackend(backend.Backend):
                     self.subscriptions.append(subs)
                 
                 elif "storage" in data:
-                    s = self.storage_manager.from_value(data["storage"])
-                    logger.info("Adding storage: %s of type %s"%(s.name(), s.type))
+                    #s = self.storage_manager.from_value(data["storage"])
+                    s = self.storage_manager.from_conf(data["storage"], self)
+                    logger.info("Adding storage: %s of type %s"%(s.name(), type(s)))
                     self.storage_manager.add_storage(s)
                 
                 elif "runner" in data:

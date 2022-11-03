@@ -21,7 +21,6 @@ There are several reasons for why this engine was created but to name a few key-
 - Possibility to run several different instances on same server
 - Allow possibility to decorate a file before it is sent to a subscriber
 
-
 =================
 Overview
 =================
@@ -143,9 +142,9 @@ During startup all config.dirs will be traversed and all files ending with **.js
   
 Where the <keyword> is one of the following types:
 
-- **publication**
 - **subscription**
 - **storage**
+- **publication**
 - **runner**
 - **processor** 
 
@@ -176,26 +175,168 @@ the publishers and then to the processors. If it is nessecary to distribute/publ
 will require some threading and other considerations since the subscription handling should not be allowed to block waiting for time consuming operations since it will starve the WSGI-servers thread 
 pool.
 
+.. code-block:: json
+
+  {
+    "subscription":{
+    "active":true,
+    "storage":["default_storage"],
+    "filter":{
+      "filter_type": "and_filter", 
+      "value": [
+        { "filter_type": "attribute_filter", 
+          "name": "_bdb/source_name", 
+          "operation": "in", 
+          "value_type": "string", 
+          "value": ["sehem","seang", "sella"]
+        }, 
+        { "filter_type": "attribute_filter", 
+          "name": "/what/object", 
+          "operation": "in", 
+          "value_type": "string", 
+          "value": ["SCAN","PVOL"]
+        }
+      ]
+    },
+    "allowed_ids":["anders-other"],
+    "cryptos":[
+      {
+        "auth":"keyczar",
+        "conf":{
+          "nodename": "anders-nzxt",
+          "pubkey":"/opt/baltrad2/etc/bltnode-keys/anders-nzxt.pub"
+        }
+      },
+      {
+        "auth":"crypto",
+        "conf":{
+          "nodename": "anders-silent", 
+          "creator": "baltrad.exchange.crypto", 
+          "key": "-----BEGIN PUBLIC KEY-----\nMIID<.....full public key in PEM format.....>==\n-----END PUBLIC KEY-----",
+          "_comment_":"Instead of using 'key', it is possible to specify a file. If the pubkey is not pointing to an absolute path it will be using the keystore roots as well",
+          "pubkey":"anders-silent.public", 
+          "keyType": "dsa", 
+          "type": "public"
+        }
+      }	  	
+    ]}
+  }
+
+The subscription contains two very important parts. First the filter, this will ensure that only files that are of interest will be managed. The filter syntax is currently according to
+the baltrad-db query syntax and hence the "_bdb/" identifier is used for internal metadata. The second part if a combination of allowed_ids and cryptos. When system is starting up, all 
+cryptos in all subscriptions are processed and registered in the authentication manager together with the nodename. The node names are added to the list of allowed_ids each subscription has. 
+Then only files sent from an id that is in list of allowed ids will be allowed.
+
+Currently, the only allowed cryptos are keyczar (for DEX-compatibility) and the internally used crypto which is just using plain public/key-signature handling.
+
+As can be seen in the above example, there is a storage named "default_storage" that this subscription expects the files to be stored in. 
+
 
 ========================
-Storages
+Storages (storage)
 ========================
 The storages are locations where files should be placed and are referred to by the subscriptions. Typically you would only have a few different storages. For example on the file system, in a database or in an archive.
-Different storages have different 
  
 .. code-block:: json
 
-  {"storage":{
-    "storage_type":"file_storage",
-    "name":"default_storage",
-    "structure":[
-      { "object":"SCAN",
-        "path":"/storage/radar",
-        "name_pattern":"${_baltrad/datetime_l:15:%Y/%m/%d/%H/%M}/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.h5"
-      },
-      { "path":"/storage/radar",
-        "name_pattern":"${_baltrad/datetime_l:15:%Y/%m/%d/%H/%M}/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z.h5"
+  {
+    "storage": {
+      "class":"baltrad.exchange.storage.storages.file_storage",
+      "name":"default_storage",
+      "arguments": {
+        "structure":[
+          {"object":"SCAN",
+           "path":"/tmp/baltrad_bdb",
+           "name_pattern":"${_baltrad/datetime_l:15:%Y/%m/%d/%H/%M}/${_baltrad/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.h5"
+          },
+          {"path":"/tmp/baltrad_bdb",
+           "name_pattern":"${_baltrad/datetime_l:15:%Y/%m/%d/%H/%M}/${_baltrad/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z.h5"
+          }
+        ]
       }
-    ]
+    }
   }
-  }
+
+The above storage-mechanism (baltrad.exchange.storage.storages.file_storage) is probably the one that is going to be used the most. It gives the user a possibility differentiate 
+between what/object types and store them with different names in different places. This storage-class also provides the chance of using metadata naming which is quite powerful
+when saving the files.
+
+Naming
+------
+
+The metadata namer is a separate class that can be used when a string should be created from the metadata. The ${..} is used as a placeholder for an ODIM H5 metadata attribute to retrive the value of the metadata attribute. 
+For example ${/what/object} will give SCAN/PVOL/.. Then there are a few unique placeholder variables that doesn't exist in the metadata of a ODIM H5 file but are very useful.
+
+**_baltrad/source:<ID>**
+  Since what/source can be incomplete, this will return the specific <ID> after the source has been identified. E.g. _baltrad/source:WMO, _baltrad/source:NOD. If source not could be identified, "undefined" is returned.
+
+**_baltrad/source_name**
+  Since what/source can be incomplete, this will return the name of the source after the source has been identified. Typically it is the NOD. If source not could be identified, "undefined" is returned.
+
+**what/source:<ID>**
+  Grabs the <ID> directly from what/source and returns it. Note, if source is incomplete this will return "undefined"
+  
+**/what/source:<ID>**
+  Grabs the <ID> directly from /what/source and returns it. Note, if source is incomplete this will return "undefined"
+  
+**_baltrad/datetime(:[A-Za-z0-9\\-/: _%]+)?**
+  For creating datetime strings from the what/date + what/time. The dateformat is same as provided in the datetime class. For example if you want to specify a date
+  as 2022/11/03/12/04, the you use the following description *${_baltrad/datetime:%Y/%m/%d/%H/%M}*.
+
+**_baltrad/datetime_u:([0-9]{2})(:[A-Za-z0-9\\-/: _%]+)?**
+  In some cases you might want to have minute-intervals. For example a directory structure where you want all files between minute 1-15 to be placed in a folder with 15 as minutes. This
+  can be achieved by specifying *${_baltrad/datetime_u:15:%Y/%m/%d/%H/%M}* and the folders will have a minute part that is either 00,15,30 or 45. This function will also wrap so that if
+  what/time has minutes between for example 46-60, then these will be placed in next hours 00-minute folder.
+  
+**_baltrad/datetime_l:([0-9]{2})(:[A-Za-z0-9\\-/: _%]+)?**
+  This placeholder almost behaves like _baltrad/datetime_u with the exception that it will lower the minute interval instead. This means that all files within minute 0-15 will be put in 00, between
+  15-30 in 15 and so on. Syntax is almost identical *${_baltrad/datetime_l:15:%Y/%m/%d/%H/%M}*
+
+
+The naming functionality also provides something that can be called suboperations which allows the manipulation of the values that are returned by the placeholders. 
+These are used directly on the placeholder. For example *${what/source:CMT}.tolower()*. They can also be chained like *${what/source:CMT}.tolower().toupper(1)*.
+
+Currently the supported suboperations are:
+
+**tolower([beginIndex[,endIndex]])**
+  changes the string to lower case. If beginIndex is specified the string gets lower case after specified beginIndex until end or endIndex if specified.
+
+**toupper([beginIndex[,endIndex]])**
+  changes the string to upper case. If beginIndex is specified the string gets upper case after specified beginIndex until end or endIndex if specified.
+
+**substring(beginIndex[,endIndex])**
+  returns a substring from beginIndex to end or endIndex if specified.
+
+**replace(matchstr, replacementstr)**
+  replaces all occurances of matchstr with replacementstr
+  
+**trim()**
+  Trims both left and right side of the string from any white spaces.
+  
+**ltrim()**
+  Trims the left side of the string from any white spaces.
+  
+**rtrim()**
+  Trims the right side of the string from any white spaces.
+  
+**interval_u(interval[,limit])**
+  ** Do not use, under development**
+  
+**interval_l(interval)**
+  ** Do not use, under development**
+
+
+With the above knowledge, assuming that a scan with elevation angle=0.5 arrives from sella, with /what/date=20221103 and /what/time=220315 then the following
+expression *${_baltrad/datetime_l:15:%Y/%m/%d/%H/%M}/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.h5*
+will result in *2022/11/03/22/00/sella_scan_202211032203_0.5.h5*.
+
+==========================
+Publications (publication)
+==========================
+
+Whenever a subscription has approved an incoming file, this file will be posted to all publications which in turn will have to decide if the file should be
+distributed or not depending on the file content. Obviously, this might cause some problems if not configuring the system properly since if more than one
+subscription approves the same file, then this file might be sent twice. In the same way, if a publication filter is to generic files might be sent more than once.
+
+  
+

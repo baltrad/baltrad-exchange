@@ -27,6 +27,7 @@ import os
 import shutil
 import stat
 from abc import abstractmethod
+import importlib
 
 from baltrad.exchange.naming import namer
 logger = logging.getLogger("baltrad.exchange.server.backend")
@@ -57,11 +58,11 @@ class storage(object):
 class none_storage(storage):
     """Simple storage that does nothing
     """
-    def __init__(self, name):
+    def __init__(self, name, backend, **kwargs):
         """Constructor
         :param name: The name identifying this storage
         """
-        self.type = self.name_repr()
+        super(none_storage, self).__init__()        
         self._name = name
 
     def store(self, path, meta):
@@ -76,19 +77,6 @@ class none_storage(storage):
         :return the name identifying this storage
         """
         return self._name
-
-    @classmethod
-    def name_repr(cls):
-        """
-        :return "none_storage"
-        """
-        return "none_storage"
-
-    @classmethod
-    def from_value(cls, v):
-        if "name" not in v:
-            raise Exception("Incomplete none_storage, must contain storage_type and name")
-        return none_storage(v["name"])
 
 class file_store:
     def __init__(self, path, name_pattern):
@@ -106,26 +94,31 @@ class file_store:
         logger.info("Stored file: %s"%(oname))
 
 class file_storage(storage):
-    """A basic file storage that allows separation of files based on object types. A typical structure would be:
-    [
-       {"object":"SCAN",
-        "path":"/tmp/baltrad_bdb",
-        "name_pattern":"${_baltrad/datetime_l:15:%Y/%m/%d/%H/%M}/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.h5"
-       },
-       {"path":"/tmp/baltrad_bdb",
-        "name_pattern":"${_baltrad/datetime_l:15:%Y/%m/%d/%H/%M}/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z.h5"
-       }
+    """A basic file storage that allows separation of files based on object types. A typical structure passed to kwargs would be
+    "structure":[
+      {"object":"SCAN",
+       "path":"/tmp/baltrad_bdb",
+       "name_pattern":"${_baltrad/datetime_l:15:%Y/%m/%d/%H/%M}/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.h5"
+      },
+      {"path":"/tmp/baltrad_bdb",
+       "name_pattern":"${_baltrad/datetime_l:15:%Y/%m/%d/%H/%M}/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z.h5"
+      }
     ]
     """
-    def __init__(self, name, structure_d):
+    def __init__(self, name, backend, **kwargs):
         """Constructor
         :param name: The name of this storage
-        :structure_d: a list of entries describing where different files of what/object-type should be placed.
+        :param backend: The backend (NOT USED)
+        :param kwargs: the configuration required for the file storage.
         """
-        self.type = self.name_repr()
+        super(file_storage, self).__init__()
         self._name = name
-        self.structure_d = structure_d
+        self._backend = backend
         self.structures = {}
+        if not "structure" in kwargs:
+            raise Exception("Missing key 'structure' in configuration")
+        self.structure_d = kwargs["structure"]
+        
         for s in self.structure_d:
             if ("object" in s and not s["object"]) or "object" not in s:
                 self.structures["default"]=file_store(s["path"],s["name_pattern"])
@@ -144,48 +137,30 @@ class file_storage(storage):
             return None
 
     def store(self, path, meta):
+        """ Stores a file in the correct directory structure
+        :param path: The path to the file to be stored
+        :param meta: The meta data for the file
+        """
         q = self.get_attribute_value("/what/object", meta)
         logger.debug("Using storage %s"%str(self.structures))
         if q in self.structures:
-            return self.structures[q].store(path, meta)
+            self.structures[q].store(path, meta)
         elif "default" in self.structures:
-            return self.structures["default"].store(path, meta)
+            self.structures["default"].store(path, meta)
         else:
             logger.info("Ignoring %s object of type: " % q)
 
     def name(self):
+        """
+        :return the name of this storage
+        """
         return self._name
-
-    @classmethod
-    def name_repr(cls):
-        return "file_storage"
-
-    @classmethod
-    def from_value(cls, v):
-        return file_storage(v["name"], v["structure"])
-        #if "name" not in v or "path" not in v or "name_pattern" not in v:
-        #    raise Exception("Incomplete none_storage, must contain storage_type, name, path & name_pattern")
-        #return file_storage(v["name"], v["path"], v["name_pattern"])
-        
+ 
 class storage_manager:
+    """ The storage manager
+    """
     def __init__(self):
-        self.storage_types={}
-        self.storage_types[none_storage.name_repr()] = none_storage.from_value
-        self.storage_types[file_storage.name_repr()] = file_storage.from_value
         self.storage={}
-        
-    def from_value(self, value):
-        if "storage_type" in value and "name" in value:
-            return self.storage_types[value["storage_type"]](value)
-        return None
-
-    def from_json(self, s):
-        js = json.loads(s)
-        parsed = self.from_value(js)
-        return parsed
-    
-    def to_json(self, storage):
-        return json.dumps(storage, default=lambda o: o.__dict__)
     
     def add_storage(self, storage):
         self.storage[storage.name()] = storage
@@ -199,3 +174,37 @@ class storage_manager:
     def store(self, name, path, meta):
         self.storage[name].store(path, meta)
         
+    @classmethod
+    def create_storage(self, clz, name, backend, extra_arguments):
+        """Creates an instance of clz with specified arguments
+        :param clz: class name specified as <module>.<classname>
+        :param arguments: a list of arguments that should be used to initialize the class       
+        """
+        if clz.find(".") > 0:
+            logger.info("Creating storage '%s'"%clz)
+            lastdot = clz.rfind(".")
+            module = importlib.import_module(clz[:lastdot])
+            classname = clz[lastdot+1:]
+            return getattr(module, classname)(name, backend, **extra_arguments)
+        else:
+            raise Exception("Must specify class as module.class")
+    
+    @classmethod
+    def from_conf(self, config, backend):
+        """Creates a storage from the specified configuration if it is possible
+        :param config: A runner config pattern. Should at least contain the following
+        { "class":"<packagename>.<classname>",
+          "name":<name of storage>,
+          "arguments":{}"
+        }
+        """
+        arguments = {}
+        storage_clazz = config["class"]
+        name = config["name"]
+        if "arguments" in config:
+            arguments = config["arguments"]
+
+        
+        p = self.create_storage(storage_clazz, name, backend, arguments)
+        
+        return p

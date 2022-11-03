@@ -26,7 +26,7 @@
          },
          { "class":"baltrad.exchange.net.adaptors.ftp_sender",
            "arguments": {
-             "uri":"ftp://sftpuploader:secret@localhost/tmp/dex_failover/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.replace('.','_').h5",
+             "uri":"ftp://sftpuploader:secret@localhost/tmp/dex_failover/${_baltrad/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.replace('.','_').h5",
              "create_missing_directories":true
            }
          }
