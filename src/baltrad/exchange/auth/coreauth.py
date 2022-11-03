@@ -239,7 +239,13 @@ class CryptoAuth(Auth):
     def add_key_config(self, conf):
         if "creator" in conf and conf["creator"] == "baltrad.exchange.crypto":
             if conf["type"] == "public":
-                key = crypto.import_key(conf["key"])
+                if "pubkey" in conf:
+                    if not os.path.isabs(conf["pubkey"]):
+                        key = crypto.load_key("%s/%s"%(self._key_root, conf["pubkey"]))
+                    else:
+                        key = crypto.load_key(conf["pubkey"])
+                else:                    
+                    key = crypto.import_key(conf["key"])
                 logger.info("adding key config %s", conf["nodename"])
                 self._verifiers[conf["nodename"]] = key
                 return conf["nodename"]

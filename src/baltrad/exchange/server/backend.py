@@ -198,22 +198,22 @@ class SimpleBackend(backend.Backend):
             odim_source_file
           )
 
-    def store_file(self, path, nodename):
+    def store_file(self, path, nid):
         """handles an incomming file and determines if it should be managed by the subscriptions or not.
         :param path: the full path to the file to be handled
-        :param nodename: the name of the node that the file comes from
+        :param nodename: the name/id of the node that the file comes from
         :returns the metadata from the file
         """
         meta = self.metadata_from_file(path)
 
-        logger.info("Received file from %s: %s, %s, %s %s" % (nodename, meta.bdb_metadata_hash, meta.bdb_source_name, meta.what_date, meta.what_time))
+        logger.info("Received file from %s: %s, %s, %s %s" % (nid, meta.bdb_metadata_hash, meta.bdb_source_name, meta.what_date, meta.what_time))
         
         if not self.handled_files.add(meta.bdb_metadata_hash):
             logger.info("File recently handled, ignoring it: %s, %s" % (meta.bdb_metadata_hash, meta.bdb_source_name))
             return None
         
         for subscription in self.subscriptions: # Should only be passive subscriptions here. Active subscriptions should be handled in separate threads.
-            if len(subscription.nodenames()) > 0 and nodename not in subscription.nodenames():
+            if len(subscription.allowed_ids()) > 0 and nid not in subscription.allowed_ids():
                 continue
             
             if subscription.filter_matching(meta):

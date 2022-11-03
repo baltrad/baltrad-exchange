@@ -172,11 +172,30 @@ A subscription defines what should be allowed into the system and the basic oper
   the signature will be validated in the auth-check before the file is handled.
 
 The subscription will however not decide where a file should be published or if it should be processed. Instead all files that passes the filter and allowed-ids check will first be distributed to
-the publishers and then to the processors. If it is nessecary to distribute/publish a file directly it can be done by implementing a distributed storage that handles this.
+the publishers and then to the processors. If it is nessecary to distribute/publish a file directly it can be done by implementing a distributed storage that handles this. Keep in mind that this 
+will require some threading and other considerations since the subscription handling should not be allowed to block waiting for time consuming operations since it will starve the WSGI-servers thread 
+pool.
 
 
 ========================
 Storages
 ========================
+The storages are locations where files should be placed and are referred to by the subscriptions. Typically you would only have a few different storages. For example on the file system, in a database or in an archive.
+Different storages have different 
  
+.. code-block:: json
 
+  {"storage":{
+    "storage_type":"file_storage",
+    "name":"default_storage",
+    "structure":[
+      { "object":"SCAN",
+        "path":"/tmp/baltrad_bdb",
+        "name_pattern":"${_baltrad/datetime_l:15:%Y/%m/%d/%H/%M}/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.h5"
+      },
+      { "path":"/tmp/baltrad_bdb",
+        "name_pattern":"${_baltrad/datetime_l:15:%Y/%m/%d/%H/%M}/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z.h5"
+      }
+    ]
+  }
+  }

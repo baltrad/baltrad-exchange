@@ -26,30 +26,62 @@ import logging
 import os
 import shutil
 import stat
+from abc import abstractmethod
+
 from baltrad.exchange.naming import namer
 logger = logging.getLogger("baltrad.exchange.server.backend")
 
-class storage:
+class storage(object):
+    """Base class for all storages
+    """
     def __init__(self):
-        pass
+        """Constructor
+        """
+        super(storage, self).__init__()
+    
+    @abstractmethod
     def name(self):
+        """
+        :return the name identifying this storage
+        """
         raise NotImplementedError()
-    def store(self, path):
+    
+    @abstractmethod
+    def store(self, path, meta):
+        """ Passes on the file to the storage
+        :param path: The full path to the file to be stored
+        :param meta: The meta data for this file.
+        """
         raise NotImplementedError()
 
 class none_storage(storage):
+    """Simple storage that does nothing
+    """
     def __init__(self, name):
+        """Constructor
+        :param name: The name identifying this storage
+        """
         self.type = self.name_repr()
         self._name = name
 
     def store(self, path, meta):
-        logger.debug("Using storage %s of type %s"%(self.name(), self.name_repr()))
+        """ Does nothing but prints that a file would have been stored
+        :param path: The full path to the file to be stored
+        :param meta: The meta data for this file.
+        """
+        logger.info("[none_storage - %s]: Would store file %s - %s - %s"%(self.name(), meta.what_source, meta.what_date, meta.what_time))
 
     def name(self):
+        """
+        :return the name identifying this storage
+        """
         return self._name
 
     @classmethod
     def name_repr(cls):
+        """
+        :return "none_storage"
+        """
         return "none_storage"
 
     @classmethod
@@ -74,7 +106,22 @@ class file_store:
         logger.info("Stored file: %s"%(oname))
 
 class file_storage(storage):
+    """A basic file storage that allows separation of files based on object types. A typical structure would be:
+    [
+       {"object":"SCAN",
+        "path":"/tmp/baltrad_bdb",
+        "name_pattern":"${_baltrad/datetime_l:15:%Y/%m/%d/%H/%M}/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.h5"
+       },
+       {"path":"/tmp/baltrad_bdb",
+        "name_pattern":"${_baltrad/datetime_l:15:%Y/%m/%d/%H/%M}/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z.h5"
+       }
+    ]
+    """
     def __init__(self, name, structure_d):
+        """Constructor
+        :param name: The name of this storage
+        :structure_d: a list of entries describing where different files of what/object-type should be placed.
+        """
         self.type = self.name_repr()
         self._name = name
         self.structure_d = structure_d
@@ -86,6 +133,11 @@ class file_storage(storage):
                 self.structures[s["object"]]=file_store(s["path"],s["name_pattern"])
 
     def get_attribute_value(self, name, meta):
+        """
+        :param name: Name of attribute
+        :param meta: Metadata from where value for name should be taken
+        :return the value for the name or None if not found
+        """
         try:
             return meta.node(name).value
         except LookupError:
