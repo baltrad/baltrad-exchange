@@ -21,7 +21,6 @@ There are several reasons for why this engine was created but to name a few key-
 - Possibility to run several different instances on same server
 - Allow possibility to decorate a file before it is sent to a subscriber
 
-=================
 Overview
 =================
 
@@ -55,7 +54,6 @@ The exchange of any files can be divided into a number of different steps.
   uses the server backend to trigger and pass a file into the system like if it had passed the **Authentication** part. The runners can for example be event triggered variants like inotify. It can also be
   triggered variants that accepts some external trigger or scheduled variants.
 
-========================
 Authorization
 ========================
 
@@ -80,7 +78,7 @@ As you see in the example, three files will be created. A private key in PEM-for
 The one in json format will typically be used when setting up the subscriptions. The json-file contains some meta information and the public PEM-key with newlines escaped to be compatible
 with json. !!!NOTE!!! It might be reasonable to also have configured a folder containing all the keys!!!
 
-========================
+
 Configuration
 ========================
 The basic configuration is just a property-file containing the most basic information which is specified when starting the server. In order for the system to start you won't need any
@@ -151,7 +149,7 @@ Where the <keyword> is one of the following types:
 Whenever a json file is read and the backend identifies one of the above keywords the object is created to support that configuration. Each of these keyword configurations will
 be explained later on
 
-============================
+
 Subscriptions (subscription)
 ============================
 
@@ -232,7 +230,6 @@ Currently, the only allowed cryptos are keyczar (for DEX-compatibility) and the 
 As can be seen in the above example, there is a storage named "default_storage" that this subscription expects the files to be stored in. 
 
 
-========================
 Storages (storage)
 ========================
 The storages are locations where files should be placed and are referred to by the subscriptions. Typically you would only have a few different storages. For example on the file system, in a database or in an archive.
@@ -330,7 +327,6 @@ With the above knowledge, assuming that a scan with elevation angle=0.5 arrives 
 expression *${_baltrad/datetime_l:15:%Y/%m/%d/%H/%M}/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.h5*
 will result in *2022/11/03/22/00/sella_scan_202211032203_0.5.h5*.
 
-==========================
 Publications (publication)
 ==========================
 
@@ -469,3 +465,61 @@ we can use a failover_connection instead. This connection type allows a list of 
        ]
      }
    }
+   
+The following connections are currently available:
+
+**baltrad.exchange.net.connections.simple_connection**
+  Simple connection that only takes one sender and if the sender fails the transmission is failed.
+  
+**baltrad.exchange.net.connections.failover_connection**
+  Takes a list of senders and will try the senders sequentially until the first sender succeedes. If all sender fails, then transmission is failed.
+
+**baltrad.exchange.net.connections.backup_connection**
+  Takes a list of senders and will send to all senders regardless if the previous one succeeded or failed.
+
+
+Senders
+----------
+The senders are protocol specific and ensures that the data is sent correctly and if applicable, in a secure way. There are several predefined ways to send files. Since each sender has it's own
+set of arguments to be initiated you find examples on how to use them in the etc-catalogue.
+
+**baltrad.exchange.net.senders.storage_sender**
+  Publishes a file using file storages. This is very useful if you want to decorate a file before it is put on the storage.
+
+**baltrad.exchange.net.senders.dex_sender**
+  Legacy DEX communication sending files to old nodes
+
+**baltrad.exchange.net.senders.rest_sender**
+  Sends a file to another node that is running baltrad-exchange. The rest sender uses the internal crypto library for signing messages which currently supports DSA & RSA keys. DSA uses DSS, RSA uses pkcs1_15.
+
+**baltrad.exchange.net.senders.sftp_sender**
+  Sends files over sftp
+
+**baltrad.exchange.net.senders.scp_sender**
+  Publishes files over scp
+  
+**baltrad.exchange.net.senders.ftp_sender**
+  Publishes files over ftp
+  
+**baltrad.exchange.net.senders.copy_sender**
+  Publishes files by copying them. It uses it's own metadata namer.
+
+Decorators
+------------
+The decorators are the baltrad exchange engines way to allow you to modify files before publishing them. For example if you only want to publish a few parameters, if you want to add some important text in a how-section
+or maybe convert the ODIM-version to a different one. At the moment, there aren't any decorators distributed with the baltrad-exchange engine. But you will find an example on how a decorator can be implemented here and here.
+
+
+Runners (runner)
+=================
+
+A runner is something that is running on the side of the actual file handling taking care of miscellaneous tasks. The two most typical runners are used for getting aware of when files are available for injection into the system like
+an active subscription. 
+
+
+  
+
+
+
+  
+
