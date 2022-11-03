@@ -190,10 +190,10 @@ Different storages have different
     "name":"default_storage",
     "structure":[
       { "object":"SCAN",
-        "path":"/tmp/baltrad_bdb",
+        "path":"/storage/radar",
         "name_pattern":"${_baltrad/datetime_l:15:%Y/%m/%d/%H/%M}/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.h5"
       },
-      { "path":"/tmp/baltrad_bdb",
+      { "path":"/storage/radar",
         "name_pattern":"${_baltrad/datetime_l:15:%Y/%m/%d/%H/%M}/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z.h5"
       }
     ]
