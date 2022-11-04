@@ -374,7 +374,7 @@ class scp_sender(baseuri_sender):
         super(scp_sender, self).__init__(backend, aid, arguments)
         
     def send(self, path, meta):
-        """Sends the file using sftp.
+        """Sends the file using scp.
         :param file: path to file that should be sent
         :param meta: the meta object for all metadata of file
         """

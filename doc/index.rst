@@ -1,8 +1,7 @@
 
-"""""""""""""""""
-baltrad-exchange
-User Manual
-"""""""""""""""""
+""""""""""""""""""""""""""""
+baltrad-exchange 
+""""""""""""""""""""""""""""
 
 ---------------------------------------------
 A multipurpose exchange engine for radar data
@@ -495,8 +494,18 @@ Currently, there are two runners implemented in the exchange server but like wit
 
 **baltrad.exchange.runner.runners.triggered_fetch_runner**
   A triggered runner. This runner implements 'message_aware' so that a json-message can be handled. This runner is triggered from the WSGI-process 
-  and as such is using the WSGI-servers thread pool. **TODO: Implement this as a producer/consumer thread to avoid any possibility to starve the WSGI-thread pool.** 
+  and as such is using the WSGI-servers thread pool. **TODO: Implement this as a producer/consumer thread to avoid any possibility to starve the WSGI-thread pool.**
+  
+  The fetcher runner will react on a trigger message and then use a protocol-specific fetcher to retrieve files from a server host in some way. Currently there is support
+  for the following fetchers.
+  
+  **baltrad.exchange.net.fetchers.sftp_fetcher** - Fetches files from host using sftp
 
+  **baltrad.exchange.net.fetchers.scp_fetcher**  - Fetches files from host using scp
+
+  **baltrad.exchange.net.fetchers.ftp_fetcher**  - Fetches files from host using ftp
+
+  **baltrad.exchange.net.fetchers.copy_fetcher** - Fetches files from host using file copy
 
 Processors (processor)
 ======================

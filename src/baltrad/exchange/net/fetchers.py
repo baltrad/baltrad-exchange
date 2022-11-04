@@ -4,8 +4,11 @@ import importlib
 import uuid
 import urllib.parse as urlparse
 import re
+import os
 import fnmatch
-from tempfile import NamedTemporaryFile
+from tempfile import NamedTemporaryFile, TemporaryDirectory
+from paramiko import SSHClient
+from scp import SCPClient
 
 from baltrad.exchange.net.sftpclient import sftpclient
 
@@ -102,7 +105,51 @@ class baseuri_fetcher(fetcher):
         """
         return self._path
 
-class sftp_fetcher(baseuri_fetcher):
+class baseuri_patternmatching_fetcher(baseuri_fetcher):
+    """Base class for fetching data using basic file transmission protocols like sftp, ftp, ...
+    """
+    def __init__(self, backend, aid, arguments):
+        """Constructor
+        :param backend: The backend
+        :param aid: Id for this fetcher
+        :param arguments: Dictionary containg at least:
+         {
+           "uri":"....",
+         }
+         This is a base class so the uri is parsed and appropriate members are set. There is no support for any sort of 
+         routing appropriate scheme to correct fetcher.
+        """
+        super(baseuri_patternmatching_fetcher, self).__init__(backend, aid, arguments)
+        self._pattern = None
+        self._fnpattern = None
+        self._pattern_matcher = None
+        
+        if "pattern" in arguments and arguments["pattern"]:
+            self._pattern = arguments["pattern"]
+        if "fnpattern" in arguments and arguments["fnpattern"]:
+            self._fnpattern = arguments["fnpattern"]
+        if self._pattern:
+            self._pattern_matcher = re.compile(self._pattern)
+
+    def fnpattern(self):
+        """
+        :return the filename pattern, like *.h5
+        """
+        return self._fnpattern
+    
+    def pattern(self):
+        """
+        :return the regular expression matching pattern
+        """
+        return self._pattern
+    
+    def pattern_matcher(self):
+        """
+        :return the pattern matcher for the regular expression if there is one
+        """
+        return self._pattern_matcher
+
+class sftp_fetcher(baseuri_patternmatching_fetcher):
     """Fetcher files using sftp
     """
     def __init__(self, backend, aid, arguments):
@@ -112,35 +159,23 @@ class sftp_fetcher(baseuri_fetcher):
         :param arguments: Dictionary containg at least:
          {
            "uri":"....",
-           "create_missing_directory":true
          }
         """
         super(sftp_fetcher, self).__init__(backend, aid, arguments)
-        self._pattern = None
-        self._fnpattern = None
-        self._pattern_matcher = None
-        
-        if "pattern" in arguments and arguments["pattern"]:
-            self._pattern = arguments["pattern"]
-        if "fnpattern" in arguments and arguments["fnpattern"]:
-            self._fnpattern = arguments["fnpattern"]
-            
-        if not self._pattern and not self._fnpattern:
-            raise Exception("Missing 'pattern' and/or 'fnpattern' in fetcher configuration")
-        if self._pattern:
-            self._pattern_matcher = re.compile(self._pattern)
+        if not self.fnpattern() and not self.pattern():
+            raise Exception("Neither fnpattern or pattern provided") 
         
     def fetch(self, **kwargs):
-        """Publishes the file using sftp.
+        """Fetches the file using sftp.
         :param file: path to file that should be published
         :param meta: the meta object for all metadata of file
         """
         with sftpclient(self.hostname(), port=self.port(), username=self.username(), password=self.password()) as c:
             files = c.listdir(self.path())
             for f in files:
-                if self._fnpattern and not fnmatch.fnmatch(f, self._fnpattern):
+                if self.fnpattern() and not fnmatch.fnmatch(f, self.fnpattern()):
                     continue
-                if self._pattern_matcher and not self._pattern_matcher.match(f):
+                if self.pattern_matcher() and not self.pattern_matcher().match(f):
                     continue
                 
                 fullname = "%s/%s"%(self.path(), f)
@@ -150,7 +185,50 @@ class sftp_fetcher(baseuri_fetcher):
                 with NamedTemporaryFile(**ntfargs) as tfo:
                     c.getfo(fullname, tfo)
                     self.backend().store_file(fullname, self.id())
+
+class scp_fetcher(baseuri_patternmatching_fetcher):
+    """Fetcher file(s) using scp
+    """
+    def __init__(self, backend, aid, arguments):
+        """Constructor
+        :param backend: The backend
+        :param aid: Id for this fetcher
+        :param arguments: Dictionary containg at least:
+         {
+           "uri":"....",
+         }
+        """
+        super(scp_fetcher, self).__init__(backend, aid, arguments)
         
+    def fetch(self, **kwargs):
+        """Fetches the file(s) using scp.
+        :param file: path to file that should be published
+        :param meta: the meta object for all metadata of file
+        """
+        ssh = None
+        scp = None
+        try:
+            ssh = SSHClient()
+            ssh.load_system_host_keys()
+            ssh.connect(self.hostname(), self.port(), self.username(), self.password());
+            _, sout, _ = ssh.exec_command("ls -1 %s"%self.path())
+            files = str(sout.read(), "utf-8").split("\n")
+            scp = SCPClient(ssh.get_transport())
+            tdargs={}
+            with TemporaryDirectory(**tdargs) as tmpdir:
+                for f in files:
+                    if f.strip():
+                        bname = os.path.basename(f)
+                        fullname = os.path.join(tmpdir, bname)
+                        scp.get(f.strip(), fullname)
+                        self.backend().store_file(fullname, self.id())
+        finally:
+            if scp:
+                try:
+                    scp.close()
+                except:
+                    pass
+
 class fetcher_manager:
     """ Creates fetcher instances from a configuration entry
     """
