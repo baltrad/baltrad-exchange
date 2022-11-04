@@ -116,8 +116,7 @@ class test_namer(unittest.TestCase):
         meta.what_source = "NOD:setst,WMO:12345,RAD:SE52"
         meta.bdb_source_name = "setst"
 
-        namer = metadata_namer("${_baltrad/datetime:%Y/%m/%d/%H/%M}.interval_u(15)/${_bdb/source_name}_${/what/date}T${/what/time}.interval_l(15)Z_${/what/object}.tolower().toupper(0)_${/dataset1/data1/what/quantity}_${_baltrad/datetime:%Y%m%d%H%M}.interval_u(15).h5")
-        
+        namer = metadata_namer("${_baltrad/datetime:%Y/%m/%d/%H/%M}.interval_u(15)/${_baltrad/source_name}_${/what/date}T${/what/time}.interval_l(15)Z_${/what/object}.tolower().toupper(0)_${/dataset1/data1/what/quantity}_${_baltrad/datetime:%Y%m%d%H%M}.interval_u(15).h5")
         assert("2000/01/01/12/15/setst_20000101T120000Z_Pvol_DBZH_200001011215.h5" == namer.name(meta))
 
     def test_complex_name_2(self):
@@ -134,11 +133,11 @@ class test_namer(unittest.TestCase):
         meta.what_source = "NOD:setst,WMO:12345,RAD:SE52"
         meta.bdb_source_name = "setst"
 
-        namer = metadata_namer("${_baltrad/datetime:%Y/%m/%d/%H/%M}.interval_l(15)/${_bdb/source_name}_${/what/date}T${/what/time}.interval_l(15)Z_${/what/object}.tolower().toupper(0)_${/dataset1/data1/what/quantity}_${_baltrad/datetime:%Y%m%d%H%M}.interval_l(15).h5")
+        namer = metadata_namer("${_baltrad/datetime:%Y/%m/%d/%H/%M}.interval_l(15)/${_baltrad/source_name}_${/what/date}T${/what/time}.interval_l(15)Z_${/what/object}.tolower().toupper(0)_${/dataset1/data1/what/quantity}_${_baltrad/datetime:%Y%m%d%H%M}.interval_l(15).h5")
 
         assert("2000/01/01/12/00/setst_20000101T120400Z_Pvol_DBZH_200001011200.h5" == namer.name(meta))
 
-    def test_complex_name_bdb_source_NOD(self):
+    def test_complex_name_baltrad_source_NOD(self):
         meta = oh5.Metadata()
         meta.add_node("/", Group("what"))
         meta.add_node("/what", Attribute("object", "PVOL"))
@@ -152,7 +151,7 @@ class test_namer(unittest.TestCase):
         meta.what_source = "NOD:setst,WMO:12345,RAD:SE52"
         meta.bdb_source_name = "setst"
 
-        namer = metadata_namer("${_baltrad/datetime:%Y/%m/%d/%H/%M}.interval_u(15)/${_bdb/source:NOD}_${/what/date}T${/what/time}.interval_l(15)Z_${/what/object}.tolower().toupper(0)_${/dataset1/data1/what/quantity}_${_baltrad/datetime:%Y%m%d%H%M}.interval_u(15).h5")
+        namer = metadata_namer("${_baltrad/datetime_u:15:%Y/%m/%d/%H/%M}/${_baltrad/source:NOD}_${/what/date}T${/what/time}.interval_l(15)Z_${/what/object}.tolower().toupper(0)_${/dataset1/data1/what/quantity}_${_baltrad/datetime_u:15:%Y%m%d%H%M}.h5")
 
         assert("2000/01/01/12/15/setst_20000101T120000Z_Pvol_DBZH_200001011215.h5" == namer.name(meta))
 

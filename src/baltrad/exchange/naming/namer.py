@@ -195,7 +195,7 @@ class metadata_namer:
             # This is the beginning of the name until the first match
             buffer.write(parsed_tmpl[0:span[0]])
             if placeholder.startswith("_baltrad/source:"):
-                replacement_value = self.get_source_item(placeholder[12:], Source.from_string(meta.bdb_source))
+                replacement_value = self.get_source_item(placeholder[16:], Source.from_string(meta.bdb_source))
             elif placeholder.startswith("_baltrad/source_name"):
                 replacement_value = meta.bdb_source_name
             elif placeholder.startswith("what/source:"):
