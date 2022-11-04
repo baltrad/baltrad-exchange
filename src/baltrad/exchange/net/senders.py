@@ -533,7 +533,7 @@ class sender_manager:
         if "arguments" in arguments:
             senderargs = arguments["arguments"]
         if clz.find(".") > 0:
-            logger.info("Creating sender '%s'"%clz)
+            logger.debug("Creating sender '%s'"%clz)
             lastdot = clz.rfind(".")
             module = importlib.import_module(clz[:lastdot])
             classname = clz[lastdot+1:]

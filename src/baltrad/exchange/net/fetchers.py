@@ -85,12 +85,21 @@ class baseuri_fetcher(fetcher):
         return self._port
     
     def username(self):
+        """
+        :return the user name
+        """
         return self._username
     
     def password(self):
+        """
+        :return the password
+        """
         return self._password
 
     def path(self):
+        """
+        :return the path
+        """
         return self._path
 
 class sftp_fetcher(baseuri_fetcher):
@@ -121,7 +130,6 @@ class sftp_fetcher(baseuri_fetcher):
         if self._pattern:
             self._pattern_matcher = re.compile(self._pattern)
         
-        
     def fetch(self, **kwargs):
         """Publishes the file using sftp.
         :param file: path to file that should be published
@@ -144,8 +152,8 @@ class sftp_fetcher(baseuri_fetcher):
                     self.backend().store_file(fullname, self.id())
         
 class fetcher_manager:
-    def __init__(self):
-        pass
+    """ Creates fetcher instances from a configuration entry
+    """
 
     @classmethod
     def from_conf(self, backend, arguments):
@@ -163,7 +171,7 @@ class fetcher_manager:
         if "arguments" in arguments:
             fetcherargs = arguments["arguments"]
         if clz.find(".") > 0:
-            logger.info("Creating fetcher '%s'"%clz)
+            logger.debug("Creating fetcher '%s'"%clz)
             lastdot = clz.rfind(".")
             module = importlib.import_module(clz[:lastdot])
             classname = clz[lastdot+1:]

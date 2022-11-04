@@ -160,18 +160,36 @@ class storage_manager:
     """ The storage manager
     """
     def __init__(self):
+        """Constructor
+        """
         self.storage={}
     
     def add_storage(self, storage):
+        """ Adds a storage instance to the internal list
+        :param storage: The created storage that is a subclass of  baltrad.exchange.storage.storages.storage
+        """
         self.storage[storage.name()] = storage
     
     def get_storage(self, name):
+        """
+        :param name: Name of the storage
+        :return the storage with provided name
+        """
         return self.storage[name]
     
     def has_storage(self, name):
+        """
+        :param name: Name of the storage
+        :return if there is a storage with specified name
+        """
         return name in self.storage
     
     def store(self, name, path, meta):
+        """Stores a file in the specified storage.
+        :param name: Name in which the file should be stored
+        :param path: The file name that should be stored
+        :param meta: Metadata about the file that should be stored
+        """
         self.storage[name].store(path, meta)
         
     @classmethod
@@ -181,7 +199,7 @@ class storage_manager:
         :param arguments: a list of arguments that should be used to initialize the class       
         """
         if clz.find(".") > 0:
-            logger.info("Creating storage '%s'"%clz)
+            logger.debug("Creating storage '%s'"%clz)
             lastdot = clz.rfind(".")
             module = importlib.import_module(clz[:lastdot])
             classname = clz[lastdot+1:]

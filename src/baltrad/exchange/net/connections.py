@@ -139,7 +139,7 @@ class connection_manager(object):
         :param arguments: a list of arguments that should be used to initialize the class       
         """
         if clz.find(".") > 0:
-            logger.info("Creating connection handler '%s'"%clz)
+            logger.debug("Creating connection handler '%s'"%clz)
             lastdot = clz.rfind(".")
             module = importlib.import_module(clz[:lastdot])
             classname = clz[lastdot+1:]

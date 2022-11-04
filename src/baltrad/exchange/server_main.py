@@ -206,6 +206,8 @@ def run():
             # openssl req  -nodes -new -x509  -keyout server.key -out server.cert
             server.ssl_adapter=BuiltinSSLAdapter(cherryconf.get("server.certificate"),
                                                  cherryconf.get("server.key"))
+
+        logger.info("REST server listening on port '%d' supporting scheme: %s"%(parsedurl.port, parsedurl.scheme))
         try:
             server.start()
         finally:

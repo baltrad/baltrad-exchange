@@ -129,7 +129,12 @@ class SimpleBackend(backend.Backend):
         for d in confdirs:
             logger.info("Processing directory: %s" % d)
             self.process_conf_dir(d.strip())
-    
+
+        logger.info("Starting runners")
+        self.runner_manager.start()
+
+        logger.info("System initialized")
+
     def read_bdb_sources(self, odim_source_file):
         """Reads and parses the odim sources
         :param odim_source_file: file containing the odim source definitions
@@ -146,34 +151,36 @@ class SimpleBackend(backend.Backend):
         files = glob.glob("%s/*.json"%d)
         
         for f in files:
-            logger.info("Processing configuration file: %s"%f)
+            logger.debug("Processing configuration file: %s"%f)
             with open(f,"r") as fp:
                 data = json.load(fp)
                 if "publication" in data:
                     p = publisher_manager.from_conf(data["publication"], self)
+                    logger.info("Adding publication from configuration file: %s"%(f))
                     self.publications.append(p)
 
                 elif "subscription" in data:
                     subs = subscription_manager.from_conf(data["subscription"], self)
+                    logger.info("Adding subscription from configuration file: %s"%(f))
                     self.subscriptions.append(subs)
                 
                 elif "storage" in data:
-                    #s = self.storage_manager.from_value(data["storage"])
                     s = self.storage_manager.from_conf(data["storage"], self)
-                    logger.info("Adding storage: %s of type %s"%(s.name(), type(s)))
+                    logger.info("Adding storage from configuration file %s"%(f))
                     self.storage_manager.add_storage(s)
                 
                 elif "runner" in data:
                     runner = self.runner_manager.from_conf(data["runner"], self)
-                    logger.info("Adding runner: %s"%(str(runner)))
+                    logger.info("Adding runner from configuration file %s"%(f))
                     self.runner_manager.add_runner(runner)
                 
                 elif "processor" in data:
                     p = processors.processor_manager.from_conf(data["processor"], self)
-                    logger.info("Adding processor: %s"%(p.name()))
+                    logger.info("Adding processor from configuration file %s"%(f))
                     self.processor_manager.add_processor(p)
-        
-        self.runner_manager.start()
+                else:
+                    logger.info("Could not identify content of configuration file %s"%f)
+
 
     @classmethod
     def from_conf(cls, conf):

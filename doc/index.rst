@@ -1,6 +1,7 @@
 
 """""""""""""""""
 baltrad-exchange
+User Manual
 """""""""""""""""
 
 ---------------------------------------------
@@ -147,8 +148,7 @@ Where the <keyword> is one of the following types:
 - **processor** 
 
 Whenever a json file is read and the backend identifies one of the above keywords the object is created to support that configuration. Each of these keyword configurations will
-be explained later on
-
+be explained in the following sections.
 
 Subscriptions (subscription)
 ============================
@@ -351,7 +351,6 @@ This publisher uses a threaded producer/consumer approach.
 The basic structure of a publication configuration looks like
 
 .. code-block:: json
-   :caption: Basic publication configuration structure
    
   {
   "publication":{
@@ -362,9 +361,9 @@ The basic structure of a publication configuration looks like
   	   "queue_size":50
      },
      "active":false,
-     "connection":{ .... connection specific config ....
+     "connection":{  .... 
      },   
-     "filter":{ .... filter specific config ....
+     "filter":{  .... 
      },
      "decorators":[
      ]
@@ -499,6 +498,13 @@ Currently, there are two runners implemented in the exchange server but like wit
   and as such is using the WSGI-servers thread pool. **TODO: Implement this as a producer/consumer thread to avoid any possibility to starve the WSGI-thread pool.** 
 
 
+Processors (processor)
+======================
+
+The processors can be seen as a combination of runners and decorators these are triggered during the subscription validation process in the same way as a publisher. That means that all processors
+will be notified about a file when it has passed the subscription matching. The processor is intended for building products from incoming data in various ways in an asynchronous way and is not
+allowed to be blocking. This means that when a file has been passed to the processor, the processor should pass it on to a queue of some sort and return immediately. The exchange server expects 
+no response and will. Instead it is up to the processor to ensure that the resulting product is taken care of, for example by notifying the exchange server that there is a file available.
 
 
 

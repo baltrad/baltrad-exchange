@@ -94,7 +94,7 @@ class processor_manager:
         :param arguments: a list of arguments that should be used to initialize the class       
         """
         if clz.find(".") > 0:
-            logger.info("Creating processor '%s'"%clz)
+            logger.debug("Creating processor '%s'"%clz)
             lastdot = clz.rfind(".")
             module = importlib.import_module(clz[:lastdot])
             classname = clz[lastdot+1:]
