@@ -348,11 +348,13 @@ This publisher uses a threaded producer/consumer approach.
 **decorators**
   Are used to modify the outgoing file in some way. The decorators are most likely plugins using ODIM-H5 manipulating software like rave or h5py.
 
-.. code-block:: json
+The basic structure of a publication configuration looks like
 
+.. code-block:: json
+   :caption: Basic publication configuration structure
+   
   {
   "publication":{
-     "_comment_":"Usually publications should use this publisher. Extra arguments is number of threads and queue_size.",
      "name":"Send file to localhost",
      "class":"baltrad.exchange.net.publishers.standard_publisher",
      "extra_arguments": {
@@ -360,42 +362,13 @@ This publisher uses a threaded producer/consumer approach.
   	   "queue_size":50
      },
      "active":false,
-     "connection":{
-       "class":"baltrad.exchange.net.connections.simple_connection",
-       "arguments":{
-         "sender":{
-           "id":"rest-sender 1",
-           "class":"baltrad.exchange.net.senders.rest_sender",
-           "arguments":{
-             "address":"https://localhost:8089",
-       	     "protocol_version":"1.0",
-       	     "crypto":{
-               "libname":"crypto",
-               "nodename":"anders-silent",
-               "privatekey":"/projects/baltrad/baltrad-exchange/etc/exchange-keys/anders-silent.private"
-             }
-           }
-         }
-       }
+     "connection":{ .... connection specific config ....
      },   
-     "filter":{
-  	   "filter_type": "and_filter", 
-  	   "value": [
-  	     {"filter_type": "attribute_filter", 
-  	      "name": "_bdb/source_name", 
-          "operation": "in", 
-          "value_type": "string", 
-          "value": ["sehem","seang"]}, 
-  	     {"filter_type": "attribute_filter", 
-          "name": "/what/object", 
-          "operation": "=", 
-          "value_type": "string", 
-          "value": ["SCAN"]}
-      ]
-    },
-    "decorators":[
-    ]
-  }
+     "filter":{ .... filter specific config ....
+     },
+     "decorators":[
+     ]
+   }
   }
 
 Connections
@@ -514,10 +487,18 @@ Runners (runner)
 =================
 
 A runner is something that is running on the side of the actual file handling taking care of miscellaneous tasks. The two most typical runners are used for getting aware of when files are available for injection into the system like
-an active subscription. 
+an active or triggered subscription. The runners have a different entrance to the system by going directly to the subscription-handling in the backend without any authentication.
+Currently, there are two runners implemented in the exchange server but like with the rest of the system it is easy to extend with new runners.
+
+**baltrad.exchange.runner.runners.inotify_runner**
+  The inotify runner is used to monitor folders and trigger "store" events. It is run in a separate thread instead of beeing created as a daemon-thread since
+  all initiation is performed in the main thread before server is started. 
+
+**baltrad.exchange.runner.runners.triggered_fetch_runner**
+  A triggered runner. This runner implements 'message_aware' so that a json-message can be handled. This runner is triggered from the WSGI-process 
+  and as such is using the WSGI-servers thread pool. **TODO: Implement this as a producer/consumer thread to avoid any possibility to starve the WSGI-thread pool.** 
 
 
-  
 
 
 

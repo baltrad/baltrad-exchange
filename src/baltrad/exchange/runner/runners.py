@@ -86,7 +86,8 @@ class inotify_runner_event_handler(pyinotify.ProcessEvent):
             self._runner.handle_file(event.pathname)
 
 class inotify_runner(runner):
-    """The inotify runner is used to monitor folders and trigger "store" events
+    """The inotify runner is used to monitor folders and trigger "store" events. It is run in a separate thread instead of 
+    beeing created as a daemon-thread since all initiation is performed in the main thread before server is started.
     """
     MASK = pyinotify.IN_CLOSE_WRITE | pyinotify.IN_MOVED_TO
     
@@ -149,7 +150,9 @@ class inotify_runner(runner):
 
 class triggered_fetch_runner(runner, message_aware):
     """A triggered runner. This runner implements 'message_aware' so that a json-message
-    can be handled.
+    can be handled. This runner is actually triggered from the WSGI-process and as such
+    is using the WSGI-servers thread pool. @todo: Implement this as a producer/consumer
+    thread to avoid any possibility to starve the WSGI-thread pool. 
     """
     def __init__(self, backend, active, **args):
         """Constructor
