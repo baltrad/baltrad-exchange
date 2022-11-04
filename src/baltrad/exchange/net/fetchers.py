@@ -10,6 +10,7 @@ from tempfile import NamedTemporaryFile, TemporaryDirectory
 from paramiko import SSHClient
 from scp import SCPClient
 import ftplib
+import glob
 
 from baltrad.exchange.net.sftpclient import sftpclient
 
@@ -274,18 +275,18 @@ class ftp_fetcher(baseuri_patternmatching_fetcher):
         files=[]
         try:
             ftp.cwd(self.path())
-            files = self.nlst()
+            files = ftp.nlst()
             
             for f in files:
                 tdargs={}
-                bname = os.path.basename(f)
-                if self.fnpattern() and not fnmatch.fnmatch(bname, self.fnpattern()):
+                if self.fnpattern() and not fnmatch.fnmatch(f, self.fnpattern()):
                     continue
-                if self.pattern_matcher() and not self.pattern_matcher().match(bname):
+                if self.pattern_matcher() and not self.pattern_matcher().match(f):
                     continue
                 
                 with NamedTemporaryFile(**tdargs) as fp:
                     ftp.retrbinary("RETR %s"%f, fp.write)
+                    fp.flush()
                     self.backend().store_file(fp.name, self.id())
         finally:
             ftp.quit()
@@ -297,6 +298,52 @@ class ftp_fetcher(baseuri_patternmatching_fetcher):
         ftp.connect(self.hostname(), self.port())
         ftp.login(self.username(), self.password())
         return ftp
+
+
+class copy_fetcher(fetcher):
+    """Fetcher file(s) using copy
+    """
+    def __init__(self, backend, aid, arguments):
+        """Constructor
+        :param backend: The backend
+        :param aid: Id for this fetcher
+        :param arguments: Dictionary containg at least:
+         {
+           "path":"....",
+         }
+        """
+        super(copy_fetcher, self).__init__(backend, aid)
+        self._path = arguments["path"]
+        self._pattern = None
+        self._fnpattern = "*.h5"
+        self._pattern_matcher = None
+        
+        if "pattern" in arguments and arguments["pattern"]:
+            self._pattern = arguments["pattern"]
+        if "fnpattern" in arguments and arguments["fnpattern"]:
+            self._fnpattern = arguments["fnpattern"]
+        if self._pattern:
+            self._pattern_matcher = re.compile(self._pattern)
+
+
+    def fetch(self, **kwargs):
+        """Fetches the file(s) using copy.
+        :param file: path to file that should be published
+        :param meta: the meta object for all metadata of file
+        """
+        files = glob.glob("%s/%s"%(self._path, self._fnpattern))
+        
+        for f in files:
+            bname = os.path.basename(f)
+            if self.pattern_matcher() and not self.pattern_matcher().match(bname):
+                continue
+            self.backend().store_file(f, self.id())
+
+    def pattern_matcher(self):
+        """
+        :return the pattern matcher
+        """
+        return self._pattern_matcher
 
 
 class fetcher_manager:

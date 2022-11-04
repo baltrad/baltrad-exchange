@@ -4,17 +4,17 @@
   "active":true,
   "class":"baltrad.exchange.runner.runners.triggered_fetch_runner",
   "extra_arguments": {
-     "trigger_names":["trigger_3"],
+     "trigger_names":["trigger_4"],
      "invoker_names":["anders-silent"],
      "fetcher": { 
-       "id":"fetcher - ftp",
-       "class":"baltrad.exchange.net.fetchers.ftp_fetcher",
+       "id":"fetcher - copy",
+       "class":"baltrad.exchange.net.fetchers.copy_fetcher",
        "arguments": {
-         "uri":"ftp://sftpuploader:secret@localhost/tmp/primary_sftp/",
+         "path":"/tmp/primary_sftp",
          "_fnpattern_":"Is used for basic filename reckognition like *.h5, ...",
          "fnpattern":"*.h5",
          "_pattern_":"Is using regular expression matching instead...",
-         "pattern":""
+         "_pattern":""
        }
      }
   }
