@@ -9,6 +9,7 @@ import fnmatch
 from tempfile import NamedTemporaryFile, TemporaryDirectory
 from paramiko import SSHClient
 from scp import SCPClient
+import ftplib
 
 from baltrad.exchange.net.sftpclient import sftpclient
 
@@ -77,6 +78,9 @@ class baseuri_fetcher(fetcher):
                 self._password = uri.password
             self._path = uri.path
 
+    def uri(self):
+        return self._uri
+
     def hostname(self):
         """Returns the hostname extracted from the uri
         """
@@ -86,6 +90,12 @@ class baseuri_fetcher(fetcher):
         """Returns the port number extracted from the uri.
         """
         return self._port
+    
+    def set_port(self, portno):
+        """ Sets the portnumber
+        :param portno: The portnumber to use
+        """
+        self._port = portno
     
     def username(self):
         """
@@ -228,6 +238,66 @@ class scp_fetcher(baseuri_patternmatching_fetcher):
                     scp.close()
                 except:
                     pass
+            if ssh:
+                try:
+                    ssh.close()
+                except:
+                    pass
+
+class ftp_fetcher(baseuri_patternmatching_fetcher):
+    """Fetcher file(s) using scp
+    """
+    def __init__(self, backend, aid, arguments):
+        """Constructor
+        :param backend: The backend
+        :param aid: Id for this fetcher
+        :param arguments: Dictionary containg at least:
+         {
+           "uri":"....",
+         }
+        """
+        super(ftp_fetcher, self).__init__(backend, aid, arguments)
+        if self.uri():
+            uri = urlparse.urlparse(self.uri())
+            if not uri.port:
+                self.set_port(21)
+
+    def fetch(self, **kwargs):
+        """Fetches the file(s) using ftp.
+        :param file: path to file that should be published
+        :param meta: the meta object for all metadata of file
+        """
+        ftp = self.connect()
+        if not ftp:
+            raise Exception("Failed to connect to remove ftp server")
+
+        files=[]
+        try:
+            ftp.cwd(self.path())
+            files = self.nlst()
+            
+            for f in files:
+                tdargs={}
+                bname = os.path.basename(f)
+                if self.fnpattern() and not fnmatch.fnmatch(bname, self.fnpattern()):
+                    continue
+                if self.pattern_matcher() and not self.pattern_matcher().match(bname):
+                    continue
+                
+                with NamedTemporaryFile(**tdargs) as fp:
+                    ftp.retrbinary("RETR %s"%f, fp.write)
+                    self.backend().store_file(fp.name, self.id())
+        finally:
+            ftp.quit()
+
+    ##
+    # Connects to remote server
+    def connect(self):
+        ftp = ftplib.FTP()
+        ftp.connect(self.hostname(), self.port())
+        ftp.login(self.username(), self.password())
+        return ftp
+
 
 class fetcher_manager:
     """ Creates fetcher instances from a configuration entry
