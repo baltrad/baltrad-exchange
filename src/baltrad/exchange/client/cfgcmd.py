@@ -40,6 +40,11 @@ from http import client as httplibclient
 # This should always be available
 from baltrad.exchange import crypto
 from baltrad.exchange.crypto import keyczarcrypto
+from baltrad.exchange.odimutil import metadata_helper
+from baltrad.exchange.server import sqlbackend
+from baltrad.exchange.matching.filters import filter_manager
+from baltrad.exchange.matching.metadata_matcher import metadata_matcher
+from baltrad.bdbcommon import oh5
 
 class ExecutionError(RuntimeError):
     pass
@@ -164,13 +169,47 @@ class CreateKeys(Command):
         print("  Private key: %s"%privkeyfolder)
         print("  Public  key: %s"%pubkeyfolder)
 
-class PostJsonMessage(Command):
+class TestFilter(Command):
     def update_optionparser(self, parser):
-        parser.set_usage(parser.get_usage().strip() + " MESSAGE")
+        parser.set_usage(parser.get_usage().strip() + " <filename>")
 
-    def execute(self, server, opts, args):
-        entry = server.post_json_message(args[0])
-        #for path in args: 
-        #    with open(path, "rb") as data:
-        #        entry = server.store(data)
-        #    print("%s stored"%(path))
+        parser.add_option(
+            "--odim-source", dest="odim_source",
+            help="The odim source file to use for identifying the source of a file. This command will create a temporary source in /tmp unless underwise specified.")
+        
+        parser.add_option(
+            "--dburi", dest="dburi", default="sqlite:////tmp/bec-config-test-sources.db",
+            help="The location where odim sources can be found. Default is to create a temporary db under /tmp.")
+        
+        parser.add_option(
+            "--filter", dest="filter",
+            help="Specifies a file containing a filter. Can be either a subscription or publication cfg-file or else a separate file containing toplevel 'filter'")
+
+    def execute(self, opts, args):
+        with open(opts.odim_source) as f:
+            sources = oh5.Source.from_rave_xml(f.read())
+        source_manager = sqlbackend.SqlAlchemySourceManager(opts.dburi)
+        source_manager.add_sources(sources)
+        hasher = oh5.MetadataHasher()
+        meta = metadata_helper.metadata_from_file(source_manager, hasher, args[0])
+
+        if not opts.filter:
+            raise Exception("Need to specify filter file")
+        
+        with open(opts.filter) as fp:
+            json_cfg = json.load(fp)
+        
+        if "subscription" in json_cfg:
+            tfilter = filter_manager().from_value(json_cfg["subscription"]["filter"])
+        elif "publication" in json_cfg:
+            tfilter = filter_manager().from_value(json_cfg["publication"]["filter"])
+        elif "filter" in json_cfg:
+            tfilter = filter_manager().from_value(json_cfg["filter"])
+        else:
+            raise Exception("Unsupported json-format")
+
+        matcher = metadata_matcher()
+        if matcher.match(meta, tfilter.to_xpr()):
+            print("MATCHING")
+        else:
+            print("NOT MATCHING")

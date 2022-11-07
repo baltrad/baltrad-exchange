@@ -31,7 +31,7 @@ from baltrad.exchange.server.subscription import subscription_manager
 from baltrad.exchange.net import publishers
 from baltrad.exchange.runner import runners
 from baltrad.exchange import auth
-
+from baltrad.exchange.odimutil import metadata_helper
 import glob
 import json
 import time, datetime
@@ -272,24 +272,25 @@ class SimpleBackend(backend.Backend):
         :param path: full path to the file
         :returns the metadata
         """
-        meta = oh5.Metadata.from_file(path)
-        if not meta.what_source:
-            raise LookupError("No source in metadata")
-        
-        metadata_hash = self._hasher.hash(meta)
-        source = self.source_manager.get_source(meta)
-        
-        meta.bdb_source = source.to_string()
-        meta.bdb_source_name = source.name
-        meta.bdb_metadata_hash = metadata_hash
-        meta.bdb_file_size = os.stat(path)[stat.ST_SIZE]
-        
-        logger.debug("Got a source identifier: %s"%str(meta.bdb_source))
-
-        stored_timestamp = datetime.datetime.utcnow()
-        meta.bdb_stored_date = stored_timestamp.date()
-        meta.bdb_stored_time = stored_timestamp.time()
-
-        return meta        
+        return metadata_helper.metadata_from_file(self.source_manager, self._hasher, path)
+        #meta = oh5.Metadata.from_file(path)
+        #if not meta.what_source:
+        #    raise LookupError("No source in metadata")
+        #
+        #metadata_hash = self._hasher.hash(meta)
+        #source = self.source_manager.get_source(meta)
+        #
+        #meta.bdb_source = source.to_string()
+        #meta.bdb_source_name = source.name
+        #meta.bdb_metadata_hash = metadata_hash
+        #meta.bdb_file_size = os.stat(path)[stat.ST_SIZE]
+        #
+        #logger.debug("Got a source identifier: %s"%str(meta.bdb_source))
+        #
+        #stored_timestamp = datetime.datetime.utcnow()
+        #meta.bdb_stored_date = stored_timestamp.date()
+        #meta.bdb_stored_time = stored_timestamp.time()
+        #
+        #return meta        
             
     

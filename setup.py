@@ -40,6 +40,7 @@ setuptools.setup(name="baltrad.exchange",
         ],
         "baltrad.exchange.config.commands": [
             "create_keys = baltrad.exchange.client.cfgcmd:CreateKeys",
+            "test_filter = baltrad.exchange.client.cfgcmd:TestFilter",
         ],
         "console_scripts" : [
             "baltrad-exchange-server = baltrad.exchange.server_main:run",

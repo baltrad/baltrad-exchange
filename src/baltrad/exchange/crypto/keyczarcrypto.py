@@ -222,6 +222,9 @@ def load_key(keypath):
     return import_keyczar_key(meta["type"], keydata)
 
 def create_keyczar_key():
+    """ Creates a new keyczar key using the DSA 1024 bit variant like the one used in
+    the old baltrad installations.
+    :return a keyczar_signer with a DSA-1024 key 
+    """
     key = DSA.generate(1024)
-    print("KEY: %s"%key)
     return keyczar_signer(key)
