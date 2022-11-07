@@ -1,11 +1,11 @@
 
-""""""""""""""""""""""""""""
-baltrad-exchange 
-""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""
+User Guide
+"""""""""""""""""""""""""""""
 
----------------------------------------------
-A multipurpose exchange engine for radar data
----------------------------------------------
+------------------------------------------------------------------
+baltrad-exchange - a multipurpose exchange engine for radar data -
+------------------------------------------------------------------
 
 Introduction
 =================
@@ -360,9 +360,9 @@ The basic structure of a publication configuration looks like
   	   "queue_size":50
      },
      "active":false,
-     "connection":{  .... 
+     "connection":{   
      },   
-     "filter":{  .... 
+     "filter":{   
      },
      "decorators":[
      ]

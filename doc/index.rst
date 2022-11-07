@@ -1,18 +1,16 @@
-.. baltrad-db documentation master file, created by
-   sphinx-quickstart on Wed Oct 26 12:19:05 2011.
+.. baltrad-exchange documentation master file
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-baltrad-db documentation index
+baltrad-exchange documentation index
 ==============================
 
 .. toctree::
    :maxdepth: 2
 
    readme
-   main
+   userguide
    commandline
-   
    
 .. api/index
    expr
