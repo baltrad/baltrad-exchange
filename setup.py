@@ -8,6 +8,7 @@ REQUIRED_PACKAGES= [
     "jprops >= 2.0.2",
     "pyasn1",
     "pycryptodomex",
+    "pyinotify",
     "python-daemon >= 1.6",
     "werkzeug >= 1.0.1"
 ]
