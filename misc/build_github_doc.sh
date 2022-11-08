@@ -5,8 +5,8 @@ set -x
 PROJECT_ROOT=$(dirname $(dirname $(readlink -f $0)))
 
 # First setup environment
-apt-get update
-apt-get -y install git rsync python3-sphinx
+sudo apt-get update
+sudo apt-get -y install git rsync python3-sphinx
 
 git config --local user.email "baltrad@users.noreply.github.com"
 git config --local user.name "Baltrad GitHub Action"
