@@ -196,7 +196,7 @@ def create_signable_string(req):
     See :ref:`doc-rest-authentication` for details.
     """
     fragments = [req.method]
-    for key in ("content-md5", "message-id", "content-type", "date"):
+    for key in ("content-md5", "content-type", "date", "message-id"):
         if key in req.headers:
             value = req.headers[key].strip()
             if value:

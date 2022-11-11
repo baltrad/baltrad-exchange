@@ -11,8 +11,8 @@ baltrad-exchange documentation index
    readme
    userguide
    commandline
+   rest
    
 .. api/index
    expr
-   rest
    tool

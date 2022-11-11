@@ -59,16 +59,15 @@ def post_file(ctx):
     :param ctx: the request context
     :type ctx: :class:`~.util.RequestContext`
     :return: :class:`~.util.JsonResponse` with status
-             *201 Created* and metadata in body
-    :raise: :class:`~.util.HttpConflict` when file already
-            stored
+             *200 OK*
 
-    See :ref:`doc-rest-op-store-file` for details
+    See :ref:`doc-rest-op-post-file` for details
     """
     logger.debug("baltrad.exchange.handler.post_file(ctx)")
     if ctx.is_anonymous(): # We don't want unauthorized messages in here unless it has been explicitly allowed
         logger.info("post_file: anonymous calls are not allowed")
         return Response("", status=httplibclient.UNAUTHORIZED)
+
     with NamedTemporaryFile() as tmp:
         shutil.copyfileobj(ctx.request.stream, tmp)
         tmp.flush()
