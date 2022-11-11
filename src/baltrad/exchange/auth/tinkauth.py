@@ -107,7 +107,7 @@ class TinkAuth(coreauth.Auth):
         See :ref:`doc-rest-authentication` for details.
         """
         fragments = [req.method, req.path]
-        for key in ("content-md5", "content-type", "date"):
+        for key in ("content-md5", "message-id", "content-type", "date"):
             if key in req.headers:
                 value = req.headers[key].strip()
                 if value:

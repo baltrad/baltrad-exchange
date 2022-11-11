@@ -69,7 +69,7 @@ def read_config(conffile):
         raise SystemExit("failed to read configuration from " + conffile)
 
 def get_logging_level(conf):
-    v = conf.get("baltrad.bdb.server.log.level", "INFO")
+    v = conf.get("baltrad.exchange.log.level", "INFO")
     if v == "DEBUG":
         return logging.DEBUG
     elif v == "INFO":

@@ -280,15 +280,18 @@ class CryptoAuth(Auth):
             keyname, sig = credentials.rsplit(":")
         except ValueError:
             raise AuthError("invalid credentials: %s" % credentials)
+
         try:
             verifier = self._verifiers[keyname]
         except Exception:
             raise AuthError("no verifier for key: %s" % keyname)
-        
+
         try:
-            return verifier.verify(self.create_signable_string(req), sig)
+            result = verifier.verify(self.create_signable_string(req), sig)
+            return result
         except Exception as e:
             logger.exception("Failed to verify message")
+
         return False
 
     def create_signable_string(self, req):
@@ -296,8 +299,8 @@ class CryptoAuth(Auth):
 
         See :ref:`doc-rest-authentication` for details.
         """
-        fragments = [req.method, req.path]
-        for key in ("content-md5", "content-type", "date"):
+        fragments = [req.method]
+        for key in ("content-md5", "message-id", "content-type", "date"):
             if key in req.headers:
                 value = req.headers[key].strip()
                 if value:

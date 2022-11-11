@@ -30,6 +30,7 @@ import urllib.parse as urlparse
 import pkg_resources
 import ssl
 import base64
+import uuid
 from datetime import datetime
 import hashlib
 
@@ -72,6 +73,7 @@ class RestfulServer(object):
             "POST", "/file/", data.read(),
             headers={
                 "content-type": "application/x-hdf5",
+                "message-id": str(uuid.uuid4()),
                 "date":datetime.utcnow().strftime("%Y%m%d%H%M%S%f")
             }
         )
@@ -93,6 +95,7 @@ class RestfulServer(object):
             "POST", "/json_message/", json_message,
             headers={
                 "content-type": "application/json",
+                "message-id": str(uuid.uuid4()),
                 "date":datetime.utcnow().strftime("%Y%m%d%H%M%S%f")
             }
         )
@@ -122,7 +125,7 @@ class RestfulServer(object):
                 self._server_url.port)
         self._auth.add_credentials(req)
         try:
-            conn.request(req.method, req.path, req.data, req.headers)
+            conn.request(req.method, "%s/%s"%(self._server_url.path, req.path), req.data, req.headers)
         except socket.error:
             raise RuntimeError(
                 "Could not send request to %s" % self._server_url_str
@@ -192,8 +195,8 @@ def create_signable_string(req):
 
     See :ref:`doc-rest-authentication` for details.
     """
-    fragments = [req.method, req.path]
-    for key in ("content-md5", "content-type", "date"):
+    fragments = [req.method]
+    for key in ("content-md5", "message-id", "content-type", "date"):
         if key in req.headers:
             value = req.headers[key].strip()
             if value:
