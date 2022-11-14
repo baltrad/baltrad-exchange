@@ -79,13 +79,18 @@ class none_storage(storage):
         return self._name
 
 class file_store:
-    def __init__(self, path, name_pattern):
+    def __init__(self, path, name_pattern, simulate=False):
         self.path = path
         self.name_pattern = name_pattern
         self.namer = namer.metadata_namer(self.name_pattern)
+        self._simulate = simulate
     
     def store(self, path, meta):
         oname = "%s/%s"%(self.path, self.namer.name(meta))
+        if self._simulate:
+            logger.info("[SIMULATE]: Stored file:  %s"%oname)
+            return
+
         dname = os.path.dirname(oname)
         if not os.path.exists(dname):
             os.makedirs(dname, exist_ok=True)    
@@ -114,16 +119,20 @@ class file_storage(storage):
         super(file_storage, self).__init__()
         self._name = name
         self._backend = backend
+        self._simulate = False
         self.structures = {}
         if not "structure" in kwargs:
             raise Exception("Missing key 'structure' in configuration")
         self.structure_d = kwargs["structure"]
+
+        if "simulate" in kwargs and isinstance(kwargs["simulate"], bool):
+            self._simulate = kwargs["simulate"]
         
         for s in self.structure_d:
             if ("object" in s and not s["object"]) or "object" not in s:
-                self.structures["default"]=file_store(s["path"],s["name_pattern"])
+                self.structures["default"]=file_store(s["path"],s["name_pattern"], self._simulate)
             else:
-                self.structures[s["object"]]=file_store(s["path"],s["name_pattern"])
+                self.structures[s["object"]]=file_store(s["path"],s["name_pattern"], self._simulate)
 
     def get_attribute_value(self, name, meta):
         """
