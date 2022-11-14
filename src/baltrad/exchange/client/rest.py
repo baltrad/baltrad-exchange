@@ -125,7 +125,14 @@ class RestfulServer(object):
                 self._server_url.port)
         self._auth.add_credentials(req)
         try:
-            conn.request(req.method, "%s/%s"%(self._server_url.path, req.path), req.data, req.headers)
+            basepath = "/"
+            subpath = req.path
+            if self._server_url.path:
+                basepath = self._server_url.path
+            if subpath.startswith("/"):
+                subpath=subpath[1:]
+            path = os.path.join(basepath, subpath)
+            conn.request(req.method, path, req.data, req.headers)
         except socket.error:
             raise RuntimeError(
                 "Could not send request to %s" % self._server_url_str

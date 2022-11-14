@@ -147,7 +147,7 @@ Where the <keyword> is one of the following types:
 - **processor** 
 
 Whenever a json file is read and the backend identifies one of the above keywords the object is created to support that configuration. Each of these keyword configurations will
-be explained in the following sections.
+be explained later on.
 
 Subscriptions (subscription)
 ============================
