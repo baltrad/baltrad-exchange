@@ -355,7 +355,7 @@ class sftp_sender(baseuri_sender):
             if self.create_missing_directories():
                 c.makedirs(bdir)
             c.chdir(bdir)
-            logger.info("Uploading %s as %s to %s"%(path, fname, self.hostname()))
+            logger.info("sftp_sender: Uploading %s as %s to %s"%(path, fname, self.hostname()))
             c.put(path, fname)
 
 class scp_sender(baseuri_sender):
@@ -389,6 +389,7 @@ class scp_sender(baseuri_sender):
             if self.create_missing_directories():
                 dirname = os.path.dirname(publishedname)
                 ssh.exec_command("test -d %s || mkdir -p %s"%(dirname, dirname))
+            logger.info("scp_sender: Uploading %s as %s to %s"%(path, publishedname, self.hostname()))
             scp.put(path, publishedname)
         finally:
             if scp:
@@ -436,8 +437,8 @@ class ftp_sender(baseuri_sender):
                 else:
                     raise e
         try:
+            logger.info("ftp_sender: Uploading %s as %s to %s"%(path, fname, self.hostname()))
             ftp.storbinary("STOR %s"%fname, open(path, "rb"))
-            logger.info("Sent %s to %s"%(fname, self.hostname()))
         finally:
             ftp.quit()
 
@@ -511,6 +512,7 @@ class copy_sender(sender):
         logger.info("copy_sender: copying %s to %s"%(filename, dirname))
         if not os.path.exists(dirname) and self.create_missing_directories():
             os.makedirs(dirname)
+        logger.info("copy_sender: Copying %s to %s"%(path, publishedname))
         shutil.copyfile(path, publishedname)
 
 class sender_manager:

@@ -114,8 +114,6 @@ class sftpclient(object):
         try:
             result = stat.S_ISREG(self._sftp.stat(path).st_mode)
         except:
-            import traceback
-            traceback.print_exc()
             result = False
         return result
 

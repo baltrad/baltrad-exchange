@@ -228,7 +228,7 @@ class SimpleBackend(backend.Backend):
                 for storage in subscription.storages():
                     self.storage_manager.store(storage, path, meta)
 
-                self.publish(path, meta)
+                self.publish(subscription.id(), path, meta)
                     
                 self.processor_manager.process(path, meta)
         return meta
@@ -243,15 +243,18 @@ class SimpleBackend(backend.Backend):
             if isinstance(r, message_aware):
                 r.handle_message(json_message, nodename)
 
-    def publish(self, path, meta):
+    def publish(self, sid, path, meta):
         """publishes the file on each interested publisher
+        :param sid: The subscription id if any
         :param path: full path to the file to be published
         :param meta: meta of file to be published
         """
         for publication in self.publications:
             matcher = metadata_matcher.metadata_matcher()
-            if publication.active() and matcher.match(meta, publication.filter().to_xpr()):
-                publication.publish(path, meta)
+            origin = publication.origin()
+            if len(origin) == 0 or (len(publication.origin()) > 0 and sid in publication.origin()):
+                if publication.active() and matcher.match(meta, publication.filter().to_xpr()):
+                    publication.publish(path, meta)
     
     def metadata_from_file(self, path):
         """creates metadata from the file
@@ -273,24 +276,5 @@ class SimpleBackend(backend.Backend):
         :returns the metadata
         """
         return metadata_helper.metadata_from_file(self.source_manager, self._hasher, path)
-        #meta = oh5.Metadata.from_file(path)
-        #if not meta.what_source:
-        #    raise LookupError("No source in metadata")
-        #
-        #metadata_hash = self._hasher.hash(meta)
-        #source = self.source_manager.get_source(meta)
-        #
-        #meta.bdb_source = source.to_string()
-        #meta.bdb_source_name = source.name
-        #meta.bdb_metadata_hash = metadata_hash
-        #meta.bdb_file_size = os.stat(path)[stat.ST_SIZE]
-        #
-        #logger.debug("Got a source identifier: %s"%str(meta.bdb_source))
-        #
-        #stored_timestamp = datetime.datetime.utcnow()
-        #meta.bdb_stored_date = stored_timestamp.date()
-        #meta.bdb_stored_time = stored_timestamp.time()
-        #
-        #return meta        
             
     

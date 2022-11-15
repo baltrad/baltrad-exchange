@@ -191,6 +191,9 @@ def run():
         logtype = conf.get("baltrad.exchange.log.type", "logfile")
         logid = conf.get("baltrad.exchange.log.id", "baltrad.exchange")
         configure_logging(opts, logtype, logid, get_logging_level(conf))
+
+        logging.getLogger("paramiko").setLevel(logging.WARNING) # Disable some paramiko loggings
+
         sys.excepthook = excepthook
         application = app.from_conf(conf)
         parsedurl = urlparse.urlsplit(server_uri)

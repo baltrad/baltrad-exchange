@@ -49,12 +49,13 @@ logger = logging.getLogger("baltrad.exchange.net.publishers")
 class publisher(object):
     """Base class used by all publishers
     """
-    def __init__(self, backend, name, active, ifilter, connections, decorators):
+    def __init__(self, backend, name, active, origin, ifilter, connections, decorators):
         """constructor
 
         :param backend: The backend implementation
         :param name: The name identifying this publication
         :param active: If this publication is active or not
+        :param origin: The origin if the publication is tunneled. Can be seen as a subscription_id filter in most cases.
         :param ifilter: The baltrad.exchange.matching.filters.filter
         :param connections: The connection(s) to use.
         :param decorators: A list of decorators that will modify file before publishing it.
@@ -62,6 +63,7 @@ class publisher(object):
         self._backend = backend
         self._name = name
         self._active = active
+        self._origin = origin
         self._filter = ifilter
         self._connections = connections
         self._decorators = decorators
@@ -93,6 +95,12 @@ class publisher(object):
         """
         return self._active
     
+    def origin(self):
+        """
+        :return the list of origins that should trigger this publication
+        """
+        return self._origin
+
     def filter(self):
         """Returns the filter
         :return: the filter
@@ -124,12 +132,13 @@ class publisher(object):
 class standard_publisher(publisher):
     """Standard publisher used for most situations. Provides two arguments. One is threads. The other is queue_size.
     """
-    def __init__(self, backend, name, active, ifilter, connections, decorators, extra_arguments):
+    def __init__(self, backend, name, active, origin, ifilter, connections, decorators, extra_arguments):
         """constructor
 
         :param backend: The backend implementation
         :param name: The name identifying this publication
         :param active: If this publication is active or not
+        :param origin: When tunneling for example subscriptions, then specify list of ids
         :param ifilter: The baltrad.exchange.matching.filters.filter
         :param connections: The connection(s) to use.
         :param decorators: A list of decorators that will modify file before publishing it.
@@ -138,7 +147,7 @@ class standard_publisher(publisher):
                                "queue_size" describes how big the queue can be before publications are discarded.
         """
 
-        super(standard_publisher, self).__init__(backend, name, active, ifilter, connections, decorators)
+        super(standard_publisher, self).__init__(backend, name, active, origin, ifilter, connections, decorators)
         nrthreads=1
         queue_size=100
         if "threads" in extra_arguments:
@@ -209,7 +218,7 @@ class publisher_manager:
         pass
 
     @classmethod
-    def create_publisher(self, name, clz, backend, active, filter, connections, decorators, extra_arguments):
+    def create_publisher(self, name, clz, backend, active, origin, filter, connections, decorators, extra_arguments):
         """Creates an instance of clz with specified arguments
         :param clz: class name specified as <module>.<classname>
         :param arguments: a list of arguments that should be used to initialize the class       
@@ -219,7 +228,7 @@ class publisher_manager:
             lastdot = clz.rfind(".")
             module = importlib.import_module(clz[:lastdot])
             classname = clz[lastdot+1:]
-            return getattr(module, classname)(backend, name, active, filter, connections, decorators, extra_arguments)
+            return getattr(module, classname)(backend, name, active, origin, filter, connections, decorators, extra_arguments)
         else:
             raise Exception("Must specify class as module.class")
     
@@ -230,6 +239,7 @@ class publisher_manager:
         publisher_clazz = "baltrad.exchange.net.publishers.standard_publisher"
         active = False
         connections = []
+        subscription_origin = []
         ifilter = None
         decorators = []
         extra_arguments = {}
@@ -255,6 +265,11 @@ class publisher_manager:
                 connection = connection_manager.from_conf(backend, conncfg["class"], args)
                 connections.append(connection)
 
+        if "subscription_origin" in config:
+            subscription_origin = config["subscription_origin"]
+            if not isinstance(subscription_origin, list):
+                subscription_origin = list(subscription_origin)
+
         if "decorators" in config:
             decoratorconf =  config["decorators"]
             for ds in decoratorconf:
@@ -264,6 +279,6 @@ class publisher_manager:
         if "filter" in config:
             ifilter = filter_manager.from_value(config["filter"])
         
-        p = self.create_publisher(name, publisher_clazz, backend, active, ifilter, connections, decorators, extra_arguments)
+        p = self.create_publisher(name, publisher_clazz, backend, active, subscription_origin, ifilter, connections, decorators, extra_arguments)
         p.start()
         return p

@@ -1,6 +1,8 @@
 {
 "subscription":{
   "_comment_":"We expect to receive files matching filter for specified node",
+  "_id_":"Is optional. Can be used for tunneling from a subscription to a specific publisher",
+  "id":"subscription_1",
   "active":true,
   "storage":["default_storage"],
   "filter":{

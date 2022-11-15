@@ -275,7 +275,7 @@ class CryptoAuth(Auth):
         self._verifiers[name] = key
     
     def authenticate(self, req, credentials):
-        logger.info("CryptoAuth - authenticate: %s"%credentials)
+        logger.debug("CryptoAuth - authenticate: %s"%credentials)
         try:
             keyname, sig = credentials.rsplit(":")
         except ValueError:
