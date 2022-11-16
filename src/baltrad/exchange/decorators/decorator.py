@@ -22,6 +22,10 @@
 ## @author Anders Henja, SMHI
 ## @date 2021-08-30
 import importlib
+import sys
+import logging
+
+logger = logging.getLogger("baltrad.exchange.decorators.decorator")
 
 ##
 # Decorator
@@ -67,6 +71,7 @@ class decorator_manager:
         :param clz: class name specified as <module>.<classname>
         :param arguments: a list of arguments that should be used to initialize the class       
         """
+        logger.info("Creating decorator: %s"%clz)
         if clz.find(".") > 0:
             lastdot = clz.rfind(".")
             module = importlib.import_module(clz[:lastdot])

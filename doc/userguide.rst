@@ -129,6 +129,10 @@ json configuration but without them the system won't do anything.
   baltrad.exchange.server.certificate = /etc/baltrad/exchange/etc/server.cert
   baltrad.exchange.server.key = /etc/baltrad/exchange/etc/server.key
 
+  # If you need to load different objects from paths that are not in the standard PYTHONPATH,
+  # then this configuration entries can be used to add paths to the sys.path.
+  # Sequenced from 1.. and when first number in sequence is missing no more atempts will be done. 
+  # baltrad.exchange.server.plugin.directory.1 = /etc/baltrad/exchange/plugins
 
 During startup all config.dirs will be traversed and all files ending with **.json** will be processed and possibly parsed. Each json-file should be defined like
 

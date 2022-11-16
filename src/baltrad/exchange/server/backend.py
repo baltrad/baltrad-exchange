@@ -36,7 +36,7 @@ import glob
 import json
 import time, datetime
 import threading
-import os,stat
+import os,stat,sys
 import uuid
 from types import SimpleNamespace
 import logging
@@ -196,6 +196,14 @@ class SimpleBackend(backend.Backend):
         configdirs = fconf.get_list("config.dirs", default="/etc/baltrad/exchange/config", sep=",") #fconf.get("config.dirs", default="/etc/baltrad/exchange/config")
 
         source_db_uri = fconf.get("source_db_uri", default="sqlite:///var/cache/baltrad/exchange/source.db")
+
+        pluginconf = fconf.filter("plugin.directory.")
+        ctr = 1
+        plugindir = pluginconf.get("%d"%ctr, "").strip()
+        while plugindir:
+            sys.path.insert(0, plugindir)
+            ctr = ctr + 1
+            plugindir = pluginconf.get("%d"%ctr, "").strip()
 
         odim_source_file = fconf.get("odim_source")
         return SimpleBackend(
