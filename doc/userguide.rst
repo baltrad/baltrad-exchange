@@ -332,6 +332,8 @@ Publications (publication)
 Whenever a subscription has approved an incoming file, this file will be posted to all publications which in turn will have to decide if the file should be
 distributed or not depending on the file content. Obviously, this might cause some problems if not configuring the system properly since if more than one
 subscription approves the same file, then this file might be sent twice. In the same way, if a publication filter is to generic files might be sent more than once.
+However, if for some reason, a tunnel behaviour is required between the subscriber and publisher it is possible to configure a subscription_origin
+for that publication.
 
 A publication uses a publisher that will take care of the sending the file. Each publisher should support handling of connections,
 filters and decorators. Currently, there is only one publisher distributed in baltrad-exchange and that is the **baltrad.exchange.net.publishers.standard_publisher"**. 
@@ -346,6 +348,9 @@ This publisher uses a threaded producer/consumer approach.
 
 **decorators**
   Are used to modify the outgoing file in some way. The decorators are most likely plugins using ODIM-H5 manipulating software like rave or h5py.
+
+**subscription_origin**
+  If tunnel between subscription and publication is required, this entry can be set with the subscription ids to react to.
 
 The basic structure of a publication configuration looks like
 
