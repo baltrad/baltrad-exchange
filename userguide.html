@@ -156,6 +156,11 @@ json configuration but without them the system won’t do anything.</p>
 <span class="c1"># openssl req  -nodes -new -x509  -keyout server.key -out server.cert</span>
 <span class="na">baltrad.exchange.server.certificate</span> <span class="o">=</span> <span class="s">/etc/baltrad/exchange/etc/server.cert</span>
 <span class="na">baltrad.exchange.server.key</span> <span class="o">=</span> <span class="s">/etc/baltrad/exchange/etc/server.key</span>
+
+<span class="c1"># If you need to load different objects from paths that are not in the standard PYTHONPATH,</span>
+<span class="c1"># then this configuration entries can be used to add paths to the sys.path.</span>
+<span class="c1"># Sequenced from 1.. and when first number in sequence is missing no more atempts will be done.</span>
+<span class="c1"># baltrad.exchange.server.plugin.directory.1 = /etc/baltrad/exchange/plugins</span>
 </pre></div>
 </div>
 <p>During startup all config.dirs will be traversed and all files ending with <strong>.json</strong> will be processed and possibly parsed. Each json-file should be defined like</p>
@@ -327,7 +332,9 @@ will result in <em>2022/11/03/22/00/sella_scan_202211032203_0.5.h5</em>.</p>
 <h3>Publications (publication)<a class="headerlink" href="#publications-publication" title="Permalink to this headline">¶</a></h3>
 <p>Whenever a subscription has approved an incoming file, this file will be posted to all publications which in turn will have to decide if the file should be
 distributed or not depending on the file content. Obviously, this might cause some problems if not configuring the system properly since if more than one
-subscription approves the same file, then this file might be sent twice. In the same way, if a publication filter is to generic files might be sent more than once.</p>
+subscription approves the same file, then this file might be sent twice. In the same way, if a publication filter is to generic files might be sent more than once.
+However, if for some reason, a tunnel behaviour is required between the subscriber and publisher it is possible to configure a subscription_origin
+for that publication.</p>
 <p>A publication uses a publisher that will take care of the sending the file. Each publisher should support handling of connections,
 filters and decorators. Currently, there is only one publisher distributed in baltrad-exchange and that is the <strong>baltrad.exchange.net.publishers.standard_publisher”</strong>.
 This publisher uses a threaded producer/consumer approach.</p>
@@ -339,6 +346,8 @@ This publisher uses a threaded producer/consumer approach.</p>
 be explained further down.</dd>
 <dt><strong>decorators</strong></dt>
 <dd>Are used to modify the outgoing file in some way. The decorators are most likely plugins using ODIM-H5 manipulating software like rave or h5py.</dd>
+<dt><strong>subscription_origin</strong></dt>
+<dd>If tunnel between subscription and publication is required, this entry can be set with the subscription ids to react to.</dd>
 </dl>
 <p>The basic structure of a publication configuration looks like</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
