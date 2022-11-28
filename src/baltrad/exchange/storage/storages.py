@@ -70,7 +70,7 @@ class none_storage(storage):
         :param path: The full path to the file to be stored
         :param meta: The meta data for this file.
         """
-        logger.info("[none_storage - %s]: Would store file %s - %s - %s"%(self.name(), meta.what_source, meta.what_date, meta.what_time))
+        logger.debug("[none_storage - %s]: %s - %s - %s"%(self.name(), meta.what_source, meta.what_date, meta.what_time))
 
     def name(self):
         """

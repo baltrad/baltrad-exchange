@@ -170,7 +170,7 @@ class standard_publisher(publisher):
             shutil.copyfileobj(fp, tmpfile)
         tmpfile.flush()
         
-        logger.info("Decorating file with %d decorators before adding it on queue"%len(self._decorators))
+        logger.debug("Decorating file with %d decorators before adding it on queue"%len(self._decorators))
         if len(self._decorators) > 0:
             for d in self._decorators:
                 logger.info("Decorator %s"%type(d))

@@ -229,7 +229,7 @@ class SimpleBackend(backend.Backend):
         
         already_handled = not self.handled_files.add(meta.bdb_metadata_hash)
         if already_handled:
-            logger.info("File recently handled: %s, %s" % (meta.bdb_metadata_hash, meta.bdb_source_name))
+            logger.debug("File recently handled: %s, %s" % (meta.bdb_metadata_hash, meta.bdb_source_name))
         
         for subscription in self.subscriptions: # Should only be passive subscriptions here. Active subscriptions should be handled in separate threads.
             if already_handled and not subscription.allow_duplicates():
