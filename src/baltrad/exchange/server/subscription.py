@@ -29,16 +29,20 @@ import logging
 logger = logging.getLogger("baltrad.exchange.server.subscription")
 
 class subscription(object):
-    def __init__(self, storages, subscription_id=None, active=True, ifilter=None, allowed_ids=[]):
+    def __init__(self, storages, subscription_id=None, active=True, ifilter=None, allow_duplicates=False, allowed_ids=[]):
         """Constructor
         :param storages: List of storage names
-        :param filter: A filter instance
+        :param subscription_id: Id this subscription should be identified if tunneling
+        :param active: If this subscription is active or not
+        :param ifilter: A filter instance
+        :param allow_duplicates: If duplicates should be allowed or not
         :param allowed_ids: A list of nodenames that should be allowed. 
         """
         self._subscription_id = subscription_id
         self._storages = storages
         self._active = active
         self._filter = ifilter
+        self._allow_duplicates = allow_duplicates
         self._allowed_ids = allowed_ids
     
     def storages(self):
@@ -71,6 +75,12 @@ class subscription(object):
         """
         return self._filter
     
+    def allow_duplicates(self):
+        """
+        :return if duplicates are handled by this subscription or not
+        """
+        return self._allow_duplicates
+    
     def allowed_ids(self):
         """
         :return the nodenames
@@ -93,15 +103,16 @@ class subscription_manager:
         pass
 
     @classmethod
-    def create_subscription(self, storages, subscription_id, active, ifilter, allowed_ids):
+    def create_subscription(self, storages, subscription_id, active, ifilter, allow_duplicates, allowed_ids):
         """Creates a subscription instance
         :param storages: List of storage names
         :param subscription_id: Subscription id
         :param active: If subscription should be set to active or not
         :param ifilter: A filter instances
+        :param allow_duplicate: If duplicates should be allowed or not
         :param allowed_ids: A list of ids that should be allowed for this subscription
         """
-        return subscription(storages, subscription_id, active, ifilter, allowed_ids)
+        return subscription(storages, subscription_id, active, ifilter, allow_duplicates, allowed_ids)
     
     @classmethod
     def from_conf(self, config, backend):
@@ -110,6 +121,8 @@ class subscription_manager:
         subscription_id=None
         active=True
         ifilter = None
+        allow_duplicates=False
+        
         allowed_ids = []
         
         if "storage" in config:
@@ -126,6 +139,9 @@ class subscription_manager:
         if "filter" in config:
             ifilter = filter_manager.from_value(config["filter"])
         
+        if "allow_duplicates" in config:
+            allow_duplicates = config["allow_duplicates"]
+        
         if "allowed_ids" in config:
             allowed_ids.extend(config["allowed_ids"])
         
@@ -135,5 +151,5 @@ class subscription_manager:
                 if nodename not in allowed_ids:
                     allowed_ids.append(nodename)
 
-        s = self.create_subscription(storages, subscription_id, active, ifilter, allowed_ids)
+        s = self.create_subscription(storages, subscription_id, active, ifilter, allow_duplicates, allowed_ids)
         return s

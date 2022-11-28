@@ -68,6 +68,9 @@ class HandledFiles(object):
         return bdbhash in self._handled
 
     def add(self, bdbhash):
+        """ Adds the hash to internal list. Will return True if hash added otherwise
+        False.
+        """
         with self.lock:
             if bdbhash in self._handled:
                 return False
@@ -224,11 +227,14 @@ class SimpleBackend(backend.Backend):
 
         logger.info("Received file from %s: %s, %s, %s %s" % (nid, meta.bdb_metadata_hash, meta.bdb_source_name, meta.what_date, meta.what_time))
         
-        if not self.handled_files.add(meta.bdb_metadata_hash):
-            logger.info("File recently handled, ignoring it: %s, %s" % (meta.bdb_metadata_hash, meta.bdb_source_name))
-            return None
+        already_handled = not self.handled_files.add(meta.bdb_metadata_hash)
+        if already_handled:
+            logger.info("File recently handled: %s, %s" % (meta.bdb_metadata_hash, meta.bdb_source_name))
         
         for subscription in self.subscriptions: # Should only be passive subscriptions here. Active subscriptions should be handled in separate threads.
+            if already_handled and not subscription.allow_duplicates():
+                continue
+            
             if len(subscription.allowed_ids()) > 0 and nid not in subscription.allowed_ids():
                 continue
             
