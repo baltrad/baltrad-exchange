@@ -123,6 +123,10 @@ json configuration but without them the system won’t do anything.</p>
 <span class="c1"># The log id used</span>
 <span class="na">baltrad.exchange.log.id</span><span class="o">=</span><span class="s">baltrad-exchange</span>
 
+<span class="c1"># The log level to use. All messages with priority &gt;= log.level will be sent to the log output.</span>
+<span class="c1"># Available are: ERROR, WARNING, INFO, DEBUG</span>
+<span class="na">baltrad.exchange.log.level</span><span class="o">=</span><span class="s">INFO</span>
+
 <span class="c1"># This is the configuration for the WSGI-server with number of threads, number of waiting messages in backlog and the operation timeout</span>
 <span class="na">baltrad.exchange.threads</span><span class="o">=</span><span class="s">20</span>
 <span class="na">baltrad.exchange.backlog</span><span class="o">=</span><span class="s">10</span>
@@ -184,10 +188,17 @@ be explained later on.</p>
 <h3>Subscriptions (subscription)<a class="headerlink" href="#subscriptions-subscription" title="Permalink to this headline">¶</a></h3>
 <p>A subscription defines what should be allowed into the system and the basic operations that should be performed on the data that arrives. A subscription contains the following parts:</p>
 <dl class="docutils">
+<dt><strong>id</strong></dt>
+<dd>In some cases it is nessecary to identify the subscription. For example when tunneling incomming files to a particular publisher.</dd>
+<dt><strong>active</strong></dt>
+<dd>If the subscription is active or not. It can be set to false to be able to keep subscription configuration without using it.</dd>
 <dt><strong>storage</strong></dt>
 <dd>A list of zero or more named storages</dd>
 <dt><strong>filter</strong></dt>
 <dd>A filter “bdb-style” that is used to match the files metadata to decide if this subscription is interested in the incomming file or not.</dd>
+<dt><strong>allow_duplicates</strong></dt>
+<dd>The software identifies all H5-files (and possibly other formats in the future) by generating a checksum from the metadata. This checksum will be stored internally for a while to be able to identify
+duplicates. Then it is up to a subscription to decide if it should allow duplicates or not. Default behaviour is always to not allow duplicates but in certain scenarios it might be necessary.</dd>
 <dt><strong>allowed-ids</strong></dt>
 <dd>A list of allowed ids that identifies the origin. This will automatically be extended with the nodenames of the allowed nodes. It can also be identifying a runner and other internal ids.</dd>
 <dt><strong>cryptos</strong></dt>
@@ -200,6 +211,7 @@ will require some threading and other considerations since the subscription hand
 pool.</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;subscription&quot;</span><span class="p">:{</span>
+  <span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;local subscription&quot;</span><span class="p">,</span>
   <span class="nt">&quot;active&quot;</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span>
   <span class="nt">&quot;storage&quot;</span><span class="p">:[</span><span class="s2">&quot;default_storage&quot;</span><span class="p">],</span>
   <span class="nt">&quot;filter&quot;</span><span class="p">:{</span>
@@ -219,6 +231,7 @@ pool.</p>
       <span class="p">}</span>
     <span class="p">]</span>
   <span class="p">},</span>
+  <span class="nt">&quot;allow_duplicates&quot;</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span>
   <span class="nt">&quot;allowed_ids&quot;</span><span class="p">:[</span><span class="s2">&quot;anders-other&quot;</span><span class="p">],</span>
   <span class="nt">&quot;cryptos&quot;</span><span class="p">:[</span>
     <span class="p">{</span>

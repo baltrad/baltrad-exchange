@@ -94,6 +94,10 @@ json configuration but without them the system won't do anything.
   
   # The log id used
   baltrad.exchange.log.id=baltrad-exchange
+
+  # The log level to use. All messages with priority >= log.level will be sent to the log output.
+  # Available are: ERROR, WARNING, INFO, DEBUG
+  baltrad.exchange.log.level=INFO
   
   # This is the configuration for the WSGI-server with number of threads, number of waiting messages in backlog and the operation timeout 
   baltrad.exchange.threads=20
@@ -158,12 +162,22 @@ Subscriptions (subscription)
 
 A subscription defines what should be allowed into the system and the basic operations that should be performed on the data that arrives. A subscription contains the following parts:
 
+**id**
+  In some cases it is nessecary to identify the subscription. For example when tunneling incomming files to a particular publisher.
+
+**active**
+  If the subscription is active or not. It can be set to false to be able to keep subscription configuration without using it.
+
 **storage**
   A list of zero or more named storages
-  
+
 **filter**
   A filter "bdb-style" that is used to match the files metadata to decide if this subscription is interested in the incomming file or not.
-  
+ 
+**allow_duplicates**
+  The software identifies all H5-files (and possibly other formats in the future) by generating a checksum from the metadata. This checksum will be stored internally for a while to be able to identify
+  duplicates. Then it is up to a subscription to decide if it should allow duplicates or not. Default behaviour is always to not allow duplicates but in certain scenarios it might be necessary.
+ 
 **allowed-ids**
   A list of allowed ids that identifies the origin. This will automatically be extended with the nodenames of the allowed nodes. It can also be identifying a runner and other internal ids.
   
@@ -180,6 +194,7 @@ pool.
 
   {
     "subscription":{
+    "id":"local subscription",
     "active":true,
     "storage":["default_storage"],
     "filter":{
@@ -199,6 +214,7 @@ pool.
         }
       ]
     },
+    "allow_duplicates":false,
     "allowed_ids":["anders-other"],
     "cryptos":[
       {
