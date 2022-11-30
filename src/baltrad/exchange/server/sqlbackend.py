@@ -43,7 +43,7 @@ from sqlalchemy import (
     PrimaryKeyConstraint,
     Table,
 )
- 
+
 dbmeta = MetaData()
 
 sources = Table("sources", dbmeta,
@@ -61,6 +61,10 @@ source_kvs = Table("source_kvs", dbmeta,
                    PrimaryKeyConstraint("source_id", "key"),
 )
 
+
+db_meta = MetaData()
+
+
 logger = logging.getLogger("baltrad.exchange.server")
 
 def force_sqlite_foreign_keys(dbapi_con, con_record):
@@ -71,9 +75,9 @@ def force_sqlite_foreign_keys(dbapi_con, con_record):
         return
     if isinstance(dbapi_con, sqlite3.Connection):
         dbapi_con.execute("pragma foreign_keys=ON")
-        
+
 class SqlAlchemySourceManager(object):
-    def __init__(self, uri="sqlite:///tmp/baltrad-exchange.db", poolsize=10):
+    def __init__(self, uri="sqlite:///tmp/baltrad-exchange-source.db", poolsize=10):
         self._engine = engine.create_engine(uri, echo=False)
         if self._engine.driver == "pysqlite":
             event.listen(self._engine, "connect", force_sqlite_foreign_keys)

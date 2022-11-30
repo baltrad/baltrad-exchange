@@ -59,6 +59,11 @@ URL_MAP = Map(
                 endpoint="handler.post_file"
             ),
         ]),
+        Submount("/statistics", [
+            Rule("/", methods=["GET"],
+                endpoint="handler.get_statistics"
+            ),
+        ]),
         Submount("/json_message", [
             Rule("/", methods=["POST"],
                 endpoint="handler.post_json_message"

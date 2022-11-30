@@ -32,6 +32,9 @@ from baltrad.exchange.net import publishers
 from baltrad.exchange.runner import runners
 from baltrad.exchange import auth
 from baltrad.exchange.odimutil import metadata_helper
+from baltrad.exchange.statistics.statistics import statistics_manager
+from baltrad.exchange.db import sqldatabase
+
 import glob
 import json
 import time, datetime
@@ -85,11 +88,12 @@ class SimpleBackend(backend.Backend):
     :param engine_or_url: an SqlAlchemy engine or a database url
     :param storage: a `~.storage.FileStorage` instance to use.
     """
-    def __init__(self, confdirs, nodename, authmgr, source_db_uri, odim_source_file):
+    def __init__(self, confdirs, nodename, authmgr, db_uri, source_db_uri, odim_source_file):
         """Constructor
         :param confdirs: a list of directories where the configuration (.json) files can be found
         :param nodename: name of this node
         :param authmgr: the authorization manager for registering keys
+        :param db_uri: general database uri for miscellaneous purposes
         :param source_db_uri: The uri to the source db
         :param odim_source_file: the file containing odim sources for identification of incomming files
         """
@@ -106,10 +110,16 @@ class SimpleBackend(backend.Backend):
         self.storage_manager = storages.storage_manager()
         self.processor_manager = processors.processor_manager()
         self.odim_source_file = odim_source_file
+        self.sqldatabase = sqldatabase.SqlAlchemyDatabase(db_uri)
         self.source_manager = sqlbackend.SqlAlchemySourceManager(source_db_uri)
         self.source_manager.add_sources(self.read_bdb_sources(self.odim_source_file))
         self.filter_manager = filters.filter_manager()
         self.runner_manager = runners.runner_manager()
+        self.statistics_manager = statistics_manager(self.sqldatabase)
+
+        self.statistics_incomming = False
+        self.statistics_duplicates = False
+        self.statistics_add_entries = False
 
         self.initialize_configuration(self.confdirs)
     
@@ -124,6 +134,12 @@ class SimpleBackend(backend.Backend):
         :returns the authorization manager used
         """
         return self.authmgr
+
+    def get_statistics_manager(self):
+        """
+        :returns the statistics manager
+        """
+        return self.statistics_manager
 
     def initialize_configuration(self, confdirs):
         """Initializes the configuration from each dir
@@ -169,7 +185,7 @@ class SimpleBackend(backend.Backend):
                 
                 elif "storage" in data:
                     s = self.storage_manager.from_conf(data["storage"], self)
-                    logger.info("Adding storage from configuration file %s"%(f))
+                    logger.info("Adding storage from csourceonfiguration file %s"%(f))
                     self.storage_manager.add_storage(s)
                 
                 elif "runner" in data:
@@ -200,6 +216,12 @@ class SimpleBackend(backend.Backend):
 
         source_db_uri = fconf.get("source_db_uri", default="sqlite:///var/cache/baltrad/exchange/source.db")
 
+        db_uri = fconf.get("db_uri", default="sqlite:///var/cache/baltrad/exchange/baltrad-exchange.db")
+
+        stat_incomming = fconf.get("statistics.incomming", False)
+        stat_duplicates = fconf.get("statistics.duplicates", False)
+        stat_add_entries = fconf.get("statistics.add_individual_entry", False)
+
         pluginconf = fconf.filter("plugin.directory.")
         ctr = 1
         plugindir = pluginconf.get("%d"%ctr, "").strip()
@@ -209,13 +231,20 @@ class SimpleBackend(backend.Backend):
             plugindir = pluginconf.get("%d"%ctr, "").strip()
 
         odim_source_file = fconf.get("odim_source")
-        return SimpleBackend(
+        backend = SimpleBackend(
             configdirs,
             nodename,
             authmgr,
+            db_uri,
             source_db_uri,
             odim_source_file
           )
+
+        backend.statistics_incomming = stat_incomming
+        backend.statistics_duplicates = stat_duplicates
+        backend.statistics_add_entries = stat_add_entries
+
+        return backend
 
     def store_file(self, path, nid):
         """handles an incomming file and determines if it should be managed by the subscriptions or not.
@@ -227,10 +256,15 @@ class SimpleBackend(backend.Backend):
 
         logger.info("Received file from %s: %s, %s, %s %s" % (nid, meta.bdb_metadata_hash, meta.bdb_source_name, meta.what_date, meta.what_time))
         
+        if self.statistics_incomming:
+            self.get_statistics_manager().increment("server-incomming", nid, meta, self.statistics_add_entries)
+
         already_handled = not self.handled_files.add(meta.bdb_metadata_hash)
         if already_handled:
             logger.debug("File recently handled: %s, %s" % (meta.bdb_metadata_hash, meta.bdb_source_name))
-        
+            if self.statistics_duplicates:
+                self.get_statistics_manager().increment("server-duplicates", nid, meta, self.statistics_add_entries)
+
         for subscription in self.subscriptions: # Should only be passive subscriptions here. Active subscriptions should be handled in separate threads.
             if already_handled and not subscription.allow_duplicates():
                 continue
@@ -241,6 +275,9 @@ class SimpleBackend(backend.Backend):
             if subscription.filter_matching(meta):
                 for storage in subscription.storages():
                     self.storage_manager.store(storage, path, meta)
+
+                for statplugin in subscription.get_statistics_plugins():
+                    statplugin.increment(nid, meta)
 
                 self.publish(subscription.id(), path, meta)
                     

@@ -5,6 +5,7 @@
   "id":"subscription_1",
   "active":true,
   "storage":["default_storage"],
+  "statdef": [{"id":"stat-subscription-1", "type": "count"}],
   "filter":{
     "filter_type": "and_filter", 
     "value": [

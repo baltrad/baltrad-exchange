@@ -24,6 +24,8 @@
 from baltrad.exchange.matching import filters
 from baltrad.exchange.matching.filters import filter_manager
 from baltrad.exchange.matching import filters, metadata_matcher
+from baltrad.exchange.statistics.statistics import statistics_manager
+
 import logging
 
 logger = logging.getLogger("baltrad.exchange.server.subscription")
@@ -44,7 +46,8 @@ class subscription(object):
         self._filter = ifilter
         self._allow_duplicates = allow_duplicates
         self._allowed_ids = allowed_ids
-    
+        self._statistics_plugins = []
+
     def storages(self):
         """
         :return the storage names
@@ -97,6 +100,17 @@ class subscription(object):
             return matcher.match(meta, self._filter.to_xpr())
         return True
        
+    def set_statistics_plugins(self, plugins):
+        """
+        """
+        self._statistics_plugins = plugins
+
+    def get_statistics_plugins(self):
+        """ 
+        :returns the stat plugins belonging to this subscription
+        """
+        return self._statistics_plugins
+
 
 class subscription_manager:
     def __init__(self):
@@ -136,6 +150,9 @@ class subscription_manager:
         if "active" in config:
             active = config["active"]
         
+        if "statdef" in config:
+            statplugins = statistics_manager.plugins_from_conf(config["statdef"], backend.get_statistics_manager())
+
         if "filter" in config:
             ifilter = filter_manager.from_value(config["filter"])
         
@@ -152,4 +169,5 @@ class subscription_manager:
                     allowed_ids.append(nodename)
 
         s = self.create_subscription(storages, subscription_id, active, ifilter, allow_duplicates, allowed_ids)
+        s.set_statistics_plugins(statplugins)
         return s

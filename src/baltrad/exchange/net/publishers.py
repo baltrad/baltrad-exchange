@@ -40,6 +40,7 @@ from tempfile import NamedTemporaryFile
 import shutil
 from baltrad.exchange.decorators.decorator import decorator_manager
 from baltrad.exchange.net.connections import connection_manager
+from baltrad.exchange.statistics.statistics import statistics_manager
 
 logger = logging.getLogger("baltrad.exchange.net.publishers")
 
@@ -160,6 +161,14 @@ class standard_publisher(publisher):
         self._threads=[]
         self._queue = Queue(self._queue_size)
 
+        self._statistics_ok_plugin = None
+        self._statistics_error_plugin = None
+
+        if "statistics_ok" in extra_arguments:
+            self._statistics_ok_plugin = statistics_manager.plugin_from_conf(extra_arguments["statistics_ok"], backend.get_statistics_manager())
+        if "statistics_error" in extra_arguments:
+            self._statistics_error_plugin = statistics_manager.plugin_from_conf(extra_arguments["statistics_error"], backend.get_statistics_manager())
+
     def publish(self, file, meta):
         """Passes on a file to the consumer queue that will be consumed and passed on to the connections.
         :param file: Actual file to be duplicated and sent.
@@ -197,8 +206,12 @@ class standard_publisher(publisher):
             tmpfile, meta = self._queue.get()
             try:
                 self.do_publish(tmpfile, meta)
+                if self._statistics_ok_plugin:
+                    self._statistics_ok_plugin.increment("", meta)
             except:
                 logger.exception("Failed to publish file %s"%(tmpfile.name))
+                if self._statistics_error_plugin:
+                    self._statistics_error_plugin.increment("", meta)
             finally:
                 self._queue.task_done()
 
@@ -280,5 +293,6 @@ class publisher_manager:
             ifilter = filter_manager.from_value(config["filter"])
         
         p = self.create_publisher(name, publisher_clazz, backend, active, subscription_origin, ifilter, connections, decorators, extra_arguments)
+
         p.start()
         return p

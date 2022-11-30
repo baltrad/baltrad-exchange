@@ -5,7 +5,9 @@
    "class":"baltrad.exchange.net.publishers.standard_publisher",
    "extra_arguments": {
   	 "threads":1,
-  	 "queue_size":50
+  	 "queue_size":50,
+     "statistics_ok": {"id":"stat-publication-scp-ok", "type": "count"},
+     "statistics_error": {"id":"stat-publication-scp-error", "type": "count"}
    },
    "active":true,
    "connection":{

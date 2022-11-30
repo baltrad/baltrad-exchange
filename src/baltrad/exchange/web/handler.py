@@ -107,3 +107,21 @@ def post_json_message(ctx):
     data = ctx.request.get_json_data()
     ctx.backend.post_message(data, ctx.backend.get_auth_manager().get_nodename(ctx.request))
     return Response("", status=httplibclient.OK)
+
+def get_statistics(ctx):
+    """Returns the statistics for modules / sources
+
+    :param ctx: the request context
+    :type ctx: :class:`~.util.RequestContext`
+    :return: :class:`~.util.JsonResponse` with status
+             *200 Created* and information in body
+
+    See :ref:`doc-rest-op-get_statistics` for details
+    """
+    logger.debug("baltrad.exchange.handler.get_statistics(ctx)")
+    if ctx.is_anonymous():
+        logger.info("get_statistics: anonymous calls are not allowed")
+        return Response("", status=httplibclient.UNAUTHORIZED)
+    data = ctx.request.get_json_data()
+    stats = ctx.backend.get_statistics_manager().get_statistics(ctx.backend.get_auth_manager().get_nodename(ctx.request), data)
+    return Response(stats, status=httplibclient.OK)
