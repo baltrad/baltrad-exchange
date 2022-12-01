@@ -78,7 +78,6 @@ class statistics_manager:
         totals = False
         hashid = None
 
-        print("Querydata=%s"%querydata)
         if "spid" in querydata:
             spid = querydata["spid"]
         if "origin" in querydata:

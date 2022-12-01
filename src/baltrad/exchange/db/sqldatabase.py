@@ -198,7 +198,6 @@ class SqlAlchemyDatabase(object):
             q = q.order_by(asc(statentry.origin)) \
                 .order_by(asc(statentry.source)) \
                 .order_by(asc(statentry.entrytime))
-            print("QUERY: %s"%q)
             return q.all()
 
     def increment_statistics(self, spid, origin, source):
