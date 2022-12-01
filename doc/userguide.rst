@@ -88,18 +88,18 @@ json configuration but without them the system won't do anything.
 
   # This is the local address the WSGI server will be listening on
   baltrad.exchange.uri=https://localhost:8089
-  
+
   # How logging should be performed
   baltrad.exchange.log.type=logfile
   
   # The log id used
   baltrad.exchange.log.id=baltrad-exchange
-
+  
   # The log level to use. All messages with priority >= log.level will be sent to the log output.
   # Available are: ERROR, WARNING, INFO, DEBUG
   baltrad.exchange.log.level=INFO
   
-  # This is the configuration for the WSGI-server with number of threads, number of waiting messages in backlog and the operation timeout 
+  # Number of threads, backlog and timeout 
   baltrad.exchange.threads=20
   baltrad.exchange.backlog=10
   baltrad.exchange.timeout=10
@@ -119,19 +119,47 @@ json configuration but without them the system won't do anything.
   # baltrad.exchange.auth.keyczar.private.key = /etc/baltrad/bltnode-keys/anders-nzxt.priv
 
   # Comma separated list of directories where json config files are located.
-  baltrad.exchange.server.config.dirs = /etc/baltrad/exchange/config
+ baltrad.exchange.server.config.dirs = /etc/baltrad/exchange/config
 
   # Where the odim source file can be found in rave format.
   baltrad.exchange.server.odim_source = /etc/baltrad/rave/config/odim_source.xml
 
   # The database in where some basic data is stored when performing the source-lookup
+  # this database doesn't need to be persisted on disk since it will be created upon started
+  # from the above odim_source.xml file
   baltrad.exchange.server.source_db_uri = sqlite:///var/cache/baltrad/exchange/source.db
+
+  # The database where we want to store all other information. This should preferrably
+  # be persisted since it will contain statistics and other relevant information
+  # pointing to a postgres database or similar but we can use sqlite as well. This
+  # database will contain for example statistics and other data that should be persisted.
+  baltrad.exchange.server.db_uri = sqlite:///var/lib/baltrad/exchange/baltrad-exchange.db
 
   # Note, these should only be readable by the baltrad user
   # and can be created using the following command.
   # openssl req  -nodes -new -x509  -keyout server.key -out server.cert
   baltrad.exchange.server.certificate = /etc/baltrad/exchange/etc/server.cert
   baltrad.exchange.server.key = /etc/baltrad/exchange/etc/server.key
+
+  # Statistics
+  # It is possible to accumulate statistics from the operation. Most of this configuration is performed
+  # per subscription / publisher / ... and all other cfg-entries that support this functionality
+  # However, there are some general statistics that is configured from this section.
+  # This data will be (unless otherwise configured) stored in the database pointed to by baltrad.exchange.server.db_uri
+
+  # Keeps track of all incomming files. Will be stored with spid == server-incomming for each source/origin
+  baltrad.exchange.server.statistics.incomming=false
+
+  # Keeps track of all duplicate files. Note, this is from a general point of view. Will be stored with spid == server-duplicate for each source/origin
+  baltrad.exchange.server.statistics.duplicates=false
+
+  # Each incomming file will be stored as one separate entry so that it is possible to
+  # calculate average process times and other relevant performance numbers.
+  baltrad.exchange.server.statistics.add_individual_entry=false
+
+  # Each incomming file will be associated with a total processing time to be able to check
+  # if there are any performance issues. This will not result in a total, just individual entries.
+  baltrad.exchange.server.statistics.file_handling_time=false
 
   # If you need to load different objects from paths that are not in the standard PYTHONPATH,
   # then this configuration entries can be used to add paths to the sys.path.
@@ -170,6 +198,12 @@ A subscription defines what should be allowed into the system and the basic oper
 
 **storage**
   A list of zero or more named storages
+
+**statdef**
+  A list of definitions for generating statistics. This should be a list containing a number
+  of statistic plugin definitions. [{"id":"stat-subscription-1", "type": "count"}]
+  *id*   is the spid this will be stored with in the database
+  *type* defines if how the statistics should be stored. **add** == only add entries to statentry, **count** == only update count or **both** == do both
 
 **filter**
   A filter "bdb-style" that is used to match the files metadata to decide if this subscription is interested in the incomming file or not.
@@ -356,7 +390,7 @@ However, if for some reason, a tunnel behaviour is required between the subscrib
 for that publication.
 
 A publication uses a publisher that will take care of the sending the file. Each publisher should support handling of connections,
-filters and decorators. Currently, there is only one publisher distributed in baltrad-exchange and that is the **baltrad.exchange.net.publishers.standard_publisher"**. 
+filters and decorators. Currently, there is only one publisher distributed in baltrad-exchange and that is the **baltrad.exchange.net.publishers.standard_publisher**. 
 This publisher uses a threaded producer/consumer approach.
 
 **filters** 
@@ -393,6 +427,24 @@ The basic structure of a publication configuration looks like
      ]
    }
   }
+
+The **baltrad.exchange.net.publishers.standard_publisher** class takes a number of arguments.
+
+  **threads**
+    Number of threads that should consume the queue
+
+  **queue_size**
+    How many items that should be allowed in the back queue before they are removed
+
+  **statistics_ok**
+    A definition for generating statistics when publication went ok. This should be a statistics plugin definition: [{"id":"stat-subscription-1", "type": "count"}]
+      *id*   is the spid this will be stored with in the database
+      *type* defines if how the statistics should be stored. **add** == only add entries to statentry, **count** == only update count or **both** == do both
+
+  **statistics_error**
+    A definition for generating statistics when publication failed. This should be a statistics plugin definition: [{"id":"stat-subscription-1", "type": "count"}]
+      *id*   is the spid this will be stored with in the database
+      *type* defines if how the statistics should be stored. **add** == only add entries to statentry, **count** == only update count or **both** == do both
 
 Connections
 -----------
