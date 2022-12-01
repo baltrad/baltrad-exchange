@@ -114,57 +114,85 @@ with json. !!!NOTE!!! It might be reasonable to also have configured a folder co
 <h3>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h3>
 <p>The basic configuration is just a property-file containing the most basic information which is specified when starting the server. In order for the system to start you won’t need any
 json configuration but without them the system won’t do anything.</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># This is the local address the WSGI server will be listening on</span>
-<span class="na">baltrad.exchange.uri</span><span class="o">=</span><span class="s">https://localhost:8089</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span> <span class="c1"># This is the local address the WSGI server will be listening on</span>
+ <span class="na">baltrad.exchange.uri</span><span class="o">=</span><span class="s">https://localhost:8089</span>
 
-<span class="c1"># How logging should be performed</span>
-<span class="na">baltrad.exchange.log.type</span><span class="o">=</span><span class="s">logfile</span>
+ <span class="c1"># How logging should be performed</span>
+ <span class="na">baltrad.exchange.log.type</span><span class="o">=</span><span class="s">logfile</span>
 
-<span class="c1"># The log id used</span>
-<span class="na">baltrad.exchange.log.id</span><span class="o">=</span><span class="s">baltrad-exchange</span>
+ <span class="c1"># The log id used</span>
+ <span class="na">baltrad.exchange.log.id</span><span class="o">=</span><span class="s">baltrad-exchange</span>
 
-<span class="c1"># The log level to use. All messages with priority &gt;= log.level will be sent to the log output.</span>
-<span class="c1"># Available are: ERROR, WARNING, INFO, DEBUG</span>
-<span class="na">baltrad.exchange.log.level</span><span class="o">=</span><span class="s">INFO</span>
+ <span class="c1"># The log level to use. All messages with priority &gt;= log.level will be sent to the log output.</span>
+ <span class="c1"># Available are: ERROR, WARNING, INFO, DEBUG</span>
+ <span class="na">baltrad.exchange.log.level</span><span class="o">=</span><span class="s">INFO</span>
 
-<span class="c1"># This is the configuration for the WSGI-server with number of threads, number of waiting messages in backlog and the operation timeout</span>
-<span class="na">baltrad.exchange.threads</span><span class="o">=</span><span class="s">20</span>
-<span class="na">baltrad.exchange.backlog</span><span class="o">=</span><span class="s">10</span>
-<span class="na">baltrad.exchange.timeout</span><span class="o">=</span><span class="s">10</span>
+ <span class="c1"># Number of threads, backlog and timeout</span>
+ <span class="na">baltrad.exchange.threads</span><span class="o">=</span><span class="s">20</span>
+<span class="s"> baltrad.exchange.backlog=10</span>
+<span class="s"> baltrad.exchange.timeout=10</span>
 
-<span class="c1"># Name of this server. Will be used when communicating with other nodes</span>
-<span class="na">baltrad.exchange.node.name</span> <span class="o">=</span> <span class="s">example-server</span>
+ <span class="c1"># Name of this server. Will be used when communicating with other nodes</span>
+ <span class="na">baltrad.exchange.node.name</span> <span class="o">=</span> <span class="s">example-server</span>
 
-<span class="c1"># Add keyczar to providers if wanted</span>
-<span class="na">baltrad.exchange.auth.providers</span> <span class="o">=</span> <span class="s">noauth, crypto</span>
+ <span class="c1"># Add keyczar to providers if wanted</span>
+ <span class="na">baltrad.exchange.auth.providers</span> <span class="o">=</span> <span class="s">noauth, crypto</span>
 
-<span class="c1"># Default crypto-variant</span>
-<span class="na">baltrad.exchange.auth.crypto.root</span> <span class="o">=</span> <span class="s">/etc/baltrad/exchange/crypto-keys</span>
-<span class="na">baltrad.exchange.auth.crypto.private.key</span> <span class="o">=</span> <span class="s">/etc/baltrad/exchange/crypto-keys/example-server.private</span>
+ <span class="c1"># Default crypto-variant</span>
+ <span class="na">baltrad.exchange.auth.crypto.root</span> <span class="o">=</span> <span class="s">/etc/baltrad/exchange/crypto-keys</span>
+<span class="s"> baltrad.exchange.auth.crypto.private.key = /etc/baltrad/exchange/crypto-keys/example-server.private</span>
 
-<span class="c1"># If keyczar is in providers. Uncomment and create/import the keyczar private key</span>
-<span class="c1"># baltrad.exchange.auth.keyczar.keystore_root = /etc/baltrad/bltnode-keys</span>
-<span class="c1"># baltrad.exchange.auth.keyczar.private.key = /etc/baltrad/bltnode-keys/anders-nzxt.priv</span>
+ <span class="c1"># If keyczar is in providers. Uncomment and create/import the keyczar private key</span>
+ <span class="c1"># baltrad.exchange.auth.keyczar.keystore_root = /etc/baltrad/bltnode-keys</span>
+ <span class="c1"># baltrad.exchange.auth.keyczar.private.key = /etc/baltrad/bltnode-keys/anders-nzxt.priv</span>
 
-<span class="c1"># Comma separated list of directories where json config files are located.</span>
+ <span class="c1"># Comma separated list of directories where json config files are located.</span>
 <span class="na">baltrad.exchange.server.config.dirs</span> <span class="o">=</span> <span class="s">/etc/baltrad/exchange/config</span>
 
-<span class="c1"># Where the odim source file can be found in rave format.</span>
-<span class="na">baltrad.exchange.server.odim_source</span> <span class="o">=</span> <span class="s">/etc/baltrad/rave/config/odim_source.xml</span>
+ <span class="c1"># Where the odim source file can be found in rave format.</span>
+ <span class="na">baltrad.exchange.server.odim_source</span> <span class="o">=</span> <span class="s">/etc/baltrad/rave/config/odim_source.xml</span>
 
-<span class="c1"># The database in where some basic data is stored when performing the source-lookup</span>
-<span class="na">baltrad.exchange.server.source_db_uri</span> <span class="o">=</span> <span class="s">sqlite:///var/cache/baltrad/exchange/source.db</span>
+ <span class="c1"># The database in where some basic data is stored when performing the source-lookup</span>
+ <span class="c1"># this database doesn&#39;t need to be persisted on disk since it will be created upon started</span>
+ <span class="c1"># from the above odim_source.xml file</span>
+ <span class="na">baltrad.exchange.server.source_db_uri</span> <span class="o">=</span> <span class="s">sqlite:///var/cache/baltrad/exchange/source.db</span>
 
-<span class="c1"># Note, these should only be readable by the baltrad user</span>
-<span class="c1"># and can be created using the following command.</span>
-<span class="c1"># openssl req  -nodes -new -x509  -keyout server.key -out server.cert</span>
-<span class="na">baltrad.exchange.server.certificate</span> <span class="o">=</span> <span class="s">/etc/baltrad/exchange/etc/server.cert</span>
-<span class="na">baltrad.exchange.server.key</span> <span class="o">=</span> <span class="s">/etc/baltrad/exchange/etc/server.key</span>
+ <span class="c1"># The database where we want to store all other information. This should preferrably</span>
+ <span class="c1"># be persisted since it will contain statistics and other relevant information</span>
+ <span class="c1"># pointing to a postgres database or similar but we can use sqlite as well. This</span>
+ <span class="c1"># database will contain for example statistics and other data that should be persisted.</span>
+ <span class="na">baltrad.exchange.server.db_uri</span> <span class="o">=</span> <span class="s">sqlite:///var/lib/baltrad/exchange/baltrad-exchange.db</span>
 
-<span class="c1"># If you need to load different objects from paths that are not in the standard PYTHONPATH,</span>
-<span class="c1"># then this configuration entries can be used to add paths to the sys.path.</span>
-<span class="c1"># Sequenced from 1.. and when first number in sequence is missing no more atempts will be done.</span>
-<span class="c1"># baltrad.exchange.server.plugin.directory.1 = /etc/baltrad/exchange/plugins</span>
+ <span class="c1"># Note, these should only be readable by the baltrad user</span>
+ <span class="c1"># and can be created using the following command.</span>
+ <span class="c1"># openssl req  -nodes -new -x509  -keyout server.key -out server.cert</span>
+ <span class="na">baltrad.exchange.server.certificate</span> <span class="o">=</span> <span class="s">/etc/baltrad/exchange/etc/server.cert</span>
+<span class="s"> baltrad.exchange.server.key = /etc/baltrad/exchange/etc/server.key</span>
+
+ <span class="c1"># Statistics</span>
+ <span class="c1"># It is possible to accumulate statistics from the operation. Most of this configuration is performed</span>
+ <span class="c1"># per subscription / publisher / ... and all other cfg-entries that support this functionality</span>
+ <span class="c1"># However, there are some general statistics that is configured from this section.</span>
+ <span class="c1"># This data will be (unless otherwise configured) stored in the database pointed to by baltrad.exchange.server.db_uri</span>
+
+ <span class="c1"># Keeps track of all incomming files. Will be stored with spid == server-incomming for each source/origin</span>
+ <span class="na">baltrad.exchange.server.statistics.incomming</span><span class="o">=</span><span class="s">false</span>
+
+ <span class="c1"># Keeps track of all duplicate files. Note, this is from a general point of view. Will be stored with spid == server-duplicate for each source/origin</span>
+ <span class="na">baltrad.exchange.server.statistics.duplicates</span><span class="o">=</span><span class="s">false</span>
+
+ <span class="c1"># Each incomming file will be stored as one separate entry so that it is possible to</span>
+ <span class="c1"># calculate average process times and other relevant performance numbers.</span>
+ <span class="na">baltrad.exchange.server.statistics.add_individual_entry</span><span class="o">=</span><span class="s">false</span>
+
+ <span class="c1"># Each incomming file will be associated with a total processing time to be able to check</span>
+ <span class="c1"># if there are any performance issues. This will not result in a total, just individual entries.</span>
+ <span class="na">baltrad.exchange.server.statistics.file_handling_time</span><span class="o">=</span><span class="s">false</span>
+
+ <span class="c1"># If you need to load different objects from paths that are not in the standard PYTHONPATH,</span>
+ <span class="c1"># then this configuration entries can be used to add paths to the sys.path.</span>
+ <span class="c1"># Sequenced from 1.. and when first number in sequence is missing no more atempts will be done.</span>
+ <span class="c1"># baltrad.exchange.server.plugin.directory.1 = /etc/baltrad/exchange/plugins</span>
 </pre></div>
 </div>
 <p>During startup all config.dirs will be traversed and all files ending with <strong>.json</strong> will be processed and possibly parsed. Each json-file should be defined like</p>
@@ -194,6 +222,11 @@ be explained later on.</p>
 <dd>If the subscription is active or not. It can be set to false to be able to keep subscription configuration without using it.</dd>
 <dt><strong>storage</strong></dt>
 <dd>A list of zero or more named storages</dd>
+<dt><strong>statdef</strong></dt>
+<dd>A list of definitions for generating statistics. This should be a list containing a number
+of statistic plugin definitions. [{“id”:”stat-subscription-1”, “type”: “count”}]
+<em>id</em>   is the spid this will be stored with in the database
+<em>type</em> defines if how the statistics should be stored. <strong>add</strong> == only add entries to statentry, <strong>count</strong> == only update count or <strong>both</strong> == do both</dd>
 <dt><strong>filter</strong></dt>
 <dd>A filter “bdb-style” that is used to match the files metadata to decide if this subscription is interested in the incomming file or not.</dd>
 <dt><strong>allow_duplicates</strong></dt>
@@ -349,7 +382,7 @@ subscription approves the same file, then this file might be sent twice. In the 
 However, if for some reason, a tunnel behaviour is required between the subscriber and publisher it is possible to configure a subscription_origin
 for that publication.</p>
 <p>A publication uses a publisher that will take care of the sending the file. Each publisher should support handling of connections,
-filters and decorators. Currently, there is only one publisher distributed in baltrad-exchange and that is the <strong>baltrad.exchange.net.publishers.standard_publisher”</strong>.
+filters and decorators. Currently, there is only one publisher distributed in baltrad-exchange and that is the <strong>baltrad.exchange.net.publishers.standard_publisher</strong>.
 This publisher uses a threaded producer/consumer approach.</p>
 <dl class="docutils">
 <dt><strong>filters</strong></dt>
@@ -382,6 +415,29 @@ be explained further down.</dd>
 <span class="p">}</span>
 </pre></div>
 </div>
+<p>The <strong>baltrad.exchange.net.publishers.standard_publisher</strong> class takes a number of arguments.</p>
+<blockquote>
+<div><dl class="docutils">
+<dt><strong>threads</strong></dt>
+<dd>Number of threads that should consume the queue</dd>
+<dt><strong>queue_size</strong></dt>
+<dd>How many items that should be allowed in the back queue before they are removed</dd>
+<dt><strong>statistics_ok</strong></dt>
+<dd><dl class="first last docutils">
+<dt>A definition for generating statistics when publication went ok. This should be a statistics plugin definition: [{“id”:”stat-subscription-1”, “type”: “count”}]</dt>
+<dd><em>id</em>   is the spid this will be stored with in the database
+<em>type</em> defines if how the statistics should be stored. <strong>add</strong> == only add entries to statentry, <strong>count</strong> == only update count or <strong>both</strong> == do both</dd>
+</dl>
+</dd>
+<dt><strong>statistics_error</strong></dt>
+<dd><dl class="first last docutils">
+<dt>A definition for generating statistics when publication failed. This should be a statistics plugin definition: [{“id”:”stat-subscription-1”, “type”: “count”}]</dt>
+<dd><em>id</em>   is the spid this will be stored with in the database
+<em>type</em> defines if how the statistics should be stored. <strong>add</strong> == only add entries to statentry, <strong>count</strong> == only update count or <strong>both</strong> == do both</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
 <div class="section" id="connections">
 <h4>Connections<a class="headerlink" href="#connections" title="Permalink to this headline">¶</a></h4>
 <p>As mentioned earlier a connection takes one ore more senders. So what is the difference between a connection and a sender. In short, a
