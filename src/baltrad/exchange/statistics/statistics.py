@@ -24,7 +24,7 @@
 from abc import abstractmethod
 import logging
 import datetime
-from threading import Thread
+import json
 from baltrad.exchange.db.sqldatabase import statistics, statentry
 
 logger = logging.getLogger("baltrad.exchange.statistics.statistics")
@@ -71,11 +71,34 @@ class statistics_manager:
         """
         return self._sqldatabase
 
-    def get_statistics(self, spid, origin, source_name):
+    def get_statistics(self, nid, querydata):
         """Returns the statistics for the specified post, origin and source_name"""
-        return {}
+        spid = None
+        origin = None
+        totals = False
+        hashid = None
 
-    def increment(self, spid, origin, meta, save_post=False, increment_counter=True):
+        print("Querydata=%s"%querydata)
+        if "spid" in querydata:
+            spid = querydata["spid"]
+        if "origin" in querydata:
+            origin = querydata["origin"]
+        if "sources" in querydata:
+            sources = querydata["sources"]
+            sources = sources.split(",")
+        if "hashid" in querydata:
+            hashid = querydata["sources"]
+        if "totals" in querydata:
+            totals = querydata["totals"]
+
+        if totals:
+            entries = self._sqldatabase.find_statistics(spid, origin, sources)
+        else:
+            entries = self._sqldatabase.find_statentries(spid, origin, sources, hashid=hashid)
+        jslist = [e.json_repr() for e in entries]
+        return json.dumps(jslist)
+
+    def increment(self, spid, origin, meta, save_post=False, increment_counter=True, optime=0, optime_info=None):
         """ Increments a counter that is defined by:
         :param spid: The id used to identify this statistics post
         :param orgin: the origin (may be null, indicating unknown origin)
@@ -84,8 +107,9 @@ class statistics_manager:
         source = meta.bdb_source_name
         if increment_counter:
             self._sqldatabase.increment_statistics(spid, origin, source)
+
         if save_post:
-            self._sqldatabase.add(statentry(spid, origin, source, datetime.datetime.now()))
+            self._sqldatabase.add(statentry(spid, origin, source, meta.bdb_metadata_hash, datetime.datetime.now(), optime, optime_info))
 
     @classmethod
     def plugin_from_conf(self, conf, statmgr):

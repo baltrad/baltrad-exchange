@@ -120,6 +120,7 @@ class SimpleBackend(backend.Backend):
         self.statistics_incomming = False
         self.statistics_duplicates = False
         self.statistics_add_entries = False
+        self.statistics_file_handling = False
 
         self.initialize_configuration(self.confdirs)
     
@@ -221,6 +222,7 @@ class SimpleBackend(backend.Backend):
         stat_incomming = fconf.get("statistics.incomming", False)
         stat_duplicates = fconf.get("statistics.duplicates", False)
         stat_add_entries = fconf.get("statistics.add_individual_entry", False)
+        stat_file_handling = fconf.get("statistics.file_handling_time", False)
 
         pluginconf = fconf.filter("plugin.directory.")
         ctr = 1
@@ -243,6 +245,7 @@ class SimpleBackend(backend.Backend):
         backend.statistics_incomming = stat_incomming
         backend.statistics_duplicates = stat_duplicates
         backend.statistics_add_entries = stat_add_entries
+        backend.statistics_file_handling = stat_file_handling
 
         return backend
 
@@ -252,12 +255,16 @@ class SimpleBackend(backend.Backend):
         :param nodename: the name/id of the node that the file comes from
         :returns the metadata from the file
         """
+        startTime = time.time()
+
         meta = self.metadata_from_file(path)
+
+        metadataTime = time.time()
 
         logger.info("Received file from %s: %s, %s, %s %s" % (nid, meta.bdb_metadata_hash, meta.bdb_source_name, meta.what_date, meta.what_time))
         
         if self.statistics_incomming:
-            self.get_statistics_manager().increment("server-incomming", nid, meta, self.statistics_add_entries)
+            self.get_statistics_manager().increment("server-incomming", nid, meta, self.statistics_add_entries, optime=int((metadataTime - startTime)*1000), optime_info="metadata")
 
         already_handled = not self.handled_files.add(meta.bdb_metadata_hash)
         if already_handled:
@@ -282,6 +289,14 @@ class SimpleBackend(backend.Backend):
                 self.publish(subscription.id(), path, meta)
                     
                 self.processor_manager.process(path, meta)
+        
+        finishedTime = time.time()
+
+        logger.info("Total processing time of file from %s (%s, %s, %s, %s): %d ms" % (nid, meta.bdb_metadata_hash, meta.bdb_source_name, meta.what_date, meta.what_time, int((finishedTime - startTime)*1000)))
+
+        if self.statistics_file_handling:
+            self.get_statistics_manager().increment("server-filehandling", nid, meta, True, False, optime=int((finishedTime - startTime)*1000), optime_info="total")
+
         return meta
 
     def post_message(self, json_message, nodename):

@@ -6,7 +6,7 @@
    "extra_arguments": {
   	 "threads":1,
   	 "queue_size":50,
-     "statistics_ok": {"id":"stat-publication-scp-ok", "type": "count"},
+     "statistics_ok": {"id":"stat-publication-scp-ok", "type": "both"},
      "statistics_error": {"id":"stat-publication-scp-error", "type": "count"}
    },
    "active":true,

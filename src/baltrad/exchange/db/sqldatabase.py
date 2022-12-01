@@ -28,6 +28,7 @@ import contextlib
 import datetime
 import logging
 
+from sqlalchemy import asc,desc
 from sqlalchemy import engine, event, exc as sqlexc, sql
 from sqlalchemy.orm import mapper, sessionmaker
 
@@ -66,7 +67,11 @@ db_statentry = Table("exchange_statentry", dbmeta,
                 Column("spid", Text, nullable=False),
                 Column("origin", Text, nullable=False),
                 Column("source", Text, nullable=True),
+                Column("hashid", Text, nullable=True),
                 Column("entrytime", TIMESTAMP, nullable=False),
+                Column("optime", Integer, nullable=False),
+                Column("optime_info", Text, nullable=True),
+
                 PrimaryKeyConstraint("spid","origin","source", "entrytime")
 )
 
@@ -85,18 +90,44 @@ class statistics(object):
         self.counter = counter
         self.updated_at = updated_at
 
+    def json_repr(self):
+        return {
+            "spid":self.spid,
+            "origin":self.origin,
+            "source":self.source,
+            "counter":self.counter,
+            "updated_at":self.updated_at.isoformat()
+        }
+
 class statentry(object):
-    def __init__(self, spid, origin, source, entrytime):
+    def __init__(self, spid, origin, source, hashid, entrytime, optime=0, optime_info=None):
         """ Represents one increment entry. Used for creating averages and such information
         :param spid: The statistics plugin id
         :param origin: Origin for this stat
         :param source: Source
+        :param hashid: The hash id
         :param entrytime: When this entry was created
+        :param optime: Operation time entry in ms
+        :param optime_info: Used to identify what was timed
         """
         self.spid = spid
         self.origin = origin
         self.source = source
+        self.hashid = hashid
         self.entrytime = entrytime
+        self.optime = optime
+        self.optime_info = optime_info
+
+    def json_repr(self):
+        return {
+            "spid":self.spid,
+            "origin":self.origin,
+            "source":self.source,
+            "hashid":self.hashid,
+            "entrytime":self.entrytime.isoformat(),
+            "optime":self.optime,
+            "optime_info":self.optime_info
+        }
 
 
 mapper(statistics, db_statistics)
@@ -145,6 +176,30 @@ class SqlAlchemyDatabase(object):
         with self.get_session() as s:
             q = s.query(statistics).filter(statistics.spid == spid).filter(statistics.origin == origin).filter(statistics.source == source)
             return q.one_or_none()
+
+    def find_statistics(self, spid, origin, sources):
+        with self.get_session() as s:
+            q = s.query(statistics).filter(statistics.spid == spid)
+            if origin:
+                q = q.filter(statistics.origin == origin)
+            if sources and len(sources) > 0:
+                q = q.filter(statistics.source.in_(sources))
+            return q.all()
+
+    def find_statentries(self, spid, origin, sources, hashid=None):
+        with self.get_session() as s:
+            q = s.query(statentry).filter(statentry.spid == spid)
+            if origin:
+                q = q.filter(statentry.origin == origin)
+            if sources:
+                q = q.filter(statentry.source.in_(sources))
+            if hashid:
+                q = q.filter(statentry.hashid == hashid)
+            q = q.order_by(asc(statentry.origin)) \
+                .order_by(asc(statentry.source)) \
+                .order_by(asc(statentry.entrytime))
+            print("QUERY: %s"%q)
+            return q.all()
 
     def increment_statistics(self, spid, origin, source):
         with self.get_session() as session:

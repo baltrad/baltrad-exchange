@@ -187,17 +187,24 @@ class PostJsonMessage(Command):
 class GetStatistics(Command):
     def update_optionparser(self, parser):
         parser.add_option(
-            "--module", dest="module",
-            help="What module statistics that should be retrieved")
+            "--spid", dest="spid",
+            help="What plugin id that should be queried")
 
         parser.add_option(
             "--sources", dest="sources",
             help="The sources that should be queried")
 
         parser.add_option(
-            "--total", dest="total", default=False, action="store_true",
+            "--totals", dest="totals", default=False, action="store_true",
             help="Use this option if the total should be returned instead")
 
     def execute(self, server, opts, args):
-        result = server.get_statistics(opts.module, opts.sources, opts.total)
+        response = server.get_statistics(opts.spid, opts.sources, opts.totals)
+        if response.status == httplibclient.OK:
+            ldata = json.loads(response.read())
+            for l in ldata:
+                print(l)
+            #print(ldata)
+        else:
+            raise Exception("Unhandled response code: %s"%response.status)
         
