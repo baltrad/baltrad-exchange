@@ -142,6 +142,14 @@ json configuration but without them the system won’t do anything.</p>
  <span class="na">baltrad.exchange.auth.crypto.root</span> <span class="o">=</span> <span class="s">/etc/baltrad/exchange/crypto-keys</span>
 <span class="s"> baltrad.exchange.auth.crypto.private.key = /etc/baltrad/exchange/crypto-keys/example-server.private</span>
 
+ <span class="c1"># It is possible to add public keys to the authenticator by adding them according to the following syntax</span>
+ <span class="c1"># baltrad.exchange.auth.crypto.keys.&lt;node name&gt; = &lt;public key file name&gt;.</span>
+ <span class="c1"># Doing this will set the nodename to &lt;node name&gt; and associate this node name with the provided public key</span>
+ <span class="c1">#</span>
+ <span class="c1"># This is automatically handled for the crypto private key and will associate the public key with the</span>
+ <span class="c1"># node name.</span>
+ <span class="c1">#baltrad.exchange.auth.crypto.keys.example-server = /etc/baltrad/exchange/crypto-keys/example-server.public</span>
+
  <span class="c1"># If keyczar is in providers. Uncomment and create/import the keyczar private key</span>
  <span class="c1"># baltrad.exchange.auth.keyczar.keystore_root = /etc/baltrad/bltnode-keys</span>
  <span class="c1"># baltrad.exchange.auth.keyczar.private.key = /etc/baltrad/bltnode-keys/anders-nzxt.priv</span>
@@ -247,6 +255,7 @@ pool.</p>
   <span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;local subscription&quot;</span><span class="p">,</span>
   <span class="nt">&quot;active&quot;</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span>
   <span class="nt">&quot;storage&quot;</span><span class="p">:[</span><span class="s2">&quot;default_storage&quot;</span><span class="p">],</span>
+  <span class="nt">&quot;statdef&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;stat-subscription-1&quot;</span><span class="p">,</span> <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;count&quot;</span><span class="p">}],</span>
   <span class="nt">&quot;filter&quot;</span><span class="p">:{</span>
     <span class="nt">&quot;filter_type&quot;</span><span class="p">:</span> <span class="s2">&quot;and_filter&quot;</span><span class="p">,</span>
     <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="p">[</span>
@@ -402,7 +411,9 @@ be explained further down.</dd>
    <span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;baltrad.exchange.net.publishers.standard_publisher&quot;</span><span class="p">,</span>
    <span class="nt">&quot;extra_arguments&quot;</span><span class="p">:</span> <span class="p">{</span>
          <span class="nt">&quot;threads&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span>
-         <span class="nt">&quot;queue_size&quot;</span><span class="p">:</span><span class="mi">50</span>
+         <span class="nt">&quot;queue_size&quot;</span><span class="p">:</span><span class="mi">50</span><span class="p">,</span>
+     <span class="nt">&quot;statistics_ok&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;stat-publication-ok&quot;</span><span class="p">,</span> <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;both&quot;</span><span class="p">},</span>
+     <span class="nt">&quot;statistics_error&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;stat-publication-error&quot;</span><span class="p">,</span> <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;count&quot;</span><span class="p">}</span>
    <span class="p">},</span>
    <span class="nt">&quot;active&quot;</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span>
    <span class="nt">&quot;connection&quot;</span><span class="p">:{</span>
