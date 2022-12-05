@@ -77,14 +77,16 @@ class statistics_manager:
         origin = None
         totals = False
         hashid = None
+        sources = []
 
         if "spid" in querydata:
             spid = querydata["spid"]
         if "origin" in querydata:
             origin = querydata["origin"]
         if "sources" in querydata:
-            sources = querydata["sources"]
-            sources = sources.split(",")
+            ssources = querydata["sources"]
+            if ssources:
+                sources = ssources.split(",")
         if "hashid" in querydata:
             hashid = querydata["sources"]
         if "totals" in querydata:
@@ -96,6 +98,11 @@ class statistics_manager:
             entries = self._sqldatabase.find_statentries(spid, origin, sources, hashid=hashid)
         jslist = [e.json_repr() for e in entries]
         return json.dumps(jslist)
+
+    def cleanup_statentry(self, age):
+        now = datetime.datetime.now()
+        maxage = now - datetime.timedelta(hours=age)
+        self._sqldatabase.cleanup_statentries(maxage)
 
     def increment(self, spid, origin, meta, save_post=False, increment_counter=True, optime=0, optime_info=None):
         """ Increments a counter that is defined by:

@@ -114,6 +114,14 @@ json configuration but without them the system won't do anything.
   baltrad.exchange.auth.crypto.root = /etc/baltrad/exchange/crypto-keys
   baltrad.exchange.auth.crypto.private.key = /etc/baltrad/exchange/crypto-keys/example-server.private
 
+  # It is possible to add public keys to the authenticator by adding them according to the following syntax
+  # baltrad.exchange.auth.crypto.keys.<node name> = <public key file name>.
+  # Doing this will set the nodename to <node name> and associate this node name with the provided public key
+  #
+  # This is automatically handled for the crypto private key and will associate the public key with the 
+  # node name.
+  #baltrad.exchange.auth.crypto.keys.example-server = /etc/baltrad/exchange/crypto-keys/example-server.public
+
   # If keyczar is in providers. Uncomment and create/import the keyczar private key
   # baltrad.exchange.auth.keyczar.keystore_root = /etc/baltrad/bltnode-keys
   # baltrad.exchange.auth.keyczar.private.key = /etc/baltrad/bltnode-keys/anders-nzxt.priv
@@ -231,6 +239,7 @@ pool.
     "id":"local subscription",
     "active":true,
     "storage":["default_storage"],
+    "statdef": [{"id":"stat-subscription-1", "type": "count"}],
     "filter":{
       "filter_type": "and_filter", 
       "value": [
@@ -416,7 +425,9 @@ The basic structure of a publication configuration looks like
      "class":"baltrad.exchange.net.publishers.standard_publisher",
      "extra_arguments": {
   	   "threads":2,
-  	   "queue_size":50
+  	   "queue_size":50,
+       "statistics_ok": {"id":"stat-publication-ok", "type": "both"},
+       "statistics_error": {"id":"stat-publication-error", "type": "count"}
      },
      "active":false,
      "connection":{   

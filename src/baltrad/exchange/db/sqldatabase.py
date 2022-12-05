@@ -48,6 +48,8 @@ from sqlalchemy import (
     Table,
 )
 
+logger = logging.getLogger("baltrad.exchange.db.sqldatabase")
+
 dbmeta = MetaData()
 
 ##
@@ -147,6 +149,7 @@ def force_sqlite_foreign_keys(dbapi_con, con_record):
 class SqlAlchemyDatabase(object):
     def __init__(self, uri="sqlite:///tmp/baltrad-exchange.db", poolsize=10):
         self._engine = engine.create_engine(uri, echo=False)
+        logger.info("ENGINE: %s"%uri)
         if self._engine.driver == "pysqlite":
             event.listen(self._engine, "connect", force_sqlite_foreign_keys)
         self.init_tables()
@@ -191,7 +194,7 @@ class SqlAlchemyDatabase(object):
             q = s.query(statentry).filter(statentry.spid == spid)
             if origin:
                 q = q.filter(statentry.origin == origin)
-            if sources:
+            if sources and len(sources) > 0:
                 q = q.filter(statentry.source.in_(sources))
             if hashid:
                 q = q.filter(statentry.hashid == hashid)
@@ -199,6 +202,12 @@ class SqlAlchemyDatabase(object):
                 .order_by(asc(statentry.source)) \
                 .order_by(asc(statentry.entrytime))
             return q.all()
+
+    def cleanup_statentries(self, maxagedt):
+        logger.info("Cleanup of statentries older than %s"%maxagedt.strftime("%Y-%m-%d %H:%M"))
+        q = db_statentry.delete().where(db_statentry.c.entrytime < maxagedt.strftime("%Y-%m-%d %H:%M"))
+        logger.debug("Query: %s"%q)
+        self._engine.execute(q)
 
     def increment_statistics(self, spid, origin, source):
         with self.get_session() as session:

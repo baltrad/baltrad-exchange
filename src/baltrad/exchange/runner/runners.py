@@ -25,7 +25,7 @@ import importlib
 import logging
 import pyinotify
 import os, re
-from threading import Thread
+from threading import Thread, Event
 
 from baltrad.exchange.naming import namer
 from baltrad.exchange.util import message_aware
@@ -44,7 +44,13 @@ class runner(object):
         super(runner,self).__init__()
         self._backend = backend
         self._active = active
-        
+
+    def backend(self):
+        """
+        :return the backend
+        """
+        return self._backend
+
     def active(self):
         """
         :return if this runner is active or not
@@ -188,6 +194,46 @@ class triggered_fetch_runner(runner, message_aware):
                 if isinstance(json_message["arguments"], dict):
                     kwargs = json_message["arguments"]
             self._fetcher.fetch(**kwargs)
+
+class statistics_cleanup_runner(runner):
+    """Cleans the statistics database
+    """
+    def __init__(self, backend, active, **args):
+        super(statistics_cleanup_runner, self).__init__(backend, active)
+        self._name = "statistics_cleanup_runner"
+        self._interval = 60 # minutes
+        self._age = 48      # hours
+        self._manager = self.backend().get_statistics_manager()
+        self._event = Event()
+        self._running = False
+
+        if "name" in args:
+            self._name = args["name"]
+        
+        if "interval" in args:
+            self._interval = args["interval"]
+            if not isinstance(self._interval, int):
+                raise AttributeError("interval should be an integer")
+
+        if "age" in args:
+            self._age = args["age"]
+            if not isinstance(self._age, int):
+                raise AttributeError("age should be an integer")
+
+    def run(self):
+        """The runner for the thread. Will trigger a wait for
+        """
+        while self._running:
+            self._manager.cleanup_statentry(self._age)
+            self._event.wait(self._interval * 60)
+
+    def start(self):
+        """Starts this runner by starting a daemonized thread.
+        """
+        self._running = True
+        self._thread = Thread(target=self.run)
+        self._thread.daemon = True
+        self._thread.start()
 
 class runner_manager:
     """ The runner manager. Will create and register the runner

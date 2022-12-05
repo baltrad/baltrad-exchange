@@ -136,6 +136,7 @@ class subscription_manager:
         active=True
         ifilter = None
         allow_duplicates=False
+        statplugins=[]
         
         allowed_ids = []
         

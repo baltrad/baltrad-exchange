@@ -236,6 +236,16 @@ class CryptoAuth(Auth):
         self._private_key = None
         self._verifiers = {}
     
+    def setPrivateKey(self, privkey, nodename=None):
+        if privkey and not os.path.exists(privkey):
+            raise Exception("If providing a private key it must point at a valid file")
+        self._private_key = privkey
+        if self._private_key and nodename:
+            privkey = crypto.load_key(self._private_key)
+            if nodename not in self._verifiers:
+                logger.info("adding public key from private for %s", nodename)
+                self._verifiers[nodename] = privkey.publickey()
+
     def add_key_config(self, conf):
         if "creator" in conf and conf["creator"] == "baltrad.exchange.crypto":
             if conf["type"] == "public":
@@ -246,8 +256,11 @@ class CryptoAuth(Auth):
                         key = crypto.load_key(conf["pubkey"])
                 else:                    
                     key = crypto.import_key(conf["key"])
-                logger.info("adding key config %s", conf["nodename"])
-                self._verifiers[conf["nodename"]] = key
+
+                if conf["nodename"] not in self._verifiers:
+                    logger.info("adding key config %s", conf["nodename"])
+                    self._verifiers[conf["nodename"]] = key
+
                 return conf["nodename"]
             else:
                 raise AuthError("Exchange auth expects public keys")
@@ -321,13 +334,13 @@ class CryptoAuth(Auth):
         key is used as a name and the value is used as the path for the key
         lookup.
         """
-        conf = conf.filter("baltrad.exchange.auth.crypto.")
+        cconf = conf.filter("baltrad.exchange.auth.crypto.")
         
-        result = CryptoAuth(conf.get("root"))
-        keyconf = conf.filter("keys.")
+        result = CryptoAuth(cconf.get("root"))
+        keyconf = cconf.filter("keys.")
         for key in keyconf.get_keys():
             result.add_key(key, keyconf.get(key))
-            
-        result._private_key = conf.get("private.key")
+        
+        result.setPrivateKey(cconf.get("private.key"), conf.get("baltrad.exchange.node.name"))
 
         return result
