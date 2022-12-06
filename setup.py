@@ -39,6 +39,7 @@ setuptools.setup(name="baltrad.exchange",
             "batchtest = baltrad.exchange.client.cmd:BatchTest",
             "post_message = baltrad.exchange.client.cmd:PostJsonMessage",
             "get_statistics = baltrad.exchange.client.cmd:GetStatistics",
+            "server_info = baltrad.exchange.client.cmd:ServerInfo",
         ],
         "baltrad.exchange.config.commands": [
             "create_keys = baltrad.exchange.client.cfgcmd:CreateKeys",

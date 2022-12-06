@@ -41,6 +41,7 @@ from .util import (
     NoContentResponse,
     Response,
 )
+import json
 
 # 
 # from ..backend import (
@@ -125,3 +126,14 @@ def get_statistics(ctx):
     data = ctx.request.get_json_data()
     stats = ctx.backend.get_statistics_manager().get_statistics(ctx.backend.get_auth_manager().get_nodename(ctx.request), data)
     return Response(stats, status=httplibclient.OK)
+
+def get_server_uptime(ctx):
+    """
+    :returns the server uptime
+    """
+    logger.debug("baltrad.exchange.handler.get_server_uptime(ctx)")
+    if ctx.is_anonymous():
+        logger.info("get_server_uptime: anonymous calls are not allowed")
+        return Response("", status=httplibclient.UNAUTHORIZED)
+    days, hours, minutes, seconds = ctx.backend.get_server_uptime()
+    return Response(json.dumps({"days":days, "hours":hours, "minutes":minutes, "seconds":seconds}), status=httplibclient.OK)

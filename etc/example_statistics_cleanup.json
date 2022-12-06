@@ -1,0 +1,13 @@
+{
+"runner":{
+  "_comment_":"Cleanup of statistics database run as a runner.",
+  "active":true,
+  "class":"baltrad.exchange.runner.runners.statistics_cleanup_runner",
+  "extra_arguments": {
+    "name":"statistics_cleanup_runner",
+    "interval": 1,
+    "age":48
+  } 
+}
+}
+

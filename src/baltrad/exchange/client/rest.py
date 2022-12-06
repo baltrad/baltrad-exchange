@@ -130,6 +130,22 @@ class RestfulServer(object):
         response = self.execute_request(request)
         return response
 
+    def get_server_info(self, subcommand, **kwargs):
+        """posts a json message to the exchange server. 
+        :param data: The data
+        """
+        request = Request(
+            "GET", "/serverinfo/%s"%subcommand,
+            headers={
+                "content-type": "application/json",
+                "message-id": str(uuid.uuid4()),
+                "date":datetime.utcnow().strftime("%Y%m%d%H%M%S%f")
+            }
+        )
+
+        response = self.execute_request(request)
+        return response
+
     def execute_request(self, req):
         """Exececutes the actual rest request over http or https. Will also add credentials to the request
         :param req: The REST request

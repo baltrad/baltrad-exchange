@@ -122,6 +122,8 @@ class SimpleBackend(backend.Backend):
         self.statistics_add_entries = False
         self.statistics_file_handling = False
 
+        self._starttime = datetime.datetime.now()
+
         self.initialize_configuration(self.confdirs)
     
     def get_storage_manager(self):
@@ -343,4 +345,9 @@ class SimpleBackend(backend.Backend):
         """
         return metadata_helper.metadata_from_file(self.source_manager, self._hasher, path)
             
-    
+    def get_server_uptime(self):
+        td = (datetime.datetime.now() - self._starttime)
+        hours = td.seconds // 3600
+        minutes = (td.seconds % 3600) // 60
+        seconds = td.seconds % 60
+        return (td.days, hours, minutes, seconds)

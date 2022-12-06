@@ -64,6 +64,11 @@ URL_MAP = Map(
                 endpoint="handler.get_statistics"
             ),
         ]),
+        Submount("/serverinfo", [
+            Rule("/uptime", methods=["GET"],
+                endpoint="handler.get_server_uptime"
+            ),
+        ]),
         Submount("/json_message", [
             Rule("/", methods=["POST"],
                 endpoint="handler.post_json_message"

@@ -208,3 +208,27 @@ class GetStatistics(Command):
         else:
             raise Exception("Unhandled response code: %s"%response.status)
         
+class ServerInfo(Command):
+    def update_optionparser(self, parser):
+        #parser.add_option(
+        #    "--spid", dest="spid",
+        #    help="What plugin id that should be queried")
+        #
+        #parser.add_option(
+        #    "--sources", dest="sources",
+        #    help="The sources that should be queried")
+        #
+        #parser.add_option(
+        #    "--totals", dest="totals", default=False, action="store_true",
+        #    help="Use this option if the total should be returned instead")
+        pass
+
+    def execute(self, server, opts, args):
+        if len(args) == 1:
+            if args[0] == "uptime":
+                response = server.get_server_info("uptime")
+                if response.status == httplibclient.OK:
+                    ldata = json.loads(response.read())
+                    print(ldata)
+                else:
+                    raise Exception("Unhandled response code: %s"%response.status)
