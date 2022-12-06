@@ -1,20 +1,19 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>User Guide &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
     
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -33,7 +32,8 @@
         <li class="right" >
           <a href="readme.html" title="README"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">baltrad-exchange 0.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">baltrad-exchange 0.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">User Guide</a></li> 
       </ul>
     </div>  
 
@@ -42,56 +42,55 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="user-guide">
+  <section id="user-guide">
 <h1>User Guide<a class="headerlink" href="#user-guide" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="baltrad-exchange-a-multipurpose-exchange-engine-for-radar-data">
+<section id="baltrad-exchange-a-multipurpose-exchange-engine-for-radar-data">
 <h2>baltrad-exchange - a multipurpose exchange engine for radar data -<a class="headerlink" href="#baltrad-exchange-a-multipurpose-exchange-engine-for-radar-data" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="introduction">
+<section id="introduction">
 <h3>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h3>
 <p>The baltrad-exchange engine is a new modernized approach of allowing exchange of radar data. Currently,
 the only supported format is ODIM-H5 but the allowed formats is possible to extend in the future.
 There are several reasons for why this engine was created but to name a few key-points:</p>
 <ul class="simple">
-<li>Add more flexible routing that can route on meta-information in a file</li>
-<li>Possibility to distribute monitored files as well as received files</li>
-<li>Smaller (and easier) installation footprint that doesn’t require an external database</li>
-<li>More flexible and easier configuration</li>
-<li>Possibility to run several different instances on same server</li>
-<li>Allow possibility to decorate a file before it is sent to a subscriber</li>
+<li><p>Add more flexible routing that can route on meta-information in a file</p></li>
+<li><p>Possibility to distribute monitored files as well as received files</p></li>
+<li><p>Smaller (and easier) installation footprint that doesn’t require an external database</p></li>
+<li><p>More flexible and easier configuration</p></li>
+<li><p>Possibility to run several different instances on same server</p></li>
+<li><p>Allow possibility to decorate a file before it is sent to a subscriber</p></li>
 </ul>
-</div>
-<div class="section" id="overview">
+</section>
+<section id="overview">
 <h3>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h3>
-<div class="figure">
+<figure class="align-default">
 <img alt="Basic overview of the server" src="_images/overview.png" />
-</div>
+</figure>
 <p>The exchange of any files can be divided into a number of different steps.</p>
-<dl class="docutils">
-<dt><strong>Input</strong></dt>
-<dd>First, there is the source file that should be distributed. This file should be injected into the system some how. Either waiting for input like when receiving a file or some sort of monitoring/triggering like polling or event handling.</dd>
-<dt><strong>Authentication</strong></dt>
-<dd>When a file is inserted into the system actively we must have some sort of authenticating that it is a valid origin. The baltrad-exchange is using public/private keys and signature handling to ensure that this is taken care of in a secure way.</dd>
-<dt><strong>Subscriptions</strong></dt>
-<dd>When the file has passed the authentication part it is time to decide what to do with the incomming file.
+<dl class="simple">
+<dt><strong>Input</strong></dt><dd><p>First, there is the source file that should be distributed. This file should be injected into the system some how. Either waiting for input like when receiving a file or some sort of monitoring/triggering like polling or event handling.</p>
+</dd>
+<dt><strong>Authentication</strong></dt><dd><p>When a file is inserted into the system actively we must have some sort of authenticating that it is a valid origin. The baltrad-exchange is using public/private keys and signature handling to ensure that this is taken care of in a secure way.</p>
+</dd>
+<dt><strong>Subscriptions</strong></dt><dd><p>When the file has passed the authentication part it is time to decide what to do with the incomming file.
 - First, the origin (nodename / id) of the file is verified against the subscription to know that we are expecting something from that origin.
 - Next the metadata is extracted from the file and matched against the subscription filter to know if this subscription should handle the file
 - If both of above checks has passed. Then the incomming file is stored at zero or more storages before it is published to all publications that matches the file metadata
-- It is also possible to put the file on a processor queue if the above checks has passed if further processing should be done within the scope of the exchange mechanism</dd>
-<dt><strong>Publications</strong></dt>
-<dd><p class="first">Since different parties want to have files distributed in various ways the publication has been divided into three different parts. The publisher, the connector and the sender.</p>
-<ul class="last simple">
-<li><strong>publisher</strong> is the overall spider taking care of threads, what connector to use and if the outgoing file should be modified in any way. Currently there is only one publisher, the standard_publisher.</li>
-<li><strong>connection</strong> this is the approach to use when distributing the file. For example if the file should be sent with some sort of failover, duplication, …</li>
-<li><strong>sender</strong> is the actual protocol to use when sending the file, like to another node, a dex-node or some sort of sftp, scp-protocol</li>
+- It is also possible to put the file on a processor queue if the above checks has passed if further processing should be done within the scope of the exchange mechanism</p>
+</dd>
+<dt><strong>Publications</strong></dt><dd><p>Since different parties want to have files distributed in various ways the publication has been divided into three different parts. The publisher, the connector and the sender.</p>
+<ul class="simple">
+<li><p><strong>publisher</strong> is the overall spider taking care of threads, what connector to use and if the outgoing file should be modified in any way. Currently there is only one publisher, the standard_publisher.</p></li>
+<li><p><strong>connection</strong> this is the approach to use when distributing the file. For example if the file should be sent with some sort of failover, duplication, …</p></li>
+<li><p><strong>sender</strong> is the actual protocol to use when sending the file, like to another node, a dex-node or some sort of sftp, scp-protocol</p></li>
 </ul>
 </dd>
-<dt><strong>Runners</strong></dt>
-<dd>If a file isn’t injected into the system we need to be able to get the file into the system some other way and here is where the runners comes into action. A runner is a separate entity that
+<dt><strong>Runners</strong></dt><dd><p>If a file isn’t injected into the system we need to be able to get the file into the system some other way and here is where the runners comes into action. A runner is a separate entity that
 uses the server backend to trigger and pass a file into the system like if it had passed the <strong>Authentication</strong> part. The runners can for example be event triggered variants like inotify. It can also be
-triggered variants that accepts some external trigger or scheduled variants.</dd>
+triggered variants that accepts some external trigger or scheduled variants.</p>
+</dd>
 </dl>
-</div>
-<div class="section" id="authorization">
+</section>
+<section id="authorization">
 <h3>Authorization<a class="headerlink" href="#authorization" title="Permalink to this headline">¶</a></h3>
 <p>There are several different ways to ensure that the sender and receiver knows about each other and in this software we have used basic signature handling. That is, you as a sender signs a message
 using your private key and the receiver verifies the sent data using the senders public key. Hence, each installation of a node needs to have at least one private/public-key. The private key should be
@@ -109,194 +108,194 @@ handling which is just called <strong>crypto</strong> in the configuration. The 
 <p>As you see in the example, three files will be created. A private key in PEM-format which is to be kept safe and two different public keys. One in PEM format and the other in json format.
 The one in json format will typically be used when setting up the subscriptions. The json-file contains some meta information and the public PEM-key with newlines escaped to be compatible
 with json. !!!NOTE!!! It might be reasonable to also have configured a folder containing all the keys!!!</p>
-</div>
-<div class="section" id="configuration">
+</section>
+<section id="configuration">
 <h3>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h3>
 <p>The basic configuration is just a property-file containing the most basic information which is specified when starting the server. In order for the system to start you won’t need any
 json configuration but without them the system won’t do anything.</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span> <span class="c1"># This is the local address the WSGI server will be listening on</span>
- <span class="na">baltrad.exchange.uri</span><span class="o">=</span><span class="s">https://localhost:8089</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="c1"># This is the local address the WSGI server will be listening on</span><span class="w"></span>
+<span class="w"> </span><span class="na">baltrad.exchange.uri</span><span class="o">=</span><span class="s">https://localhost:8089</span><span class="w"></span>
 
- <span class="c1"># How logging should be performed</span>
- <span class="na">baltrad.exchange.log.type</span><span class="o">=</span><span class="s">logfile</span>
+<span class="w"> </span><span class="c1"># How logging should be performed</span><span class="w"></span>
+<span class="w"> </span><span class="na">baltrad.exchange.log.type</span><span class="o">=</span><span class="s">logfile</span><span class="w"></span>
 
- <span class="c1"># The log id used</span>
- <span class="na">baltrad.exchange.log.id</span><span class="o">=</span><span class="s">baltrad-exchange</span>
+<span class="w"> </span><span class="c1"># The log id used</span><span class="w"></span>
+<span class="w"> </span><span class="na">baltrad.exchange.log.id</span><span class="o">=</span><span class="s">baltrad-exchange</span><span class="w"></span>
 
- <span class="c1"># The log level to use. All messages with priority &gt;= log.level will be sent to the log output.</span>
- <span class="c1"># Available are: ERROR, WARNING, INFO, DEBUG</span>
- <span class="na">baltrad.exchange.log.level</span><span class="o">=</span><span class="s">INFO</span>
+<span class="w"> </span><span class="c1"># The log level to use. All messages with priority &gt;= log.level will be sent to the log output.</span><span class="w"></span>
+<span class="w"> </span><span class="c1"># Available are: ERROR, WARNING, INFO, DEBUG</span><span class="w"></span>
+<span class="w"> </span><span class="na">baltrad.exchange.log.level</span><span class="o">=</span><span class="s">INFO</span><span class="w"></span>
 
- <span class="c1"># Number of threads, backlog and timeout</span>
- <span class="na">baltrad.exchange.threads</span><span class="o">=</span><span class="s">20</span>
-<span class="s"> baltrad.exchange.backlog=10</span>
-<span class="s"> baltrad.exchange.timeout=10</span>
+<span class="w"> </span><span class="c1"># Number of threads, backlog and timeout</span><span class="w"></span>
+<span class="w"> </span><span class="na">baltrad.exchange.threads</span><span class="o">=</span><span class="s">20</span><span class="w"></span>
+<span class="w"> </span><span class="na">baltrad.exchange.backlog</span><span class="o">=</span><span class="s">10</span><span class="w"></span>
+<span class="w"> </span><span class="na">baltrad.exchange.timeout</span><span class="o">=</span><span class="s">10</span><span class="w"></span>
 
- <span class="c1"># Name of this server. Will be used when communicating with other nodes</span>
- <span class="na">baltrad.exchange.node.name</span> <span class="o">=</span> <span class="s">example-server</span>
+<span class="w"> </span><span class="c1"># Name of this server. Will be used when communicating with other nodes</span><span class="w"></span>
+<span class="w"> </span><span class="na">baltrad.exchange.node.name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">example-server</span><span class="w"></span>
 
- <span class="c1"># Add keyczar to providers if wanted</span>
- <span class="na">baltrad.exchange.auth.providers</span> <span class="o">=</span> <span class="s">noauth, crypto</span>
+<span class="w"> </span><span class="c1"># Add keyczar to providers if wanted</span><span class="w"></span>
+<span class="w"> </span><span class="na">baltrad.exchange.auth.providers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">noauth, crypto</span><span class="w"></span>
 
- <span class="c1"># Default crypto-variant</span>
- <span class="na">baltrad.exchange.auth.crypto.root</span> <span class="o">=</span> <span class="s">/etc/baltrad/exchange/crypto-keys</span>
-<span class="s"> baltrad.exchange.auth.crypto.private.key = /etc/baltrad/exchange/crypto-keys/example-server.private</span>
+<span class="w"> </span><span class="c1"># Default crypto-variant</span><span class="w"></span>
+<span class="w"> </span><span class="na">baltrad.exchange.auth.crypto.root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/etc/baltrad/exchange/crypto-keys</span><span class="w"></span>
+<span class="w"> </span><span class="na">baltrad.exchange.auth.crypto.private.key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/etc/baltrad/exchange/crypto-keys/example-server.private</span><span class="w"></span>
 
- <span class="c1"># It is possible to add public keys to the authenticator by adding them according to the following syntax</span>
- <span class="c1"># baltrad.exchange.auth.crypto.keys.&lt;node name&gt; = &lt;public key file name&gt;.</span>
- <span class="c1"># Doing this will set the nodename to &lt;node name&gt; and associate this node name with the provided public key</span>
- <span class="c1">#</span>
- <span class="c1"># This is automatically handled for the crypto private key and will associate the public key with the</span>
- <span class="c1"># node name.</span>
- <span class="c1">#baltrad.exchange.auth.crypto.keys.example-server = /etc/baltrad/exchange/crypto-keys/example-server.public</span>
+<span class="w"> </span><span class="c1"># It is possible to add public keys to the authenticator by adding them according to the following syntax</span><span class="w"></span>
+<span class="w"> </span><span class="c1"># baltrad.exchange.auth.crypto.keys.&lt;node name&gt; = &lt;public key file name&gt;.</span><span class="w"></span>
+<span class="w"> </span><span class="c1"># Doing this will set the nodename to &lt;node name&gt; and associate this node name with the provided public key</span><span class="w"></span>
+<span class="w"> </span><span class="c1">#</span><span class="w"></span>
+<span class="w"> </span><span class="c1"># This is automatically handled for the crypto private key and will associate the public key with the</span><span class="w"></span>
+<span class="w"> </span><span class="c1"># node name.</span><span class="w"></span>
+<span class="w"> </span><span class="c1">#baltrad.exchange.auth.crypto.keys.example-server = /etc/baltrad/exchange/crypto-keys/example-server.public</span><span class="w"></span>
 
- <span class="c1"># If keyczar is in providers. Uncomment and create/import the keyczar private key</span>
- <span class="c1"># baltrad.exchange.auth.keyczar.keystore_root = /etc/baltrad/bltnode-keys</span>
- <span class="c1"># baltrad.exchange.auth.keyczar.private.key = /etc/baltrad/bltnode-keys/anders-nzxt.priv</span>
+<span class="w"> </span><span class="c1"># If keyczar is in providers. Uncomment and create/import the keyczar private key</span><span class="w"></span>
+<span class="w"> </span><span class="c1"># baltrad.exchange.auth.keyczar.keystore_root = /etc/baltrad/bltnode-keys</span><span class="w"></span>
+<span class="w"> </span><span class="c1"># baltrad.exchange.auth.keyczar.private.key = /etc/baltrad/bltnode-keys/anders-nzxt.priv</span><span class="w"></span>
 
- <span class="c1"># Comma separated list of directories where json config files are located.</span>
-<span class="na">baltrad.exchange.server.config.dirs</span> <span class="o">=</span> <span class="s">/etc/baltrad/exchange/config</span>
+<span class="w"> </span><span class="c1"># Comma separated list of directories where json config files are located.</span><span class="w"></span>
+<span class="na">baltrad.exchange.server.config.dirs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/etc/baltrad/exchange/config</span><span class="w"></span>
 
- <span class="c1"># Where the odim source file can be found in rave format.</span>
- <span class="na">baltrad.exchange.server.odim_source</span> <span class="o">=</span> <span class="s">/etc/baltrad/rave/config/odim_source.xml</span>
+<span class="w"> </span><span class="c1"># Where the odim source file can be found in rave format.</span><span class="w"></span>
+<span class="w"> </span><span class="na">baltrad.exchange.server.odim_source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/etc/baltrad/rave/config/odim_source.xml</span><span class="w"></span>
 
- <span class="c1"># The database in where some basic data is stored when performing the source-lookup</span>
- <span class="c1"># this database doesn&#39;t need to be persisted on disk since it will be created upon started</span>
- <span class="c1"># from the above odim_source.xml file</span>
- <span class="na">baltrad.exchange.server.source_db_uri</span> <span class="o">=</span> <span class="s">sqlite:///var/cache/baltrad/exchange/source.db</span>
+<span class="w"> </span><span class="c1"># The database in where some basic data is stored when performing the source-lookup</span><span class="w"></span>
+<span class="w"> </span><span class="c1"># this database doesn&#39;t need to be persisted on disk since it will be created upon started</span><span class="w"></span>
+<span class="w"> </span><span class="c1"># from the above odim_source.xml file</span><span class="w"></span>
+<span class="w"> </span><span class="na">baltrad.exchange.server.source_db_uri</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">sqlite:///var/cache/baltrad/exchange/source.db</span><span class="w"></span>
 
- <span class="c1"># The database where we want to store all other information. This should preferrably</span>
- <span class="c1"># be persisted since it will contain statistics and other relevant information</span>
- <span class="c1"># pointing to a postgres database or similar but we can use sqlite as well. This</span>
- <span class="c1"># database will contain for example statistics and other data that should be persisted.</span>
- <span class="na">baltrad.exchange.server.db_uri</span> <span class="o">=</span> <span class="s">sqlite:///var/lib/baltrad/exchange/baltrad-exchange.db</span>
+<span class="w"> </span><span class="c1"># The database where we want to store all other information. This should preferrably</span><span class="w"></span>
+<span class="w"> </span><span class="c1"># be persisted since it will contain statistics and other relevant information</span><span class="w"></span>
+<span class="w"> </span><span class="c1"># pointing to a postgres database or similar but we can use sqlite as well. This</span><span class="w"></span>
+<span class="w"> </span><span class="c1"># database will contain for example statistics and other data that should be persisted.</span><span class="w"></span>
+<span class="w"> </span><span class="na">baltrad.exchange.server.db_uri</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">sqlite:///var/lib/baltrad/exchange/baltrad-exchange.db</span><span class="w"></span>
 
- <span class="c1"># Note, these should only be readable by the baltrad user</span>
- <span class="c1"># and can be created using the following command.</span>
- <span class="c1"># openssl req  -nodes -new -x509  -keyout server.key -out server.cert</span>
- <span class="na">baltrad.exchange.server.certificate</span> <span class="o">=</span> <span class="s">/etc/baltrad/exchange/etc/server.cert</span>
-<span class="s"> baltrad.exchange.server.key = /etc/baltrad/exchange/etc/server.key</span>
+<span class="w"> </span><span class="c1"># Note, these should only be readable by the baltrad user</span><span class="w"></span>
+<span class="w"> </span><span class="c1"># and can be created using the following command.</span><span class="w"></span>
+<span class="w"> </span><span class="c1"># openssl req  -nodes -new -x509  -keyout server.key -out server.cert</span><span class="w"></span>
+<span class="w"> </span><span class="na">baltrad.exchange.server.certificate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/etc/baltrad/exchange/etc/server.cert</span><span class="w"></span>
+<span class="w"> </span><span class="na">baltrad.exchange.server.key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/etc/baltrad/exchange/etc/server.key</span><span class="w"></span>
 
- <span class="c1"># Statistics</span>
- <span class="c1"># It is possible to accumulate statistics from the operation. Most of this configuration is performed</span>
- <span class="c1"># per subscription / publisher / ... and all other cfg-entries that support this functionality</span>
- <span class="c1"># However, there are some general statistics that is configured from this section.</span>
- <span class="c1"># This data will be (unless otherwise configured) stored in the database pointed to by baltrad.exchange.server.db_uri</span>
+<span class="w"> </span><span class="c1"># Statistics</span><span class="w"></span>
+<span class="w"> </span><span class="c1"># It is possible to accumulate statistics from the operation. Most of this configuration is performed</span><span class="w"></span>
+<span class="w"> </span><span class="c1"># per subscription / publisher / ... and all other cfg-entries that support this functionality</span><span class="w"></span>
+<span class="w"> </span><span class="c1"># However, there are some general statistics that is configured from this section.</span><span class="w"></span>
+<span class="w"> </span><span class="c1"># This data will be (unless otherwise configured) stored in the database pointed to by baltrad.exchange.server.db_uri</span><span class="w"></span>
 
- <span class="c1"># Keeps track of all incomming files. Will be stored with spid == server-incomming for each source/origin</span>
- <span class="na">baltrad.exchange.server.statistics.incomming</span><span class="o">=</span><span class="s">false</span>
+<span class="w"> </span><span class="c1"># Keeps track of all incomming files. Will be stored with spid == server-incomming for each source/origin</span><span class="w"></span>
+<span class="w"> </span><span class="na">baltrad.exchange.server.statistics.incomming</span><span class="o">=</span><span class="s">false</span><span class="w"></span>
 
- <span class="c1"># Keeps track of all duplicate files. Note, this is from a general point of view. Will be stored with spid == server-duplicate for each source/origin</span>
- <span class="na">baltrad.exchange.server.statistics.duplicates</span><span class="o">=</span><span class="s">false</span>
+<span class="w"> </span><span class="c1"># Keeps track of all duplicate files. Note, this is from a general point of view. Will be stored with spid == server-duplicate for each source/origin</span><span class="w"></span>
+<span class="w"> </span><span class="na">baltrad.exchange.server.statistics.duplicates</span><span class="o">=</span><span class="s">false</span><span class="w"></span>
 
- <span class="c1"># Each incomming file will be stored as one separate entry so that it is possible to</span>
- <span class="c1"># calculate average process times and other relevant performance numbers.</span>
- <span class="na">baltrad.exchange.server.statistics.add_individual_entry</span><span class="o">=</span><span class="s">false</span>
+<span class="w"> </span><span class="c1"># Each incomming file will be stored as one separate entry so that it is possible to</span><span class="w"></span>
+<span class="w"> </span><span class="c1"># calculate average process times and other relevant performance numbers.</span><span class="w"></span>
+<span class="w"> </span><span class="na">baltrad.exchange.server.statistics.add_individual_entry</span><span class="o">=</span><span class="s">false</span><span class="w"></span>
 
- <span class="c1"># Each incomming file will be associated with a total processing time to be able to check</span>
- <span class="c1"># if there are any performance issues. This will not result in a total, just individual entries.</span>
- <span class="na">baltrad.exchange.server.statistics.file_handling_time</span><span class="o">=</span><span class="s">false</span>
+<span class="w"> </span><span class="c1"># Each incomming file will be associated with a total processing time to be able to check</span><span class="w"></span>
+<span class="w"> </span><span class="c1"># if there are any performance issues. This will not result in a total, just individual entries.</span><span class="w"></span>
+<span class="w"> </span><span class="na">baltrad.exchange.server.statistics.file_handling_time</span><span class="o">=</span><span class="s">false</span><span class="w"></span>
 
- <span class="c1"># If you need to load different objects from paths that are not in the standard PYTHONPATH,</span>
- <span class="c1"># then this configuration entries can be used to add paths to the sys.path.</span>
- <span class="c1"># Sequenced from 1.. and when first number in sequence is missing no more atempts will be done.</span>
- <span class="c1"># baltrad.exchange.server.plugin.directory.1 = /etc/baltrad/exchange/plugins</span>
+<span class="w"> </span><span class="c1"># If you need to load different objects from paths that are not in the standard PYTHONPATH,</span><span class="w"></span>
+<span class="w"> </span><span class="c1"># then this configuration entries can be used to add paths to the sys.path.</span><span class="w"></span>
+<span class="w"> </span><span class="c1"># Sequenced from 1.. and when first number in sequence is missing no more atempts will be done.</span><span class="w"></span>
+<span class="w"> </span><span class="c1"># baltrad.exchange.server.plugin.directory.1 = /etc/baltrad/exchange/plugins</span><span class="w"></span>
 </pre></div>
 </div>
 <p>During startup all config.dirs will be traversed and all files ending with <strong>.json</strong> will be processed and possibly parsed. Each json-file should be defined like</p>
-<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;&lt;keyword&gt;&quot;</span><span class="p">:{</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;&lt;keyword&gt;&quot;</span><span class="p">:{</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 <p>Where the &lt;keyword&gt; is one of the following types:</p>
 <ul class="simple">
-<li><strong>subscription</strong></li>
-<li><strong>storage</strong></li>
-<li><strong>publication</strong></li>
-<li><strong>runner</strong></li>
-<li><strong>processor</strong></li>
+<li><p><strong>subscription</strong></p></li>
+<li><p><strong>storage</strong></p></li>
+<li><p><strong>publication</strong></p></li>
+<li><p><strong>runner</strong></p></li>
+<li><p><strong>processor</strong></p></li>
 </ul>
 <p>Whenever a json file is read and the backend identifies one of the above keywords the object is created to support that configuration. Each of these keyword configurations will
 be explained later on.</p>
-</div>
-<div class="section" id="subscriptions-subscription">
+</section>
+<section id="subscriptions-subscription">
 <h3>Subscriptions (subscription)<a class="headerlink" href="#subscriptions-subscription" title="Permalink to this headline">¶</a></h3>
 <p>A subscription defines what should be allowed into the system and the basic operations that should be performed on the data that arrives. A subscription contains the following parts:</p>
-<dl class="docutils">
-<dt><strong>id</strong></dt>
-<dd>In some cases it is nessecary to identify the subscription. For example when tunneling incomming files to a particular publisher.</dd>
-<dt><strong>active</strong></dt>
-<dd>If the subscription is active or not. It can be set to false to be able to keep subscription configuration without using it.</dd>
-<dt><strong>storage</strong></dt>
-<dd>A list of zero or more named storages</dd>
-<dt><strong>statdef</strong></dt>
-<dd>A list of definitions for generating statistics. This should be a list containing a number
+<dl class="simple">
+<dt><strong>id</strong></dt><dd><p>In some cases it is nessecary to identify the subscription. For example when tunneling incomming files to a particular publisher.</p>
+</dd>
+<dt><strong>active</strong></dt><dd><p>If the subscription is active or not. It can be set to false to be able to keep subscription configuration without using it.</p>
+</dd>
+<dt><strong>storage</strong></dt><dd><p>A list of zero or more named storages</p>
+</dd>
+<dt><strong>statdef</strong></dt><dd><p>A list of definitions for generating statistics. This should be a list containing a number
 of statistic plugin definitions. [{“id”:”stat-subscription-1”, “type”: “count”}]
 <em>id</em>   is the spid this will be stored with in the database
-<em>type</em> defines if how the statistics should be stored. <strong>add</strong> == only add entries to statentry, <strong>count</strong> == only update count or <strong>both</strong> == do both</dd>
-<dt><strong>filter</strong></dt>
-<dd>A filter “bdb-style” that is used to match the files metadata to decide if this subscription is interested in the incomming file or not.</dd>
-<dt><strong>allow_duplicates</strong></dt>
-<dd>The software identifies all H5-files (and possibly other formats in the future) by generating a checksum from the metadata. This checksum will be stored internally for a while to be able to identify
-duplicates. Then it is up to a subscription to decide if it should allow duplicates or not. Default behaviour is always to not allow duplicates but in certain scenarios it might be necessary.</dd>
-<dt><strong>allowed-ids</strong></dt>
-<dd>A list of allowed ids that identifies the origin. This will automatically be extended with the nodenames of the allowed nodes. It can also be identifying a runner and other internal ids.</dd>
-<dt><strong>cryptos</strong></dt>
-<dd>This actually defines an origin that is using the REST-protocol by defining the crypto used by that origin. All cryptos will be registered in the authentication manager and when a file arrives
-the signature will be validated in the auth-check before the file is handled.</dd>
+<em>type</em> defines if how the statistics should be stored. <strong>add</strong> == only add entries to statentry, <strong>count</strong> == only update count or <strong>both</strong> == do both</p>
+</dd>
+<dt><strong>filter</strong></dt><dd><p>A filter “bdb-style” that is used to match the files metadata to decide if this subscription is interested in the incomming file or not.</p>
+</dd>
+<dt><strong>allow_duplicates</strong></dt><dd><p>The software identifies all H5-files (and possibly other formats in the future) by generating a checksum from the metadata. This checksum will be stored internally for a while to be able to identify
+duplicates. Then it is up to a subscription to decide if it should allow duplicates or not. Default behaviour is always to not allow duplicates but in certain scenarios it might be necessary.</p>
+</dd>
+<dt><strong>allowed-ids</strong></dt><dd><p>A list of allowed ids that identifies the origin. This will automatically be extended with the nodenames of the allowed nodes. It can also be identifying a runner and other internal ids.</p>
+</dd>
+<dt><strong>cryptos</strong></dt><dd><p>This actually defines an origin that is using the REST-protocol by defining the crypto used by that origin. All cryptos will be registered in the authentication manager and when a file arrives
+the signature will be validated in the auth-check before the file is handled.</p>
+</dd>
 </dl>
 <p>The subscription will however not decide where a file should be published or if it should be processed. Instead all files that passes the filter and allowed-ids check will first be distributed to
 the publishers and then to the processors. If it is nessecary to distribute/publish a file directly it can be done by implementing a distributed storage that handles this. Keep in mind that this
 will require some threading and other considerations since the subscription handling should not be allowed to block waiting for time consuming operations since it will starve the WSGI-servers thread
 pool.</p>
-<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-  <span class="nt">&quot;subscription&quot;</span><span class="p">:{</span>
-  <span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;local subscription&quot;</span><span class="p">,</span>
-  <span class="nt">&quot;active&quot;</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span>
-  <span class="nt">&quot;storage&quot;</span><span class="p">:[</span><span class="s2">&quot;default_storage&quot;</span><span class="p">],</span>
-  <span class="nt">&quot;statdef&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;stat-subscription-1&quot;</span><span class="p">,</span> <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;count&quot;</span><span class="p">}],</span>
-  <span class="nt">&quot;filter&quot;</span><span class="p">:{</span>
-    <span class="nt">&quot;filter_type&quot;</span><span class="p">:</span> <span class="s2">&quot;and_filter&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="p">[</span>
-      <span class="p">{</span> <span class="nt">&quot;filter_type&quot;</span><span class="p">:</span> <span class="s2">&quot;attribute_filter&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;_bdb/source_name&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;operation&quot;</span><span class="p">:</span> <span class="s2">&quot;in&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;value_type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;sehem&quot;</span><span class="p">,</span><span class="s2">&quot;seang&quot;</span><span class="p">,</span> <span class="s2">&quot;sella&quot;</span><span class="p">]</span>
-      <span class="p">},</span>
-      <span class="p">{</span> <span class="nt">&quot;filter_type&quot;</span><span class="p">:</span> <span class="s2">&quot;attribute_filter&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;/what/object&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;operation&quot;</span><span class="p">:</span> <span class="s2">&quot;in&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;value_type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SCAN&quot;</span><span class="p">,</span><span class="s2">&quot;PVOL&quot;</span><span class="p">]</span>
-      <span class="p">}</span>
-    <span class="p">]</span>
-  <span class="p">},</span>
-  <span class="nt">&quot;allow_duplicates&quot;</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span>
-  <span class="nt">&quot;allowed_ids&quot;</span><span class="p">:[</span><span class="s2">&quot;anders-other&quot;</span><span class="p">],</span>
-  <span class="nt">&quot;cryptos&quot;</span><span class="p">:[</span>
-    <span class="p">{</span>
-      <span class="nt">&quot;auth&quot;</span><span class="p">:</span><span class="s2">&quot;keyczar&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;conf&quot;</span><span class="p">:{</span>
-        <span class="nt">&quot;nodename&quot;</span><span class="p">:</span> <span class="s2">&quot;anders-nzxt&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;pubkey&quot;</span><span class="p">:</span><span class="s2">&quot;/opt/baltrad2/etc/bltnode-keys/anders-nzxt.pub&quot;</span>
-      <span class="p">}</span>
-    <span class="p">},</span>
-    <span class="p">{</span>
-      <span class="nt">&quot;auth&quot;</span><span class="p">:</span><span class="s2">&quot;crypto&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;conf&quot;</span><span class="p">:{</span>
-        <span class="nt">&quot;nodename&quot;</span><span class="p">:</span> <span class="s2">&quot;anders-silent&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;creator&quot;</span><span class="p">:</span> <span class="s2">&quot;baltrad.exchange.crypto&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;-----BEGIN PUBLIC KEY-----\nMIID&lt;.....full public key in PEM format.....&gt;==\n-----END PUBLIC KEY-----&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;_comment_&quot;</span><span class="p">:</span><span class="s2">&quot;Instead of using &#39;key&#39;, it is possible to specify a file. If the pubkey is not pointing to an absolute path it will be using the keystore roots as well&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;pubkey&quot;</span><span class="p">:</span><span class="s2">&quot;anders-silent.public&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;keyType&quot;</span><span class="p">:</span> <span class="s2">&quot;dsa&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;public&quot;</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-  <span class="p">]}</span>
-<span class="p">}</span>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;subscription&quot;</span><span class="p">:{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;local subscription&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;active&quot;</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;storage&quot;</span><span class="p">:[</span><span class="s2">&quot;default_storage&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;statdef&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;stat-subscription-1&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;count&quot;</span><span class="p">}],</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;filter&quot;</span><span class="p">:{</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;filter_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;and_filter&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;filter_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;attribute_filter&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;_bdb/source_name&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;operation&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;in&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;value_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;sehem&quot;</span><span class="p">,</span><span class="s2">&quot;seang&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;sella&quot;</span><span class="p">]</span><span class="w"></span>
+<span class="w">      </span><span class="p">},</span><span class="w"></span>
+<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;filter_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;attribute_filter&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/what/object&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;operation&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;in&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;value_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;SCAN&quot;</span><span class="p">,</span><span class="s2">&quot;PVOL&quot;</span><span class="p">]</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">]</span><span class="w"></span>
+<span class="w">  </span><span class="p">},</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;allow_duplicates&quot;</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;allowed_ids&quot;</span><span class="p">:[</span><span class="s2">&quot;anders-other&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;cryptos&quot;</span><span class="p">:[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nt">&quot;auth&quot;</span><span class="p">:</span><span class="s2">&quot;keyczar&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nt">&quot;conf&quot;</span><span class="p">:{</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;nodename&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;anders-nzxt&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;pubkey&quot;</span><span class="p">:</span><span class="s2">&quot;/opt/baltrad2/etc/bltnode-keys/anders-nzxt.pub&quot;</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nt">&quot;auth&quot;</span><span class="p">:</span><span class="s2">&quot;crypto&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nt">&quot;conf&quot;</span><span class="p">:{</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;nodename&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;anders-silent&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;creator&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;baltrad.exchange.crypto&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;-----BEGIN PUBLIC KEY-----\nMIID&lt;.....full public key in PEM format.....&gt;==\n-----END PUBLIC KEY-----&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;_comment_&quot;</span><span class="p">:</span><span class="s2">&quot;Instead of using &#39;key&#39;, it is possible to specify a file. If the pubkey is not pointing to an absolute path it will be using the keystore roots as well&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;pubkey&quot;</span><span class="p">:</span><span class="s2">&quot;anders-silent.public&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;keyType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dsa&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;public&quot;</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">]}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 <p>The subscription contains two very important parts. First the filter, this will ensure that only files that are of interest will be managed. The filter syntax is currently according to
@@ -305,85 +304,85 @@ cryptos in all subscriptions are processed and registered in the authentication 
 Then only files sent from an id that is in list of allowed ids will be allowed.</p>
 <p>Currently, the only allowed cryptos are keyczar (for DEX-compatibility) and the internally used crypto which is just using plain public/key-signature handling.</p>
 <p>As can be seen in the above example, there is a storage named “default_storage” that this subscription expects the files to be stored in.</p>
-</div>
-<div class="section" id="storages-storage">
+</section>
+<section id="storages-storage">
 <h3>Storages (storage)<a class="headerlink" href="#storages-storage" title="Permalink to this headline">¶</a></h3>
 <p>The storages are locations where files should be placed and are referred to by the subscriptions. Typically you would only have a few different storages. For example on the file system, in a database or in an archive.</p>
-<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-  <span class="nt">&quot;storage&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;baltrad.exchange.storage.storages.file_storage&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;default_storage&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;arguments&quot;</span><span class="p">:</span> <span class="p">{</span>
-      <span class="nt">&quot;structure&quot;</span><span class="p">:[</span>
-        <span class="p">{</span><span class="nt">&quot;object&quot;</span><span class="p">:</span><span class="s2">&quot;SCAN&quot;</span><span class="p">,</span>
-         <span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="s2">&quot;/tmp/baltrad_bdb&quot;</span><span class="p">,</span>
-         <span class="nt">&quot;name_pattern&quot;</span><span class="p">:</span><span class="s2">&quot;${_baltrad/datetime_l:15:%Y/%m/%d/%H/%M}/${_baltrad/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.h5&quot;</span>
-        <span class="p">},</span>
-        <span class="p">{</span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="s2">&quot;/tmp/baltrad_bdb&quot;</span><span class="p">,</span>
-         <span class="nt">&quot;name_pattern&quot;</span><span class="p">:</span><span class="s2">&quot;${_baltrad/datetime_l:15:%Y/%m/%d/%H/%M}/${_baltrad/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z.h5&quot;</span>
-        <span class="p">}</span>
-      <span class="p">]</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;storage&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;baltrad.exchange.storage.storages.file_storage&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;default_storage&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;arguments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nt">&quot;structure&quot;</span><span class="p">:[</span><span class="w"></span>
+<span class="w">        </span><span class="p">{</span><span class="nt">&quot;object&quot;</span><span class="p">:</span><span class="s2">&quot;SCAN&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">         </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="s2">&quot;/tmp/baltrad_bdb&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">         </span><span class="nt">&quot;name_pattern&quot;</span><span class="p">:</span><span class="s2">&quot;${_baltrad/datetime_l:15:%Y/%m/%d/%H/%M}/${_baltrad/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.h5&quot;</span><span class="w"></span>
+<span class="w">        </span><span class="p">},</span><span class="w"></span>
+<span class="w">        </span><span class="p">{</span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="s2">&quot;/tmp/baltrad_bdb&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">         </span><span class="nt">&quot;name_pattern&quot;</span><span class="p">:</span><span class="s2">&quot;${_baltrad/datetime_l:15:%Y/%m/%d/%H/%M}/${_baltrad/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z.h5&quot;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="w">      </span><span class="p">]</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 <p>The above storage-mechanism (baltrad.exchange.storage.storages.file_storage) is probably the one that is going to be used the most. It gives the user a possibility differentiate
 between what/object types and store them with different names in different places. This storage-class also provides the chance of using metadata naming which is quite powerful
 when saving the files.</p>
-<div class="section" id="naming">
+<section id="naming">
 <h4>Naming<a class="headerlink" href="#naming" title="Permalink to this headline">¶</a></h4>
 <p>The metadata namer is a separate class that can be used when a string should be created from the metadata. The ${..} is used as a placeholder for an ODIM H5 metadata attribute to retrive the value of the metadata attribute.
 For example ${/what/object} will give SCAN/PVOL/.. Then there are a few unique placeholder variables that doesn’t exist in the metadata of a ODIM H5 file but are very useful.</p>
-<dl class="docutils">
-<dt><strong>_baltrad/source:&lt;ID&gt;</strong></dt>
-<dd>Since what/source can be incomplete, this will return the specific &lt;ID&gt; after the source has been identified. E.g. _baltrad/source:WMO, _baltrad/source:NOD. If source not could be identified, “undefined” is returned.</dd>
-<dt><strong>_baltrad/source_name</strong></dt>
-<dd>Since what/source can be incomplete, this will return the name of the source after the source has been identified. Typically it is the NOD. If source not could be identified, “undefined” is returned.</dd>
-<dt><strong>what/source:&lt;ID&gt;</strong></dt>
-<dd>Grabs the &lt;ID&gt; directly from what/source and returns it. Note, if source is incomplete this will return “undefined”</dd>
-<dt><strong>/what/source:&lt;ID&gt;</strong></dt>
-<dd>Grabs the &lt;ID&gt; directly from /what/source and returns it. Note, if source is incomplete this will return “undefined”</dd>
-<dt><strong>_baltrad/datetime(:[A-Za-z0-9-/: _%]+)?</strong></dt>
-<dd>For creating datetime strings from the what/date + what/time. The dateformat is same as provided in the datetime class. For example if you want to specify a date
-as 2022/11/03/12/04, the you use the following description <em>${_baltrad/datetime:%Y/%m/%d/%H/%M}</em>.</dd>
-<dt><strong>_baltrad/datetime_u:([0-9]{2})(:[A-Za-z0-9-/: _%]+)?</strong></dt>
-<dd>In some cases you might want to have minute-intervals. For example a directory structure where you want all files between minute 1-15 to be placed in a folder with 15 as minutes. This
+<dl class="simple">
+<dt><strong>_baltrad/source:&lt;ID&gt;</strong></dt><dd><p>Since what/source can be incomplete, this will return the specific &lt;ID&gt; after the source has been identified. E.g. _baltrad/source:WMO, _baltrad/source:NOD. If source not could be identified, “undefined” is returned.</p>
+</dd>
+<dt><strong>_baltrad/source_name</strong></dt><dd><p>Since what/source can be incomplete, this will return the name of the source after the source has been identified. Typically it is the NOD. If source not could be identified, “undefined” is returned.</p>
+</dd>
+<dt><strong>what/source:&lt;ID&gt;</strong></dt><dd><p>Grabs the &lt;ID&gt; directly from what/source and returns it. Note, if source is incomplete this will return “undefined”</p>
+</dd>
+<dt><strong>/what/source:&lt;ID&gt;</strong></dt><dd><p>Grabs the &lt;ID&gt; directly from /what/source and returns it. Note, if source is incomplete this will return “undefined”</p>
+</dd>
+<dt><strong>_baltrad/datetime(:[A-Za-z0-9\-/: _%]+)?</strong></dt><dd><p>For creating datetime strings from the what/date + what/time. The dateformat is same as provided in the datetime class. For example if you want to specify a date
+as 2022/11/03/12/04, the you use the following description <em>${_baltrad/datetime:%Y/%m/%d/%H/%M}</em>.</p>
+</dd>
+<dt><strong>_baltrad/datetime_u:([0-9]{2})(:[A-Za-z0-9\-/: _%]+)?</strong></dt><dd><p>In some cases you might want to have minute-intervals. For example a directory structure where you want all files between minute 1-15 to be placed in a folder with 15 as minutes. This
 can be achieved by specifying <em>${_baltrad/datetime_u:15:%Y/%m/%d/%H/%M}</em> and the folders will have a minute part that is either 00,15,30 or 45. This function will also wrap so that if
-what/time has minutes between for example 46-60, then these will be placed in next hours 00-minute folder.</dd>
-<dt><strong>_baltrad/datetime_l:([0-9]{2})(:[A-Za-z0-9-/: _%]+)?</strong></dt>
-<dd>This placeholder almost behaves like _baltrad/datetime_u with the exception that it will lower the minute interval instead. This means that all files within minute 0-15 will be put in 00, between
-15-30 in 15 and so on. Syntax is almost identical <em>${_baltrad/datetime_l:15:%Y/%m/%d/%H/%M}</em></dd>
+what/time has minutes between for example 46-60, then these will be placed in next hours 00-minute folder.</p>
+</dd>
+<dt><strong>_baltrad/datetime_l:([0-9]{2})(:[A-Za-z0-9\-/: _%]+)?</strong></dt><dd><p>This placeholder almost behaves like _baltrad/datetime_u with the exception that it will lower the minute interval instead. This means that all files within minute 0-15 will be put in 00, between
+15-30 in 15 and so on. Syntax is almost identical <em>${_baltrad/datetime_l:15:%Y/%m/%d/%H/%M}</em></p>
+</dd>
 </dl>
 <p>The naming functionality also provides something that can be called suboperations which allows the manipulation of the values that are returned by the placeholders.
 These are used directly on the placeholder. For example <em>${what/source:CMT}.tolower()</em>. They can also be chained like <em>${what/source:CMT}.tolower().toupper(1)</em>.</p>
 <p>Currently the supported suboperations are:</p>
-<dl class="docutils">
-<dt><strong>tolower([beginIndex[,endIndex]])</strong></dt>
-<dd>changes the string to lower case. If beginIndex is specified the string gets lower case after specified beginIndex until end or endIndex if specified.</dd>
-<dt><strong>toupper([beginIndex[,endIndex]])</strong></dt>
-<dd>changes the string to upper case. If beginIndex is specified the string gets upper case after specified beginIndex until end or endIndex if specified.</dd>
-<dt><strong>substring(beginIndex[,endIndex])</strong></dt>
-<dd>returns a substring from beginIndex to end or endIndex if specified.</dd>
-<dt><strong>replace(matchstr, replacementstr)</strong></dt>
-<dd>replaces all occurances of matchstr with replacementstr</dd>
-<dt><strong>trim()</strong></dt>
-<dd>Trims both left and right side of the string from any white spaces.</dd>
-<dt><strong>ltrim()</strong></dt>
-<dd>Trims the left side of the string from any white spaces.</dd>
-<dt><strong>rtrim()</strong></dt>
-<dd>Trims the right side of the string from any white spaces.</dd>
-<dt><strong>interval_u(interval[,limit])</strong></dt>
-<dd>** Do not use, under development**</dd>
-<dt><strong>interval_l(interval)</strong></dt>
-<dd>** Do not use, under development**</dd>
+<dl class="simple">
+<dt><strong>tolower([beginIndex[,endIndex]])</strong></dt><dd><p>changes the string to lower case. If beginIndex is specified the string gets lower case after specified beginIndex until end or endIndex if specified.</p>
+</dd>
+<dt><strong>toupper([beginIndex[,endIndex]])</strong></dt><dd><p>changes the string to upper case. If beginIndex is specified the string gets upper case after specified beginIndex until end or endIndex if specified.</p>
+</dd>
+<dt><strong>substring(beginIndex[,endIndex])</strong></dt><dd><p>returns a substring from beginIndex to end or endIndex if specified.</p>
+</dd>
+<dt><strong>replace(matchstr, replacementstr)</strong></dt><dd><p>replaces all occurances of matchstr with replacementstr</p>
+</dd>
+<dt><strong>trim()</strong></dt><dd><p>Trims both left and right side of the string from any white spaces.</p>
+</dd>
+<dt><strong>ltrim()</strong></dt><dd><p>Trims the left side of the string from any white spaces.</p>
+</dd>
+<dt><strong>rtrim()</strong></dt><dd><p>Trims the right side of the string from any white spaces.</p>
+</dd>
+<dt><strong>interval_u(interval[,limit])</strong></dt><dd><p>** Do not use, under development**</p>
+</dd>
+<dt><strong>interval_l(interval)</strong></dt><dd><p>** Do not use, under development**</p>
+</dd>
 </dl>
 <p>With the above knowledge, assuming that a scan with elevation angle=0.5 arrives from sella, with /what/date=20221103 and /what/time=220315 then the following
 expression <em>${_baltrad/datetime_l:15:%Y/%m/%d/%H/%M}/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.h5</em>
 will result in <em>2022/11/03/22/00/sella_scan_202211032203_0.5.h5</em>.</p>
-</div>
-</div>
-<div class="section" id="publications-publication">
+</section>
+</section>
+<section id="publications-publication">
 <h3>Publications (publication)<a class="headerlink" href="#publications-publication" title="Permalink to this headline">¶</a></h3>
 <p>Whenever a subscription has approved an incoming file, this file will be posted to all publications which in turn will have to decide if the file should be
 distributed or not depending on the file content. Obviously, this might cause some problems if not configuring the system properly since if more than one
@@ -393,63 +392,61 @@ for that publication.</p>
 <p>A publication uses a publisher that will take care of the sending the file. Each publisher should support handling of connections,
 filters and decorators. Currently, there is only one publisher distributed in baltrad-exchange and that is the <strong>baltrad.exchange.net.publishers.standard_publisher</strong>.
 This publisher uses a threaded producer/consumer approach.</p>
-<dl class="docutils">
-<dt><strong>filters</strong></dt>
-<dd>The filters are working in the same way as they are for subscriptions and are used for matching.</dd>
-<dt><strong>connections</strong></dt>
-<dd>A connection will take care of distribution of the file to it’s destination. A connection is usually using one or more <strong>senders</strong> to distribute the file and will
-be explained further down.</dd>
-<dt><strong>decorators</strong></dt>
-<dd>Are used to modify the outgoing file in some way. The decorators are most likely plugins using ODIM-H5 manipulating software like rave or h5py.</dd>
-<dt><strong>subscription_origin</strong></dt>
-<dd>If tunnel between subscription and publication is required, this entry can be set with the subscription ids to react to.</dd>
+<dl class="simple">
+<dt><strong>filters</strong></dt><dd><p>The filters are working in the same way as they are for subscriptions and are used for matching.</p>
+</dd>
+<dt><strong>connections</strong></dt><dd><p>A connection will take care of distribution of the file to it’s destination. A connection is usually using one or more <strong>senders</strong> to distribute the file and will
+be explained further down.</p>
+</dd>
+<dt><strong>decorators</strong></dt><dd><p>Are used to modify the outgoing file in some way. The decorators are most likely plugins using ODIM-H5 manipulating software like rave or h5py.</p>
+</dd>
+<dt><strong>subscription_origin</strong></dt><dd><p>If tunnel between subscription and publication is required, this entry can be set with the subscription ids to react to.</p>
+</dd>
 </dl>
 <p>The basic structure of a publication configuration looks like</p>
-<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-<span class="nt">&quot;publication&quot;</span><span class="p">:{</span>
-   <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Send file to localhost&quot;</span><span class="p">,</span>
-   <span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;baltrad.exchange.net.publishers.standard_publisher&quot;</span><span class="p">,</span>
-   <span class="nt">&quot;extra_arguments&quot;</span><span class="p">:</span> <span class="p">{</span>
-         <span class="nt">&quot;threads&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span>
-         <span class="nt">&quot;queue_size&quot;</span><span class="p">:</span><span class="mi">50</span><span class="p">,</span>
-     <span class="nt">&quot;statistics_ok&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;stat-publication-ok&quot;</span><span class="p">,</span> <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;both&quot;</span><span class="p">},</span>
-     <span class="nt">&quot;statistics_error&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;stat-publication-error&quot;</span><span class="p">,</span> <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;count&quot;</span><span class="p">}</span>
-   <span class="p">},</span>
-   <span class="nt">&quot;active&quot;</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span>
-   <span class="nt">&quot;connection&quot;</span><span class="p">:{</span>
-   <span class="p">},</span>
-   <span class="nt">&quot;filter&quot;</span><span class="p">:{</span>
-   <span class="p">},</span>
-   <span class="nt">&quot;decorators&quot;</span><span class="p">:[</span>
-   <span class="p">]</span>
- <span class="p">}</span>
-<span class="p">}</span>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="nt">&quot;publication&quot;</span><span class="p">:{</span><span class="w"></span>
+<span class="w">   </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Send file to localhost&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">   </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;baltrad.exchange.net.publishers.standard_publisher&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">   </span><span class="nt">&quot;extra_arguments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">         </span><span class="nt">&quot;threads&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="w"></span>
+<span class="w">         </span><span class="nt">&quot;queue_size&quot;</span><span class="p">:</span><span class="mi">50</span><span class="p">,</span><span class="w"></span>
+<span class="w">     </span><span class="nt">&quot;statistics_ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;stat-publication-ok&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;both&quot;</span><span class="p">},</span><span class="w"></span>
+<span class="w">     </span><span class="nt">&quot;statistics_error&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;stat-publication-error&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;count&quot;</span><span class="p">}</span><span class="w"></span>
+<span class="w">   </span><span class="p">},</span><span class="w"></span>
+<span class="w">   </span><span class="nt">&quot;active&quot;</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="w"></span>
+<span class="w">   </span><span class="nt">&quot;connection&quot;</span><span class="p">:{</span><span class="w"></span>
+<span class="w">   </span><span class="p">},</span><span class="w"></span>
+<span class="w">   </span><span class="nt">&quot;filter&quot;</span><span class="p">:{</span><span class="w"></span>
+<span class="w">   </span><span class="p">},</span><span class="w"></span>
+<span class="w">   </span><span class="nt">&quot;decorators&quot;</span><span class="p">:[</span><span class="w"></span>
+<span class="w">   </span><span class="p">]</span><span class="w"></span>
+<span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 <p>The <strong>baltrad.exchange.net.publishers.standard_publisher</strong> class takes a number of arguments.</p>
 <blockquote>
-<div><dl class="docutils">
-<dt><strong>threads</strong></dt>
-<dd>Number of threads that should consume the queue</dd>
-<dt><strong>queue_size</strong></dt>
-<dd>How many items that should be allowed in the back queue before they are removed</dd>
-<dt><strong>statistics_ok</strong></dt>
-<dd><dl class="first last docutils">
-<dt>A definition for generating statistics when publication went ok. This should be a statistics plugin definition: [{“id”:”stat-subscription-1”, “type”: “count”}]</dt>
-<dd><em>id</em>   is the spid this will be stored with in the database
-<em>type</em> defines if how the statistics should be stored. <strong>add</strong> == only add entries to statentry, <strong>count</strong> == only update count or <strong>both</strong> == do both</dd>
+<div><dl class="simple">
+<dt><strong>threads</strong></dt><dd><p>Number of threads that should consume the queue</p>
+</dd>
+<dt><strong>queue_size</strong></dt><dd><p>How many items that should be allowed in the back queue before they are removed</p>
+</dd>
+<dt><strong>statistics_ok</strong></dt><dd><dl class="simple">
+<dt>A definition for generating statistics when publication went ok. This should be a statistics plugin definition: [{“id”:”stat-subscription-1”, “type”: “count”}]</dt><dd><p><em>id</em>   is the spid this will be stored with in the database
+<em>type</em> defines if how the statistics should be stored. <strong>add</strong> == only add entries to statentry, <strong>count</strong> == only update count or <strong>both</strong> == do both</p>
+</dd>
 </dl>
 </dd>
-<dt><strong>statistics_error</strong></dt>
-<dd><dl class="first last docutils">
-<dt>A definition for generating statistics when publication failed. This should be a statistics plugin definition: [{“id”:”stat-subscription-1”, “type”: “count”}]</dt>
-<dd><em>id</em>   is the spid this will be stored with in the database
-<em>type</em> defines if how the statistics should be stored. <strong>add</strong> == only add entries to statentry, <strong>count</strong> == only update count or <strong>both</strong> == do both</dd>
+<dt><strong>statistics_error</strong></dt><dd><dl class="simple">
+<dt>A definition for generating statistics when publication failed. This should be a statistics plugin definition: [{“id”:”stat-subscription-1”, “type”: “count”}]</dt><dd><p><em>id</em>   is the spid this will be stored with in the database
+<em>type</em> defines if how the statistics should be stored. <strong>add</strong> == only add entries to statentry, <strong>count</strong> == only update count or <strong>both</strong> == do both</p>
+</dd>
 </dl>
 </dd>
 </dl>
 </div></blockquote>
-<div class="section" id="connections">
+<section id="connections">
 <h4>Connections<a class="headerlink" href="#connections" title="Permalink to this headline">¶</a></h4>
 <p>As mentioned earlier a connection takes one ore more senders. So what is the difference between a connection and a sender. In short, a
 connection is just determining how to ensure the transmission. The sender is actually taking care of the transmission protocol and
@@ -458,131 +455,131 @@ how to get the data to it’s location.</p>
 The sender used will be a <em>baltrad.exchange.net.senders.rest_sender</em> which uses the “stock” baltrad-exchange exchange protocol.</p>
 <p>When the publisher sends a file to the simple_connection it will be passed to the sender that will atempt to send the message to the
 destination.</p>
-<div class="highlight-json notranslate"><div class="highlight"><pre><span></span>&quot;connection&quot;:{
-  &quot;class&quot;:&quot;baltrad.exchange.net.connections.simple_connection&quot;,
-  &quot;arguments&quot;:{
-    &quot;sender&quot;:{
-      &quot;id&quot;:&quot;rest-sender 1&quot;,
-      &quot;class&quot;:&quot;baltrad.exchange.net.senders.rest_sender&quot;,
-      &quot;arguments&quot;:{
-        &quot;address&quot;:&quot;https://some.remove.server:8443&quot;,
-        &quot;protocol_version&quot;:&quot;1.0&quot;,
-        &quot;crypto&quot;:{
-          &quot;libname&quot;:&quot;crypto&quot;,
-          &quot;nodename&quot;:&quot;anders-silent&quot;,
-          &quot;privatekey&quot;:&quot;/projects/baltrad/baltrad-exchange/etc/exchange-keys/anders-silent.private&quot;
-        }
-      }
-    }
-  }
-}
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="nt">&quot;connection&quot;</span><span class="p">:{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;baltrad.exchange.net.connections.simple_connection&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;arguments&quot;</span><span class="p">:{</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;sender&quot;</span><span class="p">:{</span><span class="w"></span>
+<span class="w">      </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;rest-sender 1&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;baltrad.exchange.net.senders.rest_sender&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nt">&quot;arguments&quot;</span><span class="p">:{</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;address&quot;</span><span class="p">:</span><span class="s2">&quot;https://some.remove.server:8443&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;protocol_version&quot;</span><span class="p">:</span><span class="s2">&quot;1.0&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;crypto&quot;</span><span class="p">:{</span><span class="w"></span>
+<span class="w">          </span><span class="nt">&quot;libname&quot;</span><span class="p">:</span><span class="s2">&quot;crypto&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="nt">&quot;nodename&quot;</span><span class="p">:</span><span class="s2">&quot;anders-silent&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="nt">&quot;privatekey&quot;</span><span class="p">:</span><span class="s2">&quot;/projects/baltrad/baltrad-exchange/etc/exchange-keys/anders-silent.private&quot;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 <p>If the sender for some reason fails to send the data to it’s intended target, this publication will be failed. Now, assume that we know that the destination server
 is known to be under heavy load at times and that there is a backup sftp-server where we can put the files whenever the destination server is unavailable. In that case
 we can use a failover_connection instead. This connection type allows a list of senders that will be executed in sequence until the first sender succeeds.</p>
-<div class="highlight-json notranslate"><div class="highlight"><pre><span></span>&quot;connection&quot;:{
-  &quot;_comment_&quot;:&quot;This is a connection used when publishing files to a dex server&quot;,
-  &quot;class&quot;:&quot;baltrad.exchange.net.connections.failover_connection&quot;,
-  &quot;arguments&quot;:{
-    &quot;senders&quot;:[
-      {
-        &quot;id&quot;:&quot;rest-sender 1&quot;,
-        &quot;class&quot;:&quot;baltrad.exchange.net.senders.rest_sender&quot;,
-        &quot;arguments&quot;:{
-          &quot;address&quot;:&quot;https://some.remove.server:8443&quot;,
-          &quot;protocol_version&quot;:&quot;1.0&quot;,
-          &quot;crypto&quot;:{
-            &quot;libname&quot;:&quot;crypto&quot;,
-            &quot;nodename&quot;:&quot;anders-silent&quot;,
-            &quot;privatekey&quot;:&quot;/projects/baltrad/baltrad-exchange/etc/exchange-keys/anders-silent.private&quot;
-          }
-        }
-      },
-      { &quot;class&quot;:&quot;baltrad.exchange.net.senders.ftp_sender&quot;,
-        &quot;arguments&quot;: {
-          &quot;uri&quot;:&quot;sftp://sftpuploader@some.remove.server/dex_failover/${_baltrad/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.replace(&#39;.&#39;,&#39;_&#39;).h5&quot;,
-          &quot;create_missing_directories&quot;:true
-        }
-      }
-    ]
-  }
-}
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="nt">&quot;connection&quot;</span><span class="p">:{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;_comment_&quot;</span><span class="p">:</span><span class="s2">&quot;This is a connection used when publishing files to a dex server&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;baltrad.exchange.net.connections.failover_connection&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;arguments&quot;</span><span class="p">:{</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;senders&quot;</span><span class="p">:[</span><span class="w"></span>
+<span class="w">      </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;rest-sender 1&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;baltrad.exchange.net.senders.rest_sender&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;arguments&quot;</span><span class="p">:{</span><span class="w"></span>
+<span class="w">          </span><span class="nt">&quot;address&quot;</span><span class="p">:</span><span class="s2">&quot;https://some.remove.server:8443&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="nt">&quot;protocol_version&quot;</span><span class="p">:</span><span class="s2">&quot;1.0&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="nt">&quot;crypto&quot;</span><span class="p">:{</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;libname&quot;</span><span class="p">:</span><span class="s2">&quot;crypto&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;nodename&quot;</span><span class="p">:</span><span class="s2">&quot;anders-silent&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;privatekey&quot;</span><span class="p">:</span><span class="s2">&quot;/projects/baltrad/baltrad-exchange/etc/exchange-keys/anders-silent.private&quot;</span><span class="w"></span>
+<span class="w">          </span><span class="p">}</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="w">      </span><span class="p">},</span><span class="w"></span>
+<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;baltrad.exchange.net.senders.ftp_sender&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;arguments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">          </span><span class="nt">&quot;uri&quot;</span><span class="p">:</span><span class="s2">&quot;sftp://sftpuploader@some.remove.server/dex_failover/${_baltrad/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.replace(&#39;.&#39;,&#39;_&#39;).h5&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="nt">&quot;create_missing_directories&quot;</span><span class="p">:</span><span class="kc">true</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">]</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 <p>The following connections are currently available:</p>
-<dl class="docutils">
-<dt><strong>baltrad.exchange.net.connections.simple_connection</strong></dt>
-<dd>Simple connection that only takes one sender and if the sender fails the transmission is failed.</dd>
-<dt><strong>baltrad.exchange.net.connections.failover_connection</strong></dt>
-<dd>Takes a list of senders and will try the senders sequentially until the first sender succeedes. If all sender fails, then transmission is failed.</dd>
-<dt><strong>baltrad.exchange.net.connections.backup_connection</strong></dt>
-<dd>Takes a list of senders and will send to all senders regardless if the previous one succeeded or failed.</dd>
+<dl class="simple">
+<dt><strong>baltrad.exchange.net.connections.simple_connection</strong></dt><dd><p>Simple connection that only takes one sender and if the sender fails the transmission is failed.</p>
+</dd>
+<dt><strong>baltrad.exchange.net.connections.failover_connection</strong></dt><dd><p>Takes a list of senders and will try the senders sequentially until the first sender succeedes. If all sender fails, then transmission is failed.</p>
+</dd>
+<dt><strong>baltrad.exchange.net.connections.backup_connection</strong></dt><dd><p>Takes a list of senders and will send to all senders regardless if the previous one succeeded or failed.</p>
+</dd>
 </dl>
-</div>
-<div class="section" id="senders">
+</section>
+<section id="senders">
 <h4>Senders<a class="headerlink" href="#senders" title="Permalink to this headline">¶</a></h4>
 <p>The senders are protocol specific and ensures that the data is sent correctly and if applicable, in a secure way. There are several predefined ways to send files. Since each sender has it’s own
 set of arguments to be initiated you find examples on how to use them in the etc-catalogue.</p>
-<dl class="docutils">
-<dt><strong>baltrad.exchange.net.senders.storage_sender</strong></dt>
-<dd>Publishes a file using file storages. This is very useful if you want to decorate a file before it is put on the storage.</dd>
-<dt><strong>baltrad.exchange.net.senders.dex_sender</strong></dt>
-<dd>Legacy DEX communication sending files to old nodes</dd>
-<dt><strong>baltrad.exchange.net.senders.rest_sender</strong></dt>
-<dd>Sends a file to another node that is running baltrad-exchange. The rest sender uses the internal crypto library for signing messages which currently supports DSA &amp; RSA keys. DSA uses DSS, RSA uses pkcs1_15.</dd>
-<dt><strong>baltrad.exchange.net.senders.sftp_sender</strong></dt>
-<dd>Sends files over sftp</dd>
-<dt><strong>baltrad.exchange.net.senders.scp_sender</strong></dt>
-<dd>Publishes files over scp</dd>
-<dt><strong>baltrad.exchange.net.senders.ftp_sender</strong></dt>
-<dd>Publishes files over ftp</dd>
-<dt><strong>baltrad.exchange.net.senders.copy_sender</strong></dt>
-<dd>Publishes files by copying them. It uses it’s own metadata namer.</dd>
+<dl class="simple">
+<dt><strong>baltrad.exchange.net.senders.storage_sender</strong></dt><dd><p>Publishes a file using file storages. This is very useful if you want to decorate a file before it is put on the storage.</p>
+</dd>
+<dt><strong>baltrad.exchange.net.senders.dex_sender</strong></dt><dd><p>Legacy DEX communication sending files to old nodes</p>
+</dd>
+<dt><strong>baltrad.exchange.net.senders.rest_sender</strong></dt><dd><p>Sends a file to another node that is running baltrad-exchange. The rest sender uses the internal crypto library for signing messages which currently supports DSA &amp; RSA keys. DSA uses DSS, RSA uses pkcs1_15.</p>
+</dd>
+<dt><strong>baltrad.exchange.net.senders.sftp_sender</strong></dt><dd><p>Sends files over sftp</p>
+</dd>
+<dt><strong>baltrad.exchange.net.senders.scp_sender</strong></dt><dd><p>Publishes files over scp</p>
+</dd>
+<dt><strong>baltrad.exchange.net.senders.ftp_sender</strong></dt><dd><p>Publishes files over ftp</p>
+</dd>
+<dt><strong>baltrad.exchange.net.senders.copy_sender</strong></dt><dd><p>Publishes files by copying them. It uses it’s own metadata namer.</p>
+</dd>
 </dl>
-</div>
-<div class="section" id="decorators">
+</section>
+<section id="decorators">
 <h4>Decorators<a class="headerlink" href="#decorators" title="Permalink to this headline">¶</a></h4>
 <p>The decorators are the baltrad exchange engines way to allow you to modify files before publishing them. For example if you only want to publish a few parameters, if you want to add some important text in a how-section
 or maybe convert the ODIM-version to a different one. At the moment, there aren’t any decorators distributed with the baltrad-exchange engine. But you will find an example on how a decorator can be implemented here and here.</p>
-</div>
-</div>
-<div class="section" id="runners-runner">
+</section>
+</section>
+<section id="runners-runner">
 <h3>Runners (runner)<a class="headerlink" href="#runners-runner" title="Permalink to this headline">¶</a></h3>
 <p>A runner is something that is running on the side of the actual file handling taking care of miscellaneous tasks. The two most typical runners are used for getting aware of when files are available for injection into the system like
 an active or triggered subscription. The runners have a different entrance to the system by going directly to the subscription-handling in the backend without any authentication.
 Currently, there are two runners implemented in the exchange server but like with the rest of the system it is easy to extend with new runners.</p>
-<dl class="docutils">
-<dt><strong>baltrad.exchange.runner.runners.inotify_runner</strong></dt>
-<dd>The inotify runner is used to monitor folders and trigger “store” events. It is run in a separate thread instead of beeing created as a daemon-thread since
-all initiation is performed in the main thread before server is started.</dd>
-<dt><strong>baltrad.exchange.runner.runners.triggered_fetch_runner</strong></dt>
-<dd><p class="first">A triggered runner. This runner implements ‘message_aware’ so that a json-message can be handled. This runner is triggered from the WSGI-process
+<dl>
+<dt><strong>baltrad.exchange.runner.runners.inotify_runner</strong></dt><dd><p>The inotify runner is used to monitor folders and trigger “store” events. It is run in a separate thread instead of beeing created as a daemon-thread since
+all initiation is performed in the main thread before server is started.</p>
+</dd>
+<dt><strong>baltrad.exchange.runner.runners.triggered_fetch_runner</strong></dt><dd><p>A triggered runner. This runner implements ‘message_aware’ so that a json-message can be handled. This runner is triggered from the WSGI-process
 and as such is using the WSGI-servers thread pool. <strong>TODO: Implement this as a producer/consumer thread to avoid any possibility to starve the WSGI-thread pool.</strong></p>
 <p>The fetcher runner will react on a trigger message and then use a protocol-specific fetcher to retrieve files from a server host in some way. Currently there is support
 for the following fetchers.</p>
 <p><strong>baltrad.exchange.net.fetchers.sftp_fetcher</strong> - Fetches files from host using sftp</p>
 <p><strong>baltrad.exchange.net.fetchers.scp_fetcher</strong>  - Fetches files from host using scp</p>
 <p><strong>baltrad.exchange.net.fetchers.ftp_fetcher</strong>  - Fetches files from host using ftp</p>
-<p class="last"><strong>baltrad.exchange.net.fetchers.copy_fetcher</strong> - Fetches files from host using file copy</p>
+<p><strong>baltrad.exchange.net.fetchers.copy_fetcher</strong> - Fetches files from host using file copy</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="processors-processor">
+</section>
+<section id="processors-processor">
 <h3>Processors (processor)<a class="headerlink" href="#processors-processor" title="Permalink to this headline">¶</a></h3>
 <p>The processors can be seen as a combination of runners and decorators these are triggered during the subscription validation process in the same way as a publisher. That means that all processors
 will be notified about a file when it has passed the subscription matching. The processor is intended for building products from incoming data in various ways in an asynchronous way and is not
 allowed to be blocking. This means that when a file has been passed to the processor, the processor should pass it on to a queue of some sort and return immediately. The exchange server expects
 no response and will. Instead it is up to the processor to ensure that the resulting product is taken care of, for example by notifying the exchange server that there is a file available.</p>
-</div>
-<div class="section" id="getting-started">
+</section>
+<section id="getting-started">
 <h3>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h3>
 <p>The installation is quite straight forward</p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
@@ -630,17 +627,15 @@ no response and will. Instead it is up to the processor to ensure that the resul
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -657,12 +652,13 @@ no response and will. Instead it is up to the processor to ensure that the resul
         <li class="right" >
           <a href="readme.html" title="README"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">baltrad-exchange 0.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">baltrad-exchange 0.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">User Guide</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, Anders Henja.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
     </div>
   </body>
 </html>
