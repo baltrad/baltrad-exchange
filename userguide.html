@@ -562,7 +562,24 @@ for the following fetchers.</p>
 <p><strong>baltrad.exchange.net.fetchers.ftp_fetcher</strong>  - Fetches files from host using ftp</p>
 <p><strong>baltrad.exchange.net.fetchers.copy_fetcher</strong> - Fetches files from host using file copy</p>
 </dd>
+<dt><strong>baltrad.exchange.runner.runners.statistics_cleanup_runner</strong></dt><dd><p>The statistics cleanup runner is used for ensuring that the statistics data tables gets too large. The configuration of the cleanup runner is done using two attributes, interval and age.
+The interval is specified in minutes telling the system how often the routine should be executed. Age is specified in hours and all entries older than specified number of hours will be removed.</p>
+</dd>
 </dl>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="nt">&quot;runner&quot;</span><span class="p">:{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;_comment_&quot;</span><span class="p">:</span><span class="s2">&quot;Cleanup of statistics database run as a runner.&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;active&quot;</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;baltrad.exchange.runner.runners.statistics_cleanup_runner&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;extra_arguments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;statistics_cleanup_runner&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;interval&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;age&quot;</span><span class="p">:</span><span class="mi">48</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
 </section>
 <section id="processors-processor">
 <h3>Processors (processor)<a class="headerlink" href="#processors-processor" title="Permalink to this headline">¶</a></h3>
