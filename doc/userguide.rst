@@ -595,6 +595,25 @@ Currently, there are two runners implemented in the exchange server but like wit
 
   **baltrad.exchange.net.fetchers.copy_fetcher** - Fetches files from host using file copy
 
+**baltrad.exchange.runner.runners.statistics_cleanup_runner**
+  The statistics cleanup runner is used for ensuring that the statistics data tables gets too large. The configuration of the cleanup runner is done using two attributes, interval and age.
+  The interval is specified in minutes telling the system how often the routine should be executed. Age is specified in hours and all entries older than specified number of hours will be removed.
+  
+.. code-block:: json
+
+  {
+  "runner":{
+    "_comment_":"Cleanup of statistics database run as a runner.",
+    "active":true,
+    "class":"baltrad.exchange.runner.runners.statistics_cleanup_runner",
+    "extra_arguments": {
+      "name":"statistics_cleanup_runner",
+      "interval": 1,
+      "age":48
+    } 
+  }
+  }
+
 Processors (processor)
 ======================
 
