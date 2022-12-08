@@ -246,6 +246,9 @@ class CryptoAuth(Auth):
                 logger.info("adding public key from private for %s", nodename)
                 self._verifiers[nodename] = privkey.publickey()
 
+    def getPublicKey(self, nodename):
+        return self._verifiers[nodename]
+
     def add_key_config(self, conf):
         if "creator" in conf and conf["creator"] == "baltrad.exchange.crypto":
             if conf["type"] == "public":

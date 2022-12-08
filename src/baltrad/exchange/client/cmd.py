@@ -90,7 +90,16 @@ class Command(object):
 
 class StoreFile(Command):
     def update_optionparser(self, parser):
-        parser.set_usage(parser.get_usage().strip() + " FILE [, FILE]")
+        usg = parser.get_usage().strip()
+
+        description = """
+        
+Posts a sequence of files to the exchange server.
+        """
+
+        usage = usg + " FILE [ FILE]" + description
+
+        parser.set_usage(usage)
 
     def execute(self, server, opts, args):
         for path in args: 
@@ -113,13 +122,29 @@ class BatchTest(Command):
         "sekaa":"WMO:02666,RAD:SE51,PLC:Karlskrona,CMT:sekaa,NOD:sekaa",
         "sebaa":"WMO:00000,RAD:SE52,PLC:Bålsta,CMT:sebaa,NOD:sebaa",
         }
+
     def update_optionparser(self, parser):
+        usg = parser.get_usage().strip()
+
+        description = """
+
+The batchtest uses a basefile that either is a scan or a pvol and uses that as a template and
+then updates the source and datetime before sending it to the exchange server. It is only the
+information for the swedish radars sekrn, sella, seosd, seoer, sehuv, selek, sehem, seatv, sevax, 
+seang, sekaa and sebaa that will be set in what/source. The soure set will be in the format
+WMO:02666,RAD:SE51,PLC:Karlskrona,CMT:sekaa,NOD:sekaa.
+        """
+
+        usage = usg + " --basefile=FILENAME" + description
+
+        parser.set_usage(usage)
+
         parser.add_option(
             "--basefile", dest="basefile",
             help="Basefile that should be modified and injected")
         
         parser.add_option(
-            "--datetime", dest="datetime",
+            "--datetime", dest="datetime", default=datetime.datetime.now().strftime("%Y%m%d%H%M"),
             help="Datetime")
 
         parser.add_option(
@@ -140,7 +165,8 @@ class BatchTest(Command):
     def execute(self, server, opts, args):
         import _raveio, _polarvolume, _polarscan
         if not opts.basefile:
-            raise "No basefile provided"
+            print("No basefile provided\n")
+            raise ExecutionError()
         
         dt = self.parse_datetime_str(opts.datetime, opts.interval)
         if not opts.datetime:
@@ -179,19 +205,45 @@ class BatchTest(Command):
 
 class PostJsonMessage(Command):
     def update_optionparser(self, parser):
-        parser.set_usage(parser.get_usage().strip() + " MESSAGE")
+        usg = parser.get_usage().strip()
+
+        description = """
+
+Posts a json message to the exchange server. Can be used to trigger for example a runnable job.
+
+Example: baltrad-exchange-client post_message '{"trigger":"trigger_4"}'
+        """
+
+        usage = usg + " MESSAGE" + description
+
+        parser.set_usage(usage)
 
     def execute(self, server, opts, args):
         entry = server.post_json_message(args[0])
 
 class GetStatistics(Command):
     def update_optionparser(self, parser):
+        usg = parser.get_usage().strip()
+
+        description = """
+
+Queries the exchange server for various statistics information. The spid is used to identify what statistics
+id that should be queried for. It is possible to query for all existing ids by executing the command
+list_statistic_ids.
+
+Example: baltrad-exchange-client get_statistics --spid=server-incomming --totals
+        """
+
+        usage = usg + " --spid=STAT_ID" + description
+
+        parser.set_usage(usage)
+
         parser.add_option(
             "--spid", dest="spid",
             help="What plugin id that should be queried")
 
         parser.add_option(
-            "--sources", dest="sources",
+            "--sources", dest="sources", default="",
             help="The sources that should be queried")
 
         parser.add_option(
@@ -207,28 +259,63 @@ class GetStatistics(Command):
             #print(ldata)
         else:
             raise Exception("Unhandled response code: %s"%response.status)
-        
+
+class ListStatisticIds(Command):
+    def update_optionparser(self, parser):
+        usg = parser.get_usage().strip()
+
+        description = """
+
+Queries the exchange server for the available statistics ids
+
+Example: baltrad-exchange-client list_statistic_ids
+        """
+
+        usage = usg + description
+
+        parser.set_usage(usage)
+
+    def execute(self, server, opts, args):
+        response = server.list_statistics()
+        if response.status == httplibclient.OK:
+            ldata = json.loads(response.read())
+            for l in ldata:
+                print(l)
+        else:
+            raise Exception("Unhandled response code: %s"%response.status)
+
 class ServerInfo(Command):
     def update_optionparser(self, parser):
-        #parser.add_option(
-        #    "--spid", dest="spid",
-        #    help="What plugin id that should be queried")
-        #
-        #parser.add_option(
-        #    "--sources", dest="sources",
-        #    help="The sources that should be queried")
-        #
-        #parser.add_option(
-        #    "--totals", dest="totals", default=False, action="store_true",
-        #    help="Use this option if the total should be returned instead")
-        pass
+        usg = parser.get_usage().strip()
+
+        description = """
+
+Provides some useful information about the server. Currently the following things can be queried for.
+  uptime    - How long the server has been running
+
+  nodename  - The name this server is identifying itself when sending files
+
+  publickey - The public key that can be used to identify myself as
+
+Example: baltrad-exchange-client server_info uptime
+        """
+
+        usage = usg + description
+
+        parser.set_usage(usage)
 
     def execute(self, server, opts, args):
         if len(args) == 1:
-            if args[0] == "uptime":
-                response = server.get_server_info("uptime")
+            if args[0] == "uptime" or args[0] == "nodename" or args[0] == "publickey":
+                response = server.get_server_info(args[0])
                 if response.status == httplibclient.OK:
-                    ldata = json.loads(response.read())
-                    print(ldata)
+                    if args[0] != "publickey":
+                        ldata = json.loads(response.read())
+                        print(ldata)
+                    else:
+                        ldata = response.read()
+                        print(ldata.decode())
                 else:
                     raise Exception("Unhandled response code: %s"%response.status)
+            else:
+                print("Only valid subcommands are uptime and nodename")

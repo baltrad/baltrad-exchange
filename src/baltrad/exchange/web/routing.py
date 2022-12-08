@@ -63,10 +63,19 @@ URL_MAP = Map(
             Rule("/", methods=["GET"],
                 endpoint="handler.get_statistics"
             ),
+            Rule("/ids", methods=["GET"],
+                endpoint="handler.list_statistic_ids"
+            ),
         ]),
         Submount("/serverinfo", [
             Rule("/uptime", methods=["GET"],
                 endpoint="handler.get_server_uptime"
+            ),
+            Rule("/nodename", methods=["GET"],
+                endpoint="handler.get_server_nodename"
+            ),
+            Rule("/publickey", methods=["GET"],
+                endpoint="handler.get_server_publickey"
             ),
         ]),
         Submount("/json_message", [

@@ -71,6 +71,22 @@ class statistics_manager:
         """
         return self._sqldatabase
 
+    def list_statistic_ids(self, nid):
+        """
+        :returns the list of available ids
+        """
+        result = []
+
+        ids = self._sqldatabase.list_statistic_ids()
+        for i in ids:
+            result.append({"spid":i, "totals":True})
+
+        ids = self._sqldatabase.list_statentry_ids()
+        for i in ids:
+            result.append({"spid":i, "totals":False})
+
+        return json.dumps(result)
+
     def get_statistics(self, nid, querydata):
         """Returns the statistics for the specified post, origin and source_name"""
         spid = None
@@ -78,7 +94,6 @@ class statistics_manager:
         totals = False
         hashid = None
         sources = []
-
         if "spid" in querydata:
             spid = querydata["spid"]
         if "origin" in querydata:

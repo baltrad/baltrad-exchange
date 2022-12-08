@@ -5,7 +5,7 @@
   "class":"baltrad.exchange.runner.runners.triggered_fetch_runner",
   "extra_arguments": {
      "trigger_names":["trigger_4"],
-     "invoker_names":["anders-silent"],
+     "invoker_names":["anders-nzxt"],
      "fetcher": { 
        "id":"fetcher - copy",
        "class":"baltrad.exchange.net.fetchers.copy_fetcher",

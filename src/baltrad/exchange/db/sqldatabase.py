@@ -180,6 +180,18 @@ class SqlAlchemyDatabase(object):
             q = s.query(statistics).filter(statistics.spid == spid).filter(statistics.origin == origin).filter(statistics.source == source)
             return q.one_or_none()
 
+    def list_statistic_ids(self):
+        with self.get_session() as s:
+            entries = s.query(statistics.spid).distinct(statistics.spid).all()
+            result = [e[0] for e in entries]
+            return result
+
+    def list_statentry_ids(self):
+        with self.get_session() as s:
+            entries = s.query(statentry.spid).distinct(statentry.spid).all()
+            result = [e[0] for e in entries]
+            return result
+
     def find_statistics(self, spid, origin, sources):
         with self.get_session() as s:
             q = s.query(statistics).filter(statistics.spid == spid)

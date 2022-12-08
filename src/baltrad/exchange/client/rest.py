@@ -130,6 +130,22 @@ class RestfulServer(object):
         response = self.execute_request(request)
         return response
 
+    def list_statistics(self):
+        """posts a json message to the exchange server. 
+        :param data: The data
+        """
+        request = Request(
+            "GET", "/statistics/ids",
+            headers={
+                "content-type": "application/json",
+                "message-id": str(uuid.uuid4()),
+                "date":datetime.utcnow().strftime("%Y%m%d%H%M%S%f")
+            }
+        )
+
+        response = self.execute_request(request)
+        return response
+
     def get_server_info(self, subcommand, **kwargs):
         """posts a json message to the exchange server. 
         :param data: The data

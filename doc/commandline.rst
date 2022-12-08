@@ -117,4 +117,23 @@ The tool requires two mandatory options and the odim-h5 file to be matched again
                           subscription or publication cfg-file or else a
                           separate file containing toplevel 'filter'
 
-                          
+-----------------------
+baltrad-exchange-client
+-----------------------
+
+This tool is used to communicate with the server in various ways. Examples of use can be to store files or to query for statistics and other server information.
+It is possible to get available commands by running
+
+.. code:: sh
+
+  %> baltrad-exchange-client --help
+  Usage: baltrad-exchange-client COMMAND [ARGS]
+
+  where COMMAND can be one of:
+    - batchtest
+    - get_statistics
+    - post_message
+    - server_info
+    - store
+
+  to get more information about a specific command, write baltrad-exchange-client <COMMAND> --help

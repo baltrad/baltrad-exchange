@@ -27,8 +27,11 @@ import logging
 import os
 import sys
 
-from baltrad.exchange import exchange_optparse
+from baltrad.exchange import config,exchange_optparse
 from baltrad.exchange.client import cmd,rest
+
+# Default configuration file.
+DEFAULT_CONFIG = "/etc/baltrad/exchange/etc/baltrad-exchange.properties"
 
 def extract_command(args):
     command = None
@@ -39,6 +42,14 @@ def extract_command(args):
         else:
             result_args.append(arg)
     return command, result_args
+
+def read_config(conffile):
+    if not conffile:
+        raise SystemExit("configuration file not specified")
+    try:
+        return config.Properties.load(conffile)
+    except IOError:
+        raise SystemExit("failed to read configuration from " + conffile)
 
 def run():
     optparser = exchange_optparse.create_parser()
@@ -51,22 +62,31 @@ def run():
     optparser.set_usage(usgstr)
     
     optparser.add_option(
-        "--url", dest="server_url",
-        default="https://localhost:8089",
-        help="Exchange server URL",
+        "--conf", dest="conf", default=DEFAULT_CONFIG,
+        help="The default configuration file to extract server info from unless overridden by other options"
     )
+
+    optparser.add_option(
+        "--noconf", dest="noconf", default=False, action="store_true",
+        help="If conf file not should be identified and only options should be used.")
+
+    optparser.add_option(
+        "--url", dest="server_url",
+        help="Exchange server URL.",
+    )
+    
     optparser.add_option(
         "-v", "--verbose", dest="verbose",
         action="store_true",
         help="be verbose",
     )
     optparser.add_option(
-        "-t", "--type", dest="type", default="crypto",
-        help="Type of encryption to use, currently the internal crypto or keyczar. Default: crypto")
+        "-t", "--type", dest="type",
+        help="Type of encryption to use, currently the internal crypto or keyczar.")
     
     optparser.add_option(
         "-k", "--key", dest="key",
-        help="path to public key to sign messages with"
+        help="path to private key to sign messages with"
     )
     optparser.add_option(
         "-n", "--name", dest="name",
@@ -86,7 +106,7 @@ def run():
         raise SystemExit(1)
     
     optparser.set_usage(
-        "%s %s [--url=SERVER_URL]" % (
+        "%s %s [OPTIONS]" % (
             os.path.basename(sys.argv[0]),
             command_name
         )
@@ -95,20 +115,52 @@ def run():
 
     opts, args = optparser.parse_args(args)
 
+    serverUrl = "https://localhost:8089"
+    cryptoType = "crypto"
+    keyPath = None
+    nodeName = None
+
+    if not opts.noconf and os.path.exists(opts.conf):
+        conf = read_config(opts.conf)
+        serverUrl = conf.get("baltrad.exchange.uri", "https://localhost:8089")
+        cryptoProviders = conf.get("baltrad.exchange.auth.providers", "crypto")
+        cryptoProviders = cryptoProviders.split(",")
+        cryptos = [x.strip() for x in cryptoProviders]
+        if "crypto" in cryptos:
+            cryptoType = "crypto"
+        elif "keyczar" in cryptos:
+            cryptoType = "keyczar"
+        else:
+            cryptoType = "noauth"
+        keyPath = conf.get("baltrad.exchange.auth.%s.private.key"%cryptoType, None)
+        nodeName = conf.get("baltrad.exchange.node.name", None)
+    else:
+        print("Property file is not used")
+
+    if opts.type is not None:
+        cryptoType = opts.type
+    if opts.key is not None:
+        keyPath = opts.key
+    if opts.name is not None:
+        nodeName = opts.name
+
     logging.basicConfig(format="%(message)s")
     if opts.verbose:
         logging.getLogger().setLevel(logging.DEBUG)
-    
-    auth = rest.NoAuth()
-    if opts.key:
-        if opts.type == "crypto":
-            auth = rest.CryptoAuth(opts.key, opts.name)
-        elif opts.type=="tink":
-            auth = rest.TinkAuth(opts.key, opts.name)
 
-    database = rest.RestfulServer(opts.server_url, auth)
-    
+    auth = rest.NoAuth()
+    if keyPath:
+        if cryptoType == "crypto":
+            auth = rest.CryptoAuth(keyPath, nodeName)
+        elif cryptoType=="tink":
+            auth = rest.TinkAuth(keyPath, nodeName)
+        else:
+            auth = rest.NoAuth()
+
+    database = rest.RestfulServer(serverUrl, auth)
+
     try:
         return command.execute(database, opts, args)
     except cmd.ExecutionError as e:
-        raise SystemExit(e)
+        optparser.print_usage()
+        sys.exit(1)

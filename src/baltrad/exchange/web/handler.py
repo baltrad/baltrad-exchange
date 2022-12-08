@@ -127,6 +127,25 @@ def get_statistics(ctx):
     stats = ctx.backend.get_statistics_manager().get_statistics(ctx.backend.get_auth_manager().get_nodename(ctx.request), data)
     return Response(stats, status=httplibclient.OK)
 
+def list_statistic_ids(ctx):
+    """Returns the statistic ids
+
+    :param ctx: the request context
+    :type ctx: :class:`~.util.RequestContext`
+    :return: :class:`~.util.JsonResponse` with status
+             *200 Created* and information in body
+
+    See :ref:`doc-rest-op-list_statistic_ids` for details
+    """
+    logger.debug("baltrad.exchange.handler.list_statistic_ids(ctx)")
+    if ctx.is_anonymous():
+        logger.info("list_statistic_ids: anonymous calls are not allowed")
+        return Response("", status=httplibclient.UNAUTHORIZED)
+    #data = ctx.request.get_json_data()
+    stats = ctx.backend.get_statistics_manager().list_statistic_ids(ctx.backend.get_auth_manager().get_nodename(ctx.request))
+    return Response(stats, status=httplibclient.OK)
+
+
 def get_server_uptime(ctx):
     """
     :returns the server uptime
@@ -137,3 +156,25 @@ def get_server_uptime(ctx):
         return Response("", status=httplibclient.UNAUTHORIZED)
     days, hours, minutes, seconds = ctx.backend.get_server_uptime()
     return Response(json.dumps({"days":days, "hours":hours, "minutes":minutes, "seconds":seconds}), status=httplibclient.OK)
+
+def get_server_nodename(ctx):
+    """
+    :returns the server nodename
+    """
+    logger.debug("baltrad.exchange.handler.get_server_nodename(ctx)")
+    if ctx.is_anonymous():
+        logger.info("get_server_nodename: anonymous calls are not allowed")
+        return Response("", status=httplibclient.UNAUTHORIZED)
+    nodename = ctx.backend.get_server_nodename()
+    return Response(json.dumps({"nodename":nodename}), status=httplibclient.OK)
+
+def get_server_publickey(ctx):
+    """
+    :returns the server publickey
+    """
+    logger.debug("baltrad.exchange.handler.get_server_publickey(ctx)")
+    if ctx.is_anonymous():
+        logger.info("get_server_publickey: anonymous calls are not allowed")
+        return Response("", status=httplibclient.UNAUTHORIZED)
+    publickey = ctx.backend.get_server_publickey()
+    return Response(publickey, status=httplibclient.OK)

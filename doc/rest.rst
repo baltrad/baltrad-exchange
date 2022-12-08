@@ -94,7 +94,7 @@ When running the above code the signature will be printed and can look something
    
 
 Keyczar authentication provider (*Legacy*)
-'''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''''
 **keyczar** provider can be used to sign and verify HTTP messages using
 `Keyczar <https://github.com/google/keyczar/>`_. Keyczar has been deprecated and is
 no longer supported. Since baltrad-dex and baltrad-db is still using it
@@ -175,7 +175,8 @@ Post file
 **Response**
   :Headers: Content-Length, Content-Type, Location
   :Status:
-    * **200 OK** - file has been handled
+    **200 OK** - file has been handled
+    
   ::
 
     HTTP/1.1 200 OK

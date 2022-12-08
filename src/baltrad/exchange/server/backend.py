@@ -351,3 +351,12 @@ class SimpleBackend(backend.Backend):
         minutes = (td.seconds % 3600) // 60
         seconds = td.seconds % 60
         return (td.days, hours, minutes, seconds)
+
+
+    def get_server_nodename(self):
+        return self.nodename
+
+    def get_server_publickey(self):
+        provider = self.authmgr.get_provider("crypto")
+        if provider:
+            return provider.getPublicKey(self.nodename).PEM()

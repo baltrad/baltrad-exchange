@@ -181,6 +181,7 @@ class sftp_fetcher(baseuri_patternmatching_fetcher):
         :param file: path to file that should be published
         :param meta: the meta object for all metadata of file
         """
+        logger.debug("Running sftp_fetcher: %s"%self.hostname())
         with sftpclient(self.hostname(), port=self.port(), username=self.username(), password=self.password()) as c:
             files = c.listdir(self.path())
             for f in files:
@@ -216,6 +217,7 @@ class scp_fetcher(baseuri_patternmatching_fetcher):
         :param file: path to file that should be published
         :param meta: the meta object for all metadata of file
         """
+        logger.debug("Running scp_fetcher: %s"%self.hostname())
         ssh = None
         scp = None
         try:
@@ -268,6 +270,7 @@ class ftp_fetcher(baseuri_patternmatching_fetcher):
         :param file: path to file that should be published
         :param meta: the meta object for all metadata of file
         """
+        logger.debug("Running ftp_fetcher: %s"%self.hostname())
         ftp = self.connect()
         if not ftp:
             raise Exception("Failed to connect to remove ftp server")
@@ -331,6 +334,8 @@ class copy_fetcher(fetcher):
         :param file: path to file that should be published
         :param meta: the meta object for all metadata of file
         """
+        logger.debug("Running copy_fetcher")
+
         files = glob.glob("%s/%s"%(self._path, self._fnpattern))
         
         for f in files:
