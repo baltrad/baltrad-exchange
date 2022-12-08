@@ -143,6 +143,24 @@ Options:
 </div>
 </section>
 </section>
+<section id="baltrad-exchange-client">
+<h2>baltrad-exchange-client<a class="headerlink" href="#baltrad-exchange-client" title="Permalink to this headline">¶</a></h2>
+<p>This tool is used to communicate with the server in various ways. Examples of use can be to store files or to query for statistics and other server information.
+It is possible to get available commands by running</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt; baltrad-exchange-client --help
+Usage: baltrad-exchange-client COMMAND <span class="o">[</span>ARGS<span class="o">]</span>
+
+where COMMAND can be one of:
+  - batchtest
+  - get_statistics
+  - post_message
+  - server_info
+  - store
+
+to get more information about a specific command, write baltrad-exchange-client &lt;COMMAND&gt; --help
+</pre></div>
+</div>
+</section>
 </section>
 
 
@@ -160,6 +178,7 @@ Options:
 <li><a class="reference internal" href="#test-filter">test_filter</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#baltrad-exchange-client">baltrad-exchange-client</a></li>
 </ul>
 </li>
 </ul>
