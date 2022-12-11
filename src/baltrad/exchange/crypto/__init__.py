@@ -58,7 +58,15 @@ class public_key(object):
         """Returns the public key as PEM-encoded string
         """
         return self._key.export_key("PEM").decode()
-    
+
+    def algorithm(self):
+        if isinstance(self._key, RSA.RsaKey):
+            return "rsa"
+        elif isinstance(self._key, DSA.DsaKey):
+            return "dsa"
+
+        return "unknown"
+
     def exportPEM(self, filename):
         """Exports the public key to specified filename
         :param filename: The name of the file to be written
@@ -125,6 +133,14 @@ class private_key(object):
         result = base64.urlsafe_b64encode(signature).decode("ascii")
         return result
     
+    def algorithm(self):
+        if isinstance(self._key, RSA.RsaKey):
+            return "rsa"
+        elif isinstance(self._key, DSA.DsaKey):
+            return "dsa"
+
+        return "unknown"
+
     def exportPEM(self, filename):
         """Exports the private key to specified filename
         :param filename: The name of the file to be written

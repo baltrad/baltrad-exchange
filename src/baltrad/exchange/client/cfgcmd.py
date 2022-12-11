@@ -26,19 +26,19 @@ from __future__ import print_function
 from abc import abstractmethod, ABCMeta
 import abc
 
-import json
-import os, sys
+import json, tarfile
+import os, sys, re
 import socket
 import urllib.parse as urlparse
 import pkg_resources
 import datetime,time
 import subprocess
-from tempfile import NamedTemporaryFile
+from tempfile import TemporaryDirectory
 
 from http import client as httplibclient
 
 # This should always be available
-from baltrad.exchange import crypto
+from baltrad.exchange import config, crypto
 from baltrad.exchange.crypto import keyczarcrypto
 from baltrad.exchange.odimutil import metadata_helper
 from baltrad.exchange.server import sqlbackend
@@ -46,8 +46,22 @@ from baltrad.exchange.matching.filters import filter_manager
 from baltrad.exchange.matching.metadata_matcher import metadata_matcher
 from baltrad.bdbcommon import oh5
 
+# Default configuration file.
+DEFAULT_CONFIG = "/etc/baltrad/exchange/etc/baltrad-exchange.properties"
+
+DEFAULT_TEMPLATE = "/etc/baltrad/exchange/etc/exchange-template.json"
+
+
 class ExecutionError(RuntimeError):
     pass
+
+def read_config(conffile):
+    if not conffile:
+        raise SystemExit("configuration file not specified")
+    try:
+        return config.Properties.load(conffile)
+    except IOError:
+        raise SystemExit("failed to read configuration from " + conffile)
 
 class Command(object):
     """command-line client command interface
@@ -150,7 +164,7 @@ class CreateKeys(Command):
     def create_keyczar_keys(self, opts):
         if opts.encryption != "dsa":
             print("Only supported encryption is dsa for keyczar crypto")
-            return
+            return"""
         
 
         if not os.path.exists(opts.destination):
@@ -212,4 +226,245 @@ class TestFilter(Command):
         if matcher.match(meta, tfilter.to_xpr()):
             print("MATCHING")
         else:
-            print("NOT MATCHING")
+            print("NOT MATCHING")"""
+
+class CreatePublication(Command):
+    def update_optionparser(self, parser):
+        usg = parser.get_usage().strip()
+
+        description = """
+
+Creates a publication from the provided template and the provided property-file. If possible, the
+property file will be identified by checking standard installation path. An atempt to find the
+template will be used base on default location / name as well.
+
+Example: baltrad-exchange-config create_publication --desturi=https://remote.baltrad.node --name="pub to remote node" --output=remote_node_publication.json
+        """
+
+        usage = usg + description
+
+        parser.set_usage(usage)
+
+        parser.add_option(
+            "--conf", dest="conf", default=DEFAULT_CONFIG,
+            help="Specified the property file to use to extract all relevant information to create the publication to specified host.")
+
+        parser.add_option(
+            "--template", dest="template", default=DEFAULT_TEMPLATE,
+            help="The template to use for generating the publication / subscription.")
+
+        parser.add_option(
+            "--desturi", dest="desturi", default="https://localhost:8089",
+            help="Specified the target of this publication"
+        )
+
+        parser.add_option(
+            "--name", dest="publication_name",
+            help="The name of this publication. MANDATORY!"
+        )
+
+        parser.add_option(
+            "--output", dest="output",
+            help="The output file name. If not specified, output will printed on stdout"
+        )
+
+    def execute(self, opts, args):
+        cfg = read_config(opts.conf)
+
+        if not os.path.exists(opts.template):
+            print("Must provide template")
+            sys.exit(1)
+
+        if not opts.publication_name:
+            print("Must provide --name")
+            sys.exit(1)
+
+        desturi = opts.desturi
+
+        loaded = None
+        with open(opts.template) as fp:
+            loaded = json.load(fp)
+        
+        template = loaded["template"]
+        template_publication = template["publication"]
+        clazz = "baltrad.exchange.net.publishers.standard_publisher"
+        template_connection = {"sender": "baltrad.exchange.net.senders.rest_sender", "protocol":"crypto"}
+        if "class" in template_publication:
+            clazz = template_publication["class"]
+        extra_arguments={}
+        if "extra_arguments" in template_publication:
+            extra_arguments = template_publication["extra_arguments"]
+
+        if "connection" in template:
+            template_connection = template["connection"]
+
+        publication = {}
+        publication["__comment__"] = "This is a comment"
+        publication["name"] = opts.publication_name
+        publication["class"] = clazz
+        publication["extra_arguments"] = extra_arguments
+        publication["active"] = True
+
+        connection = template_connection
+        connection["class"] = "baltrad.exchange.net.connections.simple_connection"
+        connection["arguments"] = {}
+        connection["arguments"]["sender"] = {}
+        connection["arguments"]["sender"]["id"] = "%s sender id"%opts.publication_name
+        if template_connection["sender"] == "baltrad.exchange.net.senders.rest_sender":
+            connection["arguments"]["sender"]["class"] = template_connection["sender"]
+            connection["arguments"]["sender"]["arguments"] = {}
+            connection["arguments"]["sender"]["arguments"]["address"] = opts.desturi
+            connection["arguments"]["sender"]["arguments"]["protocol_version"] = "1.0"
+
+            encryption = "crypto"
+            if "encryption" in template_connection:
+                encryption = template_connection["encryption"]
+            if encryption == "crypto":
+                connection["arguments"]["sender"]["arguments"]["crypto"] = {}
+                connection["arguments"]["sender"]["arguments"]["crypto"]["libname"] = "crypto"
+                connection["arguments"]["sender"]["arguments"]["crypto"]["nodename"] = cfg.get("baltrad.exchange.node.name")
+                connection["arguments"]["sender"]["arguments"]["crypto"]["privatekey"] = cfg.get("baltrad.exchange.auth.crypto.private.key")
+            else:
+                print("Unsupported template encryption")
+                sys.exit(0)
+        else:
+            print("Unsupported template sender")
+            sys.exit(1)
+
+        publication["connection"] = connection
+        publication["filter"] = template["filter"]
+
+        json_publication={"publication":publication}
+
+        output = json.dumps(json_publication, sort_keys=True, indent=4)
+        if opts.output:
+            if os.path.exists(opts.output):
+                print("File %s already exists"%opts.output)
+            else:
+                with open(opts.output, "w") as fp:
+                    fp.write(output)
+                    fp.flush()
+        else:
+            print(output)
+
+class CreateSubscription(Command):
+    def update_optionparser(self, parser):
+        usg = parser.get_usage().strip()
+
+        description = """
+
+Creates a subscription package from the provided template and the provided property-file. If possible, the
+property file will be identified by checking standard installation path. An atempt to find the
+template will be used base on default location / name as well. The output will be a tarball containing of one 
+public key and one subscription.json file.
+
+Example: baltrad-exchange-config create_subscription --output=subscription_bundle.tar
+        """
+
+        usage = usg + description
+
+        parser.set_usage(usage)
+
+        parser.add_option(
+            "--conf", dest="conf", default=DEFAULT_CONFIG,
+            help="Specified the property file to use to extract all relevant information to create the publication to specified host.")
+
+        parser.add_option(
+            "--template", dest="template", default=DEFAULT_TEMPLATE,
+            help="The template to use for generating the publication / subscription.")
+
+        parser.add_option(
+            "--output", dest="output",
+            help="The output file name. Must contain .tar och .tgz or .tar.gz suffix. Will default to <nodename>.tar.gz"
+        )
+
+    def execute(self, opts, args):
+        cfg = read_config(opts.conf)
+
+        if not os.path.exists(opts.template):
+            print("Must provide template")
+            sys.exit(1)
+
+        if not cfg.get("baltrad.exchange.node.name"):
+            print("No baltrad.exchange.node.name in property file")
+            sys.exit(1)
+
+        output_name = "%s.tar.gz"%cfg.get("baltrad.exchange.node.name")
+        if opts.output:
+            output_name = opts.output
+
+        if not output_name.endswith(".tar") and not output_name.endswith(".tgz") and not output_name.endswith(".tar.gz"):
+            print("output file must end with .tar, .tar.gz or .tgz")
+            sys.exit(1)
+
+        loaded = None
+        with open(opts.template) as fp:
+            loaded = json.load(fp)
+        
+        template = loaded["template"]
+        template_publication = template["publication"]
+        clazz = "baltrad.exchange.net.publishers.standard_publisher"
+        template_connection = {"sender": "baltrad.exchange.net.senders.rest_sender", "protocol":"crypto"}
+        if "class" in template_publication:
+            clazz = template_publication["class"]
+        extra_arguments={}
+        if "extra_arguments" in template_publication:
+            extra_arguments = template_publication["extra_arguments"]
+        if "connection" in template:
+            template_connection = template["connection"]
+
+
+        subscription = {}
+        subscription["__comment__"] = "This is a comment"
+        subscription["_id"] = "subscription from %s"%cfg.get("baltrad.exchange.node.name")
+        subscription["active"] = True
+        subscription["storage"] = ["default_storage"]
+        subscription["_statdef"] = [{"id":"stat-subscription-1", "type": "count"}]
+        subscription["allow_duplicates"] = False
+        subscription["allowed_ids"] = []
+
+        cryptos = []
+
+        with TemporaryDirectory() as tmpdir:
+            foldername = re.sub("(\.tar\.gz|\.tar|\.tgz)$", '', output_name)
+            dirname="%s/%s"%(tmpdir, foldername)
+            os.makedirs(dirname)
+
+            if template_connection["sender"] == "baltrad.exchange.net.senders.rest_sender":
+                cryptod = {}
+                cryptod["auth"] = "crypto"
+                cryptod["conf"] = {}
+                cryptod["conf"]["nodename"] = cfg.get("baltrad.exchange.node.name")
+                cryptod["conf"]["creator"] = "baltrad.exchange.crypto"
+                cryptod["conf"]["pubkey"] = "%s.public"%cfg.get("baltrad.exchange.node.name")
+                cryptod["conf"]["type"] = "public"
+
+                privatek = crypto.load_key(cfg.get("baltrad.exchange.auth.crypto.private.key"))
+                publick = privatek.publickey()
+                publick.exportPEM("%s/%s.public"%(dirname, cfg.get("baltrad.exchange.node.name")))
+
+                cryptod["conf"]["keyType"] = publick.algorithm()
+
+                cryptos.append(cryptod)
+            else:
+                print("Unsupported template sender")
+                sys.exit(1)
+
+            subscription["cryptos"] = cryptos
+            subscription["filter"] = template["filter"]
+
+            json_subscription={"subscription":subscription}
+            output = json.dumps(json_subscription, sort_keys=True, indent=4)
+
+            with open("%s/%s-subscription.json"%(dirname, cfg.get("baltrad.exchange.node.name")), "w") as fp:
+                fp.write(output)
+                fp.close()
+            
+            tmode = "w"
+            if output_name.endswith(".tgz") or output_name.endswith(".tar.gz"):
+                tmode = "w:gz"
+
+            with tarfile.open(output_name, tmode) as tar:
+                tar.add(dirname, arcname=foldername)
+
+            print("Created %s"%output_name)           
