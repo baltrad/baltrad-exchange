@@ -382,7 +382,7 @@ Example: baltrad-exchange-config create_subscription --output=subscription_bundl
         cfg = read_config(opts.conf)
 
         if not os.path.exists(opts.template):
-            print("Must provide template")
+            print("Must provide template. Try copying exchange-template.json from examples!")
             sys.exit(1)
 
         if not cfg.get("baltrad.exchange.node.name"):
