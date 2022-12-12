@@ -67,7 +67,14 @@ def run():
     except LookupError:
         print("'%s' is not a valid command." % command_name, file=sys.stderr)
         raise SystemExit(1)
-    
+
+    optparser.set_usage(
+        "%s %s [OPTIONS]" % (
+            os.path.basename(sys.argv[0]),
+            command_name
+        )
+    )
+
     command.update_optionparser(optparser)
 
     opts, args = optparser.parse_args(args)

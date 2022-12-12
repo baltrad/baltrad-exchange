@@ -236,7 +236,10 @@ class CreatePublication(Command):
 
 Creates a publication from the provided template and the provided property-file. If possible, the
 property file will be identified by checking standard installation path. An atempt to find the
-template will be used base on default location / name as well.
+template will be used base on default location / name as well. The resulting json file should be 
+possible to put in the local server config catalogue without modifications. If different sender 
+protocols or different connection strategies should be used the configuration file needs to be modified
+manually.
 
 Example: baltrad-exchange-config create_publication --desturi=https://remote.baltrad.node --name="pub to remote node" --output=remote_node_publication.json
         """
@@ -356,7 +359,8 @@ class CreateSubscription(Command):
 Creates a subscription package from the provided template and the provided property-file. If possible, the
 property file will be identified by checking standard installation path. An atempt to find the
 template will be used base on default location / name as well. The output will be a tarball containing of one 
-public key and one subscription.json file.
+public key and one subscription.json file together with a README file that explains how to use the tarball.
+This tar ball should be sent to the admin for the remote server.
 
 Example: baltrad-exchange-config create_subscription --output=subscription_bundle.tar
         """
@@ -459,7 +463,11 @@ Example: baltrad-exchange-config create_subscription --output=subscription_bundl
             with open("%s/%s-subscription.json"%(dirname, cfg.get("baltrad.exchange.node.name")), "w") as fp:
                 fp.write(output)
                 fp.close()
-            
+
+            with open("%s/README"%dirname, "w") as fp:
+                fp.write(self.README(cfg.get("baltrad.exchange.node.name")))
+                fp.close()
+
             tmode = "w"
             if output_name.endswith(".tgz") or output_name.endswith(".tar.gz"):
                 tmode = "w:gz"
@@ -468,3 +476,16 @@ Example: baltrad-exchange-config create_subscription --output=subscription_bundl
                 tar.add(dirname, arcname=foldername)
 
             print("Created %s"%output_name)           
+
+    def README(self, nodename):
+        return """Origin: %s
+Created: %s
+
+This folder contains two different files. One is a public key originating from %s and the
+other is the currently provided subscription configuration.  The public key should be placed in the public key root folder, 
+typically /etc/baltrad/exchange/crypto-keys/.
+
+The subscription configuration describes what the template assumes is published from the remote server. If you for example
+just want a subset of what is provided, please notifiy the remote server admin about this so that they can modify the 
+outgoing publication to keep both their and your bandwidth usage limited.
+"""%(nodename, datetime.datetime.now().strftime("%Y-%m-%d %H:%M"), nodename)
