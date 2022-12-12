@@ -60,6 +60,57 @@ baltrad software. It can also generate new keys compatible with the old installa
      Private key: /etc/baltrad/bltnode-keys/myserver.priv
      Public  key: /etc/baltrad/bltnode-keys/myserver.pub
 
+create_publication
+__________________
+
+Creates a publication from the provided template and the provided property-file. If possible, the
+property file will be identified by checking standard installation path. An atempt to find the
+template will be used base on default location / name as well. The resulting json file should be 
+possible to put in the local server config catalogue without modifications. If different sender 
+protocols or different connection strategies should be used the configuration file needs to be modified
+manually.
+
+Example: baltrad-exchange-config create_publication --desturi=https://remote.baltrad.node --name="pub to remote node" --output=remote_node_publication.json
+
+Options:
+  -h, --help            show this help message and exit
+  -v, --verbose         be verbose
+  --conf=CONF           Specified the property file to use to extract all
+                        relevant information to create the publication to
+                        specified host.
+  --template=TEMPLATE   The template to use for generating the publication /
+                        subscription.
+  --desturi=DESTURI     Specified the target of this publication
+  --name=PUBLICATION_NAME
+                        The name of this publication. MANDATORY!
+  --output=OUTPUT       The output file name. If not specified, output will
+                        printed on stdout
+
+create_subscription
+___________________
+
+Usage: baltrad-exchange-config create_subscription [OPTIONS]
+
+Creates a subscription package from the provided template and the provided property-file. If possible, the
+property file will be identified by checking standard installation path. An atempt to find the
+template will be used base on default location / name as well. The output will be a tarball containing of one 
+public key and one subscription.json file and mailed to the admin for the remote server.
+
+Example: baltrad-exchange-config create_subscription --output=subscription_bundle.tar
+        
+
+Options:
+  -h, --help           show this help message and exit
+  -v, --verbose        be verbose
+  --conf=CONF          Specified the property file to use to extract all
+                       relevant information to create the publication to
+                       specified host.
+  --template=TEMPLATE  The template to use for generating the publication /
+                       subscription.
+  --output=OUTPUT      The output file name. Must contain .tar och .tgz or
+                       .tar.gz suffix. Will default to <nodename>.tar.gz
+
+
 test_filter
 _______________
 Another useful tool is the test_filter which can be used to validate files against a filter to test how the subscription/publication filters should be defined. The matching uses the baltrad-db 
@@ -137,3 +188,37 @@ It is possible to get available commands by running
     - store
 
   to get more information about a specific command, write baltrad-exchange-client <COMMAND> --help
+
+
+When communicating with the server it is in most cases required to provide security-related options and these options are common for all commands.
+
+- **--conf=CONF** Specifies the configuration file to use for extracting required option values. 
+  Default is to use the installations config file which usually is located under /etc/baltrad/exchange/etc/baltrad-exchange.properties
+
+- **--noconf** Disables the usage of property file and expects all attributes to be provided on command line. Can be useful in some circumstances
+
+- **--url=SERVER_URL** The location of the server. Usually http://localhost:8089 or https://localhost:8089.
+
+- **-t TYPE, --type=TYPE** Type of encryption to use. Either crypto, keyczar or noauth
+
+- **-k KEY --key=KEY** The path to the private key to sign messages with.
+
+- **-n NAME --name=NAME** The name to use as node-name.
+
+When the baltrad-config-client binary is executed,  url, type, key and name will be determined by reading the options from the property-file and these 
+will be used as default values. Then, if the options are provided these will override the default values. This obviously will require that the user
+running the baltrad-exchange-client command is allowed to read the private key.
+
+All other options are specific to the above commands. The help section for each of the commands will explain more about how to use each command.
+
+batchtest
+---------
+
+The batchtest uses a basefile that either is a scan or a pvol and uses that as a template and then updates the source and datetime before sending it to the exchange server. It is only the
+information for the swedish radars sekrn, sella, seosd, seoer, sehuv, selek, sehem, seatv, sevax, seang, sekaa and sebaa that will be set in what/source. The soure set will be in the format
+WMO:02666,RAD:SE51,PLC:Karlskrona,CMT:sekaa,NOD:sekaa.
+
+get_statistics
+--------------
+
+

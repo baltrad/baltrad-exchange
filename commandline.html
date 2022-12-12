@@ -91,6 +91,79 @@ Created:
 </pre></div>
 </div>
 </section>
+<section id="create-publication">
+<h3>create_publication<a class="headerlink" href="#create-publication" title="Permalink to this headline">¶</a></h3>
+<p>Creates a publication from the provided template and the provided property-file. If possible, the
+property file will be identified by checking standard installation path. An atempt to find the
+template will be used base on default location / name as well. The resulting json file should be
+possible to put in the local server config catalogue without modifications. If different sender
+protocols or different connection strategies should be used the configuration file needs to be modified
+manually.</p>
+<p>Example: baltrad-exchange-config create_publication –desturi=https://remote.baltrad.node –name=”pub to remote node” –output=remote_node_publication.json</p>
+<dl>
+<dt>Options:</dt><dd><dl class="option-list">
+<dt><kbd><span class="option">-h</span>, <span class="option">--help</span></kbd></dt>
+<dd><p>show this help message and exit</p>
+</dd>
+<dt><kbd><span class="option">-v</span>, <span class="option">--verbose</span></kbd></dt>
+<dd><p>be verbose</p>
+</dd>
+<dt><kbd><span class="option">--conf=<var>CONF</var></span></kbd></dt>
+<dd><p>Specified the property file to use to extract all
+relevant information to create the publication to
+specified host.</p>
+</dd>
+<dt><kbd><span class="option">--template=<var>TEMPLATE</var></span></kbd></dt>
+<dd><p>The template to use for generating the publication /
+subscription.</p>
+</dd>
+<dt><kbd><span class="option">--desturi=<var>DESTURI</var></span></kbd></dt>
+<dd><p>Specified the target of this publication</p>
+</dd>
+<dt><kbd><span class="option">--name=<var>PUBLICATION_NAME</var></span></kbd></dt>
+<dd><p>The name of this publication. MANDATORY!</p>
+</dd>
+<dt><kbd><span class="option">--output=<var>OUTPUT</var></span></kbd></dt>
+<dd><p>The output file name. If not specified, output will
+printed on stdout</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+<section id="create-subscription">
+<h3>create_subscription<a class="headerlink" href="#create-subscription" title="Permalink to this headline">¶</a></h3>
+<p>Usage: baltrad-exchange-config create_subscription [OPTIONS]</p>
+<p>Creates a subscription package from the provided template and the provided property-file. If possible, the
+property file will be identified by checking standard installation path. An atempt to find the
+template will be used base on default location / name as well. The output will be a tarball containing of one
+public key and one subscription.json file and mailed to the admin for the remote server.</p>
+<p>Example: baltrad-exchange-config create_subscription –output=subscription_bundle.tar</p>
+<dl>
+<dt>Options:</dt><dd><dl class="option-list">
+<dt><kbd><span class="option">-h</span>, <span class="option">--help</span></kbd></dt>
+<dd><p>show this help message and exit</p>
+</dd>
+<dt><kbd><span class="option">-v</span>, <span class="option">--verbose</span></kbd></dt>
+<dd><p>be verbose</p>
+</dd>
+<dt><kbd><span class="option">--conf=<var>CONF</var></span></kbd></dt>
+<dd><p>Specified the property file to use to extract all
+relevant information to create the publication to
+specified host.</p>
+</dd>
+<dt><kbd><span class="option">--template=<var>TEMPLATE</var></span></kbd></dt>
+<dd><p>The template to use for generating the publication /
+subscription.</p>
+</dd>
+<dt><kbd><span class="option">--output=<var>OUTPUT</var></span></kbd></dt>
+<dd><p>The output file name. Must contain .tar och .tgz or
+.tar.gz suffix. Will default to &lt;nodename&gt;.tar.gz</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
 <section id="test-filter">
 <h3>test_filter<a class="headerlink" href="#test-filter" title="Permalink to this headline">¶</a></h3>
 <p>Another useful tool is the test_filter which can be used to validate files against a filter to test how the subscription/publication filters should be defined. The matching uses the baltrad-db
@@ -160,6 +233,23 @@ where COMMAND can be one of:
 to get more information about a specific command, write baltrad-exchange-client &lt;COMMAND&gt; --help
 </pre></div>
 </div>
+<p>When communicating with the server it is in most cases required to provide security-related options and these options are common for all commands.</p>
+<ul class="simple">
+<li><p><strong>–conf=CONF</strong> Specifies the configuration file to use for extracting required option values.
+Default is to use the installations config file which usually is located under /etc/baltrad/exchange/etc/baltrad-exchange.properties</p></li>
+<li><p><strong>–noconf</strong> Disables the usage of property file and expects all attributes to be provided on command line. Can be useful in some circumstances</p></li>
+<li><p><strong>–url=SERVER_URL</strong> The location of the server. Usually <a class="reference external" href="http://localhost:8089">http://localhost:8089</a> or <a class="reference external" href="https://localhost:8089">https://localhost:8089</a>.</p></li>
+<li><p><strong>-t TYPE, –type=TYPE</strong> Type of encryption to use. Either crypto, keyczar or noauth</p></li>
+<li><p><strong>-k KEY –key=KEY</strong> The path to the private key to sign messages with.</p></li>
+<li><p><strong>-n NAME –name=NAME</strong> The name to use as node-name.</p></li>
+</ul>
+<p>When the baltrad-config-client binary is executed,  url, type, key and name will be determined by reading the options from the property-file and these
+will be used as default values. Then, if the options are provided these will override the default values. This obviously will require that the user
+running the baltrad-exchange-client command is allowed to read the private key.</p>
+<p>All other options are specific to the above commands. The help section for each of the commands will explain more about how to use each command.</p>
+<p>The batchtest uses a basefile that either is a scan or a pvol and uses that as a template and then updates the source and datetime before sending it to the exchange server. It is only the
+information for the swedish radars sekrn, sella, seosd, seoer, sehuv, selek, sehem, seatv, sevax, seang, sekaa and sebaa that will be set in what/source. The soure set will be in the format
+WMO:02666,RAD:SE51,PLC:Karlskrona,CMT:sekaa,NOD:sekaa.</p>
 </section>
 </section>
 
@@ -175,6 +265,8 @@ to get more information about a specific command, write baltrad-exchange-client 
 <li><a class="reference internal" href="#">Command line tools</a><ul>
 <li><a class="reference internal" href="#baltrad-exchange-config">baltrad-exchange-config</a><ul>
 <li><a class="reference internal" href="#create-keys">create_keys</a></li>
+<li><a class="reference internal" href="#create-publication">create_publication</a></li>
+<li><a class="reference internal" href="#create-subscription">create_subscription</a></li>
 <li><a class="reference internal" href="#test-filter">test_filter</a></li>
 </ul>
 </li>
