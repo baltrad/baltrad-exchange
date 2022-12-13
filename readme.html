@@ -59,13 +59,18 @@ baltrad-db, that is possible as well and the metadata matched will be the one th
 <section id="setting-up-development">
 <h2>Setting up development<a class="headerlink" href="#setting-up-development" title="Permalink to this headline">¶</a></h2>
 <p>This description is valid for RedHat 8 based distributions. Other distributions requires installation from source for both bdb and hlhdf.</p>
-<p>First, you will need to get the baltrad package repository activated. As super user
+<p>First, you will need to get the baltrad package repository and the dependencies installed. As super user
 .. code:: .sh</p>
 <blockquote>
 <div><p>wget <a class="reference external" href="http://rpm.baltrad.eu/CentOS/8/latest/baltrad-package-latest.repo">http://rpm.baltrad.eu/CentOS/8/latest/baltrad-package-latest.repo</a></p>
 </div></blockquote>
-<p>dnf install python3-lockfile python3-pycryptodomex
-dnf install baltrad-db*</p>
+<p>%&gt; sudo dnf install python3-lockfile python3-pycryptodomex python3-numpy python3-paramiko python3-scp
+%&gt; sudo dnf install baltrad-db*</p>
+<p>Fetch the baltrad-exchange engine by downloading it from github.
+%&gt; cd /projects
+%&gt; git clone <a class="reference external" href="https://github.com/baltrad/baltrad-exchange.git">https://github.com/baltrad/baltrad-exchange.git</a>
+%&gt; cd baltrad-exchange</p>
+<p>The easiest way to start developing in baltrad-exchange is to create a virtual environment that will be used for local installations and tests.</p>
 </section>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>

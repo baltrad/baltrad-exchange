@@ -59,6 +59,8 @@ There are several reasons for why this engine was created but to name a few key-
 <li><p>Possibility to run several different instances on same server</p></li>
 <li><p>Allow possibility to decorate a file before it is sent to a subscriber</p></li>
 </ul>
+<p>Besides the actual server &amp; client software it is also possible to use several APIs from within the module. Note that the namespace is <strong>bexchange</strong>
+and not baltrad_exchange or any other variant.</p>
 </section>
 <section id="overview">
 <h3>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h3>
@@ -310,7 +312,7 @@ Then only files sent from an id that is in list of allowed ids will be allowed.<
 <p>The storages are locations where files should be placed and are referred to by the subscriptions. Typically you would only have a few different storages. For example on the file system, in a database or in an archive.</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
 <span class="w">  </span><span class="nt">&quot;storage&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;baltrad.exchange.storage.storages.file_storage&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;bexchange.storage.storages.file_storage&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;default_storage&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;arguments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">      </span><span class="nt">&quot;structure&quot;</span><span class="p">:[</span><span class="w"></span>
@@ -407,7 +409,7 @@ be explained further down.</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
 <span class="nt">&quot;publication&quot;</span><span class="p">:{</span><span class="w"></span>
 <span class="w">   </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Send file to localhost&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">   </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;baltrad.exchange.net.publishers.standard_publisher&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">   </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;bexchange.net.publishers.standard_publisher&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">   </span><span class="nt">&quot;extra_arguments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">         </span><span class="nt">&quot;threads&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="w"></span>
 <span class="w">         </span><span class="nt">&quot;queue_size&quot;</span><span class="p">:</span><span class="mi">50</span><span class="p">,</span><span class="w"></span>
@@ -425,7 +427,7 @@ be explained further down.</p>
 <span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
-<p>The <strong>baltrad.exchange.net.publishers.standard_publisher</strong> class takes a number of arguments.</p>
+<p>The <strong>bexchange.net.publishers.standard_publisher</strong> class takes a number of arguments.</p>
 <blockquote>
 <div><dl class="simple">
 <dt><strong>threads</strong></dt><dd><p>Number of threads that should consume the queue</p>
@@ -456,11 +458,11 @@ The sender used will be a <em>baltrad.exchange.net.senders.rest_sender</em> whic
 <p>When the publisher sends a file to the simple_connection it will be passed to the sender that will atempt to send the message to the
 destination.</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="nt">&quot;connection&quot;</span><span class="p">:{</span><span class="w"></span>
-<span class="w">  </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;baltrad.exchange.net.connections.simple_connection&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;bexchange.net.connections.simple_connection&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">  </span><span class="nt">&quot;arguments&quot;</span><span class="p">:{</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;sender&quot;</span><span class="p">:{</span><span class="w"></span>
 <span class="w">      </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;rest-sender 1&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">      </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;baltrad.exchange.net.senders.rest_sender&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;bexchange.net.senders.rest_sender&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">      </span><span class="nt">&quot;arguments&quot;</span><span class="p">:{</span><span class="w"></span>
 <span class="w">        </span><span class="nt">&quot;address&quot;</span><span class="p">:</span><span class="s2">&quot;https://some.remove.server:8443&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">        </span><span class="nt">&quot;protocol_version&quot;</span><span class="p">:</span><span class="s2">&quot;1.0&quot;</span><span class="p">,</span><span class="w"></span>
@@ -480,12 +482,12 @@ is known to be under heavy load at times and that there is a backup sftp-server 
 we can use a failover_connection instead. This connection type allows a list of senders that will be executed in sequence until the first sender succeeds.</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="nt">&quot;connection&quot;</span><span class="p">:{</span><span class="w"></span>
 <span class="w">  </span><span class="nt">&quot;_comment_&quot;</span><span class="p">:</span><span class="s2">&quot;This is a connection used when publishing files to a dex server&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;baltrad.exchange.net.connections.failover_connection&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;bexchange.net.connections.failover_connection&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">  </span><span class="nt">&quot;arguments&quot;</span><span class="p">:{</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;senders&quot;</span><span class="p">:[</span><span class="w"></span>
 <span class="w">      </span><span class="p">{</span><span class="w"></span>
 <span class="w">        </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;rest-sender 1&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">        </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;baltrad.exchange.net.senders.rest_sender&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;bexchange.net.senders.rest_sender&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">        </span><span class="nt">&quot;arguments&quot;</span><span class="p">:{</span><span class="w"></span>
 <span class="w">          </span><span class="nt">&quot;address&quot;</span><span class="p">:</span><span class="s2">&quot;https://some.remove.server:8443&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">          </span><span class="nt">&quot;protocol_version&quot;</span><span class="p">:</span><span class="s2">&quot;1.0&quot;</span><span class="p">,</span><span class="w"></span>
@@ -496,7 +498,7 @@ we can use a failover_connection instead. This connection type allows a list of 
 <span class="w">          </span><span class="p">}</span><span class="w"></span>
 <span class="w">        </span><span class="p">}</span><span class="w"></span>
 <span class="w">      </span><span class="p">},</span><span class="w"></span>
-<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;baltrad.exchange.net.senders.ftp_sender&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;bexchange.net.senders.ftp_sender&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">        </span><span class="nt">&quot;arguments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">          </span><span class="nt">&quot;uri&quot;</span><span class="p">:</span><span class="s2">&quot;sftp://sftpuploader@some.remove.server/dex_failover/${_baltrad/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.replace(&#39;.&#39;,&#39;_&#39;).h5&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">          </span><span class="nt">&quot;create_missing_directories&quot;</span><span class="p">:</span><span class="kc">true</span><span class="w"></span>
@@ -509,11 +511,11 @@ we can use a failover_connection instead. This connection type allows a list of 
 </div>
 <p>The following connections are currently available:</p>
 <dl class="simple">
-<dt><strong>baltrad.exchange.net.connections.simple_connection</strong></dt><dd><p>Simple connection that only takes one sender and if the sender fails the transmission is failed.</p>
+<dt><strong>bexchange.net.connections.simple_connection</strong></dt><dd><p>Simple connection that only takes one sender and if the sender fails the transmission is failed.</p>
 </dd>
-<dt><strong>baltrad.exchange.net.connections.failover_connection</strong></dt><dd><p>Takes a list of senders and will try the senders sequentially until the first sender succeedes. If all sender fails, then transmission is failed.</p>
+<dt><strong>bexchange.net.connections.failover_connection</strong></dt><dd><p>Takes a list of senders and will try the senders sequentially until the first sender succeedes. If all sender fails, then transmission is failed.</p>
 </dd>
-<dt><strong>baltrad.exchange.net.connections.backup_connection</strong></dt><dd><p>Takes a list of senders and will send to all senders regardless if the previous one succeeded or failed.</p>
+<dt><strong>bexchange.net.connections.backup_connection</strong></dt><dd><p>Takes a list of senders and will send to all senders regardless if the previous one succeeded or failed.</p>
 </dd>
 </dl>
 </section>
@@ -522,19 +524,19 @@ we can use a failover_connection instead. This connection type allows a list of 
 <p>The senders are protocol specific and ensures that the data is sent correctly and if applicable, in a secure way. There are several predefined ways to send files. Since each sender has it’s own
 set of arguments to be initiated you find examples on how to use them in the etc-catalogue.</p>
 <dl class="simple">
-<dt><strong>baltrad.exchange.net.senders.storage_sender</strong></dt><dd><p>Publishes a file using file storages. This is very useful if you want to decorate a file before it is put on the storage.</p>
+<dt><strong>bexchange.net.senders.storage_sender</strong></dt><dd><p>Publishes a file using file storages. This is very useful if you want to decorate a file before it is put on the storage.</p>
 </dd>
-<dt><strong>baltrad.exchange.net.senders.dex_sender</strong></dt><dd><p>Legacy DEX communication sending files to old nodes</p>
+<dt><strong>bexchange.net.senders.dex_sender</strong></dt><dd><p>Legacy DEX communication sending files to old nodes</p>
 </dd>
-<dt><strong>baltrad.exchange.net.senders.rest_sender</strong></dt><dd><p>Sends a file to another node that is running baltrad-exchange. The rest sender uses the internal crypto library for signing messages which currently supports DSA &amp; RSA keys. DSA uses DSS, RSA uses pkcs1_15.</p>
+<dt><strong>bexchange.net.senders.rest_sender</strong></dt><dd><p>Sends a file to another node that is running baltrad-exchange. The rest sender uses the internal crypto library for signing messages which currently supports DSA &amp; RSA keys. DSA uses DSS, RSA uses pkcs1_15.</p>
 </dd>
-<dt><strong>baltrad.exchange.net.senders.sftp_sender</strong></dt><dd><p>Sends files over sftp</p>
+<dt><strong>bexchange.net.senders.sftp_sender</strong></dt><dd><p>Sends files over sftp</p>
 </dd>
-<dt><strong>baltrad.exchange.net.senders.scp_sender</strong></dt><dd><p>Publishes files over scp</p>
+<dt><strong>bexchange.net.senders.scp_sender</strong></dt><dd><p>Publishes files over scp</p>
 </dd>
-<dt><strong>baltrad.exchange.net.senders.ftp_sender</strong></dt><dd><p>Publishes files over ftp</p>
+<dt><strong>bexchange.net.senders.ftp_sender</strong></dt><dd><p>Publishes files over ftp</p>
 </dd>
-<dt><strong>baltrad.exchange.net.senders.copy_sender</strong></dt><dd><p>Publishes files by copying them. It uses it’s own metadata namer.</p>
+<dt><strong>bexchange.net.senders.copy_sender</strong></dt><dd><p>Publishes files by copying them. It uses it’s own metadata namer.</p>
 </dd>
 </dl>
 </section>
@@ -550,19 +552,19 @@ or maybe convert the ODIM-version to a different one. At the moment, there aren�
 an active or triggered subscription. The runners have a different entrance to the system by going directly to the subscription-handling in the backend without any authentication.
 Currently, there are two runners implemented in the exchange server but like with the rest of the system it is easy to extend with new runners.</p>
 <dl>
-<dt><strong>baltrad.exchange.runner.runners.inotify_runner</strong></dt><dd><p>The inotify runner is used to monitor folders and trigger “store” events. It is run in a separate thread instead of beeing created as a daemon-thread since
+<dt><strong>bexchange.runner.runners.inotify_runner</strong></dt><dd><p>The inotify runner is used to monitor folders and trigger “store” events. It is run in a separate thread instead of beeing created as a daemon-thread since
 all initiation is performed in the main thread before server is started.</p>
 </dd>
-<dt><strong>baltrad.exchange.runner.runners.triggered_fetch_runner</strong></dt><dd><p>A triggered runner. This runner implements ‘message_aware’ so that a json-message can be handled. This runner is triggered from the WSGI-process
+<dt><strong>bexchange.runner.runners.triggered_fetch_runner</strong></dt><dd><p>A triggered runner. This runner implements ‘message_aware’ so that a json-message can be handled. This runner is triggered from the WSGI-process
 and as such is using the WSGI-servers thread pool. <strong>TODO: Implement this as a producer/consumer thread to avoid any possibility to starve the WSGI-thread pool.</strong></p>
 <p>The fetcher runner will react on a trigger message and then use a protocol-specific fetcher to retrieve files from a server host in some way. Currently there is support
 for the following fetchers.</p>
-<p><strong>baltrad.exchange.net.fetchers.sftp_fetcher</strong> - Fetches files from host using sftp</p>
-<p><strong>baltrad.exchange.net.fetchers.scp_fetcher</strong>  - Fetches files from host using scp</p>
-<p><strong>baltrad.exchange.net.fetchers.ftp_fetcher</strong>  - Fetches files from host using ftp</p>
-<p><strong>baltrad.exchange.net.fetchers.copy_fetcher</strong> - Fetches files from host using file copy</p>
+<p><strong>bexchange.net.fetchers.sftp_fetcher</strong> - Fetches files from host using sftp</p>
+<p><strong>bexchange.net.fetchers.scp_fetcher</strong>  - Fetches files from host using scp</p>
+<p><strong>bexchange.net.fetchers.ftp_fetcher</strong>  - Fetches files from host using ftp</p>
+<p><strong>bexchange.net.fetchers.copy_fetcher</strong> - Fetches files from host using file copy</p>
 </dd>
-<dt><strong>baltrad.exchange.runner.runners.statistics_cleanup_runner</strong></dt><dd><p>The statistics cleanup runner is used for ensuring that the statistics data tables gets too large. The configuration of the cleanup runner is done using two attributes, interval and age.
+<dt><strong>bexchange.runner.runners.statistics_cleanup_runner</strong></dt><dd><p>The statistics cleanup runner is used for ensuring that the statistics data tables gets too large. The configuration of the cleanup runner is done using two attributes, interval and age.
 The interval is specified in minutes telling the system how often the routine should be executed. Age is specified in hours and all entries older than specified number of hours will be removed.</p>
 </dd>
 </dl>
@@ -570,7 +572,7 @@ The interval is specified in minutes telling the system how often the routine sh
 <span class="nt">&quot;runner&quot;</span><span class="p">:{</span><span class="w"></span>
 <span class="w">  </span><span class="nt">&quot;_comment_&quot;</span><span class="p">:</span><span class="s2">&quot;Cleanup of statistics database run as a runner.&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">  </span><span class="nt">&quot;active&quot;</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;baltrad.exchange.runner.runners.statistics_cleanup_runner&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;bexchange.runner.runners.statistics_cleanup_runner&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">  </span><span class="nt">&quot;extra_arguments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;statistics_cleanup_runner&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;interval&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"></span>
