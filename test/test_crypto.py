@@ -26,7 +26,7 @@ from __future__ import absolute_import
 import unittest
 import os
 
-from baltrad.exchange import crypto
+from bexchange import crypto
 
 FIXTURE_DIR="%s/fixtures"%os.path.dirname(os.path.abspath(__file__))
 

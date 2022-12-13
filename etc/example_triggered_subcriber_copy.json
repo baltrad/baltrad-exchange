@@ -2,13 +2,13 @@
 "runner":{
   "_comment_":"Active handling like polling, inotify triggering or other type of backend support is handled as a runner.'",
   "active":true,
-  "class":"baltrad.exchange.runner.runners.triggered_fetch_runner",
+  "class":"bexchange.runner.runners.triggered_fetch_runner",
   "extra_arguments": {
      "trigger_names":["trigger_4"],
      "invoker_names":["anders-nzxt"],
      "fetcher": { 
        "id":"fetcher - copy",
-       "class":"baltrad.exchange.net.fetchers.copy_fetcher",
+       "class":"bexchange.net.fetchers.copy_fetcher",
        "arguments": {
          "path":"/tmp/primary_sftp",
          "_fnpattern_":"Is used for basic filename reckognition like *.h5, ...",

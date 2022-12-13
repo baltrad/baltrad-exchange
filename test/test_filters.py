@@ -25,7 +25,7 @@ from __future__ import absolute_import
 
 import unittest
 
-from baltrad.exchange.matching import filters
+from bexchange.matching import filters
 
 from baltrad.bdbcommon import oh5, expr
 from baltrad.bdbcommon.oh5.node import Attribute, Group

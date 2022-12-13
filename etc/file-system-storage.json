@@ -1,6 +1,6 @@
 {
   "storage": {
-    "class":"baltrad.exchange.storage.storages.file_storage",
+    "class":"bexchange.storage.storages.file_storage",
     "name":"default_storage",
     "arguments": {
       "simulate":false,

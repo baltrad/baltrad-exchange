@@ -2,7 +2,7 @@
 "publication_": {
    "_comment_":"Usually publications should use this publisher. Extra arguments is number of threads and queue_size.",
    "name":"DEX publishing with failover to a ftp server for later distribution",
-   "class":"baltrad.exchange.net.publishers.standard_publisher",
+   "class":"bexchange.net.publishers.standard_publisher",
    "extra_arguments": {
   	 "threads":1,
   	 "queue_size":50
@@ -10,10 +10,10 @@
    "active":false,
    "connection":{
      "_comment_":"This is a connection used when publishing files to a dex server",
-     "class":"baltrad.exchange.net.connections.failover_connection",
+     "class":"bexchange.net.connections.failover_connection",
      "arguments":{
        "senders":[
-         { "class":"baltrad.exchange.net.senders.dex_sender",
+         { "class":"bexchange.net.senders.dex_sender",
            "arguments": {
              "address":"http://localhost:8080",
              "crypto":{
@@ -24,7 +24,7 @@
              }         
            }
          },
-         { "class":"baltrad.exchange.net.adaptors.ftp_sender",
+         { "class":"bexchange.net.adaptors.ftp_sender",
            "arguments": {
              "uri":"ftp://sftpuploader:secret@localhost/tmp/dex_failover/${_baltrad/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.replace('.','_').h5",
              "create_missing_directories":true

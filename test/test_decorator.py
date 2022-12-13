@@ -25,7 +25,7 @@ from __future__ import absolute_import
 
 import unittest
 
-from baltrad.exchange.decorators.decorator import decorator_manager, decorator
+from bexchange.decorators.decorator import decorator_manager, decorator
 
 class test_filter(decorator):
     def __init__(self, arg1, arg2):

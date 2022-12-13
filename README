@@ -19,12 +19,19 @@ Setting up development
 ----------------------
 This description is valid for RedHat 8 based distributions. Other distributions requires installation from source for both bdb and hlhdf.
 
-First, you will need to get the baltrad package repository activated. As super user
+First, you will need to get the baltrad package repository and the dependencies installed. As super user
 .. code:: .sh
   wget http://rpm.baltrad.eu/CentOS/8/latest/baltrad-package-latest.repo
 
-dnf install python3-lockfile python3-pycryptodomex
-dnf install baltrad-db*
+%> sudo dnf install python3-lockfile python3-pycryptodomex python3-numpy python3-paramiko python3-scp
+%> sudo dnf install baltrad-db*
+
+Fetch the baltrad-exchange engine by downloading it from github.
+%> cd /projects
+%> git clone https://github.com/baltrad/baltrad-exchange.git
+%> cd baltrad-exchange
+
+The easiest way to start developing in baltrad-exchange is to create a virtual environment that will be used for local installations and tests.
 
 Installation
 ------------

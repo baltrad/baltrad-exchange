@@ -4,7 +4,6 @@ import setuptools
 import sys
 
 REQUIRED_PACKAGES= [
-    #"baltrad.bdbcommon",
     "jprops >= 2.0.2",
     "pyasn1",
     "pycryptodomex",
@@ -13,9 +12,9 @@ REQUIRED_PACKAGES= [
     "werkzeug >= 1.0.1"
 ]
 
-setuptools.setup(name="baltrad.exchange",
+setuptools.setup(name="bexchange",
     version="0.1",
-    namespace_packages=["baltrad"],
+    namespace_packages=["bexchange"],
     setup_requires=[],
     packages=setuptools.find_packages(
         "src",
@@ -28,30 +27,30 @@ setuptools.setup(name="baltrad.exchange",
     },
     install_requires=REQUIRED_PACKAGES,
     entry_points = {
-        "baltrad.exchange.auth": [
-            "noauth = baltrad.exchange.auth:NoAuth",
-            "tink = baltrad.exchange.auth.tinkauth:TinkAuth",
-            "crypto = baltrad.exchange.auth.coreauth:CryptoAuth",
-            "keyczar = baltrad.exchange.auth.keyczarauth:KeyczarAuth"
+        "bexchange.auth": [
+            "noauth = bexchange.auth:NoAuth",
+            "tink = bexchange.auth.tinkauth:TinkAuth",
+            "crypto = bexchange.auth.coreauth:CryptoAuth",
+            "keyczar = bexchange.auth.keyczarauth:KeyczarAuth"
         ],
-        "baltrad.exchange.client.commands": [
-            "store = baltrad.exchange.client.cmd:StoreFile",
-            "batchtest = baltrad.exchange.client.cmd:BatchTest",
-            "post_message = baltrad.exchange.client.cmd:PostJsonMessage",
-            "get_statistics = baltrad.exchange.client.cmd:GetStatistics",
-            "list_statistic_ids = baltrad.exchange.client.cmd:ListStatisticIds",
-            "server_info = baltrad.exchange.client.cmd:ServerInfo",
+        "bexchange.client.commands": [
+            "store = bexchange.client.cmd:StoreFile",
+            "batchtest = bexchange.client.cmd:BatchTest",
+            "post_message = bexchange.client.cmd:PostJsonMessage",
+            "get_statistics = bexchange.client.cmd:GetStatistics",
+            "list_statistic_ids = bexchange.client.cmd:ListStatisticIds",
+            "server_info = bexchange.client.cmd:ServerInfo",
         ],
-        "baltrad.exchange.config.commands": [
-            "create_keys = baltrad.exchange.client.cfgcmd:CreateKeys",
-            "test_filter = baltrad.exchange.client.cfgcmd:TestFilter",
-            "create_publication = baltrad.exchange.client.cfgcmd:CreatePublication",
-            "create_subscription = baltrad.exchange.client.cfgcmd:CreateSubscription",
+        "bexchange.config.commands": [
+            "create_keys = bexchange.client.cfgcmd:CreateKeys",
+            "test_filter = bexchange.client.cfgcmd:TestFilter",
+            "create_publication = bexchange.client.cfgcmd:CreatePublication",
+            "create_subscription = bexchange.client.cfgcmd:CreateSubscription",
         ],
         "console_scripts" : [
-            "baltrad-exchange-server = baltrad.exchange.server_main:run",
-            "baltrad-exchange-client = baltrad.exchange.client_main:run",
-            "baltrad-exchange-config = baltrad.exchange.config_main:run"
+            "baltrad-exchange-server = bexchange.server_main:run",
+            "baltrad-exchange-client = bexchange.client_main:run",
+            "baltrad-exchange-config = bexchange.config_main:run"
         ]
     },
     test_suite="nose.collector",

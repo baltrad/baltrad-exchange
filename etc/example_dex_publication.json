@@ -2,7 +2,7 @@
 "publication": {
    "_comment_":"Usually publications should use this publisher. Extra arguments is number of threads and queue_size.",
    "name":"Simple DEX publishing simulating old behaviour except that we don't keep track of redirect information",
-   "class":"baltrad.exchange.net.publishers.standard_publisher",
+   "class":"bexchange.net.publishers.standard_publisher",
    "extra_arguments": {
   	 "threads":1,
   	 "queue_size":50
@@ -10,11 +10,11 @@
    "active":false,
    "connection":{
      "_comment_":"This is a connection used when publishing files to a dex server",
-     "class":"baltrad.exchange.net.connections.simple_connection",
+     "class":"bexchange.net.connections.simple_connection",
      "arguments":{
        "sender":{
 	     "id":"dex adaptor to localhost",
-         "class":"baltrad.exchange.net.senders.dex_sender",
+         "class":"bexchange.net.senders.dex_sender",
          "arguments": {
            "address":"http://localhost:8080",
            "crypto":{

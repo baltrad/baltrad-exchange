@@ -2,7 +2,7 @@
 "publication": {
    "_comment_":"Usually publications should use this publisher. Extra arguments is number of threads and queue_size.",
    "name":"FTP file to remote server with failover",
-   "class":"baltrad.exchange.net.publishers.standard_publisher",
+   "class":"bexchange.net.publishers.standard_publisher",
    "extra_arguments": {
   	 "threads":1,
   	 "queue_size":50
@@ -10,16 +10,16 @@
    "active":false,
    "connection":{
      "_comment_":"This is a connection used when publishing files to ftp server using a failover",
-     "class":"baltrad.exchange.net.connections.failover_connection",
+     "class":"bexchange.net.connections.failover_connection",
      "arguments":{
        "senders":[
-         { "class":"baltrad.exchange.net.senders.ftp_sender",
+         { "class":"bexchange.net.senders.ftp_sender",
            "arguments": {
              "uri":"ftp://sftpuploader:secret@localhost/tmp/primary_ftp/${_baltrad/datetime:%Y/%m/%d/%H/%M}.interval_l(15)/${_baltrad/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.replace('.','_').h5",
              "create_missing_directories":true
            }
          },
-         { "class":"baltrad.exchange.net.senders.ftp_sender",
+         { "class":"bexchange.net.senders.ftp_sender",
            "arguments": {
              "uri":"ftp://sftpuploader:secret@localhost/tmp/secondary_ftp/${_baltrad/datetime:%Y/%m/%d/%H/%M}.interval_l(15)/${_baltrad/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.replace('.','_').h5",
              "create_missing_directories":true

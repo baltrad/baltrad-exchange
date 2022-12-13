@@ -26,7 +26,7 @@ from __future__ import absolute_import
 import unittest
 from unittest.mock import MagicMock
 
-from baltrad.exchange.processor.processors import processor_manager, processor
+from bexchange.processor.processors import processor_manager, processor
 
 class test_processor(processor):
     def __init__(self, backend, name, active, extra_arguments):

@@ -2,7 +2,7 @@
 "publication": {
    "_comment_":"Usually publications should use this publisher. Extra arguments is number of threads and queue_size.",
    "name":"Copy file to storage publication",
-   "class":"baltrad.exchange.net.publishers.standard_publisher",
+   "class":"bexchange.net.publishers.standard_publisher",
    "extra_arguments": {
   	 "threads":1,
   	 "queue_size":50
@@ -10,10 +10,10 @@
    "active":false,
    "connection":{
      "_comment_":"Export files to a storage as a publisher.",
-     "class":"baltrad.exchange.net.connections.simple_connection",
+     "class":"bexchange.net.connections.simple_connection",
      "arguments":{
        "sender":{
-	     "class":"baltrad.exchange.net.senders.storage_sender",
+	     "class":"bexchange.net.senders.storage_sender",
 	     "arguments":{
 	     	"file_storage":[
     	    	 "exporting_storage"

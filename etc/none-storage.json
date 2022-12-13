@@ -1,4 +1,4 @@
 {"storage":{
-     "class":"baltrad.exchange.storage.storages.none_storage",
+     "class":"bexchange.storage.storages.none_storage",
      "name":"none_storage"
 }}

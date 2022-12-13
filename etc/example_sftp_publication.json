@@ -2,7 +2,7 @@
 "publication": {
    "_comment_":"Usually publications should use this publisher. Extra arguments is number of threads and queue_size.",
    "name":"SFTP file to remote server",
-   "class":"baltrad.exchange.net.publishers.standard_publisher",
+   "class":"bexchange.net.publishers.standard_publisher",
    "extra_arguments": {
   	 "threads":1,
   	 "queue_size":50
@@ -10,9 +10,9 @@
    "active":true,
    "connection":{
      "_comment_":"This is a connection used when publishing files to ftp server using a failover",
-     "class":"baltrad.exchange.net.connections.simple_connection",
+     "class":"bexchange.net.connections.simple_connection",
      "arguments":{
-       "sender": { "class":"baltrad.exchange.net.senders.sftp_sender",
+       "sender": { "class":"bexchange.net.senders.sftp_sender",
           "arguments": {
             "uri":"sftp://sftpuploader:secret@localhost/tmp/primary_sftp/${_baltrad/datetime:%Y/%m/%d/%H/%M}.interval_l(15)/${_baltrad/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.replace('.','_').h5",
             "create_missing_directories":true

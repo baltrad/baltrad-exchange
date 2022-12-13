@@ -22,7 +22,7 @@
 ## @author Anders Henja, SMHI
 ## @date 2021-08-18
 import unittest
-from baltrad.exchange.naming.namer import metadata_namer
+from bexchange.naming.namer import metadata_namer
 from baltrad.bdbcommon import oh5
 from baltrad.bdbcommon.oh5.node import Attribute, Group
 

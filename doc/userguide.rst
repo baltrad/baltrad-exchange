@@ -21,6 +21,9 @@ There are several reasons for why this engine was created but to name a few key-
 - Possibility to run several different instances on same server
 - Allow possibility to decorate a file before it is sent to a subscriber
 
+Besides the actual server & client software it is also possible to use several APIs from within the module. Note that the namespace is **bexchange**
+and not baltrad_exchange or any other variant.
+
 Overview
 =================
 
@@ -300,7 +303,7 @@ The storages are locations where files should be placed and are referred to by t
 
   {
     "storage": {
-      "class":"baltrad.exchange.storage.storages.file_storage",
+      "class":"bexchange.storage.storages.file_storage",
       "name":"default_storage",
       "arguments": {
         "structure":[
@@ -422,7 +425,7 @@ The basic structure of a publication configuration looks like
   {
   "publication":{
      "name":"Send file to localhost",
-     "class":"baltrad.exchange.net.publishers.standard_publisher",
+     "class":"bexchange.net.publishers.standard_publisher",
      "extra_arguments": {
   	   "threads":2,
   	   "queue_size":50,
@@ -439,7 +442,7 @@ The basic structure of a publication configuration looks like
    }
   }
 
-The **baltrad.exchange.net.publishers.standard_publisher** class takes a number of arguments.
+The **bexchange.net.publishers.standard_publisher** class takes a number of arguments.
 
   **threads**
     Number of threads that should consume the queue
@@ -473,11 +476,11 @@ destination.
 .. code-block:: json
 
   "connection":{
-    "class":"baltrad.exchange.net.connections.simple_connection",
+    "class":"bexchange.net.connections.simple_connection",
     "arguments":{
       "sender":{
         "id":"rest-sender 1",
-        "class":"baltrad.exchange.net.senders.rest_sender",
+        "class":"bexchange.net.senders.rest_sender",
         "arguments":{
           "address":"https://some.remove.server:8443",
           "protocol_version":"1.0",
@@ -499,12 +502,12 @@ we can use a failover_connection instead. This connection type allows a list of 
 
    "connection":{
      "_comment_":"This is a connection used when publishing files to a dex server",
-     "class":"baltrad.exchange.net.connections.failover_connection",
+     "class":"bexchange.net.connections.failover_connection",
      "arguments":{
        "senders":[
          {
            "id":"rest-sender 1",
-           "class":"baltrad.exchange.net.senders.rest_sender",
+           "class":"bexchange.net.senders.rest_sender",
            "arguments":{
              "address":"https://some.remove.server:8443",
              "protocol_version":"1.0",
@@ -515,7 +518,7 @@ we can use a failover_connection instead. This connection type allows a list of 
              }
            }
          },
-         { "class":"baltrad.exchange.net.senders.ftp_sender",
+         { "class":"bexchange.net.senders.ftp_sender",
            "arguments": {
              "uri":"sftp://sftpuploader@some.remove.server/dex_failover/${_baltrad/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.replace('.','_').h5",
              "create_missing_directories":true
@@ -527,13 +530,13 @@ we can use a failover_connection instead. This connection type allows a list of 
    
 The following connections are currently available:
 
-**baltrad.exchange.net.connections.simple_connection**
+**bexchange.net.connections.simple_connection**
   Simple connection that only takes one sender and if the sender fails the transmission is failed.
   
-**baltrad.exchange.net.connections.failover_connection**
+**bexchange.net.connections.failover_connection**
   Takes a list of senders and will try the senders sequentially until the first sender succeedes. If all sender fails, then transmission is failed.
 
-**baltrad.exchange.net.connections.backup_connection**
+**bexchange.net.connections.backup_connection**
   Takes a list of senders and will send to all senders regardless if the previous one succeeded or failed.
 
 
@@ -542,25 +545,25 @@ Senders
 The senders are protocol specific and ensures that the data is sent correctly and if applicable, in a secure way. There are several predefined ways to send files. Since each sender has it's own
 set of arguments to be initiated you find examples on how to use them in the etc-catalogue.
 
-**baltrad.exchange.net.senders.storage_sender**
+**bexchange.net.senders.storage_sender**
   Publishes a file using file storages. This is very useful if you want to decorate a file before it is put on the storage.
 
-**baltrad.exchange.net.senders.dex_sender**
+**bexchange.net.senders.dex_sender**
   Legacy DEX communication sending files to old nodes
 
-**baltrad.exchange.net.senders.rest_sender**
+**bexchange.net.senders.rest_sender**
   Sends a file to another node that is running baltrad-exchange. The rest sender uses the internal crypto library for signing messages which currently supports DSA & RSA keys. DSA uses DSS, RSA uses pkcs1_15.
 
-**baltrad.exchange.net.senders.sftp_sender**
+**bexchange.net.senders.sftp_sender**
   Sends files over sftp
 
-**baltrad.exchange.net.senders.scp_sender**
+**bexchange.net.senders.scp_sender**
   Publishes files over scp
   
-**baltrad.exchange.net.senders.ftp_sender**
+**bexchange.net.senders.ftp_sender**
   Publishes files over ftp
   
-**baltrad.exchange.net.senders.copy_sender**
+**bexchange.net.senders.copy_sender**
   Publishes files by copying them. It uses it's own metadata namer.
 
 Decorators
@@ -576,26 +579,26 @@ A runner is something that is running on the side of the actual file handling ta
 an active or triggered subscription. The runners have a different entrance to the system by going directly to the subscription-handling in the backend without any authentication.
 Currently, there are two runners implemented in the exchange server but like with the rest of the system it is easy to extend with new runners.
 
-**baltrad.exchange.runner.runners.inotify_runner**
+**bexchange.runner.runners.inotify_runner**
   The inotify runner is used to monitor folders and trigger "store" events. It is run in a separate thread instead of beeing created as a daemon-thread since
   all initiation is performed in the main thread before server is started. 
 
-**baltrad.exchange.runner.runners.triggered_fetch_runner**
+**bexchange.runner.runners.triggered_fetch_runner**
   A triggered runner. This runner implements 'message_aware' so that a json-message can be handled. This runner is triggered from the WSGI-process 
   and as such is using the WSGI-servers thread pool. **TODO: Implement this as a producer/consumer thread to avoid any possibility to starve the WSGI-thread pool.**
   
   The fetcher runner will react on a trigger message and then use a protocol-specific fetcher to retrieve files from a server host in some way. Currently there is support
   for the following fetchers.
   
-  **baltrad.exchange.net.fetchers.sftp_fetcher** - Fetches files from host using sftp
+  **bexchange.net.fetchers.sftp_fetcher** - Fetches files from host using sftp
 
-  **baltrad.exchange.net.fetchers.scp_fetcher**  - Fetches files from host using scp
+  **bexchange.net.fetchers.scp_fetcher**  - Fetches files from host using scp
 
-  **baltrad.exchange.net.fetchers.ftp_fetcher**  - Fetches files from host using ftp
+  **bexchange.net.fetchers.ftp_fetcher**  - Fetches files from host using ftp
 
-  **baltrad.exchange.net.fetchers.copy_fetcher** - Fetches files from host using file copy
+  **bexchange.net.fetchers.copy_fetcher** - Fetches files from host using file copy
 
-**baltrad.exchange.runner.runners.statistics_cleanup_runner**
+**bexchange.runner.runners.statistics_cleanup_runner**
   The statistics cleanup runner is used for ensuring that the statistics data tables gets too large. The configuration of the cleanup runner is done using two attributes, interval and age.
   The interval is specified in minutes telling the system how often the routine should be executed. Age is specified in hours and all entries older than specified number of hours will be removed.
   
@@ -605,7 +608,7 @@ Currently, there are two runners implemented in the exchange server but like wit
   "runner":{
     "_comment_":"Cleanup of statistics database run as a runner.",
     "active":true,
-    "class":"baltrad.exchange.runner.runners.statistics_cleanup_runner",
+    "class":"bexchange.runner.runners.statistics_cleanup_runner",
     "extra_arguments": {
       "name":"statistics_cleanup_runner",
       "interval": 1,

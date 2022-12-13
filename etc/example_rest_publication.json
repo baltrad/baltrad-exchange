@@ -2,7 +2,7 @@
 "publication":{
    "_comment_":"Usually publications should use this publisher. Extra arguments is number of threads and queue_size.",
    "name":"Use the internal rest protocol",
-   "class":"baltrad.exchange.net.publishers.standard_publisher",
+   "class":"bexchange.net.publishers.standard_publisher",
    "extra_arguments": {
   	 "threads":2,
   	 "queue_size":50
@@ -10,11 +10,11 @@
    "active":false,
    "connection":{
      "_comment_":"This is a connection used for publishing files using the rest protocol using a simple connection. No failover or similar.",
-     "class":"baltrad.exchange.net.connections.simple_connection",
+     "class":"bexchange.net.connections.simple_connection",
      "arguments":{
        "sender":{
          "id":"rest-sender 1",
-         "class":"baltrad.exchange.net.senders.rest_sender",
+         "class":"bexchange.net.senders.rest_sender",
          "arguments":{
            "address":"https://localhost:8089",
        	   "protocol_version":"1.0",

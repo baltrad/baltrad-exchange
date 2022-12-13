@@ -3,13 +3,13 @@
         "_comment_":"Template to use when creating publications / subscriptions.",
         "name":"Publishes all swedish scans",
         "publication": {
-            "class":"baltrad.exchange.net.publishers.standard_publisher",
+            "class":"bexchange.net.publishers.standard_publisher",
             "extra_arguments": {
                 "threads":2,
                 "queue_size":50
             },
             "connection": {
-                "sender":"baltrad.exchange.net.senders.rest_sender",
+                "sender":"bexchange.net.senders.rest_sender",
                 "encryption":"crypto"
             }
         },
