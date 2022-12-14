@@ -20,24 +20,65 @@ Setting up development
 This description is valid for RedHat 8 based distributions. Other distributions requires installation from source for both bdb and hlhdf.
 
 First, you will need to get the baltrad package repository and the dependencies installed. As super user
-.. code:: .sh
-  wget http://rpm.baltrad.eu/CentOS/8/latest/baltrad-package-latest.repo
 
-%> sudo dnf install python3-lockfile python3-pycryptodomex python3-numpy python3-paramiko python3-scp
-%> sudo dnf install baltrad-db*
+.. code:: sh
 
-Fetch the baltrad-exchange engine by downloading it from github.
-%> cd /projects
-%> git clone https://github.com/baltrad/baltrad-exchange.git
-%> cd baltrad-exchange
+   %> cd /etc/yum.repos.d/
+   %> wget http://rpm.baltrad.eu/CentOS/8/latest/baltrad-package-latest.repo
+   %> sudo dnf install python3-lockfile python3-pycryptodomex python3-numpy 
+   %> sudo dnf install python3-paramiko python3-scp
+   %> sudo dnf install baltrad-db*
 
-The easiest way to start developing in baltrad-exchange is to create a virtual environment that will be used for local installations and tests.
+Fetch the baltrad-exchange engine by downloading it from github as your ordinary user
+
+.. code:: sh
+
+   %> cd /projects
+   %> git clone https://github.com/baltrad/baltrad-exchange.git
+   %> cd baltrad-exchange
+
+The easiest way to start developing in baltrad-exchange is to create a virtual environment that will be used for local installations and tests. 
+
+.. code:: sh
+
+   %> python3 -m venv --system-site-packages env
+   %> . env/bin/activate
+
+With the virtual environment created you can just install the baltrad-exchange software into your own environment by typing
+
+.. code:: sh
+
+  %> python3 setup.py install
 
 Installation
 ------------
-The installation of the software should only require the installation of hlhdf, bdbcommon and the python api for bdbclient as well as jprops.
+The installation of the software can either be done in a similar way to how the development environment is setup. You can either decide to
+use a virtual environment for running the software or you can just install it without creating the virtual environment.
+
+There is a third alternative as well and that is to use the prebuilt packages av available for the RH 8 distributions which is done by
+running:
+
+.. code:: sh
+
+   %> sudo dnf install baltrad-exchange
+
+Configuration
+_____________
+
+More information about installation and configuration can be found :ref:`here <userguide>`.
 
 Running the server
 ----------------------
-T.B.D
+
+After the keys has been created and the baltrad-exchange.properties file has been updated. The fastest way to get going is to
+run the server in foreground mode.
+
+.. code:: sh
+
+   %> baltrad-exchange-server --conf=./etc/baltrad-exchange.properties \
+                       --pidfile=/tmp/be.pid --logfile=/tmp/be.log --foreground
+
+
+
+
 

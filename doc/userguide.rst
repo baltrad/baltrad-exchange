@@ -1,3 +1,4 @@
+.. _userguide:
 
 """""""""""""""""""""""""""""
 User Guide
@@ -81,6 +82,7 @@ As you see in the example, three files will be created. A private key in PEM-for
 The one in json format will typically be used when setting up the subscriptions. The json-file contains some meta information and the public PEM-key with newlines escaped to be compatible
 with json. !!!NOTE!!! It might be reasonable to also have configured a folder containing all the keys!!!
 
+.. _ug_configuration:
 
 Configuration
 ========================
