@@ -59,26 +59,52 @@ baltrad-db, that is possible as well and the metadata matched will be the one th
 <section id="setting-up-development">
 <h2>Setting up development<a class="headerlink" href="#setting-up-development" title="Permalink to this headline">¶</a></h2>
 <p>This description is valid for RedHat 8 based distributions. Other distributions requires installation from source for both bdb and hlhdf.</p>
-<p>First, you will need to get the baltrad package repository and the dependencies installed. As super user
-.. code:: .sh</p>
-<blockquote>
-<div><p>wget <a class="reference external" href="http://rpm.baltrad.eu/CentOS/8/latest/baltrad-package-latest.repo">http://rpm.baltrad.eu/CentOS/8/latest/baltrad-package-latest.repo</a></p>
-</div></blockquote>
-<p>%&gt; sudo dnf install python3-lockfile python3-pycryptodomex python3-numpy python3-paramiko python3-scp
-%&gt; sudo dnf install baltrad-db*</p>
-<p>Fetch the baltrad-exchange engine by downloading it from github.
-%&gt; cd /projects
-%&gt; git clone <a class="reference external" href="https://github.com/baltrad/baltrad-exchange.git">https://github.com/baltrad/baltrad-exchange.git</a>
-%&gt; cd baltrad-exchange</p>
+<p>First, you will need to get the baltrad package repository and the dependencies installed. As super user</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt; <span class="nb">cd</span> /etc/yum.repos.d/
+%&gt; wget http://rpm.baltrad.eu/CentOS/8/latest/baltrad-package-latest.repo
+%&gt; sudo dnf install python3-lockfile python3-pycryptodomex python3-numpy
+%&gt; sudo dnf install python3-paramiko python3-scp
+%&gt; sudo dnf install baltrad-db*
+</pre></div>
+</div>
+<p>Fetch the baltrad-exchange engine by downloading it from github as your ordinary user</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt; <span class="nb">cd</span> /projects
+%&gt; git clone https://github.com/baltrad/baltrad-exchange.git
+%&gt; <span class="nb">cd</span> baltrad-exchange
+</pre></div>
+</div>
 <p>The easiest way to start developing in baltrad-exchange is to create a virtual environment that will be used for local installations and tests.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt; python3 -m venv --system-site-packages env
+%&gt; . env/bin/activate
+</pre></div>
+</div>
+<p>With the virtual environment created you can just install the baltrad-exchange software into your own environment by typing</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt; python3 setup.py install
+</pre></div>
+</div>
 </section>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<p>The installation of the software should only require the installation of hlhdf, bdbcommon and the python api for bdbclient as well as jprops.</p>
+<p>The installation of the software can either be done in a similar way to how the development environment is setup. You can either decide to
+use a virtual environment for running the software or you can just install it without creating the virtual environment.</p>
+<p>There is a third alternative as well and that is to use the prebuilt packages av available for the RH 8 distributions which is done by
+running:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt; sudo dnf install baltrad-exchange
+</pre></div>
+</div>
+<section id="configuration">
+<h3>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h3>
+<p>More information about installation and configuration can be found <a class="reference internal" href="userguide.html#userguide"><span class="std std-ref">here</span></a>.</p>
+</section>
 </section>
 <section id="running-the-server">
 <h2>Running the server<a class="headerlink" href="#running-the-server" title="Permalink to this headline">¶</a></h2>
-<p>T.B.D</p>
+<p>After the keys has been created and the baltrad-exchange.properties file has been updated. The fastest way to get going is to
+run the server in foreground mode.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt; baltrad-exchange-server --conf<span class="o">=</span>./etc/baltrad-exchange.properties <span class="se">\</span>
+                    --pidfile<span class="o">=</span>/tmp/be.pid --logfile<span class="o">=</span>/tmp/be.log --foreground
+</pre></div>
+</div>
 </section>
 </section>
 
@@ -94,7 +120,10 @@ baltrad-db, that is possible as well and the metadata matched will be the one th
 <li><a class="reference internal" href="#">README</a><ul>
 <li><a class="reference internal" href="#about">About</a></li>
 <li><a class="reference internal" href="#setting-up-development">Setting up development</a></li>
-<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#installation">Installation</a><ul>
+<li><a class="reference internal" href="#configuration">Configuration</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#running-the-server">Running the server</a></li>
 </ul>
 </li>
