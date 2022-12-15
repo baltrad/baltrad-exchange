@@ -75,7 +75,7 @@ class auth_manager(object):
         :return: a 2-tuple of provider and credential strings extracted from the
                  header
         
-        See :ref:`doc-rest-authentication` for details.
+        See :ref:`doc-rest-crypto-authentication` for details.
     
         Note that ("noauth", None) is returned if authorization header is missing.
         """
@@ -312,7 +312,7 @@ class CryptoAuth(Auth):
     def create_signable_string(self, req):
         """construct a signable string from a :class:`~.util.Request`
 
-        See :ref:`doc-rest-authentication` for details.
+        See :ref:`doc-rest-crypto-authentication` for details.
         """
         fragments = [req.method]
         for key in ("content-md5", "content-type", "date", "message-id"):

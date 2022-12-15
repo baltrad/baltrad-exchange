@@ -100,15 +100,16 @@ class file_store:
 
 class file_storage(storage):
     """A basic file storage that allows separation of files based on object types. A typical structure passed to kwargs would be
-    "structure":[
-      {"object":"SCAN",
-       "path":"/tmp/baltrad_bdb",
-       "name_pattern":"${_baltrad/datetime_l:15:%Y/%m/%d/%H/%M}/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.h5"
+
+    "structure": [
+      { "object":"SCAN",
+         "path":"/tmp/baltrad_bdb",
+         "name_pattern":"${_baltrad/datetime_l:15:%Y/%m/%d/%H/%M}/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.h5"
       },
-      {"path":"/tmp/baltrad_bdb",
-       "name_pattern":"${_baltrad/datetime_l:15:%Y/%m/%d/%H/%M}/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z.h5"
-      }
-    ]
+      { "path":"/tmp/baltrad_bdb",
+        "name_pattern":"${_baltrad/datetime_l:15:%Y/%m/%d/%H/%M}/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z.h5"
+      }]
+
     """
     def __init__(self, name, backend, **kwargs):
         """Constructor
@@ -138,7 +139,7 @@ class file_storage(storage):
         """
         :param name: Name of attribute
         :param meta: Metadata from where value for name should be taken
-        :return the value for the name or None if not found
+        :return: the value for the name or None if not found
         """
         try:
             return meta.node(name).value
@@ -182,14 +183,14 @@ class storage_manager:
     def get_storage(self, name):
         """
         :param name: Name of the storage
-        :return the storage with provided name
+        :return: the storage with provided name
         """
         return self.storage[name]
     
     def has_storage(self, name):
         """
         :param name: Name of the storage
-        :return if there is a storage with specified name
+        :return: if there is a storage with specified name
         """
         return name in self.storage
     
@@ -219,11 +220,14 @@ class storage_manager:
     @classmethod
     def from_conf(self, config, backend):
         """Creates a storage from the specified configuration if it is possible
+
         :param config: A runner config pattern. Should at least contain the following
+
         { "class":"<packagename>.<classname>",
           "name":<name of storage>,
           "arguments":{}"
         }
+
         """
         arguments = {}
         storage_clazz = config["class"]

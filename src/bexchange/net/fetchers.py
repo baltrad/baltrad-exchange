@@ -123,9 +123,9 @@ class baseuri_patternmatching_fetcher(baseuri_fetcher):
         """Constructor
         :param backend: The backend
         :param aid: Id for this fetcher
-        :param arguments: Dictionary containg at least:
+        :param arguments: Dictionary containg at least
          {
-           "uri":"....",
+           "uri":"...."
          }
          This is a base class so the uri is parsed and appropriate members are set. There is no support for any sort of 
          routing appropriate scheme to correct fetcher.
@@ -143,8 +143,8 @@ class baseuri_patternmatching_fetcher(baseuri_fetcher):
             self._pattern_matcher = re.compile(self._pattern)
 
     def fnpattern(self):
-        """
-        :return the filename pattern, like *.h5
+        """Returns the fnpattern
+        :return: the filename pattern, like \*.h5
         """
         return self._fnpattern
     

@@ -109,7 +109,7 @@ class sftpclient(object):
     def isfile(self, path):
         """
         :param path: Path name to check
-        :return if specified path is a file or not
+        :return: if specified path is a file or not
         """
         try:
             result = stat.S_ISREG(self._sftp.stat(path).st_mode)
@@ -118,9 +118,10 @@ class sftpclient(object):
         return result
 
     def isdir(self, path):
-        """
+        """Checks if the provided path is a directory or not
+
         :param path: Path name to check
-        :return if specified path is a dir or not
+        :return: if specified path is a dir or not
         """
         try:
             result = stat.S_ISDIR(self._sftp.stat(path).st_mode)
@@ -171,10 +172,11 @@ class sftpclient(object):
         self._sftp.get(filename, targetname)
         
     def getfo(self, remotepath, fl):
-        """ Copies the file (remotepath) from the server and writes to an open file.
+        """
+        Copies the file (remotepath) from the server and writes to an open file.
         Typically used like:
-        with NamedTemporaryFile() as fp:
-          c.getfo("....", fp)
+        with NamedTemporaryFile() as fp: c.getfo("....", fp)
+
         :param remotepath: Source filename to download
         :param fl: The destination file object
         """

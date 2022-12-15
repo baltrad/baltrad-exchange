@@ -14,6 +14,8 @@ Generic format of the exchange authorization header is::
 Provider *noauth* can be used to specify that no authentication is to be done
 and is equivalent to omitting the *Authorization* header.
 
+.. _doc-rest-crypto-authentication:
+
 Crypto authentication provider
 '''''''''''''''''''''''''''''''
 
@@ -92,6 +94,7 @@ When running the above code the signature will be printed and can look something
 
    Signature: CKQHaXw1FuLPjjNt8Y2zX3qCdxaTNfCEya1nQ6UhvrFewvYfmWEpc1NEms8FbhvdK4W0YH50S8k= 
    
+.. _doc-rest-keyczar-authentication:
 
 Keyczar authentication provider (*Legacy*)
 ''''''''''''''''''''''''''''''''''''''''''
@@ -152,7 +155,7 @@ provider per header::
 Operations
 ----------
 
-.. _doc-rest-post-file
+.. _doc-rest-post-file:
 
 Post file
 ''''''''''

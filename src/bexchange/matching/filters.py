@@ -81,7 +81,8 @@ class attribute_filter(node_filter):
               "name": "_bdb/source_name", 
               "operation": "in", 
               "value_type": "string", 
-              "value": ["sehem","seang"]}, 
+              "value": ["sehem","seang"]}
+
            :param v: The dictionary
            :param manager: The manager used to instantiate objects       
         """
@@ -132,7 +133,8 @@ class and_filter(node_filter):
     def from_value(cls, value, manager):
         """Used to create an and filter from a dictionary containing the information about this and filter. Format is:
              {"filter_type": "and_filter", 
-              "value": [....]}
+              "value": []}
+
            :param value: The dictionary
            :param manager: The manager used to instantiate objects       
         """
@@ -193,6 +195,7 @@ class or_filter(node_filter):
         """Used to create an or filter from a dictionary containing the information about this or filter. Format is:
              {"filter_type": "or_filter", 
               "value": [....]}
+
            :param value: The dictionary
            :param manager: The manager used to instantiate objects       
         """
@@ -252,6 +255,7 @@ class not_filter(node_filter):
         """Used to create a not filter from a dictionary containing the information about this not filter. Format is:
              {"filter_type": "not_filter", 
               "value": ...}
+
            :param value: The dictionary
            :param manager: The manager used to instantiate objects       
         """

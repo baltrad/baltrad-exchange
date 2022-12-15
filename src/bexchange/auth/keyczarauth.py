@@ -97,7 +97,7 @@ class KeyczarAuth(coreauth.Auth):
     def create_signable_string(self, req):
         """construct a signable string from a :class:`~.util.Request`
 
-        See :ref:`doc-rest-authentication` for details.
+        See :ref:`doc-rest-keyczar-authentication` for details.
         """
         fragments = [req.method, req.url]
         for key in ("content-type", "content-md5", "date"):

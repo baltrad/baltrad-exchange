@@ -280,9 +280,9 @@ class runner_manager:
     def from_conf(self, config, backend):
         """Creates a runner from the specified configuration if it is possible
         :param config: A runner config pattern. Should at least contain the following
-        { "class":"<packagename>.<classname>"
-          "active":<true or false>
-          "extra_arguments":{}"
+        {"class":"<packagename>.<classname>"
+        "active":<true or false>
+        "extra_arguments":{}"
         }
         """
         active = False

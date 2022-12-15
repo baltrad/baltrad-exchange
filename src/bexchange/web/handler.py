@@ -62,7 +62,7 @@ def post_file(ctx):
     :return: :class:`~.util.JsonResponse` with status
              *200 OK*
 
-    See :ref:`doc-rest-op-post-file` for details
+    See :ref:`doc-rest-cmd-store-file` for details
     """
     logger.debug("bexchange.handler.post_file(ctx)")
     if ctx.is_anonymous(): # We don't want unauthorized messages in here unless it has been explicitly allowed
@@ -99,7 +99,7 @@ def post_json_message(ctx):
     :raise: :class:`~.util.HttpConflict` when file already
             stored
 
-    See :ref:`doc-rest-op-store-file` for details
+    See :ref:`doc-rest-cmd-post-json-message` for details
     """
     logger.debug("bexchange.handler.post_json_message(ctx)")
     if ctx.is_anonymous():
@@ -117,7 +117,7 @@ def get_statistics(ctx):
     :return: :class:`~.util.JsonResponse` with status
              *200 Created* and information in body
 
-    See :ref:`doc-rest-op-get_statistics` for details
+    See :ref:`doc-rest-cmd-get_statistics` for details
     """
     logger.debug("bexchange.handler.get_statistics(ctx)")
     if ctx.is_anonymous():
@@ -135,7 +135,7 @@ def list_statistic_ids(ctx):
     :return: :class:`~.util.JsonResponse` with status
              *200 Created* and information in body
 
-    See :ref:`doc-rest-op-list_statistic_ids` for details
+    See :ref:`doc-rest-cmd-list_statistic_ids` for details
     """
     logger.debug("bexchange.handler.list_statistic_ids(ctx)")
     if ctx.is_anonymous():
@@ -149,6 +149,8 @@ def list_statistic_ids(ctx):
 def get_server_uptime(ctx):
     """
     :returns the server uptime
+
+    See :ref:`doc-rest-cmd-server_info` for details
     """
     logger.debug("bexchange.handler.get_server_uptime(ctx)")
     if ctx.is_anonymous():
@@ -160,6 +162,8 @@ def get_server_uptime(ctx):
 def get_server_nodename(ctx):
     """
     :returns the server nodename
+
+    See :ref:`doc-rest-cmd-server_info` for details
     """
     logger.debug("bexchange.handler.get_server_nodename(ctx)")
     if ctx.is_anonymous():
@@ -171,6 +175,8 @@ def get_server_nodename(ctx):
 def get_server_publickey(ctx):
     """
     :returns the server publickey
+
+    See :ref:`doc-rest-cmd-server_info` for details
     """
     logger.debug("bexchange.handler.get_server_publickey(ctx)")
     if ctx.is_anonymous():

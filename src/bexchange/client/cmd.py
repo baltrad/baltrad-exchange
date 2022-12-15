@@ -211,7 +211,7 @@ class PostJsonMessage(Command):
 
 Posts a json message to the exchange server. Can be used to trigger for example a runnable job.
 
-Example: bexchange-client post_message '{"trigger":"trigger_4"}'
+Example: baltrad-exchange-client post_message '{"trigger":"trigger_4"}'
         """
 
         usage = usg + " MESSAGE" + description
@@ -231,7 +231,7 @@ Queries the exchange server for various statistics information. The spid is used
 id that should be queried for. It is possible to query for all existing ids by executing the command
 list_statistic_ids.
 
-Example: bexchange-client get_statistics --spid=server-incomming --totals
+Example: baltrad-exchange-client get_statistics --spid=server-incomming --totals
         """
 
         usage = usg + " --spid=STAT_ID" + description
@@ -273,7 +273,7 @@ class ListStatisticIds(Command):
 
 Queries the exchange server for the available statistics ids
 
-Example: bexchange-client list_statistic_ids
+Example: baltrad-exchange-client list_statistic_ids
         """
 
         usage = usg + description
@@ -302,7 +302,7 @@ Provides some useful information about the server. Currently the following thing
 
   publickey - The public key that can be used to identify myself as
 
-Example: bexchange-client server_info uptime
+Example: baltrad-exchange-client server_info uptime
         """
 
         usage = usg + description

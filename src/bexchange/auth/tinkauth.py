@@ -104,7 +104,6 @@ class TinkAuth(coreauth.Auth):
     def create_signable_string(self, req):
         """construct a signable string from a :class:`~.util.Request`
 
-        See :ref:`doc-rest-authentication` for details.
         """
         fragments = [req.method, req.path]
         for key in ("content-md5", "message-id", "content-type", "date"):
