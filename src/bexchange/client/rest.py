@@ -109,14 +109,15 @@ class RestfulServer(object):
                 "Unhandled response code: %s" % response.status
             )
 
-    def get_statistics(self, spid, sources, totals=False):
+    def get_statistics(self, spid, sources, totals=False, qmethod=None):
         """posts a json message to the exchange server. 
         :param data: The data
         """
         json_message_d = {
             "spid":spid,
             "sources":sources,
-            "totals":totals
+            "totals":totals,
+            "method":qmethod
         }
         request = Request(
             "GET", "/statistics/", json.dumps(json_message_d),

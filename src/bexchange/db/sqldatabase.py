@@ -28,7 +28,7 @@ import contextlib
 import datetime
 import logging
 
-from sqlalchemy import asc,desc
+from sqlalchemy import asc,desc,func
 from sqlalchemy import engine, event, exc as sqlexc, sql
 from sqlalchemy.orm import mapper, sessionmaker
 
@@ -119,9 +119,10 @@ class statentry(object):
         self.entrytime = entrytime
         self.optime = optime
         self.optime_info = optime_info
+        self.attributes = {}
 
     def json_repr(self):
-        return {
+        result = {
             "spid":self.spid,
             "origin":self.origin,
             "source":self.source,
@@ -130,7 +131,16 @@ class statentry(object):
             "optime":self.optime,
             "optime_info":self.optime_info
         }
+        if self.attributes:
+            for a in self.attributes:
+                result[a] = self.attributes[a]
 
+        return result
+
+    def add_attribute(self, name, value):
+        if not "attributes" in self.__dict__:
+            self.attributes = {}
+        self.attributes[name] = value
 
 mapper(statistics, db_statistics)
 mapper(statentry, db_statentry)
@@ -214,6 +224,30 @@ class SqlAlchemyDatabase(object):
                 .order_by(asc(statentry.source)) \
                 .order_by(asc(statentry.entrytime))
             return q.all()
+
+    def get_average_statentries(self, spid, origin, sources, hashid=None):
+        with self.get_session() as s:
+            print("Creating query")
+            q = s.query(statentry, func.avg(statentry.optime)).filter(statentry.spid == spid)
+            if origin:
+                q = q.filter(statentry.origin == origin)
+            if sources and len(sources) > 0:
+                q = q.filter(statentry.source.in_(sources))
+
+            q = q.group_by(statentry.spid, statentry.origin, statentry.source)
+            q = q.order_by(asc(statentry.spid)) \
+                .order_by(asc(statentry.origin)) \
+                .order_by(asc(statentry.source)) \
+                .order_by(asc(statentry.entrytime))
+
+            qresult = q.all()
+            result = []
+            for e in qresult:
+                e[0].add_attribute("average", e[1])
+                print("Appending: %s"%e[0])
+                result.append(e[0])
+            return result
+
 
     def cleanup_statentries(self, maxagedt):
         logger.info("Cleanup of statentries older than %s"%maxagedt.strftime("%Y-%m-%d %H:%M"))

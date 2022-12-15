@@ -96,21 +96,33 @@ class statistics_manager:
         sources = []
         if "spid" in querydata:
             spid = querydata["spid"]
+
         if "origin" in querydata:
             origin = querydata["origin"]
+
         if "sources" in querydata:
             ssources = querydata["sources"]
             if ssources:
                 sources = ssources.split(",")
+
         if "hashid" in querydata:
             hashid = querydata["sources"]
+
         if "totals" in querydata:
             totals = querydata["totals"]
+
+        qmethod=None
+        if "method" in querydata:
+            qmethod = querydata["method"]
 
         if totals:
             entries = self._sqldatabase.find_statistics(spid, origin, sources)
         else:
-            entries = self._sqldatabase.find_statentries(spid, origin, sources, hashid=hashid)
+            if qmethod is None or qmethod != "average":
+                entries = self._sqldatabase.find_statentries(spid, origin, sources, hashid=hashid)
+            else:
+                entries = self._sqldatabase.get_average_statentries(spid, origin, sources)
+                
         jslist = [e.json_repr() for e in entries]
         return json.dumps(jslist)
 

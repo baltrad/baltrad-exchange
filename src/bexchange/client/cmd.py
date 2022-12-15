@@ -250,8 +250,13 @@ Example: bexchange-client get_statistics --spid=server-incomming --totals
             "--totals", dest="totals", default=False, action="store_true",
             help="Use this option if the total should be returned instead")
 
+        parser.add_option(
+            "--method", dest="method", default=None,
+            help="If some sort of analysis should be performed. Currently only average"
+        )
+
     def execute(self, server, opts, args):
-        response = server.get_statistics(opts.spid, opts.sources, opts.totals)
+        response = server.get_statistics(opts.spid, opts.sources, opts.totals, opts.method)
         if response.status == httplibclient.OK:
             ldata = json.loads(response.read())
             for l in ldata:
