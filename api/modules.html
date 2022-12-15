@@ -1,0 +1,230 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>bexchange &#8212; baltrad-exchange 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="bexchange package" href="bexchange.html" />
+    <link rel="prev" title="REST interface" href="../rest.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="bexchange.html" title="bexchange package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../rest.html" title="REST interface"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">baltrad-exchange 0.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">bexchange</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="bexchange">
+<h1>bexchange<a class="headerlink" href="#bexchange" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="bexchange.html">bexchange package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="bexchange.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="bexchange.auth.html">bexchange.auth package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.auth.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.auth.html#bexchange-auth-coreauth-module">bexchange.auth.coreauth module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.auth.html#bexchange-auth-keyczarauth-module">bexchange.auth.keyczarauth module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.auth.html#bexchange-auth-tinkauth-module">bexchange.auth.tinkauth module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.auth.html#module-contents">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="bexchange.client.html">bexchange.client package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.client.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.client.html#bexchange-client-cfgcmd-module">bexchange.client.cfgcmd module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.client.html#bexchange-client-cmd-module">bexchange.client.cmd module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.client.html#bexchange-client-rest-module">bexchange.client.rest module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.client.html#module-bexchange.client">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="bexchange.crypto.html">bexchange.crypto package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.crypto.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.crypto.html#bexchange-crypto-keyczarcrypto-module">bexchange.crypto.keyczarcrypto module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.crypto.html#bexchange-crypto-keyczarutil-module">bexchange.crypto.keyczarutil module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.crypto.html#module-contents">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="bexchange.db.html">bexchange.db package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.db.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.db.html#bexchange-db-sqldatabase-module">bexchange.db.sqldatabase module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.db.html#module-bexchange.db">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="bexchange.decorators.html">bexchange.decorators package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.decorators.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.decorators.html#module-bexchange.decorators.decorator">bexchange.decorators.decorator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.decorators.html#module-bexchange.decorators">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="bexchange.matching.html">bexchange.matching package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.matching.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.matching.html#bexchange-matching-filters-module">bexchange.matching.filters module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.matching.html#bexchange-matching-metadata-matcher-module">bexchange.matching.metadata_matcher module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.matching.html#module-bexchange.matching">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="bexchange.naming.html">bexchange.naming package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.naming.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.naming.html#bexchange-naming-namer-module">bexchange.naming.namer module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.naming.html#module-bexchange.naming">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="bexchange.net.html">bexchange.net package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.net.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.net.html#bexchange-net-connections-module">bexchange.net.connections module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.net.html#bexchange-net-fetchers-module">bexchange.net.fetchers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.net.html#bexchange-net-publishers-module">bexchange.net.publishers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.net.html#bexchange-net-senders-module">bexchange.net.senders module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.net.html#bexchange-net-sftpclient-module">bexchange.net.sftpclient module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.net.html#module-bexchange.net">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="bexchange.processor.html">bexchange.processor package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.processor.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.processor.html#bexchange-processor-processors-module">bexchange.processor.processors module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.processor.html#module-bexchange.processor">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="bexchange.runner.html">bexchange.runner package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.runner.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.runner.html#bexchange-runner-runners-module">bexchange.runner.runners module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.runner.html#module-bexchange.runner">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="bexchange.server.html">bexchange.server package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.server.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.server.html#bexchange-server-backend-module">bexchange.server.backend module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.server.html#bexchange-server-sqlbackend-module">bexchange.server.sqlbackend module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.server.html#bexchange-server-subscription-module">bexchange.server.subscription module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.server.html#module-bexchange.server">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="bexchange.statistics.html">bexchange.statistics package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.statistics.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.statistics.html#bexchange-statistics-statistics-module">bexchange.statistics.statistics module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.statistics.html#module-bexchange.statistics">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="bexchange.storage.html">bexchange.storage package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.storage.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.storage.html#bexchange-storage-storages-module">bexchange.storage.storages module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.storage.html#module-bexchange.storage">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="bexchange.web.html">bexchange.web package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.web.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.web.html#bexchange-web-app-module">bexchange.web.app module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.web.html#bexchange-web-auth-module">bexchange.web.auth module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.web.html#bexchange-web-handler-module">bexchange.web.handler module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.web.html#bexchange-web-routing-module">bexchange.web.routing module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.web.html#bexchange-web-util-module">bexchange.web.util module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.web.html#module-bexchange.web">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="bexchange.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bexchange.html#bexchange-backend-module">bexchange.backend module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bexchange.html#bexchange-client-main-module">bexchange.client_main module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bexchange.html#bexchange-config-module">bexchange.config module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bexchange.html#bexchange-config-main-module">bexchange.config_main module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bexchange.html#module-bexchange.exchange_optparse">bexchange.exchange_optparse module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bexchange.html#bexchange-odimutil-module">bexchange.odimutil module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bexchange.html#bexchange-server-main-module">bexchange.server_main module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bexchange.html#module-bexchange.util">bexchange.util module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bexchange.html#module-bexchange">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../rest.html"
+                        title="previous chapter">REST interface</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="bexchange.html"
+                        title="next chapter">bexchange package</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api/modules.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="bexchange.html" title="bexchange package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../rest.html" title="REST interface"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">baltrad-exchange 0.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">bexchange</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    </div>
+  </body>
+</html>

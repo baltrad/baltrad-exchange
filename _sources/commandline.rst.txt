@@ -211,14 +211,96 @@ running the baltrad-exchange-client command is allowed to read the private key.
 
 All other options are specific to the above commands. The help section for each of the commands will explain more about how to use each command.
 
+.. _doc-rest-cmd-batchtest:
+
 batchtest
----------
+_________
 
 The batchtest uses a basefile that either is a scan or a pvol and uses that as a template and then updates the source and datetime before sending it to the exchange server. It is only the
 information for the swedish radars sekrn, sella, seosd, seoer, sehuv, selek, sehem, seatv, sevax, seang, sekaa and sebaa that will be set in what/source. The soure set will be in the format
 WMO:02666,RAD:SE51,PLC:Karlskrona,CMT:sekaa,NOD:sekaa.
 
+Example:
+
+.. code:: sh
+
+  %> baltrad-exchange-client batchtest --basefile=/data/incomming/seang_scan_202212150100_0_5.h5
+
+
+.. _doc-rest-cmd-get_statistics:
+
 get_statistics
---------------
+______________
+
+Usage: baltrad-exchange-client get_statistics [OPTIONS] --spid=STAT_ID
+
+Queries the exchange server for various statistics information. The spid is used to identify what statistics
+id that should be queried for. It is possible to query for all existing ids by executing the command
+list_statistic_ids.
+
+Example:
+
+.. code:: sh
+
+  %> baltrad-exchange-client get_statistics --spid=server-incomming --totals
+
+.. _doc-rest-cmd-list_statistic_ids:
+
+list_statistic_ids
+__________________
+
+Usage: baltrad-exchange-client list_statistic_ids [OPTIONS]
+
+Queries the exchange server for the available statistics ids
+
+.. code:: sh
+
+   %> baltrad-exchange-client list_statistic_ids
+
+.. _doc-rest-cmd-post-json-message:
+
+post_message
+____________
+
+Usage: baltrad-exchange-client post_message [OPTIONS] MESSAGE
+
+Posts a json message to the exchange server. Can be used to trigger for example a runnable job.
+
+.. code:: sh
+
+   %> baltrad-exchange-client post_message '{"trigger":"trigger_4"}'
+
+
+.. _doc-rest-cmd-server_info:
+
+server_info
+
+Usage: baltrad-exchange-client server_info [OPTIONS]
+
+Provides some useful information about the server. Currently the following things can be queried for.
+
+  - uptime
+    How long the server has been running
+
+  - nodename
+    The name this server is identifying itself when sending files
+
+  - publickey
+    The public key that can be used to identify myself as
+
+.. code:: sh
+
+   %> baltrad-exchange-client server_info uptime
+        
+
+.. _doc-rest-cmd-store-file:
+
+store
+_____
+
+Usage: baltrad-exchange-client store [OPTIONS] FILE [ FILE]
+        
+Posts a sequence of files to the exchange server.
+        
 
 

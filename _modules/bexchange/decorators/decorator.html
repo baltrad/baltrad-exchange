@@ -1,0 +1,163 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>bexchange.decorators.decorator &#8212; baltrad-exchange 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">baltrad-exchange 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">bexchange.decorators.decorator</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for bexchange.decorators.decorator</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (C) 2021- Swedish Meteorological and Hydrological Institute (SMHI)</span>
+<span class="c1">#</span>
+<span class="c1"># This file is part of baltrad-exchange.</span>
+<span class="c1">#</span>
+<span class="c1"># baltrad-exchange is free software: you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU Lesser General Public License as published by</span>
+<span class="c1"># the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1"># baltrad-exchange is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span>
+<span class="c1"># See the GNU Lesser General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU Lesser General Public License</span>
+<span class="c1"># along with baltrad-exchange.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c1">###############################################################################</span>
+
+<span class="c1">## Decorators are used for modifying, changing, or in other way alter an ODIM H5 file.</span>
+
+<span class="c1">## @file</span>
+<span class="c1">## @author Anders Henja, SMHI</span>
+<span class="c1">## @date 2021-08-30</span>
+<span class="kn">import</span> <span class="nn">importlib</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;bexchange.decorators.decorator&quot;</span><span class="p">)</span>
+
+<span class="c1">##</span>
+<span class="c1"># Decorator</span>
+<div class="viewcode-block" id="decorator"><a class="viewcode-back" href="../../../api/bexchange.decorators.html#bexchange.decorators.decorator.decorator">[docs]</a><span class="k">class</span> <span class="nc">decorator</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A decorator is used for modifying a file before it is distributed. Incomming files are not decorated before they are saved. Instead, if that function is</span>
+<span class="sd">    wanted a copy-publisher should be used instead.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+    
+<div class="viewcode-block" id="decorator.decorate"><a class="viewcode-back" href="../../../api/bexchange.decorators.html#bexchange.decorators.decorator.decorator.decorate">[docs]</a>    <span class="k">def</span> <span class="nf">decorate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ino</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;If this decorator decorates the infile, then a new temporary file will be created. The old temporary file will be removed and</span>
+<span class="sd">        then a new temporary file will be returned.</span>
+<span class="sd">        :param ino: A tempfile.NamedTemporaryFile instance</span>
+<span class="sd">        :returns: A tempfile.NamedTemporaryFile instance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Not implemented&quot;</span><span class="p">)</span></div></div>
+
+<span class="c1">##</span>
+<span class="c1"># Example..</span>
+<div class="viewcode-block" id="example_filter"><a class="viewcode-back" href="../../../api/bexchange.decorators.html#bexchange.decorators.decorator.example_filter">[docs]</a><span class="k">class</span> <span class="nc">example_filter</span><span class="p">(</span><span class="n">decorator</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">example_filter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">arg1</span><span class="o">=</span><span class="n">arg1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">arg2</span><span class="o">=</span><span class="n">arg2</span>
+    
+<div class="viewcode-block" id="example_filter.decorate"><a class="viewcode-back" href="../../../api/bexchange.decorators.html#bexchange.decorators.decorator.example_filter.decorate">[docs]</a>    <span class="k">def</span> <span class="nf">decorate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inf</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">inf</span></div></div>
+
+<span class="c1">##</span>
+<span class="c1"># Manager that handles the creation of decorators from a class name and a number of arguments.</span>
+<span class="c1">#</span>
+<div class="viewcode-block" id="decorator_manager"><a class="viewcode-back" href="../../../api/bexchange.decorators.html#bexchange.decorators.decorator.decorator_manager">[docs]</a><span class="k">class</span> <span class="nc">decorator_manager</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;The manager for creating decorators used within bexchange. If a class extends the decorator</span>
+<span class="sd">    class it can be created by invoking decorator_manager.create(&quot;module....class name&quot;, arguments as a list) </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+    
+<div class="viewcode-block" id="decorator_manager.create"><a class="viewcode-back" href="../../../api/bexchange.decorators.html#bexchange.decorators.decorator.decorator_manager.create">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clz</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates an instance of clz with specified arguments</span>
+<span class="sd">        :param clz: class name specified as &lt;module&gt;.&lt;classname&gt;</span>
+<span class="sd">        :param arguments: a list of arguments that should be used to initialize the class       </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Creating decorator: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">clz</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">clz</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">lastdot</span> <span class="o">=</span> <span class="n">clz</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+            <span class="n">module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">clz</span><span class="p">[:</span><span class="n">lastdot</span><span class="p">])</span>
+            <span class="n">classname</span> <span class="o">=</span> <span class="n">clz</span><span class="p">[</span><span class="n">lastdot</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">classname</span><span class="p">)(</span><span class="o">*</span><span class="n">arguments</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Must specify class as module.class&quot;</span><span class="p">)</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">baltrad-exchange 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">bexchange.decorators.decorator</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    </div>
+  </body>
+</html>

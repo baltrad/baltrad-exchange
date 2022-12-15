@@ -17,6 +17,7 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="bexchange" href="api/modules.html" />
     <link rel="prev" title="Command line tools" href="commandline.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -25,6 +26,12 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="api/modules.html" title="bexchange"
+             accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="commandline.html" title="Command line tools"
              accesskey="P">previous</a> |</li>
@@ -51,7 +58,7 @@ a provider name and provider-specific credentials.</p>
 <p>Provider <em>noauth</em> can be used to specify that no authentication is to be done
 and is equivalent to omitting the <em>Authorization</em> header.</p>
 <section id="crypto-authentication-provider">
-<h3>Crypto authentication provider<a class="headerlink" href="#crypto-authentication-provider" title="Permalink to this headline">¶</a></h3>
+<span id="doc-rest-crypto-authentication"></span><h3>Crypto authentication provider<a class="headerlink" href="#crypto-authentication-provider" title="Permalink to this headline">¶</a></h3>
 <p><strong>crypto</strong> provider can be used to sign and verify HTTP messages using the stock/default
 crypto library provided by for example Cryptodome or any other DSA/RSA-compatible API.</p>
 <p>To sign a message using this method, first a signable string is created
@@ -121,7 +128,7 @@ and should be quite easy to implement in a different language.</p>
 </pre></div>
 </div>
 <section id="keyczar-authentication-provider-legacy">
-<h3>Keyczar authentication provider (<em>Legacy</em>)<a class="headerlink" href="#keyczar-authentication-provider-legacy" title="Permalink to this headline">¶</a></h3>
+<span id="doc-rest-keyczar-authentication"></span><h3>Keyczar authentication provider (<em>Legacy</em>)<a class="headerlink" href="#keyczar-authentication-provider-legacy" title="Permalink to this headline">¶</a></h3>
 <p><strong>keyczar</strong> provider can be used to sign and verify HTTP messages using
 <a class="reference external" href="https://github.com/google/keyczar/">Keyczar</a>. Keyczar has been deprecated and is
 no longer supported. Since baltrad-dex and baltrad-db is still using it
@@ -177,7 +184,7 @@ provider per header:</p>
 <section id="operations">
 <h2>Operations<a class="headerlink" href="#operations" title="Permalink to this headline">¶</a></h2>
 <section id="post-file">
-<h3>Post file<a class="headerlink" href="#post-file" title="Permalink to this headline">¶</a></h3>
+<span id="doc-rest-post-file"></span><h3>Post file<a class="headerlink" href="#post-file" title="Permalink to this headline">¶</a></h3>
 <dl>
 <dt><strong>Request</strong></dt><dd><dl class="field-list simple">
 <dt class="field-odd">Synopsis</dt>
@@ -247,6 +254,9 @@ provider per header:</p>
   <h4>Previous topic</h4>
   <p class="topless"><a href="commandline.html"
                         title="previous chapter">Command line tools</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="api/modules.html"
+                        title="next chapter">bexchange</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -274,6 +284,12 @@ provider per header:</p>
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="api/modules.html" title="bexchange"
+             >next</a> |</li>
         <li class="right" >
           <a href="commandline.html" title="Command line tools"
              >previous</a> |</li>

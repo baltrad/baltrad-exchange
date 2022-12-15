@@ -3,7 +3,7 @@
    contain the root `toctree` directive.
 
 baltrad-exchange documentation index
-==============================
+====================================
 
 .. toctree::
    :maxdepth: 2
@@ -12,7 +12,4 @@ baltrad-exchange documentation index
    userguide
    commandline
    rest
-   
-.. api/index
-   expr
-   tool
+   api/modules
