@@ -1,0 +1,303 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>bexchange.crypto &#8212; baltrad-exchange 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
+    
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">baltrad-exchange 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">bexchange.crypto</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for bexchange.crypto</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (C) 2022- Swedish Meteorological and Hydrological Institute (SMHI)</span>
+<span class="c1">#</span>
+<span class="c1"># This file is part of baltrad-exchange.</span>
+<span class="c1">#</span>
+<span class="c1"># baltrad-exchange is free software: you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU Lesser General Public License as published by</span>
+<span class="c1"># the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1"># baltrad-exchange is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span>
+<span class="c1"># See the GNU Lesser General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU Lesser General Public License</span>
+<span class="c1"># along with baltrad-exchange.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c1">###############################################################################</span>
+<span class="c1">## We wrap standard crypto-stuff to be used for default signature handling so that we can avoid the</span>
+<span class="c1"># hassle when a crypto library is too old and to young. This means that unless otherwise specified the</span>
+<span class="c1"># signature protocol used between nodes should always be DSA 2048</span>
+
+<span class="c1">## @file</span>
+<span class="c1">## @author Anders Henja, SMHI</span>
+<span class="c1">## @date 2022-10-18</span>
+<span class="sd">&quot;&quot;&quot;Internal default private/public key support for managing the signature handling in messages</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">binascii</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">base64</span>
+<span class="kn">import</span> <span class="nn">struct</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">Cryptodome.PublicKey</span> <span class="kn">import</span> <span class="n">DSA</span><span class="p">,</span> <span class="n">RSA</span>
+    <span class="kn">from</span> <span class="nn">Cryptodome.Signature</span> <span class="kn">import</span> <span class="n">DSS</span><span class="p">,</span> <span class="n">pkcs1_15</span>
+    <span class="kn">from</span> <span class="nn">Cryptodome.Hash</span> <span class="kn">import</span> <span class="n">SHA256</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">Crypto.PublicKey</span> <span class="kn">import</span> <span class="n">DSA</span><span class="p">,</span> <span class="n">RSA</span>
+    <span class="kn">from</span> <span class="nn">Crypto.Signature</span> <span class="kn">import</span> <span class="n">DSS</span><span class="p">,</span> <span class="n">PKCS1_v1_5</span>
+    <span class="kn">from</span> <span class="nn">Crypto.Hash</span> <span class="kn">import</span> <span class="n">SHA256</span>
+
+<span class="n">BIG_ENDIAN_INT_SPECIFIER</span> <span class="o">=</span> <span class="s2">&quot;&gt;i&quot;</span>
+<span class="n">BIG_ENDIAN_LONG_LONG_SPECIFIER</span> <span class="o">=</span> <span class="s2">&quot;&gt;q&quot;</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;baltard.exchange.crypto&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="public_key"><a class="viewcode-back" href="../../api/bexchange.crypto.html#bexchange.crypto.public_key">[docs]</a><span class="k">class</span> <span class="nc">public_key</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Public Key</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="sd">        :param key: The crypto key</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">public_key</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_key</span> <span class="o">=</span> <span class="n">key</span>
+
+<div class="viewcode-block" id="public_key.PEM"><a class="viewcode-back" href="../../api/bexchange.crypto.html#bexchange.crypto.public_key.PEM">[docs]</a>    <span class="k">def</span> <span class="nf">PEM</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the public key as PEM-encoded string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_key</span><span class="o">.</span><span class="n">export_key</span><span class="p">(</span><span class="s2">&quot;PEM&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="public_key.algorithm"><a class="viewcode-back" href="../../api/bexchange.crypto.html#bexchange.crypto.public_key.algorithm">[docs]</a>    <span class="k">def</span> <span class="nf">algorithm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_key</span><span class="p">,</span> <span class="n">RSA</span><span class="o">.</span><span class="n">RsaKey</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s2">&quot;rsa&quot;</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_key</span><span class="p">,</span> <span class="n">DSA</span><span class="o">.</span><span class="n">DsaKey</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s2">&quot;dsa&quot;</span>
+
+        <span class="k">return</span> <span class="s2">&quot;unknown&quot;</span></div>
+
+<div class="viewcode-block" id="public_key.exportPEM"><a class="viewcode-back" href="../../api/bexchange.crypto.html#bexchange.crypto.public_key.exportPEM">[docs]</a>    <span class="k">def</span> <span class="nf">exportPEM</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Exports the public key to specified filename</span>
+<span class="sd">        :param filename: The name of the file to be written</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+            <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PEM</span><span class="p">())</span></div>
+    
+<div class="viewcode-block" id="public_key.exportJSON"><a class="viewcode-back" href="../../api/bexchange.crypto.html#bexchange.crypto.public_key.exportJSON">[docs]</a>    <span class="k">def</span> <span class="nf">exportJSON</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">nodename</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Exports the public key to specified filename as a JSON entry</span>
+<span class="sd">        :param filename: The name of the file to be written</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">json</span>
+        <span class="n">keyType</span> <span class="o">=</span> <span class="s2">&quot;dsa&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_key</span><span class="p">,</span> <span class="n">RSA</span><span class="o">.</span><span class="n">RsaKey</span><span class="p">):</span>
+            <span class="n">keyType</span> <span class="o">=</span> <span class="s2">&quot;rsa&quot;</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">({</span><span class="s2">&quot;nodename&quot;</span><span class="p">:</span><span class="n">nodename</span><span class="p">,</span> 
+                       <span class="s2">&quot;creator&quot;</span><span class="p">:</span><span class="s2">&quot;bexchange.crypto&quot;</span><span class="p">,</span>                       
+                       <span class="s2">&quot;key&quot;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">PEM</span><span class="p">(),</span>
+                       <span class="s2">&quot;keyType&quot;</span><span class="p">:</span><span class="n">keyType</span><span class="p">,</span>
+                       <span class="s2">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;public&quot;</span><span class="p">},</span> <span class="n">fp</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="public_key.verify"><a class="viewcode-back" href="../../api/bexchange.crypto.html#bexchange.crypto.public_key.verify">[docs]</a>    <span class="k">def</span> <span class="nf">verify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">signature</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_key</span><span class="p">,</span> <span class="n">RSA</span><span class="o">.</span><span class="n">RsaKey</span><span class="p">):</span>
+            <span class="n">verifier</span> <span class="o">=</span> <span class="n">pkcs1_15</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_key</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">verifier</span> <span class="o">=</span> <span class="n">DSS</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_key</span><span class="p">,</span> <span class="s1">&#39;fips-186-3&#39;</span><span class="p">)</span>
+        <span class="n">hashed</span> <span class="o">=</span> <span class="n">SHA256</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">))</span>
+        <span class="n">uncodedsignature</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">urlsafe_b64decode</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="n">signature</span><span class="p">,</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">))</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">verifier</span><span class="o">.</span><span class="n">verify</span><span class="p">(</span><span class="n">hashed</span><span class="p">,</span> <span class="n">uncodedsignature</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">return</span> <span class="kc">False</span></div></div>
+
+    
+<div class="viewcode-block" id="private_key"><a class="viewcode-back" href="../../api/bexchange.crypto.html#bexchange.crypto.private_key">[docs]</a><span class="k">class</span> <span class="nc">private_key</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="sd">        :param key: The crypto key</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">private_key</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_key</span> <span class="o">=</span> <span class="n">key</span>
+    
+<div class="viewcode-block" id="private_key.publickey"><a class="viewcode-back" href="../../api/bexchange.crypto.html#bexchange.crypto.private_key.publickey">[docs]</a>    <span class="k">def</span> <span class="nf">publickey</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the public key</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">public_key</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_key</span><span class="o">.</span><span class="n">publickey</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="private_key.PEM"><a class="viewcode-back" href="../../api/bexchange.crypto.html#bexchange.crypto.private_key.PEM">[docs]</a>    <span class="k">def</span> <span class="nf">PEM</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the private key as PEM-encoded string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_key</span><span class="o">.</span><span class="n">export_key</span><span class="p">(</span><span class="s2">&quot;PEM&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="private_key.sign"><a class="viewcode-back" href="../../api/bexchange.crypto.html#bexchange.crypto.private_key.sign">[docs]</a>    <span class="k">def</span> <span class="nf">sign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="n">hashed</span> <span class="o">=</span> <span class="n">SHA256</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_key</span><span class="p">,</span> <span class="n">RSA</span><span class="o">.</span><span class="n">RsaKey</span><span class="p">):</span>
+            <span class="n">signer</span> <span class="o">=</span> <span class="n">pkcs1_15</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_key</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">signer</span> <span class="o">=</span> <span class="n">DSS</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_key</span><span class="p">,</span> <span class="s1">&#39;fips-186-3&#39;</span><span class="p">)</span>
+        <span class="n">signature</span> <span class="o">=</span> <span class="n">signer</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">hashed</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">urlsafe_b64encode</span><span class="p">(</span><span class="n">signature</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+    
+<div class="viewcode-block" id="private_key.algorithm"><a class="viewcode-back" href="../../api/bexchange.crypto.html#bexchange.crypto.private_key.algorithm">[docs]</a>    <span class="k">def</span> <span class="nf">algorithm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_key</span><span class="p">,</span> <span class="n">RSA</span><span class="o">.</span><span class="n">RsaKey</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s2">&quot;rsa&quot;</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_key</span><span class="p">,</span> <span class="n">DSA</span><span class="o">.</span><span class="n">DsaKey</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s2">&quot;dsa&quot;</span>
+
+        <span class="k">return</span> <span class="s2">&quot;unknown&quot;</span></div>
+
+<div class="viewcode-block" id="private_key.exportPEM"><a class="viewcode-back" href="../../api/bexchange.crypto.html#bexchange.crypto.private_key.exportPEM">[docs]</a>    <span class="k">def</span> <span class="nf">exportPEM</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Exports the private key to specified filename</span>
+<span class="sd">        :param filename: The name of the file to be written</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+            <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PEM</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="private_key.exportJSON"><a class="viewcode-back" href="../../api/bexchange.crypto.html#bexchange.crypto.private_key.exportJSON">[docs]</a>    <span class="k">def</span> <span class="nf">exportJSON</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">nodename</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">json</span>
+        <span class="sd">&quot;&quot;&quot;Exports the public key to specified filename as a JSON entry</span>
+<span class="sd">        :param filename: The name of the file to be written</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">keyType</span> <span class="o">=</span> <span class="s2">&quot;dsa&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_key</span><span class="p">,</span> <span class="n">RSA</span><span class="o">.</span><span class="n">RsaKey</span><span class="p">):</span>
+            <span class="n">keyType</span> <span class="o">=</span> <span class="s2">&quot;rsa&quot;</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">({</span><span class="s2">&quot;nodename&quot;</span><span class="p">:</span><span class="n">nodename</span><span class="p">,</span>
+                       <span class="s2">&quot;creator&quot;</span><span class="p">:</span><span class="s2">&quot;baltrad.exchange.crypto&quot;</span><span class="p">,</span> 
+                       <span class="s2">&quot;key&quot;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">PEM</span><span class="p">(),</span>
+                       <span class="s2">&quot;keyType&quot;</span><span class="p">:</span><span class="n">keyType</span><span class="p">,</span>        
+                       <span class="s2">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;private&quot;</span><span class="p">},</span> <span class="n">fp</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="create_key"><a class="viewcode-back" href="../../api/bexchange.crypto.html#bexchange.crypto.create_key">[docs]</a><span class="k">def</span> <span class="nf">create_key</span><span class="p">(</span><span class="n">encryption</span><span class="o">=</span><span class="s2">&quot;dsa&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Creates a DSA/RSA 2048 byte private/public key pair</span>
+<span class="sd">    :param encryption: The encryption to use, either dsa or rsa currently</span>
+<span class="sd">    :return the private key from which the public key can be extracted</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">encryption</span> <span class="o">==</span> <span class="s2">&quot;dsa&quot;</span><span class="p">:</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">DSA</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="mi">2048</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">encryption</span> <span class="o">==</span> <span class="s2">&quot;rsa&quot;</span><span class="p">:</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">RSA</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="mi">2048</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Unsupported encryption method&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">private_key</span><span class="p">(</span><span class="n">key</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="import_key"><a class="viewcode-back" href="../../api/bexchange.crypto.html#bexchange.crypto.import_key">[docs]</a><span class="k">def</span> <span class="nf">import_key</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Imports raw keydata and creates a private/public key</span>
+<span class="sd">    :param data: The raw keydata</span>
+<span class="sd">    :return the public/private key</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">DSA</span><span class="o">.</span><span class="n">importKey</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">RSA</span><span class="o">.</span><span class="n">importKey</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Could not import key&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">has_private</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">private_key</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">public_key</span><span class="p">(</span><span class="n">key</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="load_key"><a class="viewcode-back" href="../../api/bexchange.crypto.html#bexchange.crypto.load_key">[docs]</a><span class="k">def</span> <span class="nf">load_key</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Loads a key from specified file. Either the file should be PEM-formatted or else the internally used json file</span>
+<span class="sd">    :param filename: The file to load</span>
+<span class="sd">    :return the public/private key on success</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">json</span>
+            <span class="n">jsond</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;creator&quot;</span> <span class="ow">in</span> <span class="n">jsond</span> <span class="ow">and</span> <span class="n">jsond</span><span class="p">[</span><span class="s2">&quot;creator&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;baltrad.exchange.crypto&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">import_key</span><span class="p">(</span><span class="n">jsond</span><span class="p">[</span><span class="s2">&quot;key&quot;</span><span class="p">])</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">return</span> <span class="n">import_key</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">baltrad-exchange 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">bexchange.crypto</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    </div>
+  </body>
+</html>

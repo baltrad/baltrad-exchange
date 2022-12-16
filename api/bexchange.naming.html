@@ -52,8 +52,130 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </section>
-<section id="bexchange-naming-namer-module">
-<h2>bexchange.naming.namer module<a class="headerlink" href="#bexchange-naming-namer-module" title="Permalink to this headline">¶</a></h2>
+<section id="module-bexchange.naming.namer">
+<span id="bexchange-naming-namer-module"></span><h2>bexchange.naming.namer module<a class="headerlink" href="#module-bexchange.naming.namer" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="bexchange.naming.namer.metadata_namer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.naming.namer.</span></span><span class="sig-name descname"><span class="pre">metadata_namer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tmpl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#metadata_namer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.metadata_namer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.naming.namer.metadata_namer.get_attribute_value">
+<span class="sig-name descname"><span class="pre">get_attribute_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#metadata_namer.get_attribute_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.metadata_namer.get_attribute_value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.naming.namer.metadata_namer.get_source_item">
+<span class="sig-name descname"><span class="pre">get_source_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#metadata_namer.get_source_item"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.metadata_namer.get_source_item" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.naming.namer.metadata_namer.name">
+<span class="sig-name descname"><span class="pre">name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#metadata_namer.name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.metadata_namer.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bexchange.naming.namer.suboperation_helper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.naming.namer.</span></span><span class="sig-name descname"><span class="pre">suboperation_helper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suboperations</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#suboperation_helper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.suboperation_helper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Used to simplify suboperation execution in a name pattern. Each suboperation is implemented as a method in this function and called by eval upon execution</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.naming.namer.suboperation_helper.eval">
+<span class="sig-name descname"><span class="pre">eval</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#suboperation_helper.eval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.suboperation_helper.eval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executes the suboperation(s) on the value in from left to right</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.naming.namer.suboperation_helper.interval_l">
+<span class="sig-name descname"><span class="pre">interval_l</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interval</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#suboperation_helper.interval_l"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.suboperation_helper.interval_l" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assumes that the 2 last characters in eval value is a integer, (00, 01, 10…). Then
+this value is modified to lower part of that interval. For example assuming that it is
+minutes that are evaluated and interval = 15 and limit = 60. Then the following modification will be
+performed.
+00-14 =&gt; 00
+15-29 =&gt; 15
+30-44 =&gt; 30
+45-59 =&gt; 45.
+:param interval: Interval</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.naming.namer.suboperation_helper.interval_u">
+<span class="sig-name descname"><span class="pre">interval_u</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interval</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#suboperation_helper.interval_u"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.suboperation_helper.interval_u" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assumes that the 2 last characters in eval value is a integer, (00, 01, 10…). Then
+this value is modified to upper part of that interval. For example assuming that it is
+minutes that are evaluated and interval = 15 and limit = 60. Then the following modification will be
+performed.
+00-14 =&gt; 15
+15-29 =&gt; 30
+30-44 =&gt; 45
+45-59 =&gt; 00. Since limit is 60, the value will be put back to 0
+:param interval: Interval
+:param limit: Limit for a wrap around</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.naming.namer.suboperation_helper.ltrim">
+<span class="sig-name descname"><span class="pre">ltrim</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#suboperation_helper.ltrim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.suboperation_helper.ltrim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Trims left side of the eval-value from whitespaces
+:return the trimmed string</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.naming.namer.suboperation_helper.replace">
+<span class="sig-name descname"><span class="pre">replace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#suboperation_helper.replace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.suboperation_helper.replace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replace one string with a different one
+:param c1: string to replace
+:param c2: string to replace with
+:return the string that has been modified</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.naming.namer.suboperation_helper.rtrim">
+<span class="sig-name descname"><span class="pre">rtrim</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#suboperation_helper.rtrim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.suboperation_helper.rtrim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Trims right side of the eval-value from whitespaces
+:return the trimmed string</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.naming.namer.suboperation_helper.substring">
+<span class="sig-name descname"><span class="pre">substring</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#suboperation_helper.substring"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.suboperation_helper.substring" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a substring between start &amp; end.
+:param start: The start position
+:param end: End position (if specified, otherwise rest of string)
+:return the substring</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.naming.namer.suboperation_helper.tolower">
+<span class="sig-name descname"><span class="pre">tolower</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#suboperation_helper.tolower"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.suboperation_helper.tolower" title="Permalink to this definition">¶</a></dt>
+<dd><p>Changes to lower case between start and end position. If start and end is given, then
+a subset is changed.
+:param start: Start position
+:param end: End position
+:return new value</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.naming.namer.suboperation_helper.toupper">
+<span class="sig-name descname"><span class="pre">toupper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#suboperation_helper.toupper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.suboperation_helper.toupper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Changes to upper case between start and end position. If start and end is given, then
+a subset is changed.
+:param start: Start position
+:param end: End position
+:return new value</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.naming.namer.suboperation_helper.trim">
+<span class="sig-name descname"><span class="pre">trim</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#suboperation_helper.trim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.suboperation_helper.trim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Trims both ends of the eval-value from whitespaces
+:return the trimmed string</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-bexchange.naming">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-bexchange.naming" title="Permalink to this headline">¶</a></h2>
@@ -71,7 +193,7 @@
   <ul>
 <li><a class="reference internal" href="#">bexchange.naming package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#bexchange-naming-namer-module">bexchange.naming.namer module</a></li>
+<li><a class="reference internal" href="#module-bexchange.naming.namer">bexchange.naming.namer module</a></li>
 <li><a class="reference internal" href="#module-bexchange.naming">Module contents</a></li>
 </ul>
 </li>

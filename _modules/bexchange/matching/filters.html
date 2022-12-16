@@ -1,0 +1,417 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>bexchange.matching.filters &#8212; baltrad-exchange 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">baltrad-exchange 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">bexchange.matching.filters</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for bexchange.matching.filters</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (C) 2021- Swedish Meteorological and Hydrological Institute (SMHI)</span>
+<span class="c1">#</span>
+<span class="c1"># This file is part of baltrad-exchange.</span>
+<span class="c1">#</span>
+<span class="c1"># baltrad-exchange is free software: you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU Lesser General Public License as published by</span>
+<span class="c1"># the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1"># baltrad-exchange is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span>
+<span class="c1"># See the GNU Lesser General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU Lesser General Public License</span>
+<span class="c1"># along with baltrad-exchange.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c1">###############################################################################</span>
+
+<span class="c1">## Filters used to specify the criteria for identifiying file content.</span>
+
+<span class="c1">## @file</span>
+<span class="c1">## @author Anders Henja, SMHI</span>
+<span class="c1">## @date 2021-08-18</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">baltrad.bdbcommon</span> <span class="kn">import</span> <span class="n">oh5</span><span class="p">,</span> <span class="n">expr</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="kn">from</span> <span class="nn">baltrad.bdbcommon.oh5</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Attribute</span><span class="p">,</span>
+    <span class="n">Group</span><span class="p">,</span>
+    <span class="n">Metadata</span><span class="p">,</span>
+    <span class="n">Source</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1">##</span>
+<span class="c1"># All filters should implement this</span>
+<span class="c1">#</span>
+<div class="viewcode-block" id="node_filter"><a class="viewcode-back" href="../../../api/bexchange.matching.html#bexchange.matching.filters.node_filter">[docs]</a><span class="k">class</span> <span class="nc">node_filter</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+    
+<div class="viewcode-block" id="node_filter.to_xpr"><a class="viewcode-back" href="../../../api/bexchange.matching.html#bexchange.matching.filters.node_filter.to_xpr">[docs]</a>    <span class="k">def</span> <span class="nf">to_xpr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Translates a filter object to a list of expression symbols</span>
+<span class="sd">        :return: a list of symbols</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span></div></div>
+
+<span class="c1">##</span>
+<span class="c1"># Attribute filter</span>
+<span class="c1">#</span>
+<div class="viewcode-block" id="attribute_filter"><a class="viewcode-back" href="../../../api/bexchange.matching.html#bexchange.matching.filters.attribute_filter">[docs]</a><span class="k">class</span> <span class="nc">attribute_filter</span><span class="p">(</span><span class="n">node_filter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;an attribute filter that is used to match a specific attribute against a value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="sd">        :param name: The name of the attribute (or a logical name)</span>
+<span class="sd">        :param op: The operation that should be used for comparision</span>
+<span class="sd">        :param t: Type of the value</span>
+<span class="sd">        :param v: The value to compare against</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filter_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_repr</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">operation</span> <span class="o">=</span> <span class="n">op</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value_type</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">v</span>
+
+<div class="viewcode-block" id="attribute_filter.name_repr"><a class="viewcode-back" href="../../../api/bexchange.matching.html#bexchange.matching.filters.attribute_filter.name_repr">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">name_repr</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Name of this class</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;attribute_filter&quot;</span></div>
+
+<div class="viewcode-block" id="attribute_filter.from_value"><a class="viewcode-back" href="../../../api/bexchange.matching.html#bexchange.matching.filters.attribute_filter.from_value">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_value</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">manager</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Used to create an attribute filter from a dictionary containing the information about this attribute filter. Format is:</span>
+<span class="sd">             {&quot;filter_type&quot;: &quot;attribute_filter&quot;, </span>
+<span class="sd">              &quot;name&quot;: &quot;_bdb/source_name&quot;, </span>
+<span class="sd">              &quot;operation&quot;: &quot;in&quot;, </span>
+<span class="sd">              &quot;value_type&quot;: &quot;string&quot;, </span>
+<span class="sd">              &quot;value&quot;: [&quot;sehem&quot;,&quot;seang&quot;]}</span>
+
+<span class="sd">           :param v: The dictionary</span>
+<span class="sd">           :param manager: The manager used to instantiate objects       </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Value to attribute_filter must be a dictionary&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s2">&quot;filter_type&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">v</span> <span class="ow">or</span> \
+            <span class="s2">&quot;name&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">v</span> <span class="ow">or</span> \
+            <span class="s2">&quot;operation&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">v</span> <span class="ow">or</span> \
+            <span class="s2">&quot;value_type&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">v</span> <span class="ow">or</span> \
+            <span class="s2">&quot;value&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incomplete attribute_filter, must contain filter_type, name, operation, value_type and value&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">attribute_filter</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span><span class="n">v</span><span class="p">[</span><span class="s2">&quot;operation&quot;</span><span class="p">],</span><span class="n">v</span><span class="p">[</span><span class="s2">&quot;value_type&quot;</span><span class="p">],</span><span class="n">v</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">])</span></div>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The string representation of this instance.</span>
+<span class="sd">        :return: the string representation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s1">&#39;attribute_filter{&quot;name&quot;:&quot;</span><span class="si">%s</span><span class="s1">&quot;, &quot;operation&quot;:&quot;</span><span class="si">%s</span><span class="s1">&quot;, &quot;value_type&quot;:&quot;</span><span class="si">%s</span><span class="s1">&quot;, &quot;value&quot;:&quot;</span><span class="si">%s</span><span class="s1">&quot;}&#39;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">operation</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+<div class="viewcode-block" id="attribute_filter.to_xpr"><a class="viewcode-back" href="../../../api/bexchange.matching.html#bexchange.matching.filters.attribute_filter.to_xpr">[docs]</a>    <span class="k">def</span> <span class="nf">to_xpr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates an expression to be used when matching against metadata.</span>
+<span class="sd">        :return: The expression</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">expr</span><span class="o">.</span><span class="n">symbol</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">operation</span><span class="p">),</span> <span class="p">[</span><span class="n">expr</span><span class="o">.</span><span class="n">symbol</span><span class="p">(</span><span class="s2">&quot;attr&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_type</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">]</span></div></div>
+
+<span class="c1">##</span>
+<span class="c1"># And filter</span>
+<div class="viewcode-block" id="and_filter"><a class="viewcode-back" href="../../../api/bexchange.matching.html#bexchange.matching.filters.and_filter">[docs]</a><span class="k">class</span> <span class="nc">and_filter</span><span class="p">(</span><span class="n">node_filter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;and filter for combining several different expressions</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">childs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="sd">        :param childs: A list of childs</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filter_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_repr</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">childs</span>
+
+<div class="viewcode-block" id="and_filter.name_repr"><a class="viewcode-back" href="../../../api/bexchange.matching.html#bexchange.matching.filters.and_filter.name_repr">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">name_repr</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the name of this filter</span>
+<span class="sd">        :return: name of this filter</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;and_filter&quot;</span></div>
+
+<div class="viewcode-block" id="and_filter.from_value"><a class="viewcode-back" href="../../../api/bexchange.matching.html#bexchange.matching.filters.and_filter.from_value">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_value</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">manager</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Used to create an and filter from a dictionary containing the information about this and filter. Format is:</span>
+<span class="sd">             {&quot;filter_type&quot;: &quot;and_filter&quot;, </span>
+<span class="sd">              &quot;value&quot;: []}</span>
+
+<span class="sd">           :param value: The dictionary</span>
+<span class="sd">           :param manager: The manager used to instantiate objects       </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">childs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Value to and_filter must be a dict&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="s2">&quot;value&quot;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;value to and_filter must be a list&quot;</span><span class="p">)</span>
+      
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]:</span>
+            <span class="n">childs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">manager</span><span class="o">.</span><span class="n">from_value</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">and_filter</span><span class="p">(</span><span class="n">childs</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The string representation of this instance.</span>
+<span class="sd">        :return: the string representation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="s1">&#39;and_filter[</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">first_added</span><span class="o">=</span><span class="kc">False</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">first_added</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">result</span> <span class="o">+</span> <span class="s2">&quot;,</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">first_added</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span> <span class="o">+</span> <span class="nb">repr</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">]&quot;</span>
+        <span class="k">return</span> <span class="n">result</span>
+    
+<div class="viewcode-block" id="and_filter.to_xpr"><a class="viewcode-back" href="../../../api/bexchange.matching.html#bexchange.matching.filters.and_filter.to_xpr">[docs]</a>    <span class="k">def</span> <span class="nf">to_xpr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates an expression to be used when matching against metadata.</span>
+<span class="sd">        :return: The expression</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">expr</span><span class="o">.</span><span class="n">symbol</span><span class="p">(</span><span class="s2">&quot;and&quot;</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">to_xpr</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">result</span></div></div>
+    
+<span class="c1">##</span>
+<span class="c1"># Or filter</span>
+<div class="viewcode-block" id="or_filter"><a class="viewcode-back" href="../../../api/bexchange.matching.html#bexchange.matching.filters.or_filter">[docs]</a><span class="k">class</span> <span class="nc">or_filter</span><span class="p">(</span><span class="n">node_filter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;or filter for combining several different expressions</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">childs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="sd">        :param childs: A list of childs</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filter_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_repr</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">childs</span>
+
+<div class="viewcode-block" id="or_filter.name_repr"><a class="viewcode-back" href="../../../api/bexchange.matching.html#bexchange.matching.filters.or_filter.name_repr">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">name_repr</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the name of this filter</span>
+<span class="sd">        :return: name of this filter</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;or_filter&quot;</span></div>
+
+<div class="viewcode-block" id="or_filter.from_value"><a class="viewcode-back" href="../../../api/bexchange.matching.html#bexchange.matching.filters.or_filter.from_value">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_value</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">manager</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Used to create an or filter from a dictionary containing the information about this or filter. Format is:</span>
+<span class="sd">             {&quot;filter_type&quot;: &quot;or_filter&quot;, </span>
+<span class="sd">              &quot;value&quot;: [....]}</span>
+
+<span class="sd">           :param value: The dictionary</span>
+<span class="sd">           :param manager: The manager used to instantiate objects       </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">childs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Value to or_filter must be a dict&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="s2">&quot;value&quot;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;value to or_filter must be a list&quot;</span><span class="p">)</span>
+      
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]:</span>
+            <span class="n">childs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">manager</span><span class="o">.</span><span class="n">from_value</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+            
+        <span class="k">return</span> <span class="n">and_filter</span><span class="p">(</span><span class="n">childs</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The string representation of this instance.</span>
+<span class="sd">        :return: the string representation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="s1">&#39;or_filter[</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">first_added</span><span class="o">=</span><span class="kc">False</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">first_added</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">result</span> <span class="o">+</span> <span class="s2">&quot;,</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span> <span class="o">+</span> <span class="nb">repr</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">]&quot;</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+<div class="viewcode-block" id="or_filter.to_xpr"><a class="viewcode-back" href="../../../api/bexchange.matching.html#bexchange.matching.filters.or_filter.to_xpr">[docs]</a>    <span class="k">def</span> <span class="nf">to_xpr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates an expression to be used when matching against metadata.</span>
+<span class="sd">        :return: The expression</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">expr</span><span class="o">.</span><span class="n">symbol</span><span class="p">(</span><span class="s2">&quot;or&quot;</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">to_xpr</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">result</span>    </div></div>
+<span class="c1">##</span>
+<span class="c1"># Not filter</span>
+<div class="viewcode-block" id="not_filter"><a class="viewcode-back" href="../../../api/bexchange.matching.html#bexchange.matching.filters.not_filter">[docs]</a><span class="k">class</span> <span class="nc">not_filter</span><span class="p">(</span><span class="n">node_filter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;not filter for negating an expression</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">child</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="sd">        :param child: A child</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filter_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_repr</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">child</span>
+
+<div class="viewcode-block" id="not_filter.name_repr"><a class="viewcode-back" href="../../../api/bexchange.matching.html#bexchange.matching.filters.not_filter.name_repr">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">name_repr</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the name of this filter</span>
+<span class="sd">        :return: name of this filter</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;not_filter&quot;</span></div>
+
+<div class="viewcode-block" id="not_filter.from_value"><a class="viewcode-back" href="../../../api/bexchange.matching.html#bexchange.matching.filters.not_filter.from_value">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_value</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">manager</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Used to create a not filter from a dictionary containing the information about this not filter. Format is:</span>
+<span class="sd">             {&quot;filter_type&quot;: &quot;not_filter&quot;, </span>
+<span class="sd">              &quot;value&quot;: ...}</span>
+
+<span class="sd">           :param value: The dictionary</span>
+<span class="sd">           :param manager: The manager used to instantiate objects       </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">child</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">not_filter</span><span class="p">(</span><span class="n">manager</span><span class="o">.</span><span class="n">from_value</span><span class="p">(</span><span class="n">child</span><span class="p">))</span></div>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The string representation of this instance.</span>
+<span class="sd">        :return: the string representation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="s1">&#39;not_filter[</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span> <span class="o">+</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">]&quot;</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+<div class="viewcode-block" id="not_filter.to_xpr"><a class="viewcode-back" href="../../../api/bexchange.matching.html#bexchange.matching.filters.not_filter.to_xpr">[docs]</a>    <span class="k">def</span> <span class="nf">to_xpr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates an expression to be used when matching against metadata.</span>
+<span class="sd">        :return: The expression</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">expr</span><span class="o">.</span><span class="n">symbol</span><span class="p">(</span><span class="s2">&quot;not&quot;</span><span class="p">)]</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">to_xpr</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">result</span></div></div>
+    
+<div class="viewcode-block" id="filter_manager"><a class="viewcode-back" href="../../../api/bexchange.matching.html#bexchange.matching.filters.filter_manager">[docs]</a><span class="k">class</span> <span class="nc">filter_manager</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;The filter manager is used to create a filter from a dictionary or json entry</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filters</span><span class="o">=</span><span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filters</span><span class="p">[</span><span class="n">attribute_filter</span><span class="o">.</span><span class="n">name_repr</span><span class="p">()]</span> <span class="o">=</span> <span class="n">attribute_filter</span><span class="o">.</span><span class="n">from_value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filters</span><span class="p">[</span><span class="n">and_filter</span><span class="o">.</span><span class="n">name_repr</span><span class="p">()]</span> <span class="o">=</span> <span class="n">and_filter</span><span class="o">.</span><span class="n">from_value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filters</span><span class="p">[</span><span class="n">or_filter</span><span class="o">.</span><span class="n">name_repr</span><span class="p">()]</span> <span class="o">=</span> <span class="n">or_filter</span><span class="o">.</span><span class="n">from_value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filters</span><span class="p">[</span><span class="n">not_filter</span><span class="o">.</span><span class="n">name_repr</span><span class="p">()]</span> <span class="o">=</span> <span class="n">not_filter</span><span class="o">.</span><span class="n">from_value</span>
+
+<div class="viewcode-block" id="filter_manager.from_value"><a class="viewcode-back" href="../../../api/bexchange.matching.html#bexchange.matching.filters.filter_manager.from_value">[docs]</a>    <span class="k">def</span> <span class="nf">from_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates a object from a dictionary if it can be parsed</span>
+<span class="sd">        :param value: The dictionary. If dictionary contains &quot;filter_type&quot; and &quot;value&quot;, an atempt will be made to create the filter&quot;</span>
+<span class="sd">        :return: A filter object on success</span>
+<span class="sd">        :raise KeyError: If filter_type has not been registered</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;filter_type&quot;</span> <span class="ow">in</span> <span class="n">value</span> <span class="ow">and</span> <span class="s2">&quot;value&quot;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">filters</span><span class="p">[</span><span class="n">value</span><span class="p">[</span><span class="s2">&quot;filter_type&quot;</span><span class="p">]](</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="filter_manager.from_json"><a class="viewcode-back" href="../../../api/bexchange.matching.html#bexchange.matching.filters.filter_manager.from_json">[docs]</a>    <span class="k">def</span> <span class="nf">from_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates a object from a json entry if it can be parsed</span>
+<span class="sd">        :param value: The json entry. If json entry (dictionary) contains &quot;filter_type&quot; and &quot;value&quot;, an atempt will be made to create the filter&quot;</span>
+<span class="sd">        :return: A filter object on success</span>
+<span class="sd">        :raise KeyError: If filter_type has not been registered</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">js</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">parsed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_value</span><span class="p">(</span><span class="n">js</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">parsed</span></div>
+    
+<div class="viewcode-block" id="filter_manager.to_json"><a class="viewcode-back" href="../../../api/bexchange.matching.html#bexchange.matching.filters.filter_manager.to_json">[docs]</a>    <span class="k">def</span> <span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ifilter</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates a json entry from a filter</span>
+<span class="sd">        :param ifilter: The filter to be jsonifyed...</span>
+<span class="sd">        :return: a filter as a json string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">ifilter</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="n">o</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="filter_manager.to_xpr"><a class="viewcode-back" href="../../../api/bexchange.matching.html#bexchange.matching.filters.filter_manager.to_xpr">[docs]</a>    <span class="k">def</span> <span class="nf">to_xpr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ifilter</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates an expression to be used when matching against metadata.</span>
+<span class="sd">        :return: The expression</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ifilter</span><span class="o">.</span><span class="n">to_xpr</span><span class="p">()</span></div></div>
+
+<span class="k">if</span> <span class="vm">__name__</span><span class="o">==</span><span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">mgr</span> <span class="o">=</span> <span class="n">filter_manager</span><span class="p">()</span>
+    <span class="c1">#filter = and_filter([attribute_filter(&quot;what/quantity&quot;,&quot;in&quot;,&quot;STRING&quot;,&quot;DBZH,TH&quot;)])</span>
+    <span class="nb">filter</span> <span class="o">=</span> <span class="n">and_filter</span><span class="p">([</span>
+        <span class="n">attribute_filter</span><span class="p">(</span><span class="s2">&quot;_bdb/source_name&quot;</span><span class="p">,</span><span class="s2">&quot;=&quot;</span><span class="p">,</span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="s2">&quot;sehem&quot;</span><span class="p">),</span>
+        <span class="n">attribute_filter</span><span class="p">(</span><span class="s2">&quot;/what/object&quot;</span><span class="p">,</span><span class="s2">&quot;=&quot;</span><span class="p">,</span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="s2">&quot;PVOL&quot;</span><span class="p">)</span>
+    <span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="nb">filter</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="nb">filter</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="n">o</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">mgr</span><span class="o">.</span><span class="n">to_xpr</span><span class="p">(</span><span class="nb">filter</span><span class="p">))</span>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">baltrad-exchange 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">bexchange.matching.filters</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    </div>
+  </body>
+</html>

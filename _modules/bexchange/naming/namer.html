@@ -1,0 +1,362 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>bexchange.naming.namer &#8212; baltrad-exchange 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">baltrad-exchange 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">bexchange.naming.namer</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for bexchange.naming.namer</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (C) 2021- Swedish Meteorological and Hydrological Institute (SMHI)</span>
+<span class="c1">#</span>
+<span class="c1"># This file is part of baltrad-exchange.</span>
+<span class="c1">#</span>
+<span class="c1"># baltrad-exchange is free software: you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU Lesser General Public License as published by</span>
+<span class="c1"># the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1"># baltrad-exchange is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span>
+<span class="c1"># See the GNU Lesser General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU Lesser General Public License</span>
+<span class="c1"># along with baltrad-exchange.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c1">###############################################################################</span>
+
+<span class="c1">## Functionality to generate specific names from metadata</span>
+
+<span class="c1">## @file</span>
+<span class="c1">## @author Anders Henja, SMHI</span>
+<span class="c1">## @date 2021-08-18</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">baltrad.bdbcommon.oh5</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Source</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">$(?:&quot;</span> <span class="o">+</span> <span class="s2">&quot;(</span><span class="se">\\</span><span class="s2">$)|&quot;</span> <span class="o">+</span>
+                     <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">{([_/a-z][_:/a-z0-9 #@+</span><span class="se">\\</span><span class="s2">-</span><span class="se">\\</span><span class="s2">.%]*)</span><span class="se">\\</span><span class="s2">}((.(tolower|toupper|substring|trim|rtrim|ltrim|interval_u|interval_l|replace)(</span><span class="se">\\</span><span class="s2">((([0-9]+|&#39;[^&#39;]*&#39;)(,([0-9]+|&#39;[^&#39;]*&#39;))?)?</span><span class="se">\\</span><span class="s2">)))*)&quot;</span> <span class="o">+</span>
+                     <span class="s2">&quot;)&quot;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
+
+<span class="n">SUBOP_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;.(tolower|toupper|substring|trim|rtrim|ltrim|interval_u|interval_l|replace)(</span><span class="se">\\</span><span class="s2">((([0-9]+|&#39;[^&#39;]*&#39;)(,([0-9]+|&#39;[^&#39;]*&#39;))?)?</span><span class="se">\\</span><span class="s2">))&quot;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
+
+<span class="n">BALTRAD_DATETIME_PATTERN</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;^_baltrad/datetime(:[A-Za-z0-9</span><span class="se">\\</span><span class="s2">-/: _%]+)?$&quot;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
+
+<span class="n">BALTRAD_DATETIMEU_PATTERN</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;^_baltrad/datetime_u:([0-9]</span><span class="si">{2}</span><span class="s2">)(:[A-Za-z0-9</span><span class="se">\\</span><span class="s2">-/: _%]+)?$&quot;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
+
+<span class="n">BALTRAD_DATETIMEL_PATTERN</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;^_baltrad/datetime_l:([0-9]</span><span class="si">{2}</span><span class="s2">)(:[A-Za-z0-9</span><span class="se">\\</span><span class="s2">-/: _%]+)?$&quot;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
+
+<div class="viewcode-block" id="suboperation_helper"><a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.suboperation_helper">[docs]</a><span class="k">class</span> <span class="nc">suboperation_helper</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Used to simplify suboperation execution in a name pattern. Each suboperation is implemented as a method in this function and called by eval upon execution</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">suboperations</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">suboperations</span> <span class="o">=</span> <span class="n">suboperations</span>
+
+<div class="viewcode-block" id="suboperation_helper.eval"><a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.suboperation_helper.eval">[docs]</a>    <span class="k">def</span> <span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Executes the suboperation(s) on the value in from left to right</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">SUBOP_PATTERN</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">suboperations</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">m</span><span class="p">:</span>
+            <span class="n">span</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">span</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">suboperations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">suboperations</span><span class="p">[</span><span class="n">span</span><span class="p">[</span><span class="mi">1</span><span class="p">]:]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="s2">&quot;self</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">SUBOP_PATTERN</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">suboperations</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span></div>
+    
+<div class="viewcode-block" id="suboperation_helper.tolower"><a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.suboperation_helper.tolower">[docs]</a>    <span class="k">def</span> <span class="nf">tolower</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Changes to lower case between start and end position. If start and end is given, then </span>
+<span class="sd">        a subset is changed.</span>
+<span class="sd">        :param start: Start position</span>
+<span class="sd">        :param end: End position</span>
+<span class="sd">        :return new value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">start</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">end</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">start</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">start</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">start</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="p">[</span><span class="n">start</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="p">[</span><span class="n">start</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">start</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">start</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="p">)</span> <span class="ow">and</span> <span class="n">end</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">end</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="p">)</span> <span class="ow">and</span> <span class="n">end</span> <span class="o">&gt;</span> <span class="n">start</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">start</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="p">[</span><span class="n">end</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="suboperation_helper.toupper"><a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.suboperation_helper.toupper">[docs]</a>    <span class="k">def</span> <span class="nf">toupper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Changes to upper case between start and end position. If start and end is given, then </span>
+<span class="sd">        a subset is changed.</span>
+<span class="sd">        :param start: Start position</span>
+<span class="sd">        :param end: End position</span>
+<span class="sd">        :return new value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">start</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">end</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">start</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">start</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">start</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="p">[</span><span class="n">start</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="p">[</span><span class="n">start</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">start</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">start</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="p">)</span> <span class="ow">and</span> <span class="n">end</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">end</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="p">)</span> <span class="ow">and</span> <span class="n">end</span> <span class="o">&gt;</span> <span class="n">start</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">start</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="p">[</span><span class="n">end</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="suboperation_helper.substring"><a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.suboperation_helper.substring">[docs]</a>    <span class="k">def</span> <span class="nf">substring</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">start</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a substring between start &amp; end.</span>
+<span class="sd">        :param start: The start position</span>
+<span class="sd">        :param end: End position (if specified, otherwise rest of string)</span>
+<span class="sd">        :return the substring </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">end</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="p">[</span><span class="n">start</span><span class="p">:]</span></div>
+
+<div class="viewcode-block" id="suboperation_helper.replace"><a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.suboperation_helper.replace">[docs]</a>    <span class="k">def</span> <span class="nf">replace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Replace one string with a different one</span>
+<span class="sd">        :param c1: string to replace</span>
+<span class="sd">        :param c2: string to replace with</span>
+<span class="sd">        :return the string that has been modified</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">c1</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">):</span>
+            <span class="n">c1</span><span class="o">=</span><span class="n">c1</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="k">if</span> <span class="n">c1</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">):</span>
+            <span class="n">c1</span><span class="o">=</span><span class="n">c1</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">c2</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">):</span>
+            <span class="n">c2</span><span class="o">=</span><span class="n">c2</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="k">if</span> <span class="n">c2</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">):</span>
+            <span class="n">c2</span><span class="o">=</span><span class="n">c2</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="n">x</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="suboperation_helper.trim"><a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.suboperation_helper.trim">[docs]</a>    <span class="k">def</span> <span class="nf">trim</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Trims both ends of the eval-value from whitespaces</span>
+<span class="sd">        :return the trimmed string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="suboperation_helper.rtrim"><a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.suboperation_helper.rtrim">[docs]</a>    <span class="k">def</span> <span class="nf">rtrim</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Trims right side of the eval-value from whitespaces</span>
+<span class="sd">        :return the trimmed string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="suboperation_helper.ltrim"><a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.suboperation_helper.ltrim">[docs]</a>    <span class="k">def</span> <span class="nf">ltrim</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Trims left side of the eval-value from whitespaces</span>
+<span class="sd">        :return the trimmed string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="suboperation_helper.interval_u"><a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.suboperation_helper.interval_u">[docs]</a>    <span class="k">def</span> <span class="nf">interval_u</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interval</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Assumes that the 2 last characters in eval value is a integer, (00, 01, 10...). Then</span>
+<span class="sd">        this value is modified to upper part of that interval. For example assuming that it is</span>
+<span class="sd">        minutes that are evaluated and interval = 15 and limit = 60. Then the following modification will be</span>
+<span class="sd">        performed.</span>
+<span class="sd">        00-14 =&gt; 15</span>
+<span class="sd">        15-29 =&gt; 30</span>
+<span class="sd">        30-44 =&gt; 45</span>
+<span class="sd">        45-59 =&gt; 00. Since limit is 60, the value will be put back to 0</span>
+<span class="sd">        :param interval: Interval</span>
+<span class="sd">        :param limit: Limit for a wrap around</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">minute</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span>
+        <span class="n">period</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">minute</span><span class="o">/</span><span class="n">interval</span><span class="p">)</span>
+        <span class="n">nminute</span> <span class="o">=</span> <span class="p">(</span><span class="n">period</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="nb">int</span><span class="p">(</span><span class="n">interval</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">nminute</span> <span class="o">&gt;=</span> <span class="n">limit</span><span class="p">:</span>
+            <span class="n">nminute</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">%02d</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">nminute</span></div>
+
+<div class="viewcode-block" id="suboperation_helper.interval_l"><a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.suboperation_helper.interval_l">[docs]</a>    <span class="k">def</span> <span class="nf">interval_l</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interval</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Assumes that the 2 last characters in eval value is a integer, (00, 01, 10...). Then</span>
+<span class="sd">        this value is modified to lower part of that interval. For example assuming that it is</span>
+<span class="sd">        minutes that are evaluated and interval = 15 and limit = 60. Then the following modification will be</span>
+<span class="sd">        performed.</span>
+<span class="sd">        00-14 =&gt; 00</span>
+<span class="sd">        15-29 =&gt; 15</span>
+<span class="sd">        30-44 =&gt; 30</span>
+<span class="sd">        45-59 =&gt; 45.</span>
+<span class="sd">        :param interval: Interval</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">minute</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span>
+        <span class="n">period</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">minute</span><span class="o">/</span><span class="n">interval</span><span class="p">)</span>
+        <span class="n">nminute</span> <span class="o">=</span> <span class="n">period</span><span class="o">*</span><span class="nb">int</span><span class="p">(</span><span class="n">interval</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">%02d</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">nminute</span></div></div>
+
+<span class="c1">##</span>
+<span class="c1"># Used to create file names from metadata associated with a ODIM h5 file.</span>
+<div class="viewcode-block" id="metadata_namer"><a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.metadata_namer">[docs]</a><span class="k">class</span> <span class="nc">metadata_namer</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tmpl</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tmpl</span> <span class="o">=</span> <span class="n">tmpl</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">suboperations</span><span class="o">=</span><span class="p">{}</span>
+        <span class="c1">#self.suboperations[&quot;tolower&quot;] = self.tolower</span>
+    
+<div class="viewcode-block" id="metadata_namer.name"><a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.metadata_namer.name">[docs]</a>    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+        <span class="n">buffer</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
+        
+        <span class="n">parsed_tmpl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmpl</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">PATTERN</span><span class="p">,</span> <span class="n">parsed_tmpl</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">m</span><span class="p">:</span>
+            <span class="n">span</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">span</span><span class="p">()</span> <span class="c1"># Keeps track on where in file this pattern is matching</span>
+            <span class="n">placeholder</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+            <span class="n">suboperation</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+            
+            <span class="c1"># This is the beginning of the name until the first match</span>
+            <span class="n">buffer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">parsed_tmpl</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">span</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+            <span class="k">if</span> <span class="n">placeholder</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_baltrad/source:&quot;</span><span class="p">):</span>
+                <span class="n">replacement_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_source_item</span><span class="p">(</span><span class="n">placeholder</span><span class="p">[</span><span class="mi">16</span><span class="p">:],</span> <span class="n">Source</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">meta</span><span class="o">.</span><span class="n">bdb_source</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">placeholder</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_baltrad/source_name&quot;</span><span class="p">):</span>
+                <span class="n">replacement_value</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">bdb_source_name</span>
+            <span class="k">elif</span> <span class="n">placeholder</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;what/source:&quot;</span><span class="p">):</span>
+                <span class="n">replacement_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_source_item</span><span class="p">(</span><span class="n">placeholder</span><span class="p">[</span><span class="mi">12</span><span class="p">:],</span> <span class="n">Source</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">meta</span><span class="o">.</span><span class="n">what_source</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">placeholder</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;/what/source:&quot;</span><span class="p">):</span>
+                <span class="n">replacement_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_source_item</span><span class="p">(</span><span class="n">placeholder</span><span class="p">[</span><span class="mi">13</span><span class="p">:],</span> <span class="n">Source</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">meta</span><span class="o">.</span><span class="n">what_source</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">BALTRAD_DATETIME_PATTERN</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">placeholder</span><span class="p">):</span>
+                <span class="n">m</span> <span class="o">=</span> <span class="n">BALTRAD_DATETIME_PATTERN</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">placeholder</span><span class="p">)</span>
+                <span class="n">t</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">t</span> <span class="ow">and</span> <span class="n">t</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">t</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">t</span><span class="p">:</span>
+                    <span class="n">t</span> <span class="o">=</span> <span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">%H%M%S&quot;</span>
+                <span class="n">dt</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">(</span><span class="n">meta</span><span class="o">.</span><span class="n">what_date</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_date</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_date</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_time</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_time</span><span class="o">.</span><span class="n">minute</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_time</span><span class="o">.</span><span class="n">second</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">replacement_value</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">BALTRAD_DATETIMEU_PATTERN</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">placeholder</span><span class="p">):</span>
+                <span class="n">m</span> <span class="o">=</span> <span class="n">BALTRAD_DATETIMEU_PATTERN</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">placeholder</span><span class="p">)</span>
+                <span class="n">i</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+                <span class="n">t</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">t</span> <span class="ow">and</span> <span class="n">t</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">t</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">t</span><span class="p">:</span>
+                    <span class="n">t</span> <span class="o">=</span> <span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">%H%M%S&quot;</span>
+                    
+                <span class="n">dt</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">(</span><span class="n">meta</span><span class="o">.</span><span class="n">what_date</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_date</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_date</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_time</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_time</span><span class="o">.</span><span class="n">minute</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_time</span><span class="o">.</span><span class="n">second</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">period</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">meta</span><span class="o">.</span><span class="n">what_time</span><span class="o">.</span><span class="n">minute</span><span class="o">/</span><span class="n">i</span><span class="p">)</span>
+                <span class="n">nminute</span> <span class="o">=</span> <span class="p">(</span><span class="n">period</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="n">dt</span> <span class="o">=</span> <span class="n">dt</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="n">nminute</span> <span class="o">-</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_time</span><span class="o">.</span><span class="n">minute</span><span class="p">)</span>
+                    
+                <span class="n">replacement_value</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">BALTRAD_DATETIMEL_PATTERN</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">placeholder</span><span class="p">):</span>
+                <span class="n">m</span> <span class="o">=</span> <span class="n">BALTRAD_DATETIMEL_PATTERN</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">placeholder</span><span class="p">)</span>
+                <span class="n">i</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+                <span class="n">t</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">t</span> <span class="ow">and</span> <span class="n">t</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">t</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">t</span><span class="p">:</span>
+                    <span class="n">t</span> <span class="o">=</span> <span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">%H%M%S&quot;</span>
+                    
+                <span class="n">dt</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">(</span><span class="n">meta</span><span class="o">.</span><span class="n">what_date</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_date</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_date</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_time</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_time</span><span class="o">.</span><span class="n">minute</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_time</span><span class="o">.</span><span class="n">second</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">nminute</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_time</span><span class="o">.</span><span class="n">minute</span><span class="o">%</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="n">dt</span> <span class="o">=</span> <span class="n">dt</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="n">nminute</span><span class="p">)</span>
+                    
+                <span class="n">replacement_value</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">replacement_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_attribute_value</span><span class="p">(</span><span class="n">placeholder</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">replacement_value</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">suboperation</span><span class="p">:</span>
+                    <span class="n">replacement_value</span> <span class="o">=</span> <span class="n">suboperation_helper</span><span class="p">(</span><span class="n">replacement_value</span><span class="p">,</span><span class="n">suboperation</span><span class="p">)</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">replacement_value</span> <span class="o">=</span> <span class="n">parsed_tmpl</span><span class="p">[</span><span class="n">span</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="n">span</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">replacement_value</span><span class="p">,</span><span class="nb">float</span><span class="p">):</span>
+                <span class="n">buffer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%g</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">replacement_value</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">replacement_value</span><span class="p">,</span><span class="nb">int</span><span class="p">):</span>
+                <span class="n">buffer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">replacement_value</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">buffer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">replacement_value</span><span class="p">)</span>
+            <span class="n">parsed_tmpl</span> <span class="o">=</span> <span class="n">parsed_tmpl</span><span class="p">[</span><span class="n">span</span><span class="p">[</span><span class="mi">1</span><span class="p">]:]</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">PATTERN</span><span class="p">,</span> <span class="n">parsed_tmpl</span><span class="p">)</span>
+        <span class="n">buffer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">parsed_tmpl</span><span class="p">)</span>   
+        <span class="k">return</span> <span class="n">buffer</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span></div>
+    
+<div class="viewcode-block" id="metadata_namer.get_attribute_value"><a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.metadata_namer.get_attribute_value">[docs]</a>    <span class="k">def</span> <span class="nf">get_attribute_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">meta</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">except</span> <span class="ne">LookupError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="metadata_namer.get_source_item"><a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.metadata_namer.get_source_item">[docs]</a>    <span class="k">def</span> <span class="nf">get_source_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">source</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">source</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">source</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="k">return</span> <span class="s2">&quot;undefined&quot;</span></div></div>
+
+<span class="k">if</span> <span class="vm">__name__</span><span class="o">==</span><span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">baltrad.bdbcommon</span> <span class="kn">import</span> <span class="n">oh5</span>
+    <span class="c1">#meta = oh5.Metadata.from_file(&quot;sehem_scan_20200414T160000Z.h5&quot;)</span>
+    <span class="n">meta</span> <span class="o">=</span> <span class="n">oh5</span><span class="o">.</span><span class="n">Metadata</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;/projects/baltrad/baltrad-exchange/perf_test/scans/Z_SCAN_C_ESWI_20101016080000_sease_000000.h5&quot;</span><span class="p">)</span>
+    <span class="c1">#namer = metadata_namer(&quot;${_baltrad/datetime:%Y/%m/%d/%H/%M}.interval_u(15)/scan_${what/source:NOD}_${/what/date}T${/what/time}.interval_l(15)Z_${/what/object}.tolower().toupper(0)_${/dataset1/data1/what/quantity}_${_baltrad/datetime:%Y%m%d%H%M}.interval_u(15).h5&quot;)</span>
+    <span class="n">namer</span> <span class="o">=</span> <span class="n">metadata_namer</span><span class="p">(</span><span class="s2">&quot;${_baltrad/datetime:%Y/%m/</span><span class="si">%d</span><span class="s2">/%H/%M}.interval_u(15)/scan_${_bdb/source_name}_${/what/date}T${/what/time}.interval_l(15)Z_${/what/object}.tolower().toupper(0)_${/dataset1/data1/what/quantity}_${_baltrad/datetime:%Y%m</span><span class="si">%d</span><span class="s2">%H%M}.interval_u(15).h5&quot;</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="n">namer</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="n">meta</span><span class="p">))</span>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">baltrad-exchange 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">bexchange.naming.namer</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    </div>
+  </body>
+</html>
