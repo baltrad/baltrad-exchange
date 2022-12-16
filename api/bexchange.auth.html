@@ -78,6 +78,9 @@
 <li><p><strong>credentials</strong> – implementation specific credential string</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if success, otherwise False</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -110,8 +113,8 @@
 <dt class="sig sig-object py" id="bexchange.auth.coreauth.CryptoAuth">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.auth.coreauth.</span></span><span class="sig-name descname"><span class="pre">CryptoAuth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key_root</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/auth/coreauth.html#CryptoAuth"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.auth.coreauth.CryptoAuth" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#bexchange.auth.coreauth.Auth" title="bexchange.auth.coreauth.Auth"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.auth.coreauth.Auth</span></code></a></p>
-<p>Provide authentication through the internal crypto</p>
-<p>registered as <em>exchange-crypto</em> in <em>baltrad.bdbserver.web.auth</em> entry-point</p>
+<p>Provide authentication through the internal crypto
+registered as <em>exchange-crypto</em> in <em>baltrad.bdbserver.web.auth</em> entry-point</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.auth.coreauth.CryptoAuth.add_key">
 <span class="sig-name descname"><span class="pre">add_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/auth/coreauth.html#CryptoAuth.add_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.auth.coreauth.CryptoAuth.add_key" title="Permalink to this definition">¶</a></dt>
@@ -149,6 +152,9 @@
 <li><p><strong>credentials</strong> – implementation specific credential string</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if success, otherwise False</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -182,12 +188,31 @@ lookup.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.auth.coreauth.CryptoAuth.getPublicKey">
 <span class="sig-name descname"><span class="pre">getPublicKey</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/auth/coreauth.html#CryptoAuth.getPublicKey"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.auth.coreauth.CryptoAuth.getPublicKey" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns the public key associated with the nodename</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>nodename</strong> – Node name</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the public key</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.auth.coreauth.CryptoAuth.setPrivateKey">
 <span class="sig-name descname"><span class="pre">setPrivateKey</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">privkey</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/auth/coreauth.html#CryptoAuth.setPrivateKey"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.auth.coreauth.CryptoAuth.setPrivateKey" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Sets the private key (and associates it with a nodename) so that
+it is possible to setup the private key from the properties-file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>privkey</strong> – Path to the private key</p></li>
+<li><p><strong>nodename</strong> – The nodename that should be associated with the private key</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -195,12 +220,12 @@ lookup.</p>
 <dt class="sig sig-object py" id="bexchange.auth.coreauth.NoAuth">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.auth.coreauth.</span></span><span class="sig-name descname"><span class="pre">NoAuth</span></span><a class="reference internal" href="../_modules/bexchange/auth/coreauth.html#NoAuth"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.auth.coreauth.NoAuth" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#bexchange.auth.coreauth.Auth" title="bexchange.auth.coreauth.Auth"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.auth.coreauth.Auth</span></code></a></p>
-<p>No authentication, allow everyone</p>
-<p>registered as <em>noauth</em> in <em>baltrad.bdbserver.web.auth</em> entry-point</p>
+<p>No authentication, allow everyone
+registered as <em>noauth</em> in <em>baltrad.bdbserver.web.auth</em> entry-point</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.auth.coreauth.NoAuth.authenticate">
 <span class="sig-name descname"><span class="pre">authenticate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">req</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">credentials</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/auth/coreauth.html#NoAuth.authenticate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.auth.coreauth.NoAuth.authenticate" title="Permalink to this definition">¶</a></dt>
-<dd><p>authenticate the request with provided crendentials</p>
+<dd><p>Validates the content in the request against the credentials.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -208,16 +233,22 @@ lookup.</p>
 <li><p><strong>credentials</strong> – implementation specific credential string</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>always True</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.auth.coreauth.NoAuth.from_conf">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_conf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/auth/coreauth.html#NoAuth.from_conf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.auth.coreauth.NoAuth.from_conf" title="Permalink to this definition">¶</a></dt>
-<dd><p>construct an instance from configuration</p>
+<dd><p>Creates a NoAuth instance from configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>conf</strong> – a <a class="reference internal" href="bexchange.html#bexchange.config.Properties" title="bexchange.config.Properties"><code class="xref py py-class docutils literal notranslate"><span class="pre">Properties</span></code></a> instance</p>
+<dd class="field-odd"><p><strong>conf</strong> – the configuration entry</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a NoAuth instance.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -231,9 +262,13 @@ lookup.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.auth.coreauth.auth_manager.add_key_config">
 <span class="sig-name descname"><span class="pre">add_key_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/auth/coreauth.html#auth_manager.add_key_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.auth.coreauth.auth_manager.add_key_config" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds a key from key config
-:param conf: The key config
-:return the node name this key should be associated with</p>
+<dd><p>Adds a key from key config</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>conf</strong> – The key config</p>
+</dd>
+</dl>
+<p>:return the node name this key should be associated with</p>
 </dd></dl>
 
 <dl class="py method">
@@ -305,17 +340,40 @@ header</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.auth.coreauth.auth_manager.get_private_key">
 <span class="sig-name descname"><span class="pre">get_private_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/auth/coreauth.html#auth_manager.get_private_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.auth.coreauth.auth_manager.get_private_key" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns the private key for the provided type</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>_type</strong> – The encryption type</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the private key</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.auth.coreauth.auth_manager.get_provider">
 <span class="sig-name descname"><span class="pre">get_provider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/auth/coreauth.html#auth_manager.get_provider"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.auth.coreauth.auth_manager.get_provider" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns the specified provider</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> – The name of the provider</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the provider for specified name</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.auth.coreauth.auth_manager.get_providers">
 <span class="sig-name descname"><span class="pre">get_providers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/auth/coreauth.html#auth_manager.get_providers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.auth.coreauth.auth_manager.get_providers" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>all providers</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -364,6 +422,9 @@ header</p>
 <li><p><strong>req</strong> (<a class="reference internal" href="bexchange.web.html#bexchange.web.util.Request" title="bexchange.web.util.Request"><code class="xref py py-class docutils literal notranslate"><span class="pre">Request</span></code></a>) – the request to authenticate</p></li>
 <li><p><strong>credentials</strong> – implementation specific credential string</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if success, otherwise False</p>
 </dd>
 </dl>
 </dd></dl>
@@ -442,6 +503,9 @@ lookup.</p>
 <li><p><strong>req</strong> (<a class="reference internal" href="bexchange.web.html#bexchange.web.util.Request" title="bexchange.web.util.Request"><code class="xref py py-class docutils literal notranslate"><span class="pre">Request</span></code></a>) – the request to authenticate</p></li>
 <li><p><strong>credentials</strong> – implementation specific credential string</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if success, otherwise False</p>
 </dd>
 </dl>
 </dd></dl>
