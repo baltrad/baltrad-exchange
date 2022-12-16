@@ -34,6 +34,8 @@ autosummary_generate = True
 
 autodoc_default_flags = ['members', 'undoc-members']
 
+autodoc_mock_imports=['baltrad']
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
