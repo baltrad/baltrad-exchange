@@ -40,6 +40,8 @@ class AuthError(Exception):
 
 class auth_manager(object):
     def __init__(self):
+        """Constructor
+        """
         self._providers = {}
 
     def authenticate(self, req):
@@ -153,6 +155,7 @@ class auth_manager(object):
 
     def add_key_config(self, conf):
         """Adds a key from key config
+
         :param conf: The key config
         :return the node name this key should be associated with
         """ 
@@ -161,12 +164,25 @@ class auth_manager(object):
         return None
 
     def get_provider(self, name):
+        """Returns the specified provider
+
+        :param name: The name of the provider
+        :return: the provider for specified name
+        """
         return self._providers[name]
 
     def get_private_key(self, _type):
+        """Returns the private key for the provided type
+
+        :param _type: The encryption type
+        :return: the private key
+        """
         return self._privatekeys[_type]
 
     def get_providers(self):
+        """
+        :return: all providers
+        """
         return self._providers
 
 class Auth(object):
@@ -181,6 +197,7 @@ class Auth(object):
         :param req: the request to authenticate
         :type req: :class:`~.util.Request`
         :param credentials: implementation specific credential string
+        :return: True if success, otherwise False
         """
         raise NotImplementedError()
 
@@ -210,19 +227,29 @@ class Auth(object):
     
 class NoAuth(Auth):
     """No authentication, allow everyone
-
     registered as *noauth* in *baltrad.bdbserver.web.auth* entry-point
     """
     def authenticate(self, req, credentials):
+        """Validates the content in the request against the credentials.
+
+        :param req: the request to authenticate
+        :type req: :class:`~.util.Request`
+        :param credentials: implementation specific credential string
+        :return: always True
+        """
         return True
     
     @classmethod
     def from_conf(cls, conf):
+        """Creates a NoAuth instance from configuration.
+
+        :param conf: the configuration entry
+        :return: a NoAuth instance.
+        """
         return NoAuth()
 
 class CryptoAuth(Auth):
     """Provide authentication through the internal crypto
-
         registered as *exchange-crypto* in *baltrad.bdbserver.web.auth* entry-point
     """
     def __init__(self, key_root):
@@ -236,6 +263,12 @@ class CryptoAuth(Auth):
         self._verifiers = {}
     
     def setPrivateKey(self, privkey, nodename=None):
+        """Sets the private key (and associates it with a nodename) so that
+        it is possible to setup the private key from the properties-file.
+
+        :param privkey: Path to the private key
+        :param nodename: The nodename that should be associated with the private key
+        """
         if privkey and not os.path.exists(privkey):
             raise Exception("If providing a private key it must point at a valid file")
         self._private_key = privkey
@@ -246,6 +279,11 @@ class CryptoAuth(Auth):
                 self._verifiers[nodename] = privkey.publickey()
 
     def getPublicKey(self, nodename):
+        """Returns the public key associated with the nodename
+        
+        :param nodename: Node name
+        :return: the public key
+        """
         return self._verifiers[nodename]
 
     def add_key_config(self, conf):
