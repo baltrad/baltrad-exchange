@@ -1,0 +1,627 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>bexchange.net.senders &#8212; baltrad-exchange 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">baltrad-exchange 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">bexchange.net.senders</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for bexchange.net.senders</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (C) 2021- Swedish Meteorological and Hydrological Institute (SMHI)</span>
+<span class="c1">#</span>
+<span class="c1"># This file is part of baltrad-exchange.</span>
+<span class="c1">#</span>
+<span class="c1"># baltrad-exchange is free software: you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU Lesser General Public License as published by</span>
+<span class="c1"># the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1"># baltrad-exchange is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span>
+<span class="c1"># See the GNU Lesser General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU Lesser General Public License</span>
+<span class="c1"># along with baltrad-exchange.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c1">###############################################################################</span>
+
+<span class="c1">## Provides support for creating different type of senders</span>
+
+<span class="c1">## @file</span>
+<span class="c1">## @author Anders Henja, SMHI</span>
+<span class="c1">## @date 2021-12-01</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">abstractmethod</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">importlib</span>
+<span class="kn">import</span> <span class="nn">urllib.parse</span> <span class="k">as</span> <span class="nn">urlparse</span>
+<span class="kn">import</span> <span class="nn">http.client</span> <span class="k">as</span> <span class="nn">httplib</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">base64</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">stat</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">import</span> <span class="nn">paramiko</span>
+<span class="kn">import</span> <span class="nn">ftplib</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">from</span> <span class="nn">paramiko</span> <span class="kn">import</span> <span class="n">SSHClient</span>
+<span class="kn">from</span> <span class="nn">scp</span> <span class="kn">import</span> <span class="n">SCPClient</span>
+
+<span class="kn">from</span> <span class="nn">bexchange.naming.namer</span> <span class="kn">import</span> <span class="n">metadata_namer</span>
+<span class="kn">from</span> <span class="nn">bexchange.client</span> <span class="kn">import</span> <span class="n">rest</span>
+<span class="kn">from</span> <span class="nn">bexchange</span> <span class="kn">import</span> <span class="n">crypto</span>
+<span class="kn">from</span> <span class="nn">bexchange.crypto.keyczarcrypto</span> <span class="kn">import</span> <span class="n">keyczar_signer</span>
+<span class="kn">from</span> <span class="nn">bexchange.net.sftpclient</span> <span class="kn">import</span> <span class="n">sftpclient</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;bexchange.net.senders&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="sender"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.sender">[docs]</a><span class="k">class</span> <span class="nc">sender</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base sender. All classes implementing this should send the specified file path to a recipient over a specific protocol. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="sd">        :param backend: The server backend</span>
+<span class="sd">        :param aid: An id identifying this sender</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span> <span class="o">=</span> <span class="n">backend</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">=</span> <span class="n">aid</span>
+        
+<div class="viewcode-block" id="sender.id"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.sender.id">[docs]</a>    <span class="k">def</span> <span class="nf">id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns this uploader id</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id</span></div>
+
+<div class="viewcode-block" id="sender.backend"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.sender.backend">[docs]</a>    <span class="k">def</span> <span class="nf">backend</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the server backend</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span></div>
+
+<div class="viewcode-block" id="sender.send"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.sender.send">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sends path with the metadata meta</span>
+<span class="sd">        :param path: Path to file to be uploaded</span>
+<span class="sd">        :param meta: Metadata of the uploaded file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Not implemented&quot;</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="storage_sender"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.storage_sender">[docs]</a><span class="k">class</span> <span class="nc">storage_sender</span><span class="p">(</span><span class="n">sender</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Sends files using a number of storages.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="sd">        :param backend: The backend</span>
+<span class="sd">        :param aid: Id for this sender</span>
+<span class="sd">        :param arguments: Dictionary containg at least:</span>
+<span class="sd">        {</span>
+<span class="sd">          &quot;file_storage&quot;:[</span>
+<span class="sd">            &quot;&lt;name of storage&quot;, </span>
+<span class="sd">            ...</span>
+<span class="sd">          ]</span>
+<span class="sd">        }</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">storage_sender</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_storages</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="s2">&quot;file_storage&quot;</span> <span class="ow">in</span> <span class="n">arguments</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_storages</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;file_storage&quot;</span><span class="p">]</span>
+    
+<div class="viewcode-block" id="storage_sender.send"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.storage_sender.send">[docs]</a>    <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sends the file on all storages associated with self</span>
+<span class="sd">        :param file: path to file that should be sent</span>
+<span class="sd">        :param meta: the meta object for all metadata of file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="p">()</span><span class="o">.</span><span class="n">get_storage_manager</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storages</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">sm</span><span class="o">.</span><span class="n">has_storage</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+                <span class="n">storage</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">get_storage</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+                <span class="n">storage</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>    </div></div>
+    
+
+<div class="viewcode-block" id="dex_sender"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.dex_sender">[docs]</a><span class="k">class</span> <span class="nc">dex_sender</span><span class="p">(</span><span class="n">sender</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Legacy DEX communication sending files to old nodes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="sd">        :param backend: The backend</span>
+<span class="sd">        :param aid: Id for this sender</span>
+<span class="sd">        :param arguments: Dictionary containg at least:</span>
+<span class="sd">         {</span>
+<span class="sd">           &quot;address&quot;:&quot;http://localhost:8080&quot;,</span>
+<span class="sd">           &quot;crypto&quot;:{</span>
+<span class="sd">             &quot;sign&quot;:true,</span>
+<span class="sd">             &quot;libname&quot;:&quot;keyczar&quot;,</span>
+<span class="sd">             &quot;nodename&quot;:&quot;anders-nzxt&quot;,</span>
+<span class="sd">             &quot;privatekey&quot;:&quot;/opt/baltrad2/etc/bltnode-keys/anders-nzxt.priv&quot;</span>
+<span class="sd">           }         </span>
+<span class="sd">         }</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">dex_sender</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_address</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nodename</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_privatekey</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="s2">&quot;crypto&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">arguments</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Must provide crypto object when initializing a dex connection&quot;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="s2">&quot;address&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">arguments</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Must provide address when initializing a dex connection&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_address</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;address&quot;</span><span class="p">]</span>
+
+        <span class="n">cr</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;crypto&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">&quot;libname&quot;</span> <span class="ow">in</span> <span class="n">cr</span> <span class="ow">and</span> <span class="n">cr</span><span class="p">[</span><span class="s2">&quot;libname&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;keyczar&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Only valid crypto type for dex protocol is keyczar&quot;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_privatekey</span> <span class="o">=</span> <span class="n">cr</span><span class="p">[</span><span class="s2">&quot;privatekey&quot;</span><span class="p">]</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_privatekey</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Keyczar private key doesn&#39;t exist or is not readable: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">_privatekey</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nodename</span> <span class="o">=</span> <span class="n">cr</span><span class="p">[</span><span class="s2">&quot;nodename&quot;</span><span class="p">]</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_signer</span> <span class="o">=</span> <span class="n">keyczar_signer</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_privatekey</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_generate_headers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uri</span><span class="p">):</span>
+        <span class="n">datestr</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%a</span><span class="s2">, </span><span class="si">%e</span><span class="s2"> %B %Y %H:%M:%S&quot;</span><span class="p">)</span>
+        <span class="n">contentMD5</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">uri</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;POST&quot;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">uri</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="s2">&quot;application/x-hdf5&quot;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">contentMD5</span><span class="p">,</span> <span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">datestr</span><span class="p">)</span>
+        <span class="n">signature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_signer</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Node-Name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nodename</span><span class="p">,</span> 
+                   <span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/x-hdf5&quot;</span><span class="p">,</span>
+                   <span class="s2">&quot;Content-MD5&quot;</span><span class="p">:</span> <span class="n">contentMD5</span><span class="p">,</span> 
+                   <span class="s2">&quot;Date&quot;</span><span class="p">:</span> <span class="n">datestr</span><span class="p">,</span> 
+                   <span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nodename</span> <span class="o">+</span> <span class="s1">&#39;:&#39;</span> <span class="o">+</span> <span class="n">signature</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">headers</span>
+  
+    <span class="k">def</span> <span class="nf">_split_uri</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uri</span><span class="p">):</span>
+        <span class="n">urlparts</span> <span class="o">=</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">urlsplit</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
+        <span class="n">scheme</span> <span class="o">=</span> <span class="n">urlparts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">host</span> <span class="o">=</span> <span class="n">urlparts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">urlparts</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>    
+        <span class="k">return</span> <span class="p">(</span><span class="n">scheme</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span>
+  
+    <span class="k">def</span> <span class="nf">_post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scheme</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">headers</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">scheme</span> <span class="o">==</span> <span class="s2">&quot;https&quot;</span><span class="p">:</span>
+            <span class="n">conn</span> <span class="o">=</span> <span class="n">httplib</span><span class="o">.</span><span class="n">HTTPSConnection</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="n">ssl</span><span class="o">.</span><span class="n">_create_unverified_context</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">conn</span> <span class="o">=</span> <span class="n">httplib</span><span class="o">.</span><span class="n">HTTPConnection</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">conn</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;POST&quot;</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">headers</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">getresponse</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Failed to post message to: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">_nodename</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">();</span>
+      
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+  
+<div class="viewcode-block" id="dex_sender.send"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.dex_sender.send">[docs]</a>    <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sends the file to the dex server</span>
+<span class="sd">        :param file: path to file that should be sent</span>
+<span class="sd">        :param meta: the meta object for all metadata of file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">uri</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/BaltradDex/post_file.htm&quot;</span><span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span>
+        <span class="p">(</span><span class="n">scheme</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_split_uri</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_headers</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
+ 
+        <span class="n">fp</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
+    
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="n">scheme</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">fp</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="n">headers</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">fp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>    </div></div>
+
+<div class="viewcode-block" id="rest_sender"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.rest_sender">[docs]</a><span class="k">class</span> <span class="nc">rest_sender</span><span class="p">(</span><span class="n">sender</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Sends a file to another node that is running bexchange. The rest sender uses the internal crypto library for signing messages</span>
+<span class="sd">    which currently supports DSA &amp; RSA keys. DSA uses DSS, RSA uses pkcs1_15.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="sd">        :param backend: The backend</span>
+<span class="sd">        :param aid: Id for this sender</span>
+<span class="sd">        :param arguments: Dictionary containg at least:</span>
+<span class="sd">         {</span>
+<span class="sd">           &quot;address&quot;:&quot;http://localhost:8080&quot;,</span>
+<span class="sd">           &quot;protocol_version&quot;:&quot;1.0&quot;,</span>
+<span class="sd">           &quot;crypto&quot;:{</span>
+<span class="sd">             &quot;libname&quot;:&quot;exchange-crypto&quot;,</span>
+<span class="sd">             &quot;nodename&quot;:&quot;anders-silent&quot;,</span>
+<span class="sd">             &quot;privatekey&quot;:&quot;/etc/baltrad/exchange/cryptos/anders-silent.private&quot;</span>
+<span class="sd">           }         </span>
+<span class="sd">         }</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">rest_sender</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_address</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nodename</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_privatekey</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_version</span> <span class="o">=</span> <span class="s2">&quot;1.0&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;crypto&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">arguments</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Must provide crypto object when initializing a rest connection&quot;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="s2">&quot;address&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">arguments</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Must provide address when initializing a rest connection&quot;</span><span class="p">)</span>
+
+        <span class="n">cr</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;crypto&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">&quot;libname&quot;</span> <span class="ow">in</span> <span class="n">cr</span> <span class="ow">and</span> <span class="n">cr</span><span class="p">[</span><span class="s2">&quot;libname&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;crypto&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Only valid crypto type for protocol is currently the internal crypto&quot;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_privatekey</span> <span class="o">=</span> <span class="n">cr</span><span class="p">[</span><span class="s2">&quot;privatekey&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_privatekey</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;The private key doesn&#39;t exist or is not readable: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">_privatekey</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nodename</span> <span class="o">=</span> <span class="n">cr</span><span class="p">[</span><span class="s2">&quot;nodename&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_address</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;address&quot;</span><span class="p">]</span>
+        
+        <span class="k">if</span> <span class="s2">&quot;version&quot;</span> <span class="ow">in</span> <span class="n">arguments</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_version</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_signer</span> <span class="o">=</span> <span class="n">crypto</span><span class="o">.</span><span class="n">load_key</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_privatekey</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_signer</span><span class="p">,</span> <span class="n">crypto</span><span class="o">.</span><span class="n">private_key</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Can&#39;t use key: </span><span class="si">%s</span><span class="s2"> for signing&quot;</span><span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">_privatekey</span><span class="p">)</span>
+            
+<div class="viewcode-block" id="rest_sender.send"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.rest_sender.send">[docs]</a>    <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sends the file to the bexchange server</span>
+<span class="sd">        :param file: path to file that should be sent</span>
+<span class="sd">        :param meta: the meta object for all metadata of file</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
+        <span class="n">auth</span> <span class="o">=</span> <span class="n">rest</span><span class="o">.</span><span class="n">CryptoAuth</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_privatekey</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nodename</span><span class="p">)</span>
+        <span class="n">server</span> <span class="o">=</span> <span class="n">rest</span><span class="o">.</span><span class="n">RestfulServer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span> <span class="n">auth</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">entry</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="baseuri_sender"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.baseuri_sender">[docs]</a><span class="k">class</span> <span class="nc">baseuri_sender</span><span class="p">(</span><span class="n">sender</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base class for basic file transmission protocols like sftp, ftp, ...</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="sd">        :param backend: The backend</span>
+<span class="sd">        :param aid: Id for this sender</span>
+<span class="sd">        :param arguments: Dictionary containg at least:</span>
+<span class="sd">         {</span>
+<span class="sd">           &quot;uri&quot;:&quot;....&quot;,</span>
+<span class="sd">           &quot;create_missing_directory&quot;:true</span>
+<span class="sd">         }</span>
+<span class="sd">         This is a base class so the uri is parsed and appropriate members are set. There is no support for any sort of </span>
+<span class="sd">         routing appropriate scheme to correct sender.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">baseuri_sender</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_arguments</span> <span class="o">=</span> <span class="n">arguments</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_uri</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hostname</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_port</span> <span class="o">=</span> <span class="mi">22</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_username</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_password</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_namer</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_missing_directories</span> <span class="o">=</span> <span class="kc">True</span>
+        
+        <span class="k">if</span> <span class="s2">&quot;create_missing_directories&quot;</span> <span class="ow">in</span> <span class="n">arguments</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_create_missing_directories</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;create_missing_directories&quot;</span><span class="p">]</span>
+            
+        <span class="k">if</span> <span class="s2">&quot;uri&quot;</span> <span class="ow">in</span> <span class="n">arguments</span> <span class="ow">and</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;uri&quot;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_uri</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;uri&quot;</span><span class="p">]</span>
+            <span class="n">uri</span> <span class="o">=</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">urlparse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_uri</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_hostname</span> <span class="o">=</span> <span class="n">uri</span><span class="o">.</span><span class="n">hostname</span>
+            <span class="k">if</span> <span class="n">uri</span><span class="o">.</span><span class="n">port</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_port</span> <span class="o">=</span> <span class="n">uri</span><span class="o">.</span><span class="n">port</span>
+            <span class="k">if</span> <span class="n">uri</span><span class="o">.</span><span class="n">username</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_username</span> <span class="o">=</span> <span class="n">uri</span><span class="o">.</span><span class="n">username</span>
+            <span class="k">if</span> <span class="n">uri</span><span class="o">.</span><span class="n">password</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_password</span> <span class="o">=</span> <span class="n">uri</span><span class="o">.</span><span class="n">password</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_namer</span> <span class="o">=</span> <span class="n">metadata_namer</span><span class="p">(</span><span class="n">uri</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+
+<div class="viewcode-block" id="baseuri_sender.name"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.baseuri_sender.name">[docs]</a>    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates a unique name from the metadatanamer created from the uri</span>
+<span class="sd">        :param meta: Metadata to use when creating the name</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_namer</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="baseuri_sender.create_missing_directories"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.baseuri_sender.create_missing_directories">[docs]</a>    <span class="k">def</span> <span class="nf">create_missing_directories</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns if missing directories should be created or not</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_missing_directories</span></div>
+
+<div class="viewcode-block" id="baseuri_sender.hostname"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.baseuri_sender.hostname">[docs]</a>    <span class="k">def</span> <span class="nf">hostname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the hostname extracted from the uri</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hostname</span></div>
+
+<div class="viewcode-block" id="baseuri_sender.port"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.baseuri_sender.port">[docs]</a>    <span class="k">def</span> <span class="nf">port</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the port number extracted from the uri.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_port</span></div>
+    
+<div class="viewcode-block" id="baseuri_sender.username"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.baseuri_sender.username">[docs]</a>    <span class="k">def</span> <span class="nf">username</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_username</span></div>
+    
+<div class="viewcode-block" id="baseuri_sender.password"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.baseuri_sender.password">[docs]</a>    <span class="k">def</span> <span class="nf">password</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_password</span></div></div>
+
+
+<div class="viewcode-block" id="sftp_sender"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.sftp_sender">[docs]</a><span class="k">class</span> <span class="nc">sftp_sender</span><span class="p">(</span><span class="n">baseuri_sender</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Sends files over sftp</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="sd">        :param backend: The backend</span>
+<span class="sd">        :param aid: Id for this sender</span>
+<span class="sd">        :param arguments: Dictionary containg at least:</span>
+<span class="sd">         {</span>
+<span class="sd">           &quot;uri&quot;:&quot;....&quot;,</span>
+<span class="sd">           &quot;create_missing_directory&quot;:true</span>
+<span class="sd">         }</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">sftp_sender</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">,</span> <span class="n">arguments</span><span class="p">)</span>
+
+<div class="viewcode-block" id="sftp_sender.send"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.sftp_sender.send">[docs]</a>    <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sends the file using sftp.</span>
+<span class="sd">        :param file: path to file that should be sent</span>
+<span class="sd">        :param meta: the meta object for all metadata of file</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
+        <span class="n">publishedname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;sftp_adapter: connecting to: host=</span><span class="si">%s</span><span class="s2">, port=</span><span class="si">%d</span><span class="s2">, user=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">()))</span>
+        <span class="k">with</span> <span class="n">sftpclient</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">(),</span> <span class="n">port</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">(),</span> <span class="n">username</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">(),</span> <span class="n">password</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">())</span> <span class="k">as</span> <span class="n">c</span><span class="p">:</span>
+            <span class="n">bdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">publishedname</span><span class="p">)</span>
+            <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">publishedname</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Connected to </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">())</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_missing_directories</span><span class="p">():</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">bdir</span><span class="p">)</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">bdir</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;sftp_sender: Uploading </span><span class="si">%s</span><span class="s2"> as </span><span class="si">%s</span><span class="s2"> to </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">()))</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="scp_sender"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.scp_sender">[docs]</a><span class="k">class</span> <span class="nc">scp_sender</span><span class="p">(</span><span class="n">baseuri_sender</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Publishes files over scp</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="sd">        :param backend: The backend</span>
+<span class="sd">        :param aid: Id for this sender</span>
+<span class="sd">        :param arguments: Dictionary containg at least:</span>
+<span class="sd">         {</span>
+<span class="sd">           &quot;uri&quot;:&quot;....&quot;,</span>
+<span class="sd">           &quot;create_missing_directory&quot;:true</span>
+<span class="sd">         }</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">scp_sender</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">,</span> <span class="n">arguments</span><span class="p">)</span>
+        
+<div class="viewcode-block" id="scp_sender.send"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.scp_sender.send">[docs]</a>    <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sends the file using scp.</span>
+<span class="sd">        :param file: path to file that should be sent</span>
+<span class="sd">        :param meta: the meta object for all metadata of file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ssh</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">scp</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">ssh</span> <span class="o">=</span> <span class="n">SSHClient</span><span class="p">()</span>
+            <span class="n">ssh</span><span class="o">.</span><span class="n">load_system_host_keys</span><span class="p">()</span>
+            <span class="n">ssh</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">());</span>
+            <span class="n">scp</span> <span class="o">=</span> <span class="n">SCPClient</span><span class="p">(</span><span class="n">ssh</span><span class="o">.</span><span class="n">get_transport</span><span class="p">())</span>
+            <span class="n">publishedname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_missing_directories</span><span class="p">():</span>
+                <span class="n">dirname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">publishedname</span><span class="p">)</span>
+                <span class="n">ssh</span><span class="o">.</span><span class="n">exec_command</span><span class="p">(</span><span class="s2">&quot;test -d </span><span class="si">%s</span><span class="s2"> || mkdir -p </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">dirname</span><span class="p">,</span> <span class="n">dirname</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;scp_sender: Uploading </span><span class="si">%s</span><span class="s2"> as </span><span class="si">%s</span><span class="s2"> to </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">publishedname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">()))</span>
+            <span class="n">scp</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">publishedname</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">scp</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">scp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="k">pass</span></div></div>
+
+<div class="viewcode-block" id="ftp_sender"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.ftp_sender">[docs]</a><span class="k">class</span> <span class="nc">ftp_sender</span><span class="p">(</span><span class="n">baseuri_sender</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Publishes files over ftp</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="sd">        :param backend: The backend</span>
+<span class="sd">        :param aid: Id for this sender</span>
+<span class="sd">        :param arguments: Dictionary containg at least:</span>
+<span class="sd">         {</span>
+<span class="sd">           &quot;uri&quot;:&quot;....&quot;,</span>
+<span class="sd">           &quot;create_missing_directory&quot;:true</span>
+<span class="sd">         }</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ftp_sender</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">,</span> <span class="n">arguments</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_uri</span><span class="p">:</span>
+            <span class="n">uri</span> <span class="o">=</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">urlparse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_uri</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">uri</span><span class="o">.</span><span class="n">port</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_port</span> <span class="o">=</span> <span class="mi">21</span>
+        
+<div class="viewcode-block" id="ftp_sender.send"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.ftp_sender.send">[docs]</a>    <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sends the file using ftp.</span>
+<span class="sd">        :param file: path to file that should be published</span>
+<span class="sd">        :param meta: the meta object for all metadata of file</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
+        <span class="n">publishedname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;ftp_sender: connecting to: host=</span><span class="si">%s</span><span class="s2">, port=</span><span class="si">%d</span><span class="s2">, user=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">()))</span>
+        <span class="n">bdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">publishedname</span><span class="p">)</span>
+        <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">publishedname</span><span class="p">)</span>
+        <span class="n">ftp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">bdir</span> <span class="o">!=</span> <span class="s2">&quot;/&quot;</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;CWD: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">bdir</span><span class="p">)</span>
+                <span class="n">ftp</span><span class="o">.</span><span class="n">cwd</span><span class="p">(</span><span class="n">bdir</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">ftplib</span><span class="o">.</span><span class="n">Error</span> <span class="k">as</span> <span class="n">e</span> <span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_missing_directories</span><span class="p">():</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">change_and_create_dir</span><span class="p">(</span><span class="n">ftp</span><span class="p">,</span> <span class="n">bdir</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">e</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;ftp_sender: Uploading </span><span class="si">%s</span><span class="s2"> as </span><span class="si">%s</span><span class="s2"> to </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">()))</span>
+            <span class="n">ftp</span><span class="o">.</span><span class="n">storbinary</span><span class="p">(</span><span class="s2">&quot;STOR </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">fname</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">))</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">ftp</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ftp_sender.does_dir_exist"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.ftp_sender.does_dir_exist">[docs]</a>    <span class="k">def</span> <span class="nf">does_dir_exist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ftp</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="n">dirlist</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">dtolist</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">dtotest</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">ftp</span><span class="o">.</span><span class="n">retrlines</span><span class="p">(</span><span class="s2">&quot;LIST </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">dtolist</span><span class="p">,</span> <span class="n">dirlist</span><span class="o">.</span><span class="n">append</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">dirlist</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">dtotest</span> <span class="ow">and</span> <span class="n">f</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;D&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="ftp_sender.change_and_create_dir"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.ftp_sender.change_and_create_dir">[docs]</a>    <span class="k">def</span> <span class="nf">change_and_create_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ftp</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">does_dir_exist</span><span class="p">(</span><span class="n">ftp</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+            <span class="n">nextpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+            <span class="n">createdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">nextpath</span> <span class="o">==</span> <span class="s2">&quot;/&quot;</span> <span class="ow">or</span> <span class="n">nextpath</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Not even root folder exist&quot;</span><span class="p">)</span>  
+            <span class="bp">self</span><span class="o">.</span><span class="n">change_and_create_dir</span><span class="p">(</span><span class="n">ftp</span><span class="p">,</span> <span class="n">nextpath</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Changing directory to: </span><span class="si">%s</span><span class="s2"> and creating </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">nextpath</span><span class="p">,</span> <span class="n">createdir</span><span class="p">))</span>
+            <span class="n">ftp</span><span class="o">.</span><span class="n">cwd</span><span class="p">(</span><span class="n">nextpath</span><span class="p">)</span>
+            <span class="n">ftp</span><span class="o">.</span><span class="n">mkd</span><span class="p">(</span><span class="n">createdir</span><span class="p">)</span>
+            <span class="n">ftp</span><span class="o">.</span><span class="n">cwd</span><span class="p">(</span><span class="n">createdir</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Current working directory: </span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">nextpath</span><span class="p">,</span> <span class="n">createdir</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ftp</span><span class="o">.</span><span class="n">cwd</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
+        
+    <span class="c1">##</span>
+    <span class="c1"># Connects to remote server</span>
+<div class="viewcode-block" id="ftp_sender.connect"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.ftp_sender.connect">[docs]</a>    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">ftp</span> <span class="o">=</span> <span class="n">ftplib</span><span class="o">.</span><span class="n">FTP</span><span class="p">()</span>
+        <span class="n">ftp</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">())</span>
+        <span class="n">ftp</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">ftp</span></div></div>
+
+<div class="viewcode-block" id="copy_sender"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.copy_sender">[docs]</a><span class="k">class</span> <span class="nc">copy_sender</span><span class="p">(</span><span class="n">sender</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Sends files by copying them</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="sd">        :param backend: The backend</span>
+<span class="sd">        :param aid: Id for this sender</span>
+<span class="sd">        :param arguments: Dictionary containg at least:</span>
+<span class="sd">         {</span>
+<span class="sd">           &quot;path&quot;:&quot;....&quot;,</span>
+<span class="sd">           &quot;create_missing_directory&quot;:true</span>
+<span class="sd">         }</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">copy_sender</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_path</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_missing_directories</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="s2">&quot;create_missing_directories&quot;</span> <span class="ow">in</span> <span class="n">arguments</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_create_missing_directories</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;create_missing_directories&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_namer</span> <span class="o">=</span> <span class="n">metadata_namer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">)</span>
+
+<div class="viewcode-block" id="copy_sender.name"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.copy_sender.name">[docs]</a>    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_namer</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="copy_sender.create_missing_directories"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.copy_sender.create_missing_directories">[docs]</a>    <span class="k">def</span> <span class="nf">create_missing_directories</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_missing_directories</span></div>
+    
+<div class="viewcode-block" id="copy_sender.send"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.copy_sender.send">[docs]</a>    <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sends the file using copy.</span>
+<span class="sd">        :param file: path to file that should be sent</span>
+<span class="sd">        :param meta: the meta object for all metadata of file</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
+        <span class="n">publishedname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span>
+        <span class="n">dirname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">publishedname</span><span class="p">)</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">publishedname</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;copy_sender: copying </span><span class="si">%s</span><span class="s2"> to </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">dirname</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">dirname</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_missing_directories</span><span class="p">():</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">dirname</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;copy_sender: Copying </span><span class="si">%s</span><span class="s2"> to </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">publishedname</span><span class="p">))</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">publishedname</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="sender_manager"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.sender_manager">[docs]</a><span class="k">class</span> <span class="nc">sender_manager</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="sender_manager.from_conf"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.sender_manager.from_conf">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_conf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates an instance of clz with specified arguments</span>
+<span class="sd">        :param arguments: a list of arguments that should be used to initialize the class       </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">aid</span><span class="o">=</span><span class="kc">None</span>
+        <span class="n">clz</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">&quot;id&quot;</span> <span class="ow">in</span> <span class="n">arguments</span><span class="p">:</span>
+            <span class="n">aid</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">aid</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">-</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">clz</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()))</span> <span class="c1"># If id not specified, then we create an id </span>
+           
+        <span class="n">senderargs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="s2">&quot;arguments&quot;</span> <span class="ow">in</span> <span class="n">arguments</span><span class="p">:</span>
+            <span class="n">senderargs</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;arguments&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">clz</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Creating sender &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="o">%</span><span class="n">clz</span><span class="p">)</span>
+            <span class="n">lastdot</span> <span class="o">=</span> <span class="n">clz</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+            <span class="n">module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">clz</span><span class="p">[:</span><span class="n">lastdot</span><span class="p">])</span>
+            <span class="n">classname</span> <span class="o">=</span> <span class="n">clz</span><span class="p">[</span><span class="n">lastdot</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
+
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">classname</span><span class="p">)(</span><span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">,</span> <span class="n">senderargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Must specify class as module.class&quot;</span><span class="p">)</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">baltrad-exchange 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">bexchange.net.senders</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    </div>
+  </body>
+</html>

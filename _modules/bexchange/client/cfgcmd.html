@@ -1,0 +1,573 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>bexchange.client.cfgcmd &#8212; baltrad-exchange 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">baltrad-exchange 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">bexchange.client.cfgcmd</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for bexchange.client.cfgcmd</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (C) 2021- Swedish Meteorological and Hydrological Institute (SMHI)</span>
+<span class="c1">#</span>
+<span class="c1"># This file is part of baltrad-exchange.</span>
+<span class="c1">#</span>
+<span class="c1"># baltrad-exchange is free software: you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU Lesser General Public License as published by</span>
+<span class="c1"># the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1"># baltrad-exchange is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span>
+<span class="c1"># See the GNU Lesser General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU Lesser General Public License</span>
+<span class="c1"># along with baltrad-exchange.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c1">###############################################################################</span>
+
+<span class="c1">## Commands provided by the baltrad-exchange-config tool</span>
+
+<span class="c1">## @file</span>
+<span class="c1">## @author Anders Henja, SMHI</span>
+<span class="c1">## @date 2021-08-18</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>        
+
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">abstractmethod</span><span class="p">,</span> <span class="n">ABCMeta</span>
+<span class="kn">import</span> <span class="nn">abc</span>
+
+<span class="kn">import</span> <span class="nn">json</span><span class="o">,</span> <span class="nn">tarfile</span>
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">socket</span>
+<span class="kn">import</span> <span class="nn">urllib.parse</span> <span class="k">as</span> <span class="nn">urlparse</span>
+<span class="kn">import</span> <span class="nn">pkg_resources</span>
+<span class="kn">import</span> <span class="nn">datetime</span><span class="o">,</span><span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">from</span> <span class="nn">tempfile</span> <span class="kn">import</span> <span class="n">TemporaryDirectory</span>
+
+<span class="kn">from</span> <span class="nn">http</span> <span class="kn">import</span> <span class="n">client</span> <span class="k">as</span> <span class="n">httplibclient</span>
+
+<span class="c1"># This should always be available</span>
+<span class="kn">from</span> <span class="nn">bexchange</span> <span class="kn">import</span> <span class="n">config</span><span class="p">,</span> <span class="n">crypto</span>
+<span class="kn">from</span> <span class="nn">bexchange.crypto</span> <span class="kn">import</span> <span class="n">keyczarcrypto</span>
+<span class="kn">from</span> <span class="nn">bexchange.odimutil</span> <span class="kn">import</span> <span class="n">metadata_helper</span>
+<span class="kn">from</span> <span class="nn">bexchange.server</span> <span class="kn">import</span> <span class="n">sqlbackend</span>
+<span class="kn">from</span> <span class="nn">bexchange.matching.filters</span> <span class="kn">import</span> <span class="n">filter_manager</span>
+<span class="kn">from</span> <span class="nn">bexchange.matching.metadata_matcher</span> <span class="kn">import</span> <span class="n">metadata_matcher</span>
+<span class="kn">from</span> <span class="nn">baltrad.bdbcommon</span> <span class="kn">import</span> <span class="n">oh5</span>
+
+<span class="c1"># Default configuration file.</span>
+<span class="n">DEFAULT_CONFIG</span> <span class="o">=</span> <span class="s2">&quot;/etc/baltrad/exchange/etc/baltrad-exchange.properties&quot;</span>
+
+<span class="n">DEFAULT_TEMPLATE</span> <span class="o">=</span> <span class="s2">&quot;/etc/baltrad/exchange/etc/exchange-template.json&quot;</span>
+
+
+<div class="viewcode-block" id="ExecutionError"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.ExecutionError">[docs]</a><span class="k">class</span> <span class="nc">ExecutionError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="read_config"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.read_config">[docs]</a><span class="k">def</span> <span class="nf">read_config</span><span class="p">(</span><span class="n">conffile</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">conffile</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="s2">&quot;configuration file not specified&quot;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">config</span><span class="o">.</span><span class="n">Properties</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">conffile</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="s2">&quot;failed to read configuration from &quot;</span> <span class="o">+</span> <span class="n">conffile</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Command"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.Command">[docs]</a><span class="k">class</span> <span class="nc">Command</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;command-line client command interface</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">ABCMeta</span>
+
+<div class="viewcode-block" id="Command.update_optionparser"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.Command.update_optionparser">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+    
+<div class="viewcode-block" id="Command.execute"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.Command.execute">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;execute this command</span>
+
+<span class="sd">        :param opts: options passed from command line</span>
+<span class="sd">        :param args: arguments passed from command line</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Command.get_implementation_by_name"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.Command.get_implementation_by_name">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_implementation_by_name</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;get an implementing class by name</span>
+
+<span class="sd">        the implementing class is looked up from &#39;bexchange.config.commands&#39;</span>
+<span class="sd">        entry point. </span>
+
+<span class="sd">        :raise: :class:`LookupError` if not found</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">load_entry_point</span><span class="p">(</span>
+                <span class="s2">&quot;bexchange&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;bexchange.config.commands&quot;</span><span class="p">,</span>
+                <span class="n">name</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">LookupError</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Command.get_commands"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.Command.get_commands">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_commands</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">get_entry_map</span><span class="p">(</span><span class="s2">&quot;bexchange&quot;</span><span class="p">)[</span><span class="s2">&quot;bexchange.config.commands&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div></div>
+
+<div class="viewcode-block" id="CreateKeys"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreateKeys">[docs]</a><span class="k">class</span> <span class="nc">CreateKeys</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+<div class="viewcode-block" id="CreateKeys.update_optionparser"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreateKeys.update_optionparser">[docs]</a>    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
+            <span class="s2">&quot;--type&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;crypto&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Library to use for generating key-pair to create. Default: crypto (which is the internal key handling). Other libraries can be keyczar &quot;</span><span class="p">)</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
+            <span class="s2">&quot;--encryption&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;encryption&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;dsa&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Encryption method to use. For internal use you can either choose dsa or rsa. Default is: dsa&quot;</span><span class="p">)</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
+            <span class="s2">&quot;--destination&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;destination&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Directory where the keys should be placed. Default is current directory.&quot;</span><span class="p">)</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
+            <span class="s2">&quot;--nodename&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;nodename&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of the node for this server.&quot;</span><span class="p">)</span></div>
+        
+    
+<div class="viewcode-block" id="CreateKeys.execute"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreateKeys.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">opts</span><span class="o">.</span><span class="n">nodename</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Must specify --nodename&quot;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">opts</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;crypto&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_crypto_key</span><span class="p">(</span><span class="n">opts</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">opts</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;keyczar&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_keyczar_keys</span><span class="p">(</span><span class="n">opts</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Unsupported encryption library: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">opts</span><span class="o">.</span><span class="n">library</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CreateKeys.create_crypto_key"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreateKeys.create_crypto_key">[docs]</a>    <span class="k">def</span> <span class="nf">create_crypto_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">opts</span><span class="o">.</span><span class="n">encryption</span> <span class="o">!=</span> <span class="s2">&quot;dsa&quot;</span> <span class="ow">and</span> <span class="n">opts</span><span class="o">.</span><span class="n">encryption</span> <span class="o">!=</span> <span class="s2">&quot;rsa&quot;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Only supported encryption are dsa or rsa when using internal crypto&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+        
+        <span class="n">privatek</span> <span class="o">=</span> <span class="n">crypto</span><span class="o">.</span><span class="n">create_key</span><span class="p">(</span><span class="n">encryption</span><span class="o">=</span><span class="n">opts</span><span class="o">.</span><span class="n">encryption</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">destination</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">destination</span><span class="p">)</span>
+        
+        <span class="n">privatek</span><span class="o">.</span><span class="n">exportPEM</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">.private&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">destination</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">nodename</span><span class="p">))</span>
+        <span class="n">privatek</span><span class="o">.</span><span class="n">publickey</span><span class="p">()</span><span class="o">.</span><span class="n">exportPEM</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">.public&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">destination</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">nodename</span><span class="p">))</span>
+        <span class="n">privatek</span><span class="o">.</span><span class="n">publickey</span><span class="p">()</span><span class="o">.</span><span class="n">exportJSON</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">_public.json&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">destination</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">nodename</span><span class="p">),</span> <span class="n">opts</span><span class="o">.</span><span class="n">nodename</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Created: &quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  Private key: </span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">.private&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">destination</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">nodename</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  Public  key: </span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">.public&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">destination</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">nodename</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  Public json: </span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">_public.json&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">destination</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">nodename</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="CreateKeys.createdir"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreateKeys.createdir">[docs]</a>    <span class="k">def</span> <span class="nf">createdir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> exists but is not a directory&quot;</span><span class="o">%</span><span class="n">d</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CreateKeys.create_keyczar_keys"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreateKeys.create_keyczar_keys">[docs]</a>    <span class="k">def</span> <span class="nf">create_keyczar_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">opts</span><span class="o">.</span><span class="n">encryption</span> <span class="o">!=</span> <span class="s2">&quot;dsa&quot;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Only supported encryption is dsa for keyczar crypto&quot;</span><span class="p">)</span>
+            <span class="k">return</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        </span>
+
+<span class="s2">        if not os.path.exists(opts.destination):</span>
+<span class="s2">            os.makedirs(opts.destination)</span>
+<span class="s2">        </span>
+<span class="s2">        privkeyfolder = &quot;</span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">.priv&quot;%(opts.destination, opts.nodename)</span>
+<span class="s2">        pubkeyfolder = &quot;</span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">.pub&quot;%(opts.destination, opts.nodename)</span>
+<span class="s2">        </span>
+<span class="s2">        keyczar_signer = keyczarcrypto.create_keyczar_key()</span>
+<span class="s2">        keyczar_verifier = keyczarcrypto.keyczar_verifier(keyczar_signer._key)</span>
+<span class="s2">        </span>
+<span class="s2">        keyczar_signer.export(privkeyfolder, opts.nodename)</span>
+<span class="s2">        keyczar_verifier.export(pubkeyfolder, opts.nodename)</span>
+
+<span class="s2">        print(&quot;Created: &quot;)</span>
+<span class="s2">        print(&quot;  Private key: </span><span class="si">%s</span><span class="s2">&quot;%privkeyfolder)</span>
+<span class="s2">        print(&quot;  Public  key: </span><span class="si">%s</span><span class="s2">&quot;%pubkeyfolder)</span>
+
+<span class="s2">class TestFilter(Command):</span>
+<span class="s2">    def update_optionparser(self, parser):</span>
+<span class="s2">        parser.set_usage(parser.get_usage().strip() + &quot; &lt;filename&gt;&quot;)</span>
+
+<span class="s2">        parser.add_option(</span>
+<span class="s2">            &quot;--odim-source&quot;, dest=&quot;odim_source&quot;,</span>
+<span class="s2">            help=&quot;The odim source file to use for identifying the source of a file. This command will create a temporary source in /tmp unless underwise specified.&quot;)</span>
+<span class="s2">        </span>
+<span class="s2">        parser.add_option(</span>
+<span class="s2">            &quot;--dburi&quot;, dest=&quot;dburi&quot;, default=&quot;sqlite:////tmp/bec-config-test-sources.db&quot;,</span>
+<span class="s2">            help=&quot;The location where odim sources can be found. Default is to create a temporary db under /tmp.&quot;)</span>
+<span class="s2">        </span>
+<span class="s2">        parser.add_option(</span>
+<span class="s2">            &quot;--filter&quot;, dest=&quot;filter&quot;,</span>
+<span class="s2">            help=&quot;Specifies a file containing a filter. Can be either a subscription or publication cfg-file or else a separate file containing toplevel &#39;filter&#39;&quot;)</span>
+
+<span class="s2">    def execute(self, opts, args):</span>
+<span class="s2">        with open(opts.odim_source) as f:</span>
+<span class="s2">            sources = oh5.Source.from_rave_xml(f.read())</span>
+<span class="s2">        source_manager = sqlbackend.SqlAlchemySourceManager(opts.dburi)</span>
+<span class="s2">        source_manager.add_sources(sources)</span>
+<span class="s2">        hasher = oh5.MetadataHasher()</span>
+<span class="s2">        meta = metadata_helper.metadata_from_file(source_manager, hasher, args[0])</span>
+
+<span class="s2">        if not opts.filter:</span>
+<span class="s2">            raise Exception(&quot;Need to specify filter file&quot;)</span>
+<span class="s2">        </span>
+<span class="s2">        with open(opts.filter) as fp:</span>
+<span class="s2">            json_cfg = json.load(fp)</span>
+<span class="s2">        </span>
+<span class="s2">        if &quot;subscription&quot; in json_cfg:</span>
+<span class="s2">            tfilter = filter_manager().from_value(json_cfg[&quot;subscription&quot;][&quot;filter&quot;])</span>
+<span class="s2">        elif &quot;publication&quot; in json_cfg:</span>
+<span class="s2">            tfilter = filter_manager().from_value(json_cfg[&quot;publication&quot;][&quot;filter&quot;])</span>
+<span class="s2">        elif &quot;filter&quot; in json_cfg:</span>
+<span class="s2">            tfilter = filter_manager().from_value(json_cfg[&quot;filter&quot;])</span>
+<span class="s2">        else:</span>
+<span class="s2">            raise Exception(&quot;Unsupported json-format&quot;)</span>
+
+<span class="s2">        matcher = metadata_matcher()</span>
+<span class="s2">        if matcher.match(meta, tfilter.to_xpr()):</span>
+<span class="s2">            print(&quot;MATCHING&quot;)</span>
+<span class="s2">        else:</span>
+<span class="s2">            print(&quot;NOT MATCHING&quot;)&quot;&quot;&quot;</span></div></div>
+
+<div class="viewcode-block" id="CreatePublication"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreatePublication">[docs]</a><span class="k">class</span> <span class="nc">CreatePublication</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+<div class="viewcode-block" id="CreatePublication.update_optionparser"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreatePublication.update_optionparser">[docs]</a>    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+        <span class="n">usg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_usage</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+
+<span class="s2">Creates a publication from the provided template and the provided property-file. If possible, the</span>
+<span class="s2">property file will be identified by checking standard installation path. An atempt to find the</span>
+<span class="s2">template will be used base on default location / name as well. The resulting json file should be </span>
+<span class="s2">possible to put in the local server config catalogue without modifications. If different sender </span>
+<span class="s2">protocols or different connection strategies should be used the configuration file needs to be modified</span>
+<span class="s2">manually.</span>
+
+<span class="s2">Example: baltrad-exchange-config create_publication --desturi=https://remote.baltrad.node --name=&quot;pub to remote node&quot; --output=remote_node_publication.json</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+
+        <span class="n">usage</span> <span class="o">=</span> <span class="n">usg</span> <span class="o">+</span> <span class="n">description</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">set_usage</span><span class="p">(</span><span class="n">usage</span><span class="p">)</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
+            <span class="s2">&quot;--conf&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;conf&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">DEFAULT_CONFIG</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Specified the property file to use to extract all relevant information to create the publication to specified host.&quot;</span><span class="p">)</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
+            <span class="s2">&quot;--template&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;template&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">DEFAULT_TEMPLATE</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The template to use for generating the publication / subscription.&quot;</span><span class="p">)</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
+            <span class="s2">&quot;--desturi&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;desturi&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;https://localhost:8089&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Specified the target of this publication&quot;</span>
+        <span class="p">)</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
+            <span class="s2">&quot;--name&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;publication_name&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The name of this publication. MANDATORY!&quot;</span>
+        <span class="p">)</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
+            <span class="s2">&quot;--output&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;output&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The output file name. If not specified, output will printed on stdout&quot;</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CreatePublication.execute"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreatePublication.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="n">cfg</span> <span class="o">=</span> <span class="n">read_config</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">conf</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">template</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Must provide template&quot;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">opts</span><span class="o">.</span><span class="n">publication_name</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Must provide --name&quot;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">desturi</span> <span class="o">=</span> <span class="n">opts</span><span class="o">.</span><span class="n">desturi</span>
+
+        <span class="n">loaded</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">template</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+            <span class="n">loaded</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+        
+        <span class="n">template</span> <span class="o">=</span> <span class="n">loaded</span><span class="p">[</span><span class="s2">&quot;template&quot;</span><span class="p">]</span>
+        <span class="n">template_publication</span> <span class="o">=</span> <span class="n">template</span><span class="p">[</span><span class="s2">&quot;publication&quot;</span><span class="p">]</span>
+        <span class="n">clazz</span> <span class="o">=</span> <span class="s2">&quot;bexchange.net.publishers.standard_publisher&quot;</span>
+        <span class="n">template_connection</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;sender&quot;</span><span class="p">:</span> <span class="s2">&quot;bexchange.net.senders.rest_sender&quot;</span><span class="p">,</span> <span class="s2">&quot;protocol&quot;</span><span class="p">:</span><span class="s2">&quot;crypto&quot;</span><span class="p">}</span>
+        <span class="k">if</span> <span class="s2">&quot;class&quot;</span> <span class="ow">in</span> <span class="n">template_publication</span><span class="p">:</span>
+            <span class="n">clazz</span> <span class="o">=</span> <span class="n">template_publication</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">]</span>
+        <span class="n">extra_arguments</span><span class="o">=</span><span class="p">{}</span>
+        <span class="k">if</span> <span class="s2">&quot;extra_arguments&quot;</span> <span class="ow">in</span> <span class="n">template_publication</span><span class="p">:</span>
+            <span class="n">extra_arguments</span> <span class="o">=</span> <span class="n">template_publication</span><span class="p">[</span><span class="s2">&quot;extra_arguments&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="s2">&quot;connection&quot;</span> <span class="ow">in</span> <span class="n">template</span><span class="p">:</span>
+            <span class="n">template_connection</span> <span class="o">=</span> <span class="n">template</span><span class="p">[</span><span class="s2">&quot;connection&quot;</span><span class="p">]</span>
+
+        <span class="n">publication</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">publication</span><span class="p">[</span><span class="s2">&quot;__comment__&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;This is a comment&quot;</span>
+        <span class="n">publication</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">opts</span><span class="o">.</span><span class="n">publication_name</span>
+        <span class="n">publication</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">clazz</span>
+        <span class="n">publication</span><span class="p">[</span><span class="s2">&quot;extra_arguments&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">extra_arguments</span>
+        <span class="n">publication</span><span class="p">[</span><span class="s2">&quot;active&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">connection</span> <span class="o">=</span> <span class="n">template_connection</span>
+        <span class="n">connection</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;bexchange.net.connections.simple_connection&quot;</span>
+        <span class="n">connection</span><span class="p">[</span><span class="s2">&quot;arguments&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">connection</span><span class="p">[</span><span class="s2">&quot;arguments&quot;</span><span class="p">][</span><span class="s2">&quot;sender&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">connection</span><span class="p">[</span><span class="s2">&quot;arguments&quot;</span><span class="p">][</span><span class="s2">&quot;sender&quot;</span><span class="p">][</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> sender id&quot;</span><span class="o">%</span><span class="n">opts</span><span class="o">.</span><span class="n">publication_name</span>
+        <span class="k">if</span> <span class="n">template_connection</span><span class="p">[</span><span class="s2">&quot;sender&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;bexchange.net.senders.rest_sender&quot;</span><span class="p">:</span>
+            <span class="n">connection</span><span class="p">[</span><span class="s2">&quot;arguments&quot;</span><span class="p">][</span><span class="s2">&quot;sender&quot;</span><span class="p">][</span><span class="s2">&quot;class&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">template_connection</span><span class="p">[</span><span class="s2">&quot;sender&quot;</span><span class="p">]</span>
+            <span class="n">connection</span><span class="p">[</span><span class="s2">&quot;arguments&quot;</span><span class="p">][</span><span class="s2">&quot;sender&quot;</span><span class="p">][</span><span class="s2">&quot;arguments&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">connection</span><span class="p">[</span><span class="s2">&quot;arguments&quot;</span><span class="p">][</span><span class="s2">&quot;sender&quot;</span><span class="p">][</span><span class="s2">&quot;arguments&quot;</span><span class="p">][</span><span class="s2">&quot;address&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">opts</span><span class="o">.</span><span class="n">desturi</span>
+            <span class="n">connection</span><span class="p">[</span><span class="s2">&quot;arguments&quot;</span><span class="p">][</span><span class="s2">&quot;sender&quot;</span><span class="p">][</span><span class="s2">&quot;arguments&quot;</span><span class="p">][</span><span class="s2">&quot;protocol_version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;1.0&quot;</span>
+
+            <span class="n">encryption</span> <span class="o">=</span> <span class="s2">&quot;crypto&quot;</span>
+            <span class="k">if</span> <span class="s2">&quot;encryption&quot;</span> <span class="ow">in</span> <span class="n">template_connection</span><span class="p">:</span>
+                <span class="n">encryption</span> <span class="o">=</span> <span class="n">template_connection</span><span class="p">[</span><span class="s2">&quot;encryption&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">encryption</span> <span class="o">==</span> <span class="s2">&quot;crypto&quot;</span><span class="p">:</span>
+                <span class="n">connection</span><span class="p">[</span><span class="s2">&quot;arguments&quot;</span><span class="p">][</span><span class="s2">&quot;sender&quot;</span><span class="p">][</span><span class="s2">&quot;arguments&quot;</span><span class="p">][</span><span class="s2">&quot;crypto&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">connection</span><span class="p">[</span><span class="s2">&quot;arguments&quot;</span><span class="p">][</span><span class="s2">&quot;sender&quot;</span><span class="p">][</span><span class="s2">&quot;arguments&quot;</span><span class="p">][</span><span class="s2">&quot;crypto&quot;</span><span class="p">][</span><span class="s2">&quot;libname&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;crypto&quot;</span>
+                <span class="n">connection</span><span class="p">[</span><span class="s2">&quot;arguments&quot;</span><span class="p">][</span><span class="s2">&quot;sender&quot;</span><span class="p">][</span><span class="s2">&quot;arguments&quot;</span><span class="p">][</span><span class="s2">&quot;crypto&quot;</span><span class="p">][</span><span class="s2">&quot;nodename&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;baltrad.exchange.node.name&quot;</span><span class="p">)</span>
+                <span class="n">connection</span><span class="p">[</span><span class="s2">&quot;arguments&quot;</span><span class="p">][</span><span class="s2">&quot;sender&quot;</span><span class="p">][</span><span class="s2">&quot;arguments&quot;</span><span class="p">][</span><span class="s2">&quot;crypto&quot;</span><span class="p">][</span><span class="s2">&quot;privatekey&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;baltrad.exchange.auth.crypto.private.key&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Unsupported template encryption&quot;</span><span class="p">)</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Unsupported template sender&quot;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">publication</span><span class="p">[</span><span class="s2">&quot;connection&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">connection</span>
+        <span class="n">publication</span><span class="p">[</span><span class="s2">&quot;filter&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">template</span><span class="p">[</span><span class="s2">&quot;filter&quot;</span><span class="p">]</span>
+
+        <span class="n">json_publication</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;publication&quot;</span><span class="p">:</span><span class="n">publication</span><span class="p">}</span>
+
+        <span class="n">output</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">json_publication</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">opts</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">output</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;File </span><span class="si">%s</span><span class="s2"> already exists&quot;</span><span class="o">%</span><span class="n">opts</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+                    <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+                    <span class="n">fp</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">output</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="CreateSubscription"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreateSubscription">[docs]</a><span class="k">class</span> <span class="nc">CreateSubscription</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+<div class="viewcode-block" id="CreateSubscription.update_optionparser"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreateSubscription.update_optionparser">[docs]</a>    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+        <span class="n">usg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_usage</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+
+<span class="s2">Creates a subscription package from the provided template and the provided property-file. If possible, the</span>
+<span class="s2">property file will be identified by checking standard installation path. An atempt to find the</span>
+<span class="s2">template will be used base on default location / name as well. The output will be a tarball containing of one </span>
+<span class="s2">public key and one subscription.json file together with a README file that explains how to use the tarball.</span>
+<span class="s2">This tar ball should be sent to the admin for the remote server.</span>
+
+<span class="s2">Example: baltrad-exchange-config create_subscription --output=subscription_bundle.tar</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+
+        <span class="n">usage</span> <span class="o">=</span> <span class="n">usg</span> <span class="o">+</span> <span class="n">description</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">set_usage</span><span class="p">(</span><span class="n">usage</span><span class="p">)</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
+            <span class="s2">&quot;--conf&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;conf&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">DEFAULT_CONFIG</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Specified the property file to use to extract all relevant information to create the publication to specified host.&quot;</span><span class="p">)</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
+            <span class="s2">&quot;--template&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;template&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">DEFAULT_TEMPLATE</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The template to use for generating the publication / subscription.&quot;</span><span class="p">)</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
+            <span class="s2">&quot;--output&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;output&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The output file name. Must contain .tar och .tgz or .tar.gz suffix. Will default to &lt;nodename&gt;.tar.gz&quot;</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CreateSubscription.execute"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreateSubscription.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="n">cfg</span> <span class="o">=</span> <span class="n">read_config</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">conf</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">template</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Must provide template. Try copying exchange-template.json from examples!&quot;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;baltrad.exchange.node.name&quot;</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No baltrad.exchange.node.name in property file&quot;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">output_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.tar.gz&quot;</span><span class="o">%</span><span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;baltrad.exchange.node.name&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">opts</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
+            <span class="n">output_name</span> <span class="o">=</span> <span class="n">opts</span><span class="o">.</span><span class="n">output</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">output_name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.tar&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">output_name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.tgz&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">output_name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.tar.gz&quot;</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;output file must end with .tar, .tar.gz or .tgz&quot;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">loaded</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">template</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+            <span class="n">loaded</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+        
+        <span class="n">template</span> <span class="o">=</span> <span class="n">loaded</span><span class="p">[</span><span class="s2">&quot;template&quot;</span><span class="p">]</span>
+        <span class="n">template_publication</span> <span class="o">=</span> <span class="n">template</span><span class="p">[</span><span class="s2">&quot;publication&quot;</span><span class="p">]</span>
+        <span class="n">clazz</span> <span class="o">=</span> <span class="s2">&quot;bexchange.net.publishers.standard_publisher&quot;</span>
+        <span class="n">template_connection</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;sender&quot;</span><span class="p">:</span> <span class="s2">&quot;bexchange.net.senders.rest_sender&quot;</span><span class="p">,</span> <span class="s2">&quot;protocol&quot;</span><span class="p">:</span><span class="s2">&quot;crypto&quot;</span><span class="p">}</span>
+        <span class="k">if</span> <span class="s2">&quot;class&quot;</span> <span class="ow">in</span> <span class="n">template_publication</span><span class="p">:</span>
+            <span class="n">clazz</span> <span class="o">=</span> <span class="n">template_publication</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">]</span>
+        <span class="n">extra_arguments</span><span class="o">=</span><span class="p">{}</span>
+        <span class="k">if</span> <span class="s2">&quot;extra_arguments&quot;</span> <span class="ow">in</span> <span class="n">template_publication</span><span class="p">:</span>
+            <span class="n">extra_arguments</span> <span class="o">=</span> <span class="n">template_publication</span><span class="p">[</span><span class="s2">&quot;extra_arguments&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">&quot;connection&quot;</span> <span class="ow">in</span> <span class="n">template</span><span class="p">:</span>
+            <span class="n">template_connection</span> <span class="o">=</span> <span class="n">template</span><span class="p">[</span><span class="s2">&quot;connection&quot;</span><span class="p">]</span>
+
+
+        <span class="n">subscription</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">subscription</span><span class="p">[</span><span class="s2">&quot;__comment__&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;This is a comment&quot;</span>
+        <span class="n">subscription</span><span class="p">[</span><span class="s2">&quot;_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;subscription from </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;baltrad.exchange.node.name&quot;</span><span class="p">)</span>
+        <span class="n">subscription</span><span class="p">[</span><span class="s2">&quot;active&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">subscription</span><span class="p">[</span><span class="s2">&quot;storage&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;default_storage&quot;</span><span class="p">]</span>
+        <span class="n">subscription</span><span class="p">[</span><span class="s2">&quot;_statdef&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;stat-subscription-1&quot;</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;count&quot;</span><span class="p">}]</span>
+        <span class="n">subscription</span><span class="p">[</span><span class="s2">&quot;allow_duplicates&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">subscription</span><span class="p">[</span><span class="s2">&quot;allowed_ids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">cryptos</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">with</span> <span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">tmpdir</span><span class="p">:</span>
+            <span class="n">foldername</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;(\.tar\.gz|\.tar|\.tgz)$&quot;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">output_name</span><span class="p">)</span>
+            <span class="n">dirname</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="n">foldername</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">dirname</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">template_connection</span><span class="p">[</span><span class="s2">&quot;sender&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;bexchange.net.senders.rest_sender&quot;</span><span class="p">:</span>
+                <span class="n">cryptod</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">cryptod</span><span class="p">[</span><span class="s2">&quot;auth&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;crypto&quot;</span>
+                <span class="n">cryptod</span><span class="p">[</span><span class="s2">&quot;conf&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">cryptod</span><span class="p">[</span><span class="s2">&quot;conf&quot;</span><span class="p">][</span><span class="s2">&quot;nodename&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;baltrad.exchange.node.name&quot;</span><span class="p">)</span>
+                <span class="n">cryptod</span><span class="p">[</span><span class="s2">&quot;conf&quot;</span><span class="p">][</span><span class="s2">&quot;creator&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;baltrad.exchange.crypto&quot;</span>
+                <span class="n">cryptod</span><span class="p">[</span><span class="s2">&quot;conf&quot;</span><span class="p">][</span><span class="s2">&quot;pubkey&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.public&quot;</span><span class="o">%</span><span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;baltrad.exchange.node.name&quot;</span><span class="p">)</span>
+                <span class="n">cryptod</span><span class="p">[</span><span class="s2">&quot;conf&quot;</span><span class="p">][</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;public&quot;</span>
+
+                <span class="n">privatek</span> <span class="o">=</span> <span class="n">crypto</span><span class="o">.</span><span class="n">load_key</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;baltrad.exchange.auth.crypto.private.key&quot;</span><span class="p">))</span>
+                <span class="n">publick</span> <span class="o">=</span> <span class="n">privatek</span><span class="o">.</span><span class="n">publickey</span><span class="p">()</span>
+                <span class="n">publick</span><span class="o">.</span><span class="n">exportPEM</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">.public&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">dirname</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;baltrad.exchange.node.name&quot;</span><span class="p">)))</span>
+
+                <span class="n">cryptod</span><span class="p">[</span><span class="s2">&quot;conf&quot;</span><span class="p">][</span><span class="s2">&quot;keyType&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">publick</span><span class="o">.</span><span class="n">algorithm</span><span class="p">()</span>
+
+                <span class="n">cryptos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cryptod</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Unsupported template sender&quot;</span><span class="p">)</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="n">subscription</span><span class="p">[</span><span class="s2">&quot;cryptos&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cryptos</span>
+            <span class="n">subscription</span><span class="p">[</span><span class="s2">&quot;filter&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">template</span><span class="p">[</span><span class="s2">&quot;filter&quot;</span><span class="p">]</span>
+
+            <span class="n">json_subscription</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;subscription&quot;</span><span class="p">:</span><span class="n">subscription</span><span class="p">}</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">json_subscription</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">-subscription.json&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">dirname</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;baltrad.exchange.node.name&quot;</span><span class="p">)),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+                <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+                <span class="n">fp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/README&quot;</span><span class="o">%</span><span class="n">dirname</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+                <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">README</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;baltrad.exchange.node.name&quot;</span><span class="p">)))</span>
+                <span class="n">fp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+            <span class="n">tmode</span> <span class="o">=</span> <span class="s2">&quot;w&quot;</span>
+            <span class="k">if</span> <span class="n">output_name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.tgz&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">output_name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.tar.gz&quot;</span><span class="p">):</span>
+                <span class="n">tmode</span> <span class="o">=</span> <span class="s2">&quot;w:gz&quot;</span>
+
+            <span class="k">with</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">output_name</span><span class="p">,</span> <span class="n">tmode</span><span class="p">)</span> <span class="k">as</span> <span class="n">tar</span><span class="p">:</span>
+                <span class="n">tar</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">dirname</span><span class="p">,</span> <span class="n">arcname</span><span class="o">=</span><span class="n">foldername</span><span class="p">)</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Created </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">output_name</span><span class="p">)</span>           </div>
+
+<div class="viewcode-block" id="CreateSubscription.README"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreateSubscription.README">[docs]</a>    <span class="k">def</span> <span class="nf">README</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodename</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;&quot;Origin: </span><span class="si">%s</span><span class="s2"></span>
+<span class="s2">Created: </span><span class="si">%s</span><span class="s2"></span>
+
+<span class="s2">This folder contains two different files. One is a public key originating from </span><span class="si">%s</span><span class="s2"> and the</span>
+<span class="s2">other is the currently provided subscription configuration.  The public key should be placed in the public key root folder, </span>
+<span class="s2">typically /etc/baltrad/exchange/crypto-keys/.</span>
+
+<span class="s2">The subscription configuration describes what the template assumes is published from the remote server. If you for example</span>
+<span class="s2">just want a subset of what is provided, please notifiy the remote server admin about this so that they can modify the </span>
+<span class="s2">outgoing publication to keep both their and your bandwidth usage limited.</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">nodename</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M&quot;</span><span class="p">),</span> <span class="n">nodename</span><span class="p">)</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">baltrad-exchange 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">bexchange.client.cfgcmd</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    </div>
+  </body>
+</html>

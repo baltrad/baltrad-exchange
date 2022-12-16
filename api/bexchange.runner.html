@@ -52,8 +52,192 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </section>
-<section id="bexchange-runner-runners-module">
-<h2>bexchange.runner.runners module<a class="headerlink" href="#bexchange-runner-runners-module" title="Permalink to this headline">¶</a></h2>
+<section id="module-bexchange.runner.runners">
+<span id="bexchange-runner-runners-module"></span><h2>bexchange.runner.runners module<a class="headerlink" href="#module-bexchange.runner.runners" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="bexchange.runner.runners.inotify_runner">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.runner.runners.</span></span><span class="sig-name descname"><span class="pre">inotify_runner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/runner/runners.html#inotify_runner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.runner.runners.inotify_runner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bexchange.runner.runners.runner" title="bexchange.runner.runners.runner"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.runner.runners.runner</span></code></a></p>
+<p>The inotify runner is used to monitor folders and trigger “store” events. It is run in a separate thread instead of
+beeing created as a daemon-thread since all initiation is performed in the main thread before server is started.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bexchange.runner.runners.inotify_runner.MASK">
+<span class="sig-name descname"><span class="pre">MASK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">136</span></em><a class="headerlink" href="#bexchange.runner.runners.inotify_runner.MASK" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.runner.runners.inotify_runner.handle_file">
+<span class="sig-name descname"><span class="pre">handle_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/runner/runners.html#inotify_runner.handle_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.runner.runners.inotify_runner.handle_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles the file (by sending it to the backend using the name given to this runner
+:param filename: The filename to handle</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.runner.runners.inotify_runner.is_ignored">
+<span class="sig-name descname"><span class="pre">is_ignored</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/runner/runners.html#inotify_runner.is_ignored"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.runner.runners.inotify_runner.is_ignored" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the specified file should be ignored or not, for example when a tmpfile is written.
+the check is performed on basename.
+:param filename: The filename to be checked
+:return True if file should be ignored otherwise False</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.runner.runners.inotify_runner.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/runner/runners.html#inotify_runner.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.runner.runners.inotify_runner.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>The runner for the thread. Starts the inotify notifier loop</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.runner.runners.inotify_runner.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/runner/runners.html#inotify_runner.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.runner.runners.inotify_runner.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts this runner by adding the watched folders and then starting a daemonized thread.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bexchange.runner.runners.inotify_runner_event_handler">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.runner.runners.</span></span><span class="sig-name descname"><span class="pre">inotify_runner_event_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inotify_runner</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/runner/runners.html#inotify_runner_event_handler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.runner.runners.inotify_runner_event_handler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pyinotify.ProcessEvent</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.runner.runners.inotify_runner_event_handler.process_IN_CLOSE_WRITE">
+<span class="sig-name descname"><span class="pre">process_IN_CLOSE_WRITE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/runner/runners.html#inotify_runner_event_handler.process_IN_CLOSE_WRITE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.runner.runners.inotify_runner_event_handler.process_IN_CLOSE_WRITE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Will be called by the inotify notifier when file event occurs.
+:param event: The file event</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.runner.runners.inotify_runner_event_handler.process_IN_MOVED_TO">
+<span class="sig-name descname"><span class="pre">process_IN_MOVED_TO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/runner/runners.html#inotify_runner_event_handler.process_IN_MOVED_TO"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.runner.runners.inotify_runner_event_handler.process_IN_MOVED_TO" title="Permalink to this definition">¶</a></dt>
+<dd><p>Will be called by the inotify notifier when file event occurs.
+:param event: The file event</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bexchange.runner.runners.runner">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.runner.runners.</span></span><span class="sig-name descname"><span class="pre">runner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/runner/runners.html#runner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.runner.runners.runner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base class for any runner</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.runner.runners.runner.active">
+<span class="sig-name descname"><span class="pre">active</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/runner/runners.html#runner.active"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.runner.runners.runner.active" title="Permalink to this definition">¶</a></dt>
+<dd><p>:return if this runner is active or not</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.runner.runners.runner.backend">
+<span class="sig-name descname"><span class="pre">backend</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/runner/runners.html#runner.backend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.runner.runners.runner.backend" title="Permalink to this definition">¶</a></dt>
+<dd><p>:return the backend</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.runner.runners.runner.setactive">
+<span class="sig-name descname"><span class="pre">setactive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">active</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/runner/runners.html#runner.setactive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.runner.runners.runner.setactive" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>active</strong> – If this runner should be active or not</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.runner.runners.runner.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/runner/runners.html#runner.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.runner.runners.runner.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract start method. Will start the runner. Typically by setting up some event listening or starting a thread.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bexchange.runner.runners.runner_manager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.runner.runners.</span></span><span class="sig-name descname"><span class="pre">runner_manager</span></span><a class="reference internal" href="../_modules/bexchange/runner/runners.html#runner_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.runner.runners.runner_manager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>The runner manager. Will create and register the runner</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.runner.runners.runner_manager.add_runner">
+<span class="sig-name descname"><span class="pre">add_runner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">runner</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/runner/runners.html#runner_manager.add_runner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.runner.runners.runner_manager.add_runner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a runner to the manager
+:param runner: The runner that should be added</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.runner.runners.runner_manager.create_runner">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_runner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clz</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/runner/runners.html#runner_manager.create_runner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.runner.runners.runner_manager.create_runner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an instance of clz with specified arguments
+:param clz: class name specified as &lt;module&gt;.&lt;classname&gt;
+:param arguments: a list of arguments that should be used to initialize the class</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.runner.runners.runner_manager.from_conf">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_conf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/runner/runners.html#runner_manager.from_conf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.runner.runners.runner_manager.from_conf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a runner from the specified configuration if it is possible
+:param config: A runner config pattern. Should at least contain the following
+{“class”:”&lt;packagename&gt;.&lt;classname&gt;”
+“active”:&lt;true or false&gt;
+“extra_arguments”:{}”
+}</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.runner.runners.runner_manager.get_runners">
+<span class="sig-name descname"><span class="pre">get_runners</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/runner/runners.html#runner_manager.get_runners"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.runner.runners.runner_manager.get_runners" title="Permalink to this definition">¶</a></dt>
+<dd><p>:return the runners</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.runner.runners.runner_manager.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/runner/runners.html#runner_manager.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.runner.runners.runner_manager.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts all runners</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bexchange.runner.runners.statistics_cleanup_runner">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.runner.runners.</span></span><span class="sig-name descname"><span class="pre">statistics_cleanup_runner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/runner/runners.html#statistics_cleanup_runner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.runner.runners.statistics_cleanup_runner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bexchange.runner.runners.runner" title="bexchange.runner.runners.runner"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.runner.runners.runner</span></code></a></p>
+<p>Cleans the statistics database</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.runner.runners.statistics_cleanup_runner.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/runner/runners.html#statistics_cleanup_runner.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.runner.runners.statistics_cleanup_runner.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>The runner for the thread. Will trigger a wait for</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.runner.runners.statistics_cleanup_runner.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/runner/runners.html#statistics_cleanup_runner.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.runner.runners.statistics_cleanup_runner.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts this runner by starting a daemonized thread.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bexchange.runner.runners.triggered_fetch_runner">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.runner.runners.</span></span><span class="sig-name descname"><span class="pre">triggered_fetch_runner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/runner/runners.html#triggered_fetch_runner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.runner.runners.triggered_fetch_runner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bexchange.runner.runners.runner" title="bexchange.runner.runners.runner"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.runner.runners.runner</span></code></a>, <a class="reference internal" href="bexchange.html#bexchange.util.message_aware" title="bexchange.util.message_aware"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.util.message_aware</span></code></a></p>
+<p>A triggered runner. This runner implements ‘message_aware’ so that a json-message
+can be handled. This runner is actually triggered from the WSGI-process and as such
+is using the WSGI-servers thread pool. &#64;todo: Implement this as a producer/consumer
+thread to avoid any possibility to starve the WSGI-thread pool.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.runner.runners.triggered_fetch_runner.handle_message">
+<span class="sig-name descname"><span class="pre">handle_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/runner/runners.html#triggered_fetch_runner.handle_message"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.runner.runners.triggered_fetch_runner.handle_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles the message if the json message contains a trigger that matches trigger names and
+that the nodename is allowed within the invoker_names by invoking the fetch method in fetcher
+using “arguments” in the json-message.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.runner.runners.triggered_fetch_runner.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/runner/runners.html#triggered_fetch_runner.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.runner.runners.triggered_fetch_runner.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Not used</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-bexchange.runner">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-bexchange.runner" title="Permalink to this headline">¶</a></h2>
@@ -71,7 +255,7 @@
   <ul>
 <li><a class="reference internal" href="#">bexchange.runner package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#bexchange-runner-runners-module">bexchange.runner.runners module</a></li>
+<li><a class="reference internal" href="#module-bexchange.runner.runners">bexchange.runner.runners module</a></li>
 <li><a class="reference internal" href="#module-bexchange.runner">Module contents</a></li>
 </ul>
 </li>
