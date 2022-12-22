@@ -123,7 +123,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span></div>
 
-<div class="viewcode-block" id="configure_logging"><a class="viewcode-back" href="../../api/bexchange.html#bexchange.server_main.configure_logging">[docs]</a><span class="k">def</span> <span class="nf">configure_logging</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="n">logtype</span><span class="p">,</span> <span class="n">logid</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">):</span>
+<div class="viewcode-block" id="configure_logging"><a class="viewcode-back" href="../../api/bexchange.html#bexchange.server_main.configure_logging">[docs]</a><span class="k">def</span> <span class="nf">configure_logging</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="n">logtype</span><span class="p">,</span> <span class="n">logfile</span><span class="p">,</span> <span class="n">logid</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">):</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
 
@@ -131,9 +131,11 @@
     <span class="k">if</span> <span class="n">opts</span><span class="o">.</span><span class="n">foreground</span> <span class="ow">or</span> <span class="n">logtype</span> <span class="o">==</span> <span class="s1">&#39;stdout&#39;</span><span class="p">:</span>
         <span class="n">handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
         <span class="n">add_loghandler</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">default_formatter</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">opts</span><span class="o">.</span><span class="n">logfile</span><span class="p">:</span>
-        <span class="n">handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">handlers</span><span class="o">.</span><span class="n">WatchedFileHandler</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">logfile</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">logfile</span><span class="p">:</span>
+        <span class="n">handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">handlers</span><span class="o">.</span><span class="n">WatchedFileHandler</span><span class="p">(</span><span class="n">logfile</span><span class="p">)</span>
         <span class="n">add_loghandler</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">default_formatter</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">logtype</span> <span class="o">==</span> <span class="s2">&quot;syslog&quot;</span><span class="p">:</span>
         <span class="n">handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">handlers</span><span class="o">.</span><span class="n">SysLogHandler</span><span class="p">(</span><span class="n">SYSLOG_ADDRESS</span><span class="p">,</span> <span class="n">facility</span><span class="o">=</span><span class="n">SYSLOG_FACILITY</span><span class="p">)</span>
         <span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s1">&#39;python[&#39;</span> <span class="o">+</span> <span class="n">logid</span> <span class="o">+</span> <span class="s1">&#39;]: </span><span class="si">%(name)s</span><span class="s1">: </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -229,8 +231,15 @@
             <span class="kn">from</span> <span class="nn">cherrypy.wsgiserver.ssl_builtin</span> <span class="kn">import</span> <span class="n">BuiltinSSLAdapter</span>
             
         <span class="n">logtype</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;baltrad.exchange.log.type&quot;</span><span class="p">,</span> <span class="s2">&quot;logfile&quot;</span><span class="p">)</span>
+
+        <span class="n">logfile</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">opts</span><span class="o">.</span><span class="n">logfile</span><span class="p">:</span>
+            <span class="n">logfile</span> <span class="o">=</span> <span class="n">opts</span><span class="o">.</span><span class="n">logfile</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logfile</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;baltrad.exchange.log.logfile&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
         <span class="n">logid</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;baltrad.exchange.log.id&quot;</span><span class="p">,</span> <span class="s2">&quot;baltrad.exchange&quot;</span><span class="p">)</span>
-        <span class="n">configure_logging</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="n">logtype</span><span class="p">,</span> <span class="n">logid</span><span class="p">,</span> <span class="n">get_logging_level</span><span class="p">(</span><span class="n">conf</span><span class="p">))</span>
+        <span class="n">configure_logging</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="n">logtype</span><span class="p">,</span> <span class="n">logfile</span><span class="p">,</span> <span class="n">logid</span><span class="p">,</span> <span class="n">get_logging_level</span><span class="p">(</span><span class="n">conf</span><span class="p">))</span>
 
         <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;paramiko&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">)</span> <span class="c1"># Disable some paramiko loggings</span>
 
