@@ -83,7 +83,7 @@ def get_logging_level(conf):
     else:
         return logging.INFO
 
-def configure_logging(opts, logtype, logid, level=logging.INFO):
+def configure_logging(opts, logtype, logfile, logid, level=logging.INFO):
     logger = logging.getLogger()
     logger.setLevel(level)
 
@@ -91,9 +91,11 @@ def configure_logging(opts, logtype, logid, level=logging.INFO):
     if opts.foreground or logtype == 'stdout':
         handler = logging.StreamHandler(sys.stdout)
         add_loghandler(logger, handler, default_formatter)
-    if opts.logfile:
-        handler = logging.handlers.WatchedFileHandler(opts.logfile)
+
+    if logfile:
+        handler = logging.handlers.WatchedFileHandler(logfile)
         add_loghandler(logger, handler, default_formatter)
+
     if logtype == "syslog":
         handler = logging.handlers.SysLogHandler(SYSLOG_ADDRESS, facility=SYSLOG_FACILITY)
         formatter = logging.Formatter('python[' + logid + ']: %(name)s: %(message)s')
@@ -189,8 +191,15 @@ def run():
             from cherrypy.wsgiserver.ssl_builtin import BuiltinSSLAdapter
             
         logtype = conf.get("baltrad.exchange.log.type", "logfile")
+
+        logfile = None
+        if opts.logfile:
+            logfile = opts.logfile
+        else:
+            logfile = conf.get("baltrad.exchange.log.logfile", None)
+
         logid = conf.get("baltrad.exchange.log.id", "baltrad.exchange")
-        configure_logging(opts, logtype, logid, get_logging_level(conf))
+        configure_logging(opts, logtype, logfile, logid, get_logging_level(conf))
 
         logging.getLogger("paramiko").setLevel(logging.WARNING) # Disable some paramiko loggings
 
