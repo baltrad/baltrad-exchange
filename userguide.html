@@ -124,6 +124,9 @@ json configuration but without them the system won’t do anything.</p>
 <span class="w"> </span><span class="c1"># How logging should be performed</span><span class="w"></span>
 <span class="w"> </span><span class="na">baltrad.exchange.log.type</span><span class="o">=</span><span class="s">logfile</span><span class="w"></span>
 
+<span class="w"> </span><span class="c1"># The logfile to use if logfile logging is choosen. Can be overridden by server options.</span><span class="w"></span>
+<span class="w"> </span><span class="c1"># baltrad.exchange.log.logfile=/var/log/baltrad/baltrad-exchange-server.log</span><span class="w"></span>
+
 <span class="w"> </span><span class="c1"># The log id used</span><span class="w"></span>
 <span class="w"> </span><span class="na">baltrad.exchange.log.id</span><span class="o">=</span><span class="s">baltrad-exchange</span><span class="w"></span>
 
@@ -546,7 +549,51 @@ set of arguments to be initiated you find examples on how to use them in the etc
 <section id="decorators">
 <h4>Decorators<a class="headerlink" href="#decorators" title="Permalink to this headline">¶</a></h4>
 <p>The decorators are the baltrad exchange engines way to allow you to modify files before publishing them. For example if you only want to publish a few parameters, if you want to add some important text in a how-section
-or maybe convert the ODIM-version to a different one. At the moment, there aren’t any decorators distributed with the baltrad-exchange engine. But you will find an example on how a decorator can be implemented here and here.</p>
+or maybe convert the ODIM-version to a different one. At the moment, there aren’t any decorators distributed with the baltrad-exchange engine. Below is an example on how a decorator that removes all quantities except
+the ones that was configured.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+
+<span class="kn">from</span> <span class="nn">baltrad.exchange.decorators.decorator</span> <span class="kn">import</span> <span class="n">decorator_manager</span><span class="p">,</span> <span class="n">decorator</span>
+<span class="kn">import</span> <span class="nn">_raveio</span><span class="o">,</span> <span class="nn">_rave</span><span class="o">,</span> <span class="nn">_polarvolume</span><span class="o">,</span> <span class="nn">_polarscan</span>
+<span class="kn">from</span> <span class="nn">tempfile</span> <span class="kn">import</span> <span class="n">NamedTemporaryFile</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+
+<span class="k">class</span> <span class="nc">keep_quantities_decorator</span><span class="p">(</span><span class="n">decorator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Removes all quantities in a volume or scan except the ones specified.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quantities</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">keep_quantities_decorator</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_quantities</span> <span class="o">=</span> <span class="n">quantities</span>
+    
+    <span class="k">def</span> <span class="nf">decorate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inf</span><span class="p">):</span>
+        <span class="n">outf</span> <span class="o">=</span> <span class="n">inf</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">_raveio</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">outf</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">object</span>
+            <span class="k">if</span> <span class="n">_polarvolume</span><span class="o">.</span><span class="n">isPolarVolume</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="ow">or</span> <span class="n">_polarscan</span><span class="o">.</span><span class="n">isPolarScan</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    	        <span class="n">a</span><span class="o">.</span><span class="n">removeParametersExcept</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_quantities</span><span class="p">)</span>
+    	        <span class="n">newf</span> <span class="o">=</span> <span class="n">NamedTemporaryFile</span><span class="p">()</span>
+    	        <span class="n">rio</span> <span class="o">=</span> <span class="n">_raveio</span><span class="o">.</span><span class="n">new</span><span class="p">()</span>
+    	        <span class="n">rio</span><span class="o">.</span><span class="n">object</span> <span class="o">=</span> <span class="n">a</span>
+    	        <span class="n">rio</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">newf</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    	        <span class="n">outf</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    	        <span class="n">outf</span> <span class="o">=</span> <span class="n">newf</span>
+        <span class="k">except</span><span class="p">:</span>
+    	    <span class="kn">import</span> <span class="nn">traceback</span>
+    	    <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">(</span><span class="s2">&quot;Failed&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">outf</span>
+
+</pre></div>
+</div>
+<p>The decorator is in turn configured in the publisher as</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;decorators&quot;</span>:<span class="o">[</span>
+ <span class="o">{</span> <span class="s2">&quot;decorator&quot;</span>:<span class="s2">&quot;rave_be_decorator.keep_quantities_decorator&quot;</span>,
+  <span class="s2">&quot;arguments&quot;</span>:<span class="o">[</span>
+     <span class="o">[</span><span class="s2">&quot;DBZH&quot;</span>, <span class="s2">&quot;VRADH&quot;</span>, <span class="s2">&quot;TH&quot;</span><span class="o">]</span>
+  <span class="o">]</span>
+ <span class="o">}</span>
+<span class="o">]</span>
+</pre></div>
+</div>
 </section>
 </section>
 <section id="runners-runner">
@@ -593,9 +640,50 @@ will be notified about a file when it has passed the subscription matching. The 
 allowed to be blocking. This means that when a file has been passed to the processor, the processor should pass it on to a queue of some sort and return immediately. The exchange server expects
 no response and will. Instead it is up to the processor to ensure that the resulting product is taken care of, for example by notifying the exchange server that there is a file available.</p>
 </section>
-<section id="getting-started">
-<h3>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h3>
-<p>The installation is quite straight forward</p>
+<section id="installation">
+<h3>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h3>
+<p>The easiest way to install the software is if you are using a RedHat 8 based distribution since you in that can install the software from the prebuilt
+packages. Other distributions requires installation from source for both bdb and hlhdf.</p>
+<section id="installing-from-rpm">
+<h4>Installing from RPM<a class="headerlink" href="#installing-from-rpm" title="Permalink to this headline">¶</a></h4>
+<p>First, you should enable the baltrad package repository which is done as super user.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt; <span class="nb">cd</span> /etc/yum.repos.d/
+%&gt; wget http://rpm.baltrad.eu/CentOS/8/latest/baltrad-package-latest.repo
+%&gt; dnf update
+</pre></div>
+</div>
+<p>Then you should install some dependencies before installing the baltrad-exchange server.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt; sudo dnf install python3-lockfile python3-pycryptodomex python3-numpy
+%&gt; sudo dnf install python3-paramiko python3-scp
+%&gt; sudo dnf install baltrad-db*
+</pre></div>
+</div>
+<p>Finally you should install the baltrad-exchange server</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt; sudo dnf install baltrad-exchange
+</pre></div>
+</div>
+</section>
+<section id="installation-from-software">
+<h4>Installation from software<a class="headerlink" href="#installation-from-software" title="Permalink to this headline">¶</a></h4>
+<p>The installation process from source can be used for either running the server or for development purposes.</p>
+<p>The first step that will be required is to get all dependencies in place. Either using prebuilt packages or directly from source. The following
+python packages will be needed lockfile, pycryptodomex numpy, paramiko, scp, baltrad-db bdbcommon &amp; bdbclient and hlhdf.</p>
+<p>Fetch the baltrad-exchange engine by downloading it from github as your ordinary user</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt; <span class="nb">cd</span> /projects
+%&gt; git clone https://github.com/baltrad/baltrad-exchange.git
+%&gt; <span class="nb">cd</span> baltrad-exchange
+</pre></div>
+</div>
+<p>The easiest way to start developing in baltrad-exchange is to create a virtual environment that will be used for local installations and tests.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt; python3 -m venv --system-site-packages env
+%&gt; . env/bin/activate
+</pre></div>
+</div>
+<p>With the virtual environment created you can just install the baltrad-exchange software into your own environment by typing</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt; python3 setup.py install
+</pre></div>
+</div>
+</section>
 </section>
 </section>
 </section>
@@ -628,7 +716,11 @@ no response and will. Instead it is up to the processor to ensure that the resul
 </li>
 <li><a class="reference internal" href="#runners-runner">Runners (runner)</a></li>
 <li><a class="reference internal" href="#processors-processor">Processors (processor)</a></li>
-<li><a class="reference internal" href="#getting-started">Getting started</a></li>
+<li><a class="reference internal" href="#installation">Installation</a><ul>
+<li><a class="reference internal" href="#installing-from-rpm">Installing from RPM</a></li>
+<li><a class="reference internal" href="#installation-from-software">Installation from software</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

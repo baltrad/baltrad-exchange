@@ -97,6 +97,9 @@ json configuration but without them the system won't do anything.
   # How logging should be performed
   baltrad.exchange.log.type=logfile
   
+  # The logfile to use if logfile logging is choosen. Can be overridden by server options.
+  # baltrad.exchange.log.logfile=/var/log/baltrad/baltrad-exchange-server.log
+
   # The log id used
   baltrad.exchange.log.id=baltrad-exchange
   
@@ -571,7 +574,22 @@ set of arguments to be initiated you find examples on how to use them in the etc
 Decorators
 ------------
 The decorators are the baltrad exchange engines way to allow you to modify files before publishing them. For example if you only want to publish a few parameters, if you want to add some important text in a how-section
-or maybe convert the ODIM-version to a different one. At the moment, there aren't any decorators distributed with the baltrad-exchange engine. But you will find an example on how a decorator can be implemented here and here.
+or maybe convert the ODIM-version to a different one. At the moment, there aren't any decorators distributed with the baltrad-exchange engine. Below is an example on how a decorator that removes all quantities except
+the ones that was configured.
+
+.. literalinclude:: rave_be_decorator.py
+
+The decorator is in turn configured in the publisher as
+
+.. code:: sh
+
+   "decorators":[
+    { "decorator":"rave_be_decorator.keep_quantities_decorator",
+     "arguments":[
+     	["DBZH", "VRADH", "TH"]
+     ]
+    }
+   ]
 
 
 Runners (runner)
@@ -628,9 +646,62 @@ allowed to be blocking. This means that when a file has been passed to the proce
 no response and will. Instead it is up to the processor to ensure that the resulting product is taken care of, for example by notifying the exchange server that there is a file available.
 
 
-Getting started
+Installation
 ===============
 
-The installation is quite straight forward
-  
+The easiest way to install the software is if you are using a RedHat 8 based distribution since you in that can install the software from the prebuilt
+packages. Other distributions requires installation from source for both bdb and hlhdf.
 
+Installing from RPM
+-------------------
+
+First, you should enable the baltrad package repository which is done as super user.
+
+.. code:: sh
+
+   %> cd /etc/yum.repos.d/
+   %> wget http://rpm.baltrad.eu/CentOS/8/latest/baltrad-package-latest.repo
+   %> dnf update
+
+Then you should install some dependencies before installing the baltrad-exchange server.
+
+.. code:: sh
+
+   %> sudo dnf install python3-lockfile python3-pycryptodomex python3-numpy 
+   %> sudo dnf install python3-paramiko python3-scp
+   %> sudo dnf install baltrad-db*
+
+Finally you should install the baltrad-exchange server
+
+.. code:: sh
+
+   %> sudo dnf install baltrad-exchange
+
+Installation from software
+--------------------------
+
+The installation process from source can be used for either running the server or for development purposes.
+
+The first step that will be required is to get all dependencies in place. Either using prebuilt packages or directly from source. The following 
+python packages will be needed lockfile, pycryptodomex numpy, paramiko, scp, baltrad-db bdbcommon & bdbclient and hlhdf.
+
+Fetch the baltrad-exchange engine by downloading it from github as your ordinary user
+
+.. code:: sh
+
+   %> cd /projects
+   %> git clone https://github.com/baltrad/baltrad-exchange.git
+   %> cd baltrad-exchange
+
+The easiest way to start developing in baltrad-exchange is to create a virtual environment that will be used for local installations and tests. 
+
+.. code:: sh
+
+   %> python3 -m venv --system-site-packages env
+   %> . env/bin/activate
+
+With the virtual environment created you can just install the baltrad-exchange software into your own environment by typing
+
+.. code:: sh
+
+  %> python3 setup.py install
