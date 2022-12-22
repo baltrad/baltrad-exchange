@@ -76,7 +76,7 @@ run the server in foreground mode.
 .. code:: sh
 
    %> baltrad-exchange-server --conf=./etc/baltrad-exchange.properties \
-                       --pidfile=/tmp/be.pid --logfile=/tmp/be.log --foreground
+                       --pidfile=/tmp/be.pid --foreground
 
 
 
