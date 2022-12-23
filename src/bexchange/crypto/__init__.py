@@ -55,11 +55,15 @@ class public_key(object):
         self._key = key
 
     def PEM(self):
-        """Returns the public key as PEM-encoded string
+        """
+        :return: the public key as PEM-encoded string
         """
         return self._key.export_key("PEM").decode()
 
     def algorithm(self):
+        """
+        :return: the algorithm this key is using, currently only "rsa" or "dsa".
+        """
         if isinstance(self._key, RSA.RsaKey):
             return "rsa"
         elif isinstance(self._key, DSA.DsaKey):
@@ -77,6 +81,7 @@ class public_key(object):
     def exportJSON(self, filename, nodename):
         """Exports the public key to specified filename as a JSON entry
         :param filename: The name of the file to be written
+        :param nodename: The nodename that should be added to the exported json entry
         """
         import json
         keyType = "dsa"
@@ -91,6 +96,11 @@ class public_key(object):
                        "type":"public"}, fp)
 
     def verify(self, msg, signature):
+        """Verifies if the msg and signature matches up.
+        :param msg: The message that was used to generate the signature
+        :param signature: The signature that we are expecting the message to match
+        :return: True if they are matching, otherwise False
+        """
         if isinstance(self._key, RSA.RsaKey):
             verifier = pkcs1_15.new(self._key)
         else:
@@ -114,16 +124,22 @@ class private_key(object):
         self._key = key
     
     def publickey(self):
-        """Returns the public key
+        """
+        :return: the public key
         """
         return public_key(self._key.publickey())
 
     def PEM(self):
-        """Returns the private key as PEM-encoded string
+        """
+        :return: the private key as PEM-encoded string
         """
         return self._key.export_key("PEM").decode()
 
     def sign(self, msg):
+        """Creates a b64 encoded signature  from the message
+        :param msg: The message that should be used to generate the signature from
+        :return: the signature
+        """
         hashed = SHA256.new(bytes(msg, "UTF-8"))
         if isinstance(self._key, RSA.RsaKey):
             signer = pkcs1_15.new(self._key)
@@ -134,6 +150,9 @@ class private_key(object):
         return result
     
     def algorithm(self):
+        """
+        :return: the algorithm this key is using, currently only "rsa" or "dsa".
+        """
         if isinstance(self._key, RSA.RsaKey):
             return "rsa"
         elif isinstance(self._key, DSA.DsaKey):
@@ -149,10 +168,12 @@ class private_key(object):
             fp.write(self.PEM())
 
     def exportJSON(self, filename, nodename):
-        import json
         """Exports the public key to specified filename as a JSON entry
         :param filename: The name of the file to be written
+        :param nodename: The nodename that should be added to the exported json entry
         """
+        import json
+
         keyType = "dsa"
         if isinstance(self._key, RSA.RsaKey):
             keyType = "rsa"

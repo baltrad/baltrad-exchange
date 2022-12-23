@@ -55,6 +55,11 @@ class TinkAuth(coreauth.Auth):
         self._verifiers = {}
     
     def add_key_config(self, conf):
+        """Adds a key from key config
+
+        :param conf: The key config
+        :return the node name this key should be associated with
+        """        
         handle = cleartext_keyset_handle.read(tink.JsonKeysetReader(json.dumps(conf["key"])))
         verifier = handle.primitive(signature.PublicKeyVerify)
         self._verifiers[conf["name"]] = verifier
@@ -82,6 +87,11 @@ class TinkAuth(coreauth.Auth):
         self._verifiers[name] = verifier
     
     def authenticate(self, req, credentials):
+        """Authenticates the request against the credentials.
+        :param req: The http request
+        :param credentials: The credentials that should be verified against
+        :return: True if authenticated, False otherwise. 
+        """        
         try:
             keyname, sig = credentials.rsplit(":")
         except ValueError:

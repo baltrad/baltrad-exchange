@@ -78,7 +78,7 @@ def force_sqlite_foreign_keys(dbapi_con, con_record):
 
 class SqlAlchemySourceManager(object):
     def __init__(self, uri="sqlite:///tmp/baltrad-exchange-source.db", poolsize=10):
-        self._engine = engine.create_engine(uri, echo=False)
+        self._engine = engine.create_engine(uri, echo=False) # @todo: engine.create_engine for sqlite doesn't support pool_size=poolsize
         if self._engine.driver == "pysqlite":
             event.listen(self._engine, "connect", force_sqlite_foreign_keys)
         self.init_tables()

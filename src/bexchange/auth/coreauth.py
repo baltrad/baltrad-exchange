@@ -219,6 +219,10 @@ class Auth(object):
     
     @classmethod
     def get_impl(cls, name):
+        """
+        :param name: The name of the entrypoint as defined in setup.py, e.g. crypto, keyczar...
+        :return: the class represented by name. Used to create an instance of correct type 
+        """
         return pkg_resources.load_entry_point(
             "bexchange",
             "bexchange.auth",
@@ -287,6 +291,9 @@ class CryptoAuth(Auth):
         return self._verifiers[nodename]
 
     def add_key_config(self, conf):
+        """Adding key from a json-conf. Will ensure that creator is baltrad.exchange.crypto.
+        :param conf: The json configuration
+        """
         if "creator" in conf and conf["creator"] == "baltrad.exchange.crypto":
             if conf["type"] == "public":
                 if "pubkey" in conf:
@@ -328,6 +335,11 @@ class CryptoAuth(Auth):
         self._verifiers[name] = key
     
     def authenticate(self, req, credentials):
+        """Authenticates the request against the credentials.
+        :param req: The http request
+        :param credentials: The credentials that should be verified against
+        :return: True if authenticated, False otherwise. 
+        """
         logger.debug("CryptoAuth - authenticate: %s"%credentials)
         try:
             keyname, sig = credentials.rsplit(":")

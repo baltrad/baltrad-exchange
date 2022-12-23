@@ -63,6 +63,11 @@ class KeyczarAuth(coreauth.Auth):
         self._verifiers[name] = verifier
     
     def add_key_config(self, conf):
+        """Adds a key from key config
+
+        :param conf: The key config
+        :return the node name this key should be associated with
+        """         
         try:
             pubkey = conf["pubkey"]
             nodename = conf["nodename"]
@@ -77,6 +82,11 @@ class KeyczarAuth(coreauth.Auth):
         return nodename
     
     def authenticate(self, req, credentials):
+        """Authenticates the request against the credentials.
+        :param req: The http request
+        :param credentials: The credentials that should be verified against
+        :return: True if authenticated, False otherwise. 
+        """        
         try:
             keyname, signature = credentials.rsplit(":")
         except ValueError:
