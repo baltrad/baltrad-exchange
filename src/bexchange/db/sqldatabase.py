@@ -48,6 +48,8 @@ from sqlalchemy import (
     Table,
 )
 
+from bexchange.db import util as dbutil
+
 logger = logging.getLogger("bexchange.db.sqldatabase")
 
 dbmeta = MetaData()
@@ -162,7 +164,7 @@ class SqlAlchemyDatabase(object):
         :param uri: The uri pointing to the database.
         :param poolsize: How many database connections we should use
         """
-        self._engine = engine.create_engine(uri, echo=False) # @todo: engine.create_engine for sqlite doesn't support pool_size=poolsize
+        self._engine = dbutil.create_engine_from_url(uri, poolsize)
         if self._engine.driver == "pysqlite":
             event.listen(self._engine, "connect", force_sqlite_foreign_keys)
         self.init_tables()
