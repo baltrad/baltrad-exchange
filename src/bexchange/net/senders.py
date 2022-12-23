@@ -151,6 +151,10 @@ class dex_sender(sender):
         self._signer = keyczar_signer.read(self._privatekey)
 
     def _generate_headers(self, uri):
+        """Creates the headers that should be added to the dex message
+        :param uri: The uri that should be added
+        :return: the headers as a dictonary
+        """
         datestr = datetime.datetime.now().strftime("%a, %e %B %Y %H:%M:%S")
         contentMD5 = base64.b64encode(uri.encode("utf-8"))
         message = ("POST" + '\n' + uri + '\n' + "application/x-hdf5" + '\n' + str(contentMD5, "utf-8") + '\n' + datestr)
@@ -163,6 +167,10 @@ class dex_sender(sender):
         return headers
   
     def _split_uri(self, uri):
+        """Splits an uri to the individual parts.
+        :param uri: The uri to be split
+        :return: tuple of scheme, host and query
+        """
         urlparts = urlparse.urlsplit(uri)
         scheme = urlparts[0]
         host = urlparts[1]
@@ -170,6 +178,14 @@ class dex_sender(sender):
         return (scheme, host, query)
   
     def _post(self, scheme, host, query, data, headers):
+        """Posts the message to the recipient.
+        :param scheme: The scheme to use, https or http
+        :param host: the host that should be connected to (including port)
+        :param query: the query data
+        :param data: the data to be added to message
+        :param headers: the headers to add to message
+        :return: a tuple of status, reason and any data
+        """
         if scheme == "https":
             conn = httplib.HTTPSConnection(host, context = ssl._create_unverified_context())
         else:
@@ -443,6 +459,11 @@ class ftp_sender(baseuri_sender):
             ftp.quit()
 
     def does_dir_exist(self, ftp, path):
+        """Tests if the specified directory exist using the provided ftp-connection
+        :param ftp: the ftp connection
+        :param path: the path to test
+        :return: True or False
+        """
         dirlist = []
         dtolist = os.path.dirname(path)
         dtotest = os.path.basename(path)
@@ -453,6 +474,9 @@ class ftp_sender(baseuri_sender):
         return False
 
     def change_and_create_dir(self, ftp, path):
+        """Changes directory and creates specified directory.
+        :param ftp: The ftp connection
+        :param path: The path to create"""
         if not self.does_dir_exist(ftp, path):
             nextpath = os.path.dirname(path)
             createdir = os.path.basename(path)
@@ -470,6 +494,9 @@ class ftp_sender(baseuri_sender):
     ##
     # Connects to remote server
     def connect(self):
+        """Connects to the host specified by host  / port.
+        :return: the ftp connection
+        """
         ftp = ftplib.FTP()
         ftp.connect(self.hostname(), self.port())
         ftp.login(self.username(), self.password())
@@ -496,9 +523,16 @@ class copy_sender(sender):
         self._namer = metadata_namer(self._path)
 
     def name(self, meta):
+        """Creates the name to use when copying the file from the metadata
+        :param meta: The metadata
+        :return: the name to use for destination
+        """
         return self._namer.name(meta)
     
     def create_missing_directories(self):
+        """
+        :return: if missing directories should be created or not
+        """
         return self._create_missing_directories
     
     def send(self, path, meta):
@@ -517,6 +551,8 @@ class copy_sender(sender):
 
 class sender_manager:
     def __init__(self):
+        """Constructor
+        """
         pass
 
     @classmethod

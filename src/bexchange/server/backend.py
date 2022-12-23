@@ -346,6 +346,9 @@ class SimpleBackend(backend.Backend):
         return metadata_helper.metadata_from_file(self.source_manager, self._hasher, path)
             
     def get_server_uptime(self):
+        """
+        :return: the server uptime as a tuple of (days, hours, minutes, seconds)
+        """
         td = (datetime.datetime.now() - self._starttime)
         hours = td.seconds // 3600
         minutes = (td.seconds % 3600) // 60
@@ -354,9 +357,15 @@ class SimpleBackend(backend.Backend):
 
 
     def get_server_nodename(self):
+        """
+        :return: the nodename of this server
+        """
         return self.nodename
 
     def get_server_publickey(self):
+        """
+        :return: the public crypto key in PEM encoding that can be used by recipient to verify messages with
+        """
         provider = self.authmgr.get_provider("crypto")
         if provider:
             return provider.getPublicKey(self.nodename).PEM()

@@ -216,6 +216,8 @@ class standard_publisher(publisher):
                 self._queue.task_done()
 
     def start(self):
+        """ Starts all consumer threads as daemon threads
+        """
         for i in range(self._nrthreads):
             t = Thread(target=self.consumer)
             t.daemon = True
@@ -223,11 +225,17 @@ class standard_publisher(publisher):
             t.start() 
 
     def stop(self):
+        """Joins the threads
+        """
         for t in self._threads:
             t.join()
 
 class publisher_manager:
+    """The manager used for creating publishers from configuration
+    """
     def __init__(self):
+        """Constructor
+        """
         pass
 
     @classmethod
@@ -247,6 +255,11 @@ class publisher_manager:
     
     @classmethod
     def from_conf(self, config, backend):
+        """Creates the publisher instance from provided configuration.
+        :param config: The json config in a dict
+        :param backend: The backend the publisher shall have access to
+        :return: the created publisher
+        """
         filter_manager = filters.filter_manager()
         name = "unknown"
         publisher_clazz = "bexchange.net.publishers.standard_publisher"

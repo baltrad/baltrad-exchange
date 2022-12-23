@@ -79,6 +79,10 @@ def force_sqlite_foreign_keys(dbapi_con, con_record):
         dbapi_con.execute("pragma foreign_keys=ON")
 
 class SqlAlchemySourceManager(object):
+    """The DB manager providing source handling
+    :param uri: The uri to database where sources are stored
+    :param poolsize: the size of the db connection pool. In the case of sqlite, this will not be used
+    """
     def __init__(self, uri="sqlite:///tmp/baltrad-exchange-source.db", poolsize=10):
         self._engine = dbutil.create_engine_from_url(uri, poolsize)
         if self._engine.driver == "pysqlite":
@@ -87,14 +91,20 @@ class SqlAlchemySourceManager(object):
 
     @property
     def driver(self):
-        """database driver name
+        """
+        :return: database driver name
         """
         return self._engine.driver
     
     def init_tables(self):
+        """Initializes the database tables
+        """
         dbmeta.create_all(self._engine)
 
     def add_sources(self, srclist):
+        """Adds the sources to the source database
+        :param srclist: a list of bdbcommon.oh5.Sources
+        """
         with self.get_connection() as conn:
             count = conn.execute("select count(*) from sources").fetchone()["count(*)"]
             if count > 0:
@@ -115,6 +125,10 @@ class SqlAlchemySourceManager(object):
                 self.insert_source_values(conn, source_id, source)
     
     def get_source(self, meta):
+        """
+        :param meta: The metadata containing source
+        :return: A complete source from the metadata source identifier
+        """
         with self.get_connection() as conn:
             if meta.what_source == None:
                 raise LookupError("no source in metadata")
@@ -138,6 +152,11 @@ class SqlAlchemySourceManager(object):
     # Insert Key-values from a source
     #
     def insert_source_values(self, conn, source_id, source):
+        """Inserts kvs values
+        :param conn: connection
+        :param source_id: the unique source id
+        :param source: the source
+        """
         kvs = []
         for k, v in source.items():
             kvs.append({

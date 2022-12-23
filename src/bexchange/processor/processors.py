@@ -32,18 +32,35 @@ from bexchange.naming import namer
 logger = logging.getLogger("bexchange.processor")
 
 class processor:
+    """Base class to be used by all processor implementations
+    """
     def __init__(self, backend, name, active, extra_arguments=None):
+        """Constructor
+        :param backend: The backend that this processor should have access to
+        :param name: Name that identifies this processor
+        :param active: If this processor should be active or not
+        :param extra_arguments: The extra arguments used when creating the processor
+        """
         self._backend = backend
         self._name = name
         self._active = active
     
     def backend(self):
+        """
+        :return: the backend instance
+        """
         return self._backend
     
     def name(self):
+        """
+        :return: the name of this processor
+        """
         return self._name
     
     def active(self):
+        """
+        :return: if this processor is active or not
+        """
         return self._active
     
     def process(self, path, metadata):
@@ -54,9 +71,13 @@ class processor:
         raise NotImplementedError()
 
     def start(self):
+        """Starts this processor. Typically by starting a thread or consumer pool
+        """
         pass
     
     def stop(self):
+        """Stops this processor. Typically by joining a number of threads
+        """
         pass
 
 class example_processor(processor):
@@ -104,6 +125,11 @@ class processor_manager:
     
     @classmethod
     def from_conf(self, config, backend):
+        """Creates a processor instance from provided json config
+        :param config: The json config as a dictionary
+        :param backend: The backend this processor should have access to
+        :return: the processor instance
+        """
         name = "unknown"
         active = False
         extra_arguments = {}

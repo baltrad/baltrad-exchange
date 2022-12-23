@@ -199,6 +199,11 @@ class statistics_cleanup_runner(runner):
     """Cleans the statistics database
     """
     def __init__(self, backend, active, **args):
+        """Constructor
+        :param backend: The backend
+        :param active: If this runner is active or not
+        :param args: Dictionary containing "name", "interval" and "age"
+        """
         super(statistics_cleanup_runner, self).__init__(backend, active)
         self._name = "statistics_cleanup_runner"
         self._interval = 60 # minutes

@@ -129,7 +129,11 @@ class backup_connection(publisher_connection):
                 logger.exception("Failed to send %s to %s"%(path, sender.id()), e);
     
 class connection_manager(object):
+    """The connection manager is used for creating connection instances from the provided configuration
+    """
     def __init__(self):
+        """Constructor
+        """
         pass
     
     @classmethod
