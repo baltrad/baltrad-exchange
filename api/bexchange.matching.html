@@ -280,45 +280,72 @@
 <dt class="sig sig-object py" id="bexchange.matching.metadata_matcher.metadata_matcher">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.matching.metadata_matcher.</span></span><span class="sig-name descname"><span class="pre">metadata_matcher</span></span><a class="reference internal" href="../_modules/bexchange/matching/metadata_matcher.html#metadata_matcher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.metadata_matcher.metadata_matcher" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Used for matching metadata against an expression</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.matching.metadata_matcher.metadata_matcher.find_plain">
 <span class="sig-name descname"><span class="pre">find_plain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/metadata_matcher.html#metadata_matcher.find_plain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.metadata_matcher.metadata_matcher.find_plain" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Finds any name within the metadata.
+:param name: The name of the attribute
+:param <a href="#id3"><span class="problematic" id="id4">type_</span></a>: Not used
+:return: The value</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.matching.metadata_matcher.metadata_matcher.find_source">
 <span class="sig-name descname"><span class="pre">find_source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/metadata_matcher.html#metadata_matcher.find_source"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.metadata_matcher.metadata_matcher.find_source" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Finds a source identifier within the source.
+:param name: The source identifier
+:param source: The data source
+:return the found value</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.matching.metadata_matcher.metadata_matcher.find_value">
 <span class="sig-name descname"><span class="pre">find_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/metadata_matcher.html#metadata_matcher.find_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.metadata_matcher.metadata_matcher.find_value" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Finds a value within the metadata with specified name
+:param name: The name that is requested
+:param <a href="#id5"><span class="problematic" id="id6">type_</span></a>: The type we are looking for
+:return: the value if found</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.matching.metadata_matcher.metadata_matcher.in_">
 <span class="sig-name descname"><span class="pre">in_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lhs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rhs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/metadata_matcher.html#metadata_matcher.in_"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.metadata_matcher.metadata_matcher.in_" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Matches if items in lhs exists in the rhs.
+:param lhs: Left hand side which is a list of values
+:param rhs: Right hand side which is matched against
+:return: True or False</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.matching.metadata_matcher.metadata_matcher.init_evaluator">
 <span class="sig-name descname"><span class="pre">init_evaluator</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/metadata_matcher.html#metadata_matcher.init_evaluator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.metadata_matcher.metadata_matcher.init_evaluator" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Sets up all operations available for the filter</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.matching.metadata_matcher.metadata_matcher.like">
 <span class="sig-name descname"><span class="pre">like</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lhs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rhs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/metadata_matcher.html#metadata_matcher.like"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.metadata_matcher.metadata_matcher.like" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Matches against a <a href="#id1"><span class="problematic" id="id2">*</span></a>-pattern.
+:param lhs: Left hand side which is a list of value
+:param rhs: Right hand side which is pattern
+:return: True or False</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.matching.metadata_matcher.metadata_matcher.match">
 <span class="sig-name descname"><span class="pre">match</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xpr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/metadata_matcher.html#metadata_matcher.match"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.metadata_matcher.metadata_matcher.match" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Matches the metadata against the expression. Synchronized.
+:param metadata: The metadata to be matched against
+:param xpr: The expression matched against
+:return: True or False</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.matching.metadata_matcher.metadata_matcher.match_path">
 <span class="sig-name descname"><span class="pre">match_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">split_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/metadata_matcher.html#metadata_matcher.match_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.metadata_matcher.metadata_matcher.match_path" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Matches the paths</p>
+</dd></dl>
 
 </dd></dl>
 
