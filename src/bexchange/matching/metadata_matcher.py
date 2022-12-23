@@ -36,10 +36,16 @@ from baltrad.bdbcommon.oh5 import (
 # Used for matching metadata against an expression
 #
 class metadata_matcher:
+    """ Used for matching metadata against an expression
+    """
     def __init__(self):
+        """Constructor
+        """
         self.init_evaluator()
   
     def init_evaluator(self):  
+        """Sets up all operations available for the filter
+        """
         evaluator = expr.Evaluator()
         evaluator.add_procedure("+", operator.add)
         evaluator.add_procedure("-", operator.sub)
@@ -68,6 +74,11 @@ class metadata_matcher:
         self.lock = threading.Lock()
     
     def find_value(self, name, type_):
+        """Finds a value within the metadata with specified name
+        :param name: The name that is requested
+        :param type_: The type we are looking for
+        :return: the value if found
+        """
         if name.startswith("what/source:"):
             return self.find_source(name, self.meta.source())
         elif name.startswith("_bdb/source:"):
@@ -77,12 +88,22 @@ class metadata_matcher:
         return self.find_plain(name, type_)
 
     def find_source(self, name, source):
+        """Finds a source identifier within the source.
+        :param name: The source identifier
+        :param source: The data source
+        :return the found value
+        """
         key = name[name.rfind(":") + 1:]
         if key in source:
             return [source[key]]
         return []
     
     def find_plain(self, name, type_):
+        """Finds any name within the metadata.
+        :param name: The name of the attribute
+        :param type_: Not used
+        :return: The value
+        """
         result = []
         split_path = name.split("/")
         for node in self.meta.iternodes():
@@ -91,16 +112,28 @@ class metadata_matcher:
         return result
   
     def match_path(self, split_path, nodepath):
+        """Matches the paths
+        """
         node_split_path = nodepath.split("/")
         from_index = len(node_split_path) - len(split_path)
         if from_index < 0:
             return False
         return split_path == node_split_path[from_index:]
  
-    def in_(self, lhs, rhs): 
+    def in_(self, lhs, rhs):
+        """Matches if items in lhs exists in the rhs.
+        :param lhs: Left hand side which is a list of values
+        :param rhs: Right hand side which is matched against
+        :return: True or False
+        """
         return any(item in rhs for item in lhs)
 
     def like(self, lhs, rhs):
+        """Matches against a *-pattern.
+        :param lhs: Left hand side which is a list of value
+        :param rhs: Right hand side which is pattern
+        :return: True or False
+        """
         pattern = rhs[0].replace("*", ".*")
         p = re.compile(pattern)
         for i in lhs:
@@ -110,6 +143,11 @@ class metadata_matcher:
 
     #Synchronize!!!
     def match(self, metadata, xpr):
+        """Matches the metadata against the expression. Synchronized.
+        :param metadata: The metadata to be matched against
+        :param xpr: The expression matched against
+        :return: True or False
+        """
         with self.lock:
             self.evaluator.add_procedure("attr", self.find_value)
             self.meta = metadata

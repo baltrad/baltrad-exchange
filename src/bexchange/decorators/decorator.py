@@ -63,6 +63,8 @@ class decorator_manager:
     class it can be created by invoking decorator_manager.create("module....class name", arguments as a list) 
     """
     def __init__(self):
+        """Constructor
+        """
         pass
     
     @classmethod
