@@ -72,20 +72,36 @@ on to the actual processing-part without locking up the resources.</p>
 <dt class="sig sig-object py" id="bexchange.processor.processors.processor">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.processor.processors.</span></span><span class="sig-name descname"><span class="pre">processor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_arguments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/processor/processors.html#processor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.processor.processors.processor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base class to be used by all processor implementations</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.processor.processors.processor.active">
 <span class="sig-name descname"><span class="pre">active</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/processor/processors.html#processor.active"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.processor.processors.processor.active" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>if this processor is active or not</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.processor.processors.processor.backend">
 <span class="sig-name descname"><span class="pre">backend</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/processor/processors.html#processor.backend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.processor.processors.processor.backend" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the backend instance</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.processor.processors.processor.name">
 <span class="sig-name descname"><span class="pre">name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/processor/processors.html#processor.name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.processor.processors.processor.name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the name of this processor</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.processor.processors.processor.process">
@@ -98,12 +114,14 @@ on to the actual processing-part without locking up the resources.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.processor.processors.processor.start">
 <span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/processor/processors.html#processor.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.processor.processors.processor.start" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Starts this processor. Typically by starting a thread or consumer pool</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.processor.processors.processor.stop">
 <span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/processor/processors.html#processor.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.processor.processors.processor.stop" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Stops this processor. Typically by joining a number of threads</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -130,7 +148,11 @@ on to the actual processing-part without locking up the resources.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.processor.processors.processor_manager.from_conf">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_conf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/processor/processors.html#processor_manager.from_conf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.processor.processors.processor_manager.from_conf" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Creates a processor instance from provided json config
+:param config: The json config as a dictionary
+:param backend: The backend this processor should have access to
+:return: the processor instance</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.processor.processors.processor_manager.process">

@@ -73,6 +73,7 @@
 <dt class="sig sig-object py" id="bexchange.net.connections.connection_manager">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.connections.</span></span><span class="sig-name descname"><span class="pre">connection_manager</span></span><a class="reference internal" href="../_modules/bexchange/net/connections.html#connection_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.connection_manager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>The connection manager is used for creating connection instances from the provided configuration</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.connections.connection_manager.from_conf">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_conf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clz</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#connection_manager.from_conf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.connection_manager.from_conf" title="Permalink to this definition">¶</a></dt>
@@ -382,12 +383,20 @@ Each (or most) publisher_connection is associated with one or more senders.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.senders.copy_sender.create_missing_directories">
 <span class="sig-name descname"><span class="pre">create_missing_directories</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#copy_sender.create_missing_directories"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.copy_sender.create_missing_directories" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>if missing directories should be created or not</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.senders.copy_sender.name">
 <span class="sig-name descname"><span class="pre">name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#copy_sender.name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.copy_sender.name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Creates the name to use when copying the file from the metadata
+:param meta: The metadata
+:return: the name to use for destination</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.senders.copy_sender.send">
@@ -422,17 +431,26 @@ Each (or most) publisher_connection is associated with one or more senders.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.senders.ftp_sender.change_and_create_dir">
 <span class="sig-name descname"><span class="pre">change_and_create_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ftp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#ftp_sender.change_and_create_dir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.ftp_sender.change_and_create_dir" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Changes directory and creates specified directory.
+:param ftp: The ftp connection
+:param path: The path to create</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.senders.ftp_sender.connect">
 <span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#ftp_sender.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.ftp_sender.connect" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Connects to the host specified by host  / port.
+:return: the ftp connection</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.senders.ftp_sender.does_dir_exist">
 <span class="sig-name descname"><span class="pre">does_dir_exist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ftp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#ftp_sender.does_dir_exist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.ftp_sender.does_dir_exist" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Tests if the specified directory exist using the provided ftp-connection
+:param ftp: the ftp connection
+:param path: the path to test
+:return: True or False</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.senders.ftp_sender.send">

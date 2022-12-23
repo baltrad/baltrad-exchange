@@ -191,6 +191,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_signer</span> <span class="o">=</span> <span class="n">keyczar_signer</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_privatekey</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_generate_headers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uri</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates the headers that should be added to the dex message</span>
+<span class="sd">        :param uri: The uri that should be added</span>
+<span class="sd">        :return: the headers as a dictonary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">datestr</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%a</span><span class="s2">, </span><span class="si">%e</span><span class="s2"> %B %Y %H:%M:%S&quot;</span><span class="p">)</span>
         <span class="n">contentMD5</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">uri</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
         <span class="n">message</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;POST&quot;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">uri</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="s2">&quot;application/x-hdf5&quot;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">contentMD5</span><span class="p">,</span> <span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">datestr</span><span class="p">)</span>
@@ -203,6 +207,10 @@
         <span class="k">return</span> <span class="n">headers</span>
   
     <span class="k">def</span> <span class="nf">_split_uri</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uri</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Splits an uri to the individual parts.</span>
+<span class="sd">        :param uri: The uri to be split</span>
+<span class="sd">        :return: tuple of scheme, host and query</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">urlparts</span> <span class="o">=</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">urlsplit</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
         <span class="n">scheme</span> <span class="o">=</span> <span class="n">urlparts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">host</span> <span class="o">=</span> <span class="n">urlparts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -210,6 +218,14 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">scheme</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span>
   
     <span class="k">def</span> <span class="nf">_post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scheme</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">headers</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Posts the message to the recipient.</span>
+<span class="sd">        :param scheme: The scheme to use, https or http</span>
+<span class="sd">        :param host: the host that should be connected to (including port)</span>
+<span class="sd">        :param query: the query data</span>
+<span class="sd">        :param data: the data to be added to message</span>
+<span class="sd">        :param headers: the headers to add to message</span>
+<span class="sd">        :return: a tuple of status, reason and any data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">scheme</span> <span class="o">==</span> <span class="s2">&quot;https&quot;</span><span class="p">:</span>
             <span class="n">conn</span> <span class="o">=</span> <span class="n">httplib</span><span class="o">.</span><span class="n">HTTPSConnection</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="n">ssl</span><span class="o">.</span><span class="n">_create_unverified_context</span><span class="p">())</span>
         <span class="k">else</span><span class="p">:</span>
@@ -483,6 +499,11 @@
             <span class="n">ftp</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="ftp_sender.does_dir_exist"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.ftp_sender.does_dir_exist">[docs]</a>    <span class="k">def</span> <span class="nf">does_dir_exist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ftp</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Tests if the specified directory exist using the provided ftp-connection</span>
+<span class="sd">        :param ftp: the ftp connection</span>
+<span class="sd">        :param path: the path to test</span>
+<span class="sd">        :return: True or False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">dirlist</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">dtolist</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="n">dtotest</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
@@ -493,6 +514,9 @@
         <span class="k">return</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="ftp_sender.change_and_create_dir"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.ftp_sender.change_and_create_dir">[docs]</a>    <span class="k">def</span> <span class="nf">change_and_create_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ftp</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Changes directory and creates specified directory.</span>
+<span class="sd">        :param ftp: The ftp connection</span>
+<span class="sd">        :param path: The path to create&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">does_dir_exist</span><span class="p">(</span><span class="n">ftp</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
             <span class="n">nextpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
             <span class="n">createdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
@@ -510,6 +534,9 @@
     <span class="c1">##</span>
     <span class="c1"># Connects to remote server</span>
 <div class="viewcode-block" id="ftp_sender.connect"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.ftp_sender.connect">[docs]</a>    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Connects to the host specified by host  / port.</span>
+<span class="sd">        :return: the ftp connection</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ftp</span> <span class="o">=</span> <span class="n">ftplib</span><span class="o">.</span><span class="n">FTP</span><span class="p">()</span>
         <span class="n">ftp</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">())</span>
         <span class="n">ftp</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">())</span>
@@ -536,9 +563,16 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_namer</span> <span class="o">=</span> <span class="n">metadata_namer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">)</span>
 
 <div class="viewcode-block" id="copy_sender.name"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.copy_sender.name">[docs]</a>    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates the name to use when copying the file from the metadata</span>
+<span class="sd">        :param meta: The metadata</span>
+<span class="sd">        :return: the name to use for destination</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_namer</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span></div>
     
 <div class="viewcode-block" id="copy_sender.create_missing_directories"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.copy_sender.create_missing_directories">[docs]</a>    <span class="k">def</span> <span class="nf">create_missing_directories</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: if missing directories should be created or not</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_missing_directories</span></div>
     
 <div class="viewcode-block" id="copy_sender.send"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.copy_sender.send">[docs]</a>    <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
@@ -557,6 +591,8 @@
 
 <div class="viewcode-block" id="sender_manager"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.sender_manager">[docs]</a><span class="k">class</span> <span class="nc">sender_manager</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span>
 
 <div class="viewcode-block" id="sender_manager.from_conf"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.sender_manager.from_conf">[docs]</a>    <span class="nd">@classmethod</span>

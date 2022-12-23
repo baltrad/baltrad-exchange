@@ -72,18 +72,35 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;bexchange.processor&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="processor"><a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.processor">[docs]</a><span class="k">class</span> <span class="nc">processor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Base class to be used by all processor implementations</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">active</span><span class="p">,</span> <span class="n">extra_arguments</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="sd">        :param backend: The backend that this processor should have access to</span>
+<span class="sd">        :param name: Name that identifies this processor</span>
+<span class="sd">        :param active: If this processor should be active or not</span>
+<span class="sd">        :param extra_arguments: The extra arguments used when creating the processor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span> <span class="o">=</span> <span class="n">backend</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_active</span> <span class="o">=</span> <span class="n">active</span>
     
 <div class="viewcode-block" id="processor.backend"><a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.processor.backend">[docs]</a>    <span class="k">def</span> <span class="nf">backend</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: the backend instance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span></div>
     
 <div class="viewcode-block" id="processor.name"><a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.processor.name">[docs]</a>    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: the name of this processor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span></div>
     
 <div class="viewcode-block" id="processor.active"><a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.processor.active">[docs]</a>    <span class="k">def</span> <span class="nf">active</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: if this processor is active or not</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_active</span></div>
     
 <div class="viewcode-block" id="processor.process"><a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.processor.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
@@ -94,9 +111,13 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="processor.start"><a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.processor.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Starts this processor. Typically by starting a thread or consumer pool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
     
 <div class="viewcode-block" id="processor.stop"><a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.processor.stop">[docs]</a>    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Stops this processor. Typically by joining a number of threads</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div></div>
 
 <div class="viewcode-block" id="example_processor"><a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.example_processor">[docs]</a><span class="k">class</span> <span class="nc">example_processor</span><span class="p">(</span><span class="n">processor</span><span class="p">):</span>
@@ -144,6 +165,11 @@
     
 <div class="viewcode-block" id="processor_manager.from_conf"><a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.processor_manager.from_conf">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_conf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">backend</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates a processor instance from provided json config</span>
+<span class="sd">        :param config: The json config as a dictionary</span>
+<span class="sd">        :param backend: The backend this processor should have access to</span>
+<span class="sd">        :return: the processor instance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;unknown&quot;</span>
         <span class="n">active</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">extra_arguments</span> <span class="o">=</span> <span class="p">{}</span>
