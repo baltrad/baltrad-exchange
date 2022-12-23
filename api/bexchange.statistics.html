@@ -52,80 +52,8 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </section>
-<section id="module-bexchange.statistics.statistics">
-<span id="bexchange-statistics-statistics-module"></span><h2>bexchange.statistics.statistics module<a class="headerlink" href="#module-bexchange.statistics.statistics" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="bexchange.statistics.statistics.simple_stat_plugin">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.statistics.statistics.</span></span><span class="sig-name descname"><span class="pre">simple_stat_plugin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sptype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">statmgr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/statistics/statistics.html#simple_stat_plugin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.statistics.statistics.simple_stat_plugin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Simple statistics plugin that will call the stat mgrs increment function</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="bexchange.statistics.statistics.simple_stat_plugin.increment">
-<span class="sig-name descname"><span class="pre">increment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">origin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/statistics/statistics.html#simple_stat_plugin.increment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.statistics.statistics.simple_stat_plugin.increment" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calls the statistics managers increment method
-:param origin: The origin
-:param meta: The metadata</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="bexchange.statistics.statistics.statistics_manager">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.statistics.statistics.</span></span><span class="sig-name descname"><span class="pre">statistics_manager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/statistics/statistics.html#statistics_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.statistics.statistics.statistics_manager" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>The statistics manager. Will create and register the statistics plugin</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="bexchange.statistics.statistics.statistics_manager.cleanup_statentry">
-<span class="sig-name descname"><span class="pre">cleanup_statentry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">age</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/statistics/statistics.html#statistics_manager.cleanup_statentry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.statistics.statistics.statistics_manager.cleanup_statentry" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="bexchange.statistics.statistics.statistics_manager.get_statistics">
-<span class="sig-name descname"><span class="pre">get_statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">querydata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/statistics/statistics.html#statistics_manager.get_statistics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.statistics.statistics.statistics_manager.get_statistics" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the statistics for the specified post, origin and source_name</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="bexchange.statistics.statistics.statistics_manager.increment">
-<span class="sig-name descname"><span class="pre">increment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_post</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increment_counter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optime_info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/statistics/statistics.html#statistics_manager.increment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.statistics.statistics.statistics_manager.increment" title="Permalink to this definition">¶</a></dt>
-<dd><p>Increments a counter that is defined by:
-:param spid: The id used to identify this statistics post
-:param orgin: the origin (may be null, indicating unknown origin)
-:param meta: the metadata</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="bexchange.statistics.statistics.statistics_manager.list_statistic_ids">
-<span class="sig-name descname"><span class="pre">list_statistic_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/statistics/statistics.html#statistics_manager.list_statistic_ids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.statistics.statistics.statistics_manager.list_statistic_ids" title="Permalink to this definition">¶</a></dt>
-<dd><p>:returns the list of available ids</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="bexchange.statistics.statistics.statistics_manager.plugin_from_conf">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">plugin_from_conf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">statmgr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/statistics/statistics.html#statistics_manager.plugin_from_conf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.statistics.statistics.statistics_manager.plugin_from_conf" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a stat plugin from the configuration
-:param conf: The config as a dictionary
-:param statmgr: The statistics manager to use
-:returns a stat plugin</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="bexchange.statistics.statistics.statistics_manager.plugins_from_conf">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">plugins_from_conf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">statmgr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/statistics/statistics.html#statistics_manager.plugins_from_conf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.statistics.statistics.statistics_manager.plugins_from_conf" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a stat plugin from the configuration
-:param conf: The config as a dictionary
-:param statmgr: The statistics manager to use
-:returns a stat plugin</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="bexchange.statistics.statistics.statistics_manager.sqldatabase">
-<span class="sig-name descname"><span class="pre">sqldatabase</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/statistics/statistics.html#statistics_manager.sqldatabase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.statistics.statistics.statistics_manager.sqldatabase" title="Permalink to this definition">¶</a></dt>
-<dd><p>:return the sqlalchemy database instance used</p>
-</dd></dl>
-
-</dd></dl>
-
+<section id="bexchange-statistics-statistics-module">
+<h2>bexchange.statistics.statistics module<a class="headerlink" href="#bexchange-statistics-statistics-module" title="Permalink to this headline">¶</a></h2>
 </section>
 <section id="module-bexchange.statistics">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-bexchange.statistics" title="Permalink to this headline">¶</a></h2>
@@ -143,7 +71,7 @@
   <ul>
 <li><a class="reference internal" href="#">bexchange.statistics package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-bexchange.statistics.statistics">bexchange.statistics.statistics module</a></li>
+<li><a class="reference internal" href="#bexchange-statistics-statistics-module">bexchange.statistics.statistics module</a></li>
 <li><a class="reference internal" href="#module-bexchange.statistics">Module contents</a></li>
 </ul>
 </li>

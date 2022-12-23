@@ -52,158 +52,8 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </section>
-<section id="module-bexchange.client.cfgcmd">
-<span id="bexchange-client-cfgcmd-module"></span><h2>bexchange.client.cfgcmd module<a class="headerlink" href="#module-bexchange.client.cfgcmd" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="bexchange.client.cfgcmd.Command">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.client.cfgcmd.</span></span><span class="sig-name descname"><span class="pre">Command</span></span><a class="reference internal" href="../_modules/bexchange/client/cfgcmd.html#Command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.client.cfgcmd.Command" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>command-line client command interface</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="bexchange.client.cfgcmd.Command.execute">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/client/cfgcmd.html#Command.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.client.cfgcmd.Command.execute" title="Permalink to this definition">¶</a></dt>
-<dd><p>execute this command</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>opts</strong> – options passed from command line</p></li>
-<li><p><strong>args</strong> – arguments passed from command line</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="bexchange.client.cfgcmd.Command.get_commands">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_commands</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/client/cfgcmd.html#Command.get_commands"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.client.cfgcmd.Command.get_commands" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="bexchange.client.cfgcmd.Command.get_implementation_by_name">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_implementation_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/client/cfgcmd.html#Command.get_implementation_by_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.client.cfgcmd.Command.get_implementation_by_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>get an implementing class by name</p>
-<p>the implementing class is looked up from ‘bexchange.config.commands’
-entry point.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Raise</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">LookupError</span></code> if not found</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="bexchange.client.cfgcmd.Command.update_optionparser">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update_optionparser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/client/cfgcmd.html#Command.update_optionparser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.client.cfgcmd.Command.update_optionparser" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="bexchange.client.cfgcmd.CreateKeys">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.client.cfgcmd.</span></span><span class="sig-name descname"><span class="pre">CreateKeys</span></span><a class="reference internal" href="../_modules/bexchange/client/cfgcmd.html#CreateKeys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.client.cfgcmd.CreateKeys" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bexchange.client.cfgcmd.Command" title="bexchange.client.cfgcmd.Command"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.client.cfgcmd.Command</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="bexchange.client.cfgcmd.CreateKeys.create_crypto_key">
-<span class="sig-name descname"><span class="pre">create_crypto_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/client/cfgcmd.html#CreateKeys.create_crypto_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.client.cfgcmd.CreateKeys.create_crypto_key" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="bexchange.client.cfgcmd.CreateKeys.create_keyczar_keys">
-<span class="sig-name descname"><span class="pre">create_keyczar_keys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/client/cfgcmd.html#CreateKeys.create_keyczar_keys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.client.cfgcmd.CreateKeys.create_keyczar_keys" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="bexchange.client.cfgcmd.CreateKeys.createdir">
-<span class="sig-name descname"><span class="pre">createdir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/client/cfgcmd.html#CreateKeys.createdir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.client.cfgcmd.CreateKeys.createdir" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="bexchange.client.cfgcmd.CreateKeys.execute">
-<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/client/cfgcmd.html#CreateKeys.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.client.cfgcmd.CreateKeys.execute" title="Permalink to this definition">¶</a></dt>
-<dd><p>execute this command</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>opts</strong> – options passed from command line</p></li>
-<li><p><strong>args</strong> – arguments passed from command line</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="bexchange.client.cfgcmd.CreateKeys.update_optionparser">
-<span class="sig-name descname"><span class="pre">update_optionparser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/client/cfgcmd.html#CreateKeys.update_optionparser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.client.cfgcmd.CreateKeys.update_optionparser" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="bexchange.client.cfgcmd.CreatePublication">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.client.cfgcmd.</span></span><span class="sig-name descname"><span class="pre">CreatePublication</span></span><a class="reference internal" href="../_modules/bexchange/client/cfgcmd.html#CreatePublication"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.client.cfgcmd.CreatePublication" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bexchange.client.cfgcmd.Command" title="bexchange.client.cfgcmd.Command"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.client.cfgcmd.Command</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="bexchange.client.cfgcmd.CreatePublication.execute">
-<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/client/cfgcmd.html#CreatePublication.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.client.cfgcmd.CreatePublication.execute" title="Permalink to this definition">¶</a></dt>
-<dd><p>execute this command</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>opts</strong> – options passed from command line</p></li>
-<li><p><strong>args</strong> – arguments passed from command line</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="bexchange.client.cfgcmd.CreatePublication.update_optionparser">
-<span class="sig-name descname"><span class="pre">update_optionparser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/client/cfgcmd.html#CreatePublication.update_optionparser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.client.cfgcmd.CreatePublication.update_optionparser" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="bexchange.client.cfgcmd.CreateSubscription">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.client.cfgcmd.</span></span><span class="sig-name descname"><span class="pre">CreateSubscription</span></span><a class="reference internal" href="../_modules/bexchange/client/cfgcmd.html#CreateSubscription"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.client.cfgcmd.CreateSubscription" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bexchange.client.cfgcmd.Command" title="bexchange.client.cfgcmd.Command"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.client.cfgcmd.Command</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="bexchange.client.cfgcmd.CreateSubscription.README">
-<span class="sig-name descname"><span class="pre">README</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/client/cfgcmd.html#CreateSubscription.README"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.client.cfgcmd.CreateSubscription.README" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="bexchange.client.cfgcmd.CreateSubscription.execute">
-<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/client/cfgcmd.html#CreateSubscription.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.client.cfgcmd.CreateSubscription.execute" title="Permalink to this definition">¶</a></dt>
-<dd><p>execute this command</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>opts</strong> – options passed from command line</p></li>
-<li><p><strong>args</strong> – arguments passed from command line</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="bexchange.client.cfgcmd.CreateSubscription.update_optionparser">
-<span class="sig-name descname"><span class="pre">update_optionparser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/client/cfgcmd.html#CreateSubscription.update_optionparser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.client.cfgcmd.CreateSubscription.update_optionparser" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="bexchange.client.cfgcmd.ExecutionError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.client.cfgcmd.</span></span><span class="sig-name descname"><span class="pre">ExecutionError</span></span><a class="reference internal" href="../_modules/bexchange/client/cfgcmd.html#ExecutionError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.client.cfgcmd.ExecutionError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="bexchange.client.cfgcmd.read_config">
-<span class="sig-prename descclassname"><span class="pre">bexchange.client.cfgcmd.</span></span><span class="sig-name descname"><span class="pre">read_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conffile</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/client/cfgcmd.html#read_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.client.cfgcmd.read_config" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
+<section id="bexchange-client-cfgcmd-module">
+<h2>bexchange.client.cfgcmd module<a class="headerlink" href="#bexchange-client-cfgcmd-module" title="Permalink to this headline">¶</a></h2>
 </section>
 <section id="module-bexchange.client.cmd">
 <span id="bexchange-client-cmd-module"></span><h2>bexchange.client.cmd module<a class="headerlink" href="#module-bexchange.client.cmd" title="Permalink to this headline">¶</a></h2>
@@ -587,7 +437,7 @@ entry point.</p>
   <ul>
 <li><a class="reference internal" href="#">bexchange.client package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-bexchange.client.cfgcmd">bexchange.client.cfgcmd module</a></li>
+<li><a class="reference internal" href="#bexchange-client-cfgcmd-module">bexchange.client.cfgcmd module</a></li>
 <li><a class="reference internal" href="#module-bexchange.client.cmd">bexchange.client.cmd module</a></li>
 <li><a class="reference internal" href="#module-bexchange.client.rest">bexchange.client.rest module</a></li>
 <li><a class="reference internal" href="#module-bexchange.client">Module contents</a></li>
