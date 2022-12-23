@@ -95,11 +95,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_key</span> <span class="o">=</span> <span class="n">key</span>
 
 <div class="viewcode-block" id="public_key.PEM"><a class="viewcode-back" href="../../api/bexchange.crypto.html#bexchange.crypto.public_key.PEM">[docs]</a>    <span class="k">def</span> <span class="nf">PEM</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the public key as PEM-encoded string</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: the public key as PEM-encoded string</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_key</span><span class="o">.</span><span class="n">export_key</span><span class="p">(</span><span class="s2">&quot;PEM&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="public_key.algorithm"><a class="viewcode-back" href="../../api/bexchange.crypto.html#bexchange.crypto.public_key.algorithm">[docs]</a>    <span class="k">def</span> <span class="nf">algorithm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: the algorithm this key is using, currently only &quot;rsa&quot; or &quot;dsa&quot;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_key</span><span class="p">,</span> <span class="n">RSA</span><span class="o">.</span><span class="n">RsaKey</span><span class="p">):</span>
             <span class="k">return</span> <span class="s2">&quot;rsa&quot;</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_key</span><span class="p">,</span> <span class="n">DSA</span><span class="o">.</span><span class="n">DsaKey</span><span class="p">):</span>
@@ -117,6 +121,7 @@
 <div class="viewcode-block" id="public_key.exportJSON"><a class="viewcode-back" href="../../api/bexchange.crypto.html#bexchange.crypto.public_key.exportJSON">[docs]</a>    <span class="k">def</span> <span class="nf">exportJSON</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">nodename</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Exports the public key to specified filename as a JSON entry</span>
 <span class="sd">        :param filename: The name of the file to be written</span>
+<span class="sd">        :param nodename: The nodename that should be added to the exported json entry</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">import</span> <span class="nn">json</span>
         <span class="n">keyType</span> <span class="o">=</span> <span class="s2">&quot;dsa&quot;</span>
@@ -131,6 +136,11 @@
                        <span class="s2">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;public&quot;</span><span class="p">},</span> <span class="n">fp</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="public_key.verify"><a class="viewcode-back" href="../../api/bexchange.crypto.html#bexchange.crypto.public_key.verify">[docs]</a>    <span class="k">def</span> <span class="nf">verify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">signature</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Verifies if the msg and signature matches up.</span>
+<span class="sd">        :param msg: The message that was used to generate the signature</span>
+<span class="sd">        :param signature: The signature that we are expecting the message to match</span>
+<span class="sd">        :return: True if they are matching, otherwise False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_key</span><span class="p">,</span> <span class="n">RSA</span><span class="o">.</span><span class="n">RsaKey</span><span class="p">):</span>
             <span class="n">verifier</span> <span class="o">=</span> <span class="n">pkcs1_15</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_key</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -154,16 +164,22 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_key</span> <span class="o">=</span> <span class="n">key</span>
     
 <div class="viewcode-block" id="private_key.publickey"><a class="viewcode-back" href="../../api/bexchange.crypto.html#bexchange.crypto.private_key.publickey">[docs]</a>    <span class="k">def</span> <span class="nf">publickey</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the public key</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: the public key</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">public_key</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_key</span><span class="o">.</span><span class="n">publickey</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="private_key.PEM"><a class="viewcode-back" href="../../api/bexchange.crypto.html#bexchange.crypto.private_key.PEM">[docs]</a>    <span class="k">def</span> <span class="nf">PEM</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the private key as PEM-encoded string</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: the private key as PEM-encoded string</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_key</span><span class="o">.</span><span class="n">export_key</span><span class="p">(</span><span class="s2">&quot;PEM&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="private_key.sign"><a class="viewcode-back" href="../../api/bexchange.crypto.html#bexchange.crypto.private_key.sign">[docs]</a>    <span class="k">def</span> <span class="nf">sign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates a b64 encoded signature  from the message</span>
+<span class="sd">        :param msg: The message that should be used to generate the signature from</span>
+<span class="sd">        :return: the signature</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">hashed</span> <span class="o">=</span> <span class="n">SHA256</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">))</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_key</span><span class="p">,</span> <span class="n">RSA</span><span class="o">.</span><span class="n">RsaKey</span><span class="p">):</span>
             <span class="n">signer</span> <span class="o">=</span> <span class="n">pkcs1_15</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_key</span><span class="p">)</span>
@@ -174,6 +190,9 @@
         <span class="k">return</span> <span class="n">result</span></div>
     
 <div class="viewcode-block" id="private_key.algorithm"><a class="viewcode-back" href="../../api/bexchange.crypto.html#bexchange.crypto.private_key.algorithm">[docs]</a>    <span class="k">def</span> <span class="nf">algorithm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: the algorithm this key is using, currently only &quot;rsa&quot; or &quot;dsa&quot;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_key</span><span class="p">,</span> <span class="n">RSA</span><span class="o">.</span><span class="n">RsaKey</span><span class="p">):</span>
             <span class="k">return</span> <span class="s2">&quot;rsa&quot;</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_key</span><span class="p">,</span> <span class="n">DSA</span><span class="o">.</span><span class="n">DsaKey</span><span class="p">):</span>
@@ -189,10 +208,12 @@
             <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PEM</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="private_key.exportJSON"><a class="viewcode-back" href="../../api/bexchange.crypto.html#bexchange.crypto.private_key.exportJSON">[docs]</a>    <span class="k">def</span> <span class="nf">exportJSON</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">nodename</span><span class="p">):</span>
-        <span class="kn">import</span> <span class="nn">json</span>
         <span class="sd">&quot;&quot;&quot;Exports the public key to specified filename as a JSON entry</span>
 <span class="sd">        :param filename: The name of the file to be written</span>
+<span class="sd">        :param nodename: The nodename that should be added to the exported json entry</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">json</span>
+
         <span class="n">keyType</span> <span class="o">=</span> <span class="s2">&quot;dsa&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_key</span><span class="p">,</span> <span class="n">RSA</span><span class="o">.</span><span class="n">RsaKey</span><span class="p">):</span>
             <span class="n">keyType</span> <span class="o">=</span> <span class="s2">&quot;rsa&quot;</span>

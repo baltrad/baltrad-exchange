@@ -269,18 +269,30 @@ to import_keyczar_key.
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.crypto.private_key.PEM">
 <span class="sig-name descname"><span class="pre">PEM</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/crypto.html#private_key.PEM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.crypto.private_key.PEM" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the private key as PEM-encoded string</p>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the private key as PEM-encoded string</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.crypto.private_key.algorithm">
 <span class="sig-name descname"><span class="pre">algorithm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/crypto.html#private_key.algorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.crypto.private_key.algorithm" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the algorithm this key is using, currently only “rsa” or “dsa”.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.crypto.private_key.exportJSON">
 <span class="sig-name descname"><span class="pre">exportJSON</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/crypto.html#private_key.exportJSON"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.crypto.private_key.exportJSON" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Exports the public key to specified filename as a JSON entry
+:param filename: The name of the file to be written
+:param nodename: The nodename that should be added to the exported json entry</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.crypto.private_key.exportPEM">
@@ -292,13 +304,20 @@ to import_keyczar_key.
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.crypto.private_key.publickey">
 <span class="sig-name descname"><span class="pre">publickey</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/crypto.html#private_key.publickey"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.crypto.private_key.publickey" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the public key</p>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the public key</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.crypto.private_key.sign">
 <span class="sig-name descname"><span class="pre">sign</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/crypto.html#private_key.sign"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.crypto.private_key.sign" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Creates a b64 encoded signature  from the message
+:param msg: The message that should be used to generate the signature from
+:return: the signature</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -310,19 +329,29 @@ to import_keyczar_key.
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.crypto.public_key.PEM">
 <span class="sig-name descname"><span class="pre">PEM</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/crypto.html#public_key.PEM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.crypto.public_key.PEM" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the public key as PEM-encoded string</p>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the public key as PEM-encoded string</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.crypto.public_key.algorithm">
 <span class="sig-name descname"><span class="pre">algorithm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/crypto.html#public_key.algorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.crypto.public_key.algorithm" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the algorithm this key is using, currently only “rsa” or “dsa”.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.crypto.public_key.exportJSON">
 <span class="sig-name descname"><span class="pre">exportJSON</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/crypto.html#public_key.exportJSON"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.crypto.public_key.exportJSON" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exports the public key to specified filename as a JSON entry
-:param filename: The name of the file to be written</p>
+:param filename: The name of the file to be written
+:param nodename: The nodename that should be added to the exported json entry</p>
 </dd></dl>
 
 <dl class="py method">
@@ -335,7 +364,11 @@ to import_keyczar_key.
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.crypto.public_key.verify">
 <span class="sig-name descname"><span class="pre">verify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">signature</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/crypto.html#public_key.verify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.crypto.public_key.verify" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Verifies if the msg and signature matches up.
+:param msg: The message that was used to generate the signature
+:param signature: The signature that we are expecting the message to match
+:return: True if they are matching, otherwise False</p>
+</dd></dl>
 
 </dd></dl>
 

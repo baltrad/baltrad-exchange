@@ -98,7 +98,15 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.auth.coreauth.Auth.get_impl">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_impl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/auth/coreauth.html#Auth.get_impl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.auth.coreauth.Auth.get_impl" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> – The name of the entrypoint as defined in setup.py, e.g. crypto, keyczar…</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the class represented by name. Used to create an instance of correct type</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -136,26 +144,17 @@ registered as <em>exchange-crypto</em> in <em>baltrad.bdbserver.web.auth</em> en
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.auth.coreauth.CryptoAuth.add_key_config">
 <span class="sig-name descname"><span class="pre">add_key_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/auth/coreauth.html#CryptoAuth.add_key_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.auth.coreauth.CryptoAuth.add_key_config" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds a key config to this provider
-:param jsonstr: THe key config
-:return the nodename this key should be associated with</p>
+<dd><p>Adding key from a json-conf. Will ensure that creator is baltrad.exchange.crypto.
+:param conf: The json configuration</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.auth.coreauth.CryptoAuth.authenticate">
 <span class="sig-name descname"><span class="pre">authenticate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">req</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">credentials</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/auth/coreauth.html#CryptoAuth.authenticate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.auth.coreauth.CryptoAuth.authenticate" title="Permalink to this definition">¶</a></dt>
-<dd><p>authenticate the request with provided crendentials</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>req</strong> (<a class="reference internal" href="bexchange.web.html#bexchange.web.util.Request" title="bexchange.web.util.Request"><code class="xref py py-class docutils literal notranslate"><span class="pre">Request</span></code></a>) – the request to authenticate</p></li>
-<li><p><strong>credentials</strong> – implementation specific credential string</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>True if success, otherwise False</p>
-</dd>
-</dl>
+<dd><p>Authenticates the request against the credentials.
+:param req: The http request
+:param credentials: The credentials that should be verified against
+:return: True if authenticated, False otherwise.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -407,26 +406,22 @@ header</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.auth.keyczarauth.KeyczarAuth.add_key_config">
 <span class="sig-name descname"><span class="pre">add_key_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/auth/keyczarauth.html#KeyczarAuth.add_key_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.auth.keyczarauth.KeyczarAuth.add_key_config" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds a key config to this provider
-:param jsonstr: THe key config
-:return the nodename this key should be associated with</p>
+<dd><p>Adds a key from key config</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>conf</strong> – The key config</p>
+</dd>
+</dl>
+<p>:return the node name this key should be associated with</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.auth.keyczarauth.KeyczarAuth.authenticate">
 <span class="sig-name descname"><span class="pre">authenticate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">req</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">credentials</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/auth/keyczarauth.html#KeyczarAuth.authenticate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.auth.keyczarauth.KeyczarAuth.authenticate" title="Permalink to this definition">¶</a></dt>
-<dd><p>authenticate the request with provided crendentials</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>req</strong> (<a class="reference internal" href="bexchange.web.html#bexchange.web.util.Request" title="bexchange.web.util.Request"><code class="xref py py-class docutils literal notranslate"><span class="pre">Request</span></code></a>) – the request to authenticate</p></li>
-<li><p><strong>credentials</strong> – implementation specific credential string</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>True if success, otherwise False</p>
-</dd>
-</dl>
+<dd><p>Authenticates the request against the credentials.
+:param req: The http request
+:param credentials: The credentials that should be verified against
+:return: True if authenticated, False otherwise.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -488,26 +483,22 @@ lookup.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.auth.tinkauth.TinkAuth.add_key_config">
 <span class="sig-name descname"><span class="pre">add_key_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/auth/tinkauth.html#TinkAuth.add_key_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.auth.tinkauth.TinkAuth.add_key_config" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds a key config to this provider
-:param jsonstr: THe key config
-:return the nodename this key should be associated with</p>
+<dd><p>Adds a key from key config</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>conf</strong> – The key config</p>
+</dd>
+</dl>
+<p>:return the node name this key should be associated with</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.auth.tinkauth.TinkAuth.authenticate">
 <span class="sig-name descname"><span class="pre">authenticate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">req</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">credentials</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/auth/tinkauth.html#TinkAuth.authenticate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.auth.tinkauth.TinkAuth.authenticate" title="Permalink to this definition">¶</a></dt>
-<dd><p>authenticate the request with provided crendentials</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>req</strong> (<a class="reference internal" href="bexchange.web.html#bexchange.web.util.Request" title="bexchange.web.util.Request"><code class="xref py py-class docutils literal notranslate"><span class="pre">Request</span></code></a>) – the request to authenticate</p></li>
-<li><p><strong>credentials</strong> – implementation specific credential string</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>True if success, otherwise False</p>
-</dd>
-</dl>
+<dd><p>Authenticates the request against the credentials.
+:param req: The http request
+:param credentials: The credentials that should be verified against
+:return: True if authenticated, False otherwise.</p>
 </dd></dl>
 
 <dl class="py method">

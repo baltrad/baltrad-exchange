@@ -95,6 +95,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_verifiers</span> <span class="o">=</span> <span class="p">{}</span>
     
 <div class="viewcode-block" id="TinkAuth.add_key_config"><a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.tinkauth.TinkAuth.add_key_config">[docs]</a>    <span class="k">def</span> <span class="nf">add_key_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conf</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Adds a key from key config</span>
+
+<span class="sd">        :param conf: The key config</span>
+<span class="sd">        :return the node name this key should be associated with</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
         <span class="n">handle</span> <span class="o">=</span> <span class="n">cleartext_keyset_handle</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">tink</span><span class="o">.</span><span class="n">JsonKeysetReader</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;key&quot;</span><span class="p">])))</span>
         <span class="n">verifier</span> <span class="o">=</span> <span class="n">handle</span><span class="o">.</span><span class="n">primitive</span><span class="p">(</span><span class="n">signature</span><span class="o">.</span><span class="n">PublicKeyVerify</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_verifiers</span><span class="p">[</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">verifier</span>
@@ -122,6 +127,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_verifiers</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">verifier</span></div>
     
 <div class="viewcode-block" id="TinkAuth.authenticate"><a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.tinkauth.TinkAuth.authenticate">[docs]</a>    <span class="k">def</span> <span class="nf">authenticate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">credentials</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Authenticates the request against the credentials.</span>
+<span class="sd">        :param req: The http request</span>
+<span class="sd">        :param credentials: The credentials that should be verified against</span>
+<span class="sd">        :return: True if authenticated, False otherwise. </span>
+<span class="sd">        &quot;&quot;&quot;</span>        
         <span class="k">try</span><span class="p">:</span>
             <span class="n">keyname</span><span class="p">,</span> <span class="n">sig</span> <span class="o">=</span> <span class="n">credentials</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
