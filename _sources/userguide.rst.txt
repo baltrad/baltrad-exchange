@@ -221,6 +221,7 @@ instead specify the template file to use by specifying --template=<template file
 The publication that should be placed in the json configuration folder is created by issuing the following command.
 
 .. code:: sh
+
    %> baltrad-exchange-config create_publication --template=exchange-template.json \
       --desturi=https://remote.baltrad.node --name="pub to remote node" --output=remote_node_publication.json
 
@@ -229,6 +230,7 @@ When the publication has been created the required modifications should be perfo
 A subscription that should be sent to a subscriber is created in a similar way.
 
 .. code:: sh
+  
    %> baltrad-exchange-config create_publication --template=exchange-template.json \
       --output=remote_node_publication.json
 

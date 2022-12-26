@@ -238,8 +238,16 @@ subscription section.</p>
 The default location for the template is /etc/baltrad/exchange/etc/exchange-template.json. If you want to use several different templates you can
 instead specify the template file to use by specifying –template=&lt;template file name&gt;.</p>
 <p>The publication that should be placed in the json configuration folder is created by issuing the following command.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt; baltrad-exchange-config create_publication --template<span class="o">=</span>exchange-template.json <span class="se">\</span>
+   --desturi<span class="o">=</span>https://remote.baltrad.node --name<span class="o">=</span><span class="s2">&quot;pub to remote node&quot;</span> --output<span class="o">=</span>remote_node_publication.json
+</pre></div>
+</div>
 <p>When the publication has been created the required modifications should be performed before putting it in the json config folder.</p>
 <p>A subscription that should be sent to a subscriber is created in a similar way.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt; baltrad-exchange-config create_publication --template<span class="o">=</span>exchange-template.json <span class="se">\</span>
+   --output<span class="o">=</span>remote_node_publication.json
+</pre></div>
+</div>
 <p>The output from this will be a tar ball containing the public key and the subscription configuration. This bundle should be sent to the
 subscriber using email or some other distribution mechanism. The user on the other hand should unpack this file and put the files at the appropriate
 locations. If the subscriber wants to limit the files received, then the publisher should be made aware of this so that they can limit the outgoing
