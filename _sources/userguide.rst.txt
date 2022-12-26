@@ -230,8 +230,8 @@ When the publication has been created the required modifications should be perfo
 A subscription that should be sent to a subscriber is created in a similar way.
 
 .. code:: sh
-  
-   %> baltrad-exchange-config create_publication --template=exchange-template.json \
+
+   %> baltrad-exchange-config create_subscription --template=exchange-template.json \
       --output=remote_node_publication.json
 
 The output from this will be a tar ball containing the public key and the subscription configuration. This bundle should be sent to the 
