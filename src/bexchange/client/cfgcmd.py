@@ -164,7 +164,7 @@ class CreateKeys(Command):
     def create_keyczar_keys(self, opts):
         if opts.encryption != "dsa":
             print("Only supported encryption is dsa for keyczar crypto")
-            return"""
+            return
         
 
         if not os.path.exists(opts.destination):
@@ -226,7 +226,7 @@ class TestFilter(Command):
         if matcher.match(meta, tfilter.to_xpr()):
             print("MATCHING")
         else:
-            print("NOT MATCHING")"""
+            print("NOT MATCHING")
 
 class CreatePublication(Command):
     def update_optionparser(self, parser):

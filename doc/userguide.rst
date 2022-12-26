@@ -201,6 +201,42 @@ Where the <keyword> is one of the following types:
 Whenever a json file is read and the backend identifies one of the above keywords the object is created to support that configuration. Each of these keyword configurations will
 be explained later on.
 
+Templates
+-----------
+
+To simplify the exchange and setup of the system, there is the possibility to use a template (or templates) to generate the subscription and publication
+that will be used to configure the exchange. The template contains the necessary parts which are used when the subscription and publication is generated.
+
+.. literalinclude:: exchange-template.json
+
+The first part is the publication part that contains the sender type and the type of publisher that should be used. Currently, only
+the rest_sender is supported as template and obviously only crypto which is the encryption method used by the rest-sender.
+The other section is the filter that will be used for matching files. This part will be put into both the publication and the
+subscription section.
+
+When the template has been created it is possible to use the baltrad-exchange-config program to generate both publication and subscription artifacts.
+The default location for the template is /etc/baltrad/exchange/etc/exchange-template.json. If you want to use several different templates you can
+instead specify the template file to use by specifying --template=<template file name>.
+
+The publication that should be placed in the json configuration folder is created by issuing the following command.
+
+.. code:: sh
+   %> baltrad-exchange-config create_publication --template=exchange-template.json \
+      --desturi=https://remote.baltrad.node --name="pub to remote node" --output=remote_node_publication.json
+
+When the publication has been created the required modifications should be performed before putting it in the json config folder.
+
+A subscription that should be sent to a subscriber is created in a similar way.
+
+.. code:: sh
+   %> baltrad-exchange-config create_publication --template=exchange-template.json \
+      --output=remote_node_publication.json
+
+The output from this will be a tar ball containing the public key and the subscription configuration. This bundle should be sent to the 
+subscriber using email or some other distribution mechanism. The user on the other hand should unpack this file and put the files at the appropriate
+locations. If the subscriber wants to limit the files received, then the publisher should be made aware of this so that they can limit the outgoing
+files.
+
 Subscriptions (subscription)
 ============================
 
