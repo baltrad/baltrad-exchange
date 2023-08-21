@@ -9,7 +9,7 @@ REQUIRED_PACKAGES= [
     "python3-pycryptodomex",
     "python3-inotify",
     "python3-daemon >= 1.6",
-    "python3-werkzeug == 1.0.1"
+    "python3-werkzeug >= 1.0.1"
 ]
 
 setuptools.setup(name="bexchange",
