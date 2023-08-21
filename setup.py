@@ -4,12 +4,12 @@ import setuptools
 import sys
 
 REQUIRED_PACKAGES= [
-    "jprops >= 2.0.2",
-    "pyasn1",
-    "pycryptodomex",
-    "pyinotify",
-    "python-daemon >= 1.6",
-    "werkzeug == 1.0.1"
+    "SMHI-python3-radar_pyutils",
+    "python3-pyasn1",
+    "python3-pycryptodomex",
+    "python3-inotify",
+    "python3-daemon >= 1.6",
+    "python3-werkzeug == 1.0.1"
 ]
 
 setuptools.setup(name="bexchange",
