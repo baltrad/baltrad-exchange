@@ -5,10 +5,10 @@ import sys
 
 REQUIRED_PACKAGES= [
     "SMHI-python3-radar_pyutils",
-    "python3-pyasn1",
-    "python3-pycryptodomex",
-    "python3-inotify",
-    "python3-daemon",
+    "pyasn1",
+    "pycryptodomex",
+    "inotify",
+    "daemon",
     "werkzeug"
 ]
 
