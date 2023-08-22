@@ -7,7 +7,7 @@ REQUIRED_PACKAGES= [
     "SMHI-python3-radar_pyutils",
     "pyasn1",
     "pycryptodomex",
-    "inotify",
+    "pyinotify",
     "python-daemon",
     "werkzeug"
 ]
