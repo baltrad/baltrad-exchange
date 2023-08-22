@@ -8,7 +8,7 @@ REQUIRED_PACKAGES= [
     "pyasn1",
     "pycryptodomex",
     "inotify",
-    "daemon",
+    "python-daemon",
     "werkzeug"
 ]
 
