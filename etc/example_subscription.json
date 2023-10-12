@@ -30,7 +30,7 @@
       "auth":"keyczar",
       "conf":{
         "nodename": "anders-nzxt",
-        "pubkey":"/opt/baltrad2/etc/bltnode-keys/anders-nzxt.pub"
+        "pubkey":"/opt/baltrad/etc/bltnode-keys/anders-nzxt.pub"
       }
     },
     {

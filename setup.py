@@ -4,12 +4,11 @@ import setuptools
 import sys
 
 REQUIRED_PACKAGES= [
-    "jprops >= 2.0.2",
-    "pyasn1",
-    "pycryptodomex",
+    "baltradutils",
+    "baltradcrypto",
     "pyinotify",
-    "python-daemon >= 1.6",
-    "werkzeug == 1.0.1"
+    "python-daemon",
+    "werkzeug"
 ]
 
 setuptools.setup(name="bexchange",

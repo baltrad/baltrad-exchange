@@ -98,7 +98,10 @@ class sftpclient(object):
         try:
             self._client = paramiko.SSHClient()
             self._client.load_system_host_keys()
-            self._client.connect(self.hostname(), port=self.port(), username=self.username(), banner_timeout=self._banner_timeout)
+            if self._password:
+                self._client.connect(self.hostname(), port=self.port(), username=self.username(), password=self.password(), banner_timeout=self._banner_timeout)
+            else:
+                self._client.connect(self.hostname(), port=self.port(), username=self.username(), banner_timeout=self._banner_timeout)
             self._sftp = self._client.open_sftp()
             self._sftp.get_channel().settimeout(self._timeout)
         except:
@@ -195,3 +198,8 @@ class sftpclient(object):
         """
         self.disconnect()
   
+#if __name__=="__main__":
+#    #self, host, port, username, password, timeout=30.0, banner_timeout=30
+#    sf = sftpclient("localhost", 22, "sftpuploader", "secret")
+#    with sf:
+#        print(sf.listdir("."))

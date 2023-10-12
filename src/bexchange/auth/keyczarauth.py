@@ -25,9 +25,9 @@
 import os
 import logging
 from bexchange.auth import coreauth
-from bexchange import crypto
 
-from bexchange.crypto import keyczarcrypto
+from baltradcrypto import crypto
+from baltradcrypto.crypto import keyczarcrypto
 
 logger = logging.getLogger("bexchange.auth")
 

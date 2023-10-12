@@ -36,7 +36,8 @@ import hashlib
 
 from http import client as httplibclient
 
-from bexchange.crypto import keyczarcrypto
+from baltradcrypto.crypto import keyczarcrypto
+from baltradcrypto import crypto
 
 try:
     import tink
@@ -45,7 +46,6 @@ try:
 except:
     pass
 
-from bexchange import crypto
 
 class Request(object):
     def __init__(self, method, path, data=None, headers={}):

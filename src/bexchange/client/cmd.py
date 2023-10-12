@@ -38,8 +38,8 @@ from tempfile import NamedTemporaryFile
 from http import client as httplibclient
 
 # This should always be available
-from bexchange import crypto
-from bexchange.crypto import keyczarcrypto
+from baltradcrypto import crypto
+from baltradcrypto.crypto import keyczarcrypto
 
 class ExecutionError(RuntimeError):
     pass

@@ -21,7 +21,7 @@
 ## @file
 ## @author Anders Henja, SMHI
 ## @date 2021-08-18
-import jprops
+from baltradutils import jprops
 
 _undefined = object()
 

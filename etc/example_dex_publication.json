@@ -21,7 +21,7 @@
              "sign":true,
              "libname":"keyczar",
              "nodename":"anders-nzxt",
-             "privatekey":"/opt/baltrad2/etc/bltnode-keys/anders-nzxt.priv"
+             "privatekey":"/opt/baltrad/etc/bltnode-keys/anders-nzxt.priv"
            }         
          }
        }

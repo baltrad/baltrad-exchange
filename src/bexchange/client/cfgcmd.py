@@ -38,13 +38,15 @@ from tempfile import TemporaryDirectory
 from http import client as httplibclient
 
 # This should always be available
-from bexchange import config, crypto
-from bexchange.crypto import keyczarcrypto
+from bexchange import config
 from bexchange.odimutil import metadata_helper
 from bexchange.server import sqlbackend
 from bexchange.matching.filters import filter_manager
 from bexchange.matching.metadata_matcher import metadata_matcher
 from baltrad.bdbcommon import oh5
+
+from baltradcrypto import crypto
+from baltradcrypto.crypto import keyczarcrypto
 
 # Default configuration file.
 DEFAULT_CONFIG = "/etc/baltrad/exchange/etc/baltrad-exchange.properties"
