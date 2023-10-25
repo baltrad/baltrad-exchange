@@ -29,7 +29,7 @@ import os
 
 from bexchange import util
 from bexchange import config
-from bexchange import crypto
+from baltradcrypto import crypto
 
 logger = logging.getLogger("bexchange.auth")
 
