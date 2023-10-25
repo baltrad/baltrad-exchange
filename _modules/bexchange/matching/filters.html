@@ -317,7 +317,47 @@
         <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">expr</span><span class="o">.</span><span class="n">symbol</span><span class="p">(</span><span class="s2">&quot;not&quot;</span><span class="p">)]</span>
         <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">to_xpr</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">result</span></div></div>
-    
+
+<span class="c1">##</span>
+<span class="c1"># Always true</span>
+<div class="viewcode-block" id="always_filter"><a class="viewcode-back" href="../../../api/bexchange.matching.html#bexchange.matching.filters.always_filter">[docs]</a><span class="k">class</span> <span class="nc">always_filter</span><span class="p">(</span><span class="n">node_filter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;always filter for returning true</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="sd">        :param child: A child</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filter_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_repr</span><span class="p">()</span>
+
+<div class="viewcode-block" id="always_filter.name_repr"><a class="viewcode-back" href="../../../api/bexchange.matching.html#bexchange.matching.filters.always_filter.name_repr">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">name_repr</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the name of this filter</span>
+<span class="sd">        :return: name of this filter</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;always_filter&quot;</span></div>
+
+<div class="viewcode-block" id="always_filter.from_value"><a class="viewcode-back" href="../../../api/bexchange.matching.html#bexchange.matching.filters.always_filter.from_value">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_value</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">manager</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Used to create a not filter from a dictionary containing the information about this not filter. Format is:</span>
+<span class="sd">             {&quot;filter_type&quot;: &quot;always_filter&quot;}</span>
+<span class="sd">           :param value: The dictionary</span>
+<span class="sd">           :param manager: The manager used to instantiate objects       </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">always_filter</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The string representation of this instance.</span>
+<span class="sd">        :return: the string representation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="s1">&#39;always_filter&#39;</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+<div class="viewcode-block" id="always_filter.to_xpr"><a class="viewcode-back" href="../../../api/bexchange.matching.html#bexchange.matching.filters.always_filter.to_xpr">[docs]</a>    <span class="k">def</span> <span class="nf">to_xpr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates an expression to be used when matching against metadata.</span>
+<span class="sd">        :return: The expression</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span></div></div>
+
 <div class="viewcode-block" id="filter_manager"><a class="viewcode-back" href="../../../api/bexchange.matching.html#bexchange.matching.filters.filter_manager">[docs]</a><span class="k">class</span> <span class="nc">filter_manager</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;The filter manager is used to create a filter from a dictionary or json entry</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -329,6 +369,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">filters</span><span class="p">[</span><span class="n">and_filter</span><span class="o">.</span><span class="n">name_repr</span><span class="p">()]</span> <span class="o">=</span> <span class="n">and_filter</span><span class="o">.</span><span class="n">from_value</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">filters</span><span class="p">[</span><span class="n">or_filter</span><span class="o">.</span><span class="n">name_repr</span><span class="p">()]</span> <span class="o">=</span> <span class="n">or_filter</span><span class="o">.</span><span class="n">from_value</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">filters</span><span class="p">[</span><span class="n">not_filter</span><span class="o">.</span><span class="n">name_repr</span><span class="p">()]</span> <span class="o">=</span> <span class="n">not_filter</span><span class="o">.</span><span class="n">from_value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filters</span><span class="p">[</span><span class="n">always_filter</span><span class="o">.</span><span class="n">name_repr</span><span class="p">()]</span> <span class="o">=</span> <span class="n">always_filter</span><span class="o">.</span><span class="n">from_value</span>
 
 <div class="viewcode-block" id="filter_manager.from_value"><a class="viewcode-back" href="../../../api/bexchange.matching.html#bexchange.matching.filters.filter_manager.from_value">[docs]</a>    <span class="k">def</span> <span class="nf">from_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Creates a object from a dictionary if it can be parsed</span>

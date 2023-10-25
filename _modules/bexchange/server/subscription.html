@@ -194,6 +194,7 @@
         <span class="k">if</span> <span class="s2">&quot;statdef&quot;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
             <span class="n">statplugins</span> <span class="o">=</span> <span class="n">statistics_manager</span><span class="o">.</span><span class="n">plugins_from_conf</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;statdef&quot;</span><span class="p">],</span> <span class="n">backend</span><span class="o">.</span><span class="n">get_statistics_manager</span><span class="p">())</span>
 
+        <span class="n">ifilter</span> <span class="o">=</span> <span class="n">filter_manager</span><span class="o">.</span><span class="n">from_value</span><span class="p">({</span><span class="s2">&quot;filter_type&quot;</span><span class="p">:</span><span class="s2">&quot;always_filter&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:{}})</span>
         <span class="k">if</span> <span class="s2">&quot;filter&quot;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
             <span class="n">ifilter</span> <span class="o">=</span> <span class="n">filter_manager</span><span class="o">.</span><span class="n">from_value</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;filter&quot;</span><span class="p">])</span>
         
