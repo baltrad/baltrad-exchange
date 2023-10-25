@@ -1,0 +1,13 @@
+{
+"runner":{
+  "_comment_":"ZMQ subscriber to localhost.'",
+  "active":false,
+  "class":"bexchange.net.zmq.subscriber.subscriber",
+  "extra_arguments": {
+    "name":"zmq - localhost",
+    "hmac":"<change me>",
+    "address":"tcp://127.0.0.1:8079",
+    "__address":"tcp://127.0.0.1:8123"
+  } 
+}
+}
