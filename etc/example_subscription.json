@@ -6,7 +6,7 @@
   "active":true,
   "storage":["default_storage"],
   "statdef": [{"id":"stat-subscription-1", "type": "count"}],
-  "filter":{
+  "__filter":{
     "filter_type": "and_filter", 
     "value": [
       {"filter_type": "attribute_filter", 
@@ -24,7 +24,7 @@
     ]
   },
   "allow_duplicates":false,
-  "allowed_ids":["anders-other"],
+  "allowed_ids":["anders-other", "zmq - localhost", "inotify_monitor_1"],
   "cryptos":[
     {
       "auth":"keyczar",

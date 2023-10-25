@@ -154,3 +154,7 @@ class test_filters(unittest.TestCase):
         ifilter = filters.not_filter(filters.attribute_filter("some/value", "=", "string", "sehem"))
         expected = [expr.symbol("not"), [expr.symbol("="), [expr.symbol("attr"), "some/value", "string"], "sehem"]]
         self.assertEqual(expected, ifilter.to_xpr())
+
+    def test_always_filter_to_xpr(self):
+        ifilter = filters.always_filter()
+        self.assertEqual(True, ifilter.to_xpr())

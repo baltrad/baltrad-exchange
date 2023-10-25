@@ -120,6 +120,11 @@ class publisher(object):
         """
         return self._decorators
 
+    def initialize(self):
+        """Initializes the publisher before it is started.
+        """
+        pass
+
     def start(self):
         """A publisher should most likely be managing threads and as such a start method is needed
         """
@@ -215,6 +220,11 @@ class standard_publisher(publisher):
             finally:
                 self._queue.task_done()
 
+    def initialize(self):
+        """Initializes the publisher before it is started.
+        """
+        super(standard_publisher, self).initialize()
+
     def start(self):
         """ Starts all consumer threads as daemon threads
         """
@@ -302,10 +312,13 @@ class publisher_manager:
                 decorator = decorator_manager.create(ds["decorator"], ds["arguments"])
                 decorators.append(decorator)
 
+        ifilter = filter_manager.from_value({"filter_type":"always_filter", "value":{}})
         if "filter" in config:
             ifilter = filter_manager.from_value(config["filter"])
         
         p = self.create_publisher(name, publisher_clazz, backend, active, subscription_origin, ifilter, connections, decorators, extra_arguments)
+
+        p.initialize()
 
         p.start()
         return p

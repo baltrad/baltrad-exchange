@@ -47,10 +47,3 @@ class test_processor_manager(unittest.TestCase):
         extra_args["hej"]="yay"
         clz = processor_manager.create_processor("testit", "test_processor.test_processor", backend, True, extra_args)
         self.assertTrue(clz._args == extra_args)
-
-    #def test_create_instance_invalid_arguments(self):
-    #    try:
-    #        clz = decorator_manager.create("test_decorator.test_filter", ["a1"])
-    #        self.fail("Expected TypeError")
-    #    except TypeError:
-    #        pass

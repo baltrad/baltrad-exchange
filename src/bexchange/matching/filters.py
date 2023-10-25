@@ -277,7 +277,47 @@ class not_filter(node_filter):
         result = [expr.symbol("not")]
         result.append(self.value.to_xpr())
         return result
-    
+
+##
+# Always true
+class always_filter(node_filter):
+    """always filter for returning true
+    """
+    def __init__(self):
+        """Constructor
+        :param child: A child
+        """
+        self.filter_type = self.name_repr()
+
+    @classmethod
+    def name_repr(cls):
+        """Returns the name of this filter
+        :return: name of this filter
+        """
+        return "always_filter"
+
+    @classmethod
+    def from_value(cls, value, manager):
+        """Used to create a not filter from a dictionary containing the information about this not filter. Format is:
+             {"filter_type": "always_filter"}
+           :param value: The dictionary
+           :param manager: The manager used to instantiate objects       
+        """
+        return always_filter()
+
+    def __repr__(self):
+        """The string representation of this instance.
+        :return: the string representation
+        """
+        result = 'always_filter'
+        return result
+
+    def to_xpr(self):
+        """Creates an expression to be used when matching against metadata.
+        :return: The expression
+        """
+        return True
+
 class filter_manager:
     """The filter manager is used to create a filter from a dictionary or json entry
     """
@@ -289,6 +329,7 @@ class filter_manager:
         self.filters[and_filter.name_repr()] = and_filter.from_value
         self.filters[or_filter.name_repr()] = or_filter.from_value
         self.filters[not_filter.name_repr()] = not_filter.from_value
+        self.filters[always_filter.name_repr()] = always_filter.from_value
 
     def from_value(self, value):
         """Creates a object from a dictionary if it can be parsed

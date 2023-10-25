@@ -9,7 +9,7 @@
      "statistics_ok": {"id":"stat-publication-scp-ok", "type": "both"},
      "statistics_error": {"id":"stat-publication-scp-error", "type": "count"}
    },
-   "active":true,
+   "active":false,
    "connection":{
      "_comment_":"This is a connection used when publishing files to ftp server using a failover",
      "class":"bexchange.net.connections.simple_connection",

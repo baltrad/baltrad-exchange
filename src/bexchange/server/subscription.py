@@ -154,6 +154,7 @@ class subscription_manager:
         if "statdef" in config:
             statplugins = statistics_manager.plugins_from_conf(config["statdef"], backend.get_statistics_manager())
 
+        ifilter = filter_manager.from_value({"filter_type":"always_filter", "value":{}})
         if "filter" in config:
             ifilter = filter_manager.from_value(config["filter"])
         

@@ -182,6 +182,9 @@ class metadata_namer:
         self.suboperations={}
         #self.suboperations["tolower"] = self.tolower
     
+    def template(self):
+        return self.tmpl
+
     def name(self, meta):
         buffer = StringIO()
         

@@ -137,6 +137,7 @@ class inotify_runner(runner):
         :param filename: The filename to handle
         """
         self._backend.store_file(filename, self._name)
+        os.unlink(filename)
 
     def run(self):
         """The runner for the thread. Starts the inotify notifier loop

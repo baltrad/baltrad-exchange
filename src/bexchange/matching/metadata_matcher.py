@@ -119,7 +119,7 @@ class metadata_matcher:
         if from_index < 0:
             return False
         return split_path == node_split_path[from_index:]
- 
+
     def in_(self, lhs, rhs):
         """Matches if items in lhs exists in the rhs.
         :param lhs: Left hand side which is a list of values
