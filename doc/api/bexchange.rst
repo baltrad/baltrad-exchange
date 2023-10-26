@@ -9,7 +9,6 @@ Subpackages
 
    bexchange.auth
    bexchange.client
-   bexchange.crypto
    bexchange.db
    bexchange.decorators
    bexchange.matching

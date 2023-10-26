@@ -17,4 +17,6 @@ pip3 install "Werkzeug == 1.0.1"
 
 cd "$PROJECT_ROOT/doc"
 
+make clean
+
 make github
