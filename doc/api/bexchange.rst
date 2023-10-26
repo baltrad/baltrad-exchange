@@ -15,6 +15,7 @@ Subpackages
    bexchange.matching
    bexchange.naming
    bexchange.net
+   bexchange.net.zmq
    bexchange.processor
    bexchange.runner
    bexchange.server
