@@ -1,0 +1,408 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>bexchange.client.cmd &#8212; baltrad-exchange 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">baltrad-exchange 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">bexchange.client.cmd</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for bexchange.client.cmd</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (C) 2021- Swedish Meteorological and Hydrological Institute (SMHI)</span>
+<span class="c1">#</span>
+<span class="c1"># This file is part of baltrad-exchange.</span>
+<span class="c1">#</span>
+<span class="c1"># baltrad-exchange is free software: you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU Lesser General Public License as published by</span>
+<span class="c1"># the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1"># baltrad-exchange is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span>
+<span class="c1"># See the GNU Lesser General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU Lesser General Public License</span>
+<span class="c1"># along with baltrad-exchange.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c1">###############################################################################</span>
+
+<span class="c1">## Commands provided by the baltrad-exchange-client</span>
+
+<span class="c1">## @file</span>
+<span class="c1">## @author Anders Henja, SMHI</span>
+<span class="c1">## @date 2021-08-18</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>        
+
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">abstractmethod</span><span class="p">,</span> <span class="n">ABCMeta</span>
+<span class="kn">import</span> <span class="nn">abc</span>
+
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">socket</span>
+<span class="kn">import</span> <span class="nn">urllib.parse</span> <span class="k">as</span> <span class="nn">urlparse</span>
+<span class="kn">import</span> <span class="nn">pkg_resources</span>
+<span class="kn">import</span> <span class="nn">datetime</span><span class="o">,</span><span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">from</span> <span class="nn">tempfile</span> <span class="kn">import</span> <span class="n">NamedTemporaryFile</span>
+
+<span class="kn">from</span> <span class="nn">http</span> <span class="kn">import</span> <span class="n">client</span> <span class="k">as</span> <span class="n">httplibclient</span>
+
+<span class="c1"># This should always be available</span>
+<span class="kn">from</span> <span class="nn">baltradcrypto</span> <span class="kn">import</span> <span class="n">crypto</span>
+<span class="kn">from</span> <span class="nn">baltradcrypto.crypto</span> <span class="kn">import</span> <span class="n">keyczarcrypto</span>
+
+<div class="viewcode-block" id="ExecutionError"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.ExecutionError">[docs]</a><span class="k">class</span> <span class="nc">ExecutionError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="Command"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.Command">[docs]</a><span class="k">class</span> <span class="nc">Command</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;command-line client command interface</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">ABCMeta</span>
+
+<div class="viewcode-block" id="Command.update_optionparser"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.Command.update_optionparser">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+    
+<div class="viewcode-block" id="Command.execute"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.Command.execute">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;execute this command</span>
+
+<span class="sd">        :param database: a database instance to operate on</span>
+<span class="sd">        :param opts: options passed from command line</span>
+<span class="sd">        :param args: arguments passed from command line</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Command.get_implementation_by_name"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.Command.get_implementation_by_name">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_implementation_by_name</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;get an implementing class by name</span>
+
+<span class="sd">        the implementing class is looked up from &#39;baltrad.bdbclient.commands&#39;</span>
+<span class="sd">        entry point. </span>
+
+<span class="sd">        :raise: :class:`LookupError` if not found</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">load_entry_point</span><span class="p">(</span>
+                <span class="s2">&quot;bexchange&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;bexchange.client.commands&quot;</span><span class="p">,</span>
+                <span class="n">name</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">LookupError</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Command.get_commands"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.Command.get_commands">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_commands</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">get_entry_map</span><span class="p">(</span><span class="s2">&quot;bexchange&quot;</span><span class="p">)[</span><span class="s2">&quot;bexchange.client.commands&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div></div>
+
+<div class="viewcode-block" id="StoreFile"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.StoreFile">[docs]</a><span class="k">class</span> <span class="nc">StoreFile</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+<div class="viewcode-block" id="StoreFile.update_optionparser"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.StoreFile.update_optionparser">[docs]</a>    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+        <span class="n">usg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_usage</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        </span>
+<span class="s2">Posts a sequence of files to the exchange server.</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+
+        <span class="n">usage</span> <span class="o">=</span> <span class="n">usg</span> <span class="o">+</span> <span class="s2">&quot; FILE [ FILE]&quot;</span> <span class="o">+</span> <span class="n">description</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">set_usage</span><span class="p">(</span><span class="n">usage</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="StoreFile.execute"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.StoreFile.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span> 
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">data</span><span class="p">:</span>
+                <span class="n">entry</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> stored&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">path</span><span class="p">))</span></div></div>
+
+<div class="viewcode-block" id="BatchTest"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.BatchTest">[docs]</a><span class="k">class</span> <span class="nc">BatchTest</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+    <span class="n">SRC_MAPPING</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;sekrn&quot;</span><span class="p">:</span><span class="s2">&quot;WMO:02032,RAD:SE40,PLC:Kiruna,CMT:sekrn,NOD:sekrn&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sella&quot;</span><span class="p">:</span><span class="s2">&quot;WMO:02092,RAD:SE41,PLC:Luleå,CMT:sella,NOD:sella&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;seosd&quot;</span><span class="p">:</span><span class="s2">&quot;WMO:02200,RAD:SE42,PLC:Östersund,CMT:seosd,NOD:seosd&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;seoer&quot;</span><span class="p">:</span><span class="s2">&quot;WMO:02262,RAD:SE43,PLC:Örnsköldsvik,CMT:seoer,NOD:seoer&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sehuv&quot;</span><span class="p">:</span><span class="s2">&quot;WMO:02334,RAD:SE44,PLC:Hudiksvall,CMT:sehuv,NOD:sehuv&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;selek&quot;</span><span class="p">:</span><span class="s2">&quot;WMO:02430,RAD:SE45,PLC:Leksand,CMT:selek,NOD:selek&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sehem&quot;</span><span class="p">:</span><span class="s2">&quot;WMO:02588,RAD:SE47,PLC:Hemse,CMT:sehem,NOD:sehem&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;seatv&quot;</span><span class="p">:</span><span class="s2">&quot;WMO:02570,RAD:SE48,PLC:Åtvidaberg,CMT:seatv,NOD:seatv&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sevax&quot;</span><span class="p">:</span><span class="s2">&quot;WMO:02600,RAD:SE49,PLC:Vara,CMT:sevax,NOD:sevax&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;seang&quot;</span><span class="p">:</span><span class="s2">&quot;WMO:02606,RAD:SE50,PLC:Ängelholm,CMT:seang,NOD:seang&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sekaa&quot;</span><span class="p">:</span><span class="s2">&quot;WMO:02666,RAD:SE51,PLC:Karlskrona,CMT:sekaa,NOD:sekaa&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sebaa&quot;</span><span class="p">:</span><span class="s2">&quot;WMO:00000,RAD:SE52,PLC:Bålsta,CMT:sebaa,NOD:sebaa&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+
+<div class="viewcode-block" id="BatchTest.update_optionparser"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.BatchTest.update_optionparser">[docs]</a>    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+        <span class="n">usg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_usage</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+
+<span class="s2">The batchtest uses a basefile that either is a scan or a pvol and uses that as a template and</span>
+<span class="s2">then updates the source and datetime before sending it to the exchange server. It is only the</span>
+<span class="s2">information for the swedish radars sekrn, sella, seosd, seoer, sehuv, selek, sehem, seatv, sevax, </span>
+<span class="s2">seang, sekaa and sebaa that will be set in what/source. The soure set will be in the format</span>
+<span class="s2">WMO:02666,RAD:SE51,PLC:Karlskrona,CMT:sekaa,NOD:sekaa.</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+
+        <span class="n">usage</span> <span class="o">=</span> <span class="n">usg</span> <span class="o">+</span> <span class="s2">&quot; --basefile=FILENAME&quot;</span> <span class="o">+</span> <span class="n">description</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">set_usage</span><span class="p">(</span><span class="n">usage</span><span class="p">)</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
+            <span class="s2">&quot;--basefile&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;basefile&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Basefile that should be modified and injected&quot;</span><span class="p">)</span>
+        
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
+            <span class="s2">&quot;--datetime&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;datetime&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">%H%M&quot;</span><span class="p">),</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Datetime&quot;</span><span class="p">)</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
+            <span class="s2">&quot;--sources&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;sources&quot;</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="s2">&quot;sekrn,sella,seosd,seoer,sehuv,selek,sehem,seatv,sevax,seang,sekaa,sebaa&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The sources&quot;</span><span class="p">)</span>
+    
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
+            <span class="s2">&quot;--periods&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;periods&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Number of periods&quot;</span><span class="p">)</span>
+        
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
+            <span class="s2">&quot;--interval&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;interval&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Minutes between each period&quot;</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="BatchTest.execute"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.BatchTest.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">_raveio</span><span class="o">,</span> <span class="nn">_polarvolume</span><span class="o">,</span> <span class="nn">_polarscan</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">opts</span><span class="o">.</span><span class="n">basefile</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No basefile provided</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">ExecutionError</span><span class="p">()</span>
+        
+        <span class="n">dt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_datetime_str</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">interval</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">opts</span><span class="o">.</span><span class="n">datetime</span><span class="p">:</span>
+            <span class="n">dt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_closest_time</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">interval</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">pindex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">periods</span><span class="p">):</span>
+            <span class="n">tstr</span> <span class="o">=</span> <span class="p">(</span><span class="n">dt</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span> <span class="o">=</span> <span class="n">pindex</span><span class="o">*</span><span class="n">opts</span><span class="o">.</span><span class="n">interval</span><span class="p">))</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">%H%M%S&quot;</span><span class="p">)</span>
+            <span class="n">o</span> <span class="o">=</span> <span class="n">_raveio</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">basefile</span><span class="p">)</span><span class="o">.</span><span class="n">object</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">tstr</span><span class="p">[:</span><span class="mi">8</span><span class="p">]</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">tstr</span><span class="p">[</span><span class="mi">8</span><span class="p">:]</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="n">d</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">t</span>
+            
+            <span class="k">for</span> <span class="n">src</span> <span class="ow">in</span> <span class="n">opts</span><span class="o">.</span><span class="n">sources</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">):</span>
+                <span class="n">o</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">SRC_MAPPING</span><span class="p">[</span><span class="n">src</span><span class="p">]</span>
+                <span class="n">rio</span> <span class="o">=</span> <span class="n">_raveio</span><span class="o">.</span><span class="n">new</span><span class="p">()</span>
+                <span class="n">rio</span><span class="o">.</span><span class="n">object</span> <span class="o">=</span> <span class="n">o</span>
+                <span class="k">with</span> <span class="n">NamedTemporaryFile</span><span class="p">()</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">rio</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">data</span><span class="p">:</span>
+                        <span class="n">entry</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>                    </div>
+
+<div class="viewcode-block" id="BatchTest.get_closest_time"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.BatchTest.get_closest_time">[docs]</a>    <span class="k">def</span> <span class="nf">get_closest_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interval</span><span class="p">):</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span>
+        <span class="n">oz</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">tm_min</span><span class="o">%</span><span class="n">interval</span>
+        <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">tm_year</span><span class="p">,</span><span class="n">t</span><span class="o">.</span><span class="n">tm_mon</span><span class="p">,</span><span class="n">t</span><span class="o">.</span><span class="n">tm_mday</span><span class="p">,</span><span class="n">t</span><span class="o">.</span><span class="n">tm_hour</span><span class="p">,</span><span class="n">t</span><span class="o">.</span><span class="n">tm_min</span><span class="o">-</span><span class="n">oz</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BatchTest.parse_datetime_str"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.BatchTest.parse_datetime_str">[docs]</a>    <span class="k">def</span> <span class="nf">parse_datetime_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dtstr</span><span class="p">,</span> <span class="n">interval</span><span class="p">):</span>
+        <span class="n">year</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">dtstr</span><span class="p">[:</span><span class="mi">4</span><span class="p">])</span>
+        <span class="n">month</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">dtstr</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">6</span><span class="p">])</span>
+        <span class="n">mday</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">dtstr</span><span class="p">[</span><span class="mi">6</span><span class="p">:</span><span class="mi">8</span><span class="p">])</span>
+        <span class="n">hour</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">dtstr</span><span class="p">[</span><span class="mi">8</span><span class="p">:</span><span class="mi">10</span><span class="p">])</span>
+        <span class="n">minute</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">dtstr</span><span class="p">[</span><span class="mi">10</span><span class="p">:</span><span class="mi">12</span><span class="p">])</span>
+        <span class="n">minute</span> <span class="o">=</span> <span class="n">minute</span> <span class="o">-</span> <span class="n">minute</span><span class="o">%</span><span class="n">interval</span>
+        <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">year</span><span class="p">,</span><span class="n">month</span><span class="p">,</span><span class="n">mday</span><span class="p">,</span><span class="n">hour</span><span class="p">,</span><span class="n">minute</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="PostJsonMessage"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.PostJsonMessage">[docs]</a><span class="k">class</span> <span class="nc">PostJsonMessage</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+<div class="viewcode-block" id="PostJsonMessage.update_optionparser"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.PostJsonMessage.update_optionparser">[docs]</a>    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+        <span class="n">usg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_usage</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+
+<span class="s2">Posts a json message to the exchange server. Can be used to trigger for example a runnable job.</span>
+
+<span class="s2">Example: baltrad-exchange-client post_message &#39;{&quot;trigger&quot;:&quot;trigger_4&quot;}&#39;</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+
+        <span class="n">usage</span> <span class="o">=</span> <span class="n">usg</span> <span class="o">+</span> <span class="s2">&quot; MESSAGE&quot;</span> <span class="o">+</span> <span class="n">description</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">set_usage</span><span class="p">(</span><span class="n">usage</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PostJsonMessage.execute"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.PostJsonMessage.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="n">entry</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">post_json_message</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div></div>
+
+<div class="viewcode-block" id="GetStatistics"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.GetStatistics">[docs]</a><span class="k">class</span> <span class="nc">GetStatistics</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+<div class="viewcode-block" id="GetStatistics.update_optionparser"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.GetStatistics.update_optionparser">[docs]</a>    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+        <span class="n">usg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_usage</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+
+<span class="s2">Queries the exchange server for various statistics information. The spid is used to identify what statistics</span>
+<span class="s2">id that should be queried for. It is possible to query for all existing ids by executing the command</span>
+<span class="s2">list_statistic_ids.</span>
+
+<span class="s2">Example: baltrad-exchange-client get_statistics --spid=server-incomming --totals</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+
+        <span class="n">usage</span> <span class="o">=</span> <span class="n">usg</span> <span class="o">+</span> <span class="s2">&quot; --spid=STAT_ID&quot;</span> <span class="o">+</span> <span class="n">description</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">set_usage</span><span class="p">(</span><span class="n">usage</span><span class="p">)</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
+            <span class="s2">&quot;--spid&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;spid&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;What plugin id that should be queried&quot;</span><span class="p">)</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
+            <span class="s2">&quot;--sources&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;sources&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The sources that should be queried&quot;</span><span class="p">)</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
+            <span class="s2">&quot;--totals&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;totals&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Use this option if the total should be returned instead&quot;</span><span class="p">)</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
+            <span class="s2">&quot;--method&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;method&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;If some sort of analysis should be performed. Currently only average&quot;</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="GetStatistics.execute"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.GetStatistics.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">get_statistics</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">spid</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">sources</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">totals</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">method</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">httplibclient</span><span class="o">.</span><span class="n">OK</span><span class="p">:</span>
+            <span class="n">ldata</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">ldata</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+            <span class="c1">#print(ldata)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Unhandled response code: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="ListStatisticIds"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.ListStatisticIds">[docs]</a><span class="k">class</span> <span class="nc">ListStatisticIds</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+<div class="viewcode-block" id="ListStatisticIds.update_optionparser"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.ListStatisticIds.update_optionparser">[docs]</a>    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+        <span class="n">usg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_usage</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+
+<span class="s2">Queries the exchange server for the available statistics ids</span>
+
+<span class="s2">Example: baltrad-exchange-client list_statistic_ids</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+
+        <span class="n">usage</span> <span class="o">=</span> <span class="n">usg</span> <span class="o">+</span> <span class="n">description</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">set_usage</span><span class="p">(</span><span class="n">usage</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ListStatisticIds.execute"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.ListStatisticIds.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">list_statistics</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">httplibclient</span><span class="o">.</span><span class="n">OK</span><span class="p">:</span>
+            <span class="n">ldata</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">ldata</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Unhandled response code: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="ServerInfo"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.ServerInfo">[docs]</a><span class="k">class</span> <span class="nc">ServerInfo</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+<div class="viewcode-block" id="ServerInfo.update_optionparser"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.ServerInfo.update_optionparser">[docs]</a>    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+        <span class="n">usg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_usage</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+
+<span class="s2">Provides some useful information about the server. Currently the following things can be queried for.</span>
+<span class="s2">  uptime    - How long the server has been running</span>
+
+<span class="s2">  nodename  - The name this server is identifying itself when sending files</span>
+
+<span class="s2">  publickey - The public key that can be used to identify myself as</span>
+
+<span class="s2">Example: baltrad-exchange-client server_info uptime</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+
+        <span class="n">usage</span> <span class="o">=</span> <span class="n">usg</span> <span class="o">+</span> <span class="n">description</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">set_usage</span><span class="p">(</span><span class="n">usage</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ServerInfo.execute"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.ServerInfo.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;uptime&quot;</span> <span class="ow">or</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;nodename&quot;</span> <span class="ow">or</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;publickey&quot;</span><span class="p">:</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">get_server_info</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">httplibclient</span><span class="o">.</span><span class="n">OK</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;publickey&quot;</span><span class="p">:</span>
+                        <span class="n">ldata</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="n">ldata</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">ldata</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="n">ldata</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Unhandled response code: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Only valid subcommands are uptime and nodename&quot;</span><span class="p">)</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">baltrad-exchange 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">bexchange.client.cmd</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    </div>
+  </body>
+</html>

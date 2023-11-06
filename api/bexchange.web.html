@@ -48,14 +48,169 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </section>
-<section id="bexchange-web-app-module">
-<h2>bexchange.web.app module<a class="headerlink" href="#bexchange-web-app-module" title="Permalink to this headline">¶</a></h2>
+<section id="module-bexchange.web.app">
+<span id="bexchange-web-app-module"></span><h2>bexchange.web.app module<a class="headerlink" href="#module-bexchange.web.app" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="bexchange.web.app.Application">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.web.app.</span></span><span class="sig-name descname"><span class="pre">Application</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/web/app.html#Application"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.web.app.Application" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.web.app.Application.dispatch_request">
+<span class="sig-name descname"><span class="pre">dispatch_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">provider</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/web/app.html#Application.dispatch_request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.web.app.Application.dispatch_request" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.web.app.Application.from_conf">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_conf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/web/app.html#Application.from_conf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.web.app.Application.from_conf" title="Permalink to this definition">¶</a></dt>
+<dd><p>create instance from configuration.
+:param conf: a <a class="reference internal" href="bexchange.html#bexchange.config.Properties" title="bexchange.config.Properties"><code class="xref py py-class docutils literal notranslate"><span class="pre">Properties</span></code></a> instance to configure</p>
+<blockquote>
+<div><p>from</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.web.app.Application.get_backend">
+<span class="sig-name descname"><span class="pre">get_backend</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/web/app.html#Application.get_backend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.web.app.Application.get_backend" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="bexchange.web.app.from_conf">
+<span class="sig-prename descclassname"><span class="pre">bexchange.web.app.</span></span><span class="sig-name descname"><span class="pre">from_conf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/web/app.html#from_conf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.web.app.from_conf" title="Permalink to this definition">¶</a></dt>
+<dd><p>create the entire WSGI application from conf
+this will wrap the application with necessary middleware</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="bexchange.web.app.serve">
+<span class="sig-prename descclassname"><span class="pre">bexchange.web.app.</span></span><span class="sig-name descname"><span class="pre">serve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/web/app.html#serve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.web.app.serve" title="Permalink to this definition">¶</a></dt>
+<dd><p>serve the application using werkzeug</p>
+</dd></dl>
+
 </section>
-<section id="bexchange-web-auth-module">
-<h2>bexchange.web.auth module<a class="headerlink" href="#bexchange-web-auth-module" title="Permalink to this headline">¶</a></h2>
+<section id="module-bexchange.web.auth">
+<span id="bexchange-web-auth-module"></span><h2>bexchange.web.auth module<a class="headerlink" href="#module-bexchange.web.auth" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="bexchange.web.auth.AuthMiddleware">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.web.auth.</span></span><span class="sig-name descname"><span class="pre">AuthMiddleware</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">authmgr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/web/auth.html#AuthMiddleware"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.web.auth.AuthMiddleware" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>WSGI middleware providing authentication. Actual authentication is
+delegated to an <a class="reference internal" href="bexchange.auth.html#bexchange.auth.coreauth.Auth" title="bexchange.auth.coreauth.Auth"><code class="xref py py-class docutils literal notranslate"><span class="pre">Auth</span></code></a> implementation registered as a <em>provider</em>
+here.</p>
+<p>The provider and credentials are extracted using <code class="xref py py-func docutils literal notranslate"><span class="pre">get_credentials()</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>app</strong> – the WSGI application receiving the request if authentication
+is successful.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.web.auth.AuthMiddleware.authenticate">
+<span class="sig-name descname"><span class="pre">authenticate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">req</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/web/auth.html#AuthMiddleware.authenticate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.web.auth.AuthMiddleware.authenticate" title="Permalink to this definition">¶</a></dt>
+<dd><p>authenticate a <a class="reference internal" href="#bexchange.web.util.Request" title="bexchange.web.util.Request"><code class="xref py py-class docutils literal notranslate"><span class="pre">Request</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="bexchange-web-handler-module">
-<h2>bexchange.web.handler module<a class="headerlink" href="#bexchange-web-handler-module" title="Permalink to this headline">¶</a></h2>
+<section id="module-bexchange.web.handler">
+<span id="bexchange-web-handler-module"></span><h2>bexchange.web.handler module<a class="headerlink" href="#module-bexchange.web.handler" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="bexchange.web.handler.get_server_nodename">
+<span class="sig-prename descclassname"><span class="pre">bexchange.web.handler.</span></span><span class="sig-name descname"><span class="pre">get_server_nodename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/web/handler.html#get_server_nodename"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.web.handler.get_server_nodename" title="Permalink to this definition">¶</a></dt>
+<dd><p>:returns the server nodename</p>
+<p>See <span class="xref std std-ref">doc-rest-cmd-server_info</span> for details</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="bexchange.web.handler.get_server_publickey">
+<span class="sig-prename descclassname"><span class="pre">bexchange.web.handler.</span></span><span class="sig-name descname"><span class="pre">get_server_publickey</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/web/handler.html#get_server_publickey"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.web.handler.get_server_publickey" title="Permalink to this definition">¶</a></dt>
+<dd><p>:returns the server publickey</p>
+<p>See <span class="xref std std-ref">doc-rest-cmd-server_info</span> for details</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="bexchange.web.handler.get_server_uptime">
+<span class="sig-prename descclassname"><span class="pre">bexchange.web.handler.</span></span><span class="sig-name descname"><span class="pre">get_server_uptime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/web/handler.html#get_server_uptime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.web.handler.get_server_uptime" title="Permalink to this definition">¶</a></dt>
+<dd><p>:returns the server uptime</p>
+<p>See <span class="xref std std-ref">doc-rest-cmd-server_info</span> for details</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="bexchange.web.handler.get_statistics">
+<span class="sig-prename descclassname"><span class="pre">bexchange.web.handler.</span></span><span class="sig-name descname"><span class="pre">get_statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/web/handler.html#get_statistics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.web.handler.get_statistics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the statistics for modules / sources</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ctx</strong> (<a class="reference internal" href="#bexchange.web.util.RequestContext" title="bexchange.web.util.RequestContext"><code class="xref py py-class docutils literal notranslate"><span class="pre">RequestContext</span></code></a>) – the request context</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><a class="reference internal" href="#bexchange.web.util.JsonResponse" title="bexchange.web.util.JsonResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">JsonResponse</span></code></a> with status
+<em>200 Created</em> and information in body</p>
+</dd>
+</dl>
+<p>See <a class="reference internal" href="../commandline.html#doc-rest-cmd-get-statistics"><span class="std std-ref">get_statistics</span></a> for details</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="bexchange.web.handler.list_statistic_ids">
+<span class="sig-prename descclassname"><span class="pre">bexchange.web.handler.</span></span><span class="sig-name descname"><span class="pre">list_statistic_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/web/handler.html#list_statistic_ids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.web.handler.list_statistic_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the statistic ids</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ctx</strong> (<a class="reference internal" href="#bexchange.web.util.RequestContext" title="bexchange.web.util.RequestContext"><code class="xref py py-class docutils literal notranslate"><span class="pre">RequestContext</span></code></a>) – the request context</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><a class="reference internal" href="#bexchange.web.util.JsonResponse" title="bexchange.web.util.JsonResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">JsonResponse</span></code></a> with status
+<em>200 Created</em> and information in body</p>
+</dd>
+</dl>
+<p>See <a class="reference internal" href="../commandline.html#doc-rest-cmd-list-statistic-ids"><span class="std std-ref">list_statistic_ids</span></a> for details</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="bexchange.web.handler.post_dex_file">
+<span class="sig-prename descclassname"><span class="pre">bexchange.web.handler.</span></span><span class="sig-name descname"><span class="pre">post_dex_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/web/handler.html#post_dex_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.web.handler.post_dex_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="bexchange.web.handler.post_file">
+<span class="sig-prename descclassname"><span class="pre">bexchange.web.handler.</span></span><span class="sig-name descname"><span class="pre">post_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/web/handler.html#post_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.web.handler.post_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Receive a file from some party</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ctx</strong> (<a class="reference internal" href="#bexchange.web.util.RequestContext" title="bexchange.web.util.RequestContext"><code class="xref py py-class docutils literal notranslate"><span class="pre">RequestContext</span></code></a>) – the request context</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><a class="reference internal" href="#bexchange.web.util.JsonResponse" title="bexchange.web.util.JsonResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">JsonResponse</span></code></a> with status
+<em>200 OK</em></p>
+</dd>
+</dl>
+<p>See <a class="reference internal" href="../commandline.html#doc-rest-cmd-store-file"><span class="std std-ref">store</span></a> for details</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="bexchange.web.handler.post_json_message">
+<span class="sig-prename descclassname"><span class="pre">bexchange.web.handler.</span></span><span class="sig-name descname"><span class="pre">post_json_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/web/handler.html#post_json_message"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.web.handler.post_json_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>A trigger message used to trigger different jobs from the outside</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ctx</strong> (<a class="reference internal" href="#bexchange.web.util.RequestContext" title="bexchange.web.util.RequestContext"><code class="xref py py-class docutils literal notranslate"><span class="pre">RequestContext</span></code></a>) – the request context</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><a class="reference internal" href="#bexchange.web.util.JsonResponse" title="bexchange.web.util.JsonResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">JsonResponse</span></code></a> with status
+<em>201 Created</em> and metadata in body</p>
+</dd>
+<dt class="field-odd">Raise</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#bexchange.web.util.HttpConflict" title="bexchange.web.util.HttpConflict"><code class="xref py py-class docutils literal notranslate"><span class="pre">HttpConflict</span></code></a> when file already
+stored</p>
+</dd>
+</dl>
+<p>See <a class="reference internal" href="../commandline.html#doc-rest-cmd-post-json-message"><span class="std std-ref">post_message</span></a> for details</p>
+</dd></dl>
+
 </section>
 <section id="module-bexchange.web.routing">
 <span id="bexchange-web-routing-module"></span><h2>bexchange.web.routing module<a class="headerlink" href="#module-bexchange.web.routing" title="Permalink to this headline">¶</a></h2>
@@ -246,9 +401,9 @@ headers will be set in the response.</p>
   <ul>
 <li><a class="reference internal" href="#">bexchange.web package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#bexchange-web-app-module">bexchange.web.app module</a></li>
-<li><a class="reference internal" href="#bexchange-web-auth-module">bexchange.web.auth module</a></li>
-<li><a class="reference internal" href="#bexchange-web-handler-module">bexchange.web.handler module</a></li>
+<li><a class="reference internal" href="#module-bexchange.web.app">bexchange.web.app module</a></li>
+<li><a class="reference internal" href="#module-bexchange.web.auth">bexchange.web.auth module</a></li>
+<li><a class="reference internal" href="#module-bexchange.web.handler">bexchange.web.handler module</a></li>
 <li><a class="reference internal" href="#module-bexchange.web.routing">bexchange.web.routing module</a></li>
 <li><a class="reference internal" href="#module-bexchange.web.util">bexchange.web.util module</a></li>
 <li><a class="reference internal" href="#module-bexchange.web">Module contents</a></li>
