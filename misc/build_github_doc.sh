@@ -12,7 +12,12 @@ sudo apt-get -y install python3-sqlalchemy python3-paramiko python3-pyinotify py
 git config --local user.email "baltrad@users.noreply.github.com"
 git config --local user.name "Baltrad GitHub Action"
 
-pip3 install "jprops == 2.0.2"
+rm -fr /tmp/doc-env
+python3 -m venv --system-site-packages /tmp/doc-env
+source /tmp/doc-env/bin/activate
+
+pip3 install git+https://github.com/baltrad/baltrad-crypto.git  || exit 127
+pip3 install git+https://github.com/baltrad/baltrad-utils.git || exit 127
 pip3 install "Werkzeug == 1.0.1"
 
 cd "$PROJECT_ROOT/doc"
