@@ -49,7 +49,8 @@ The exchange of any files can be divided into a number of different steps.
 **Publications**
   Since different parties want to have files distributed in various ways the publication has been divided into three different parts. The publisher, the connector and the sender.
   
-  - **publisher** is the overall spider taking care of threads, what connector to use and if the outgoing file should be modified in any way. Currently there is only one publisher, the standard_publisher.
+  - **publisher** is the overall spider taking care of threads, what connector to use and if the outgoing file should be modified in any way. Currently there are two publishers, the standard_publisher and the zmq publisher. 
+  The zmq publisher doesn't have a connection and/or sender since it's using the internal ZeroMQ framework for communication.
   - **connection** this is the approach to use when distributing the file. For example if the file should be sent with some sort of failover, duplication, ...
   - **sender** is the actual protocol to use when sending the file, like to another node, a dex-node or some sort of sftp, scp-protocol
 
@@ -435,6 +436,8 @@ With the above knowledge, assuming that a scan with elevation angle=0.5 arrives 
 expression *${_baltrad/datetime_l:15:%Y/%m/%d/%H/%M}/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.h5*
 will result in *2022/11/03/22/00/sella_scan_202211032203_0.5.h5*.
 
+.. _ug_publications:
+
 Publications (publication)
 ==========================
 
@@ -629,6 +632,7 @@ The decorator is in turn configured in the publisher as
     }
    ]
 
+.. _ug_runners:
 
 Runners (runner)
 =================

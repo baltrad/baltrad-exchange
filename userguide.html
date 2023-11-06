@@ -71,7 +71,7 @@ and not baltrad_exchange or any other variant.</p>
 <img alt="Basic overview of the server" src="_images/overview.png" />
 </figure>
 <p>The exchange of any files can be divided into a number of different steps.</p>
-<dl class="simple">
+<dl>
 <dt><strong>Input</strong></dt><dd><p>First, there is the source file that should be distributed. This file should be injected into the system some how. Either waiting for input like when receiving a file or some sort of monitoring/triggering like polling or event handling.</p>
 </dd>
 <dt><strong>Authentication</strong></dt><dd><p>When a file is inserted into the system actively we must have some sort of authenticating that it is a valid origin. The baltrad-exchange is using public/private keys and signature handling to ensure that this is taken care of in a secure way.</p>
@@ -84,10 +84,11 @@ and not baltrad_exchange or any other variant.</p>
 </dd>
 <dt><strong>Publications</strong></dt><dd><p>Since different parties want to have files distributed in various ways the publication has been divided into three different parts. The publisher, the connector and the sender.</p>
 <ul class="simple">
-<li><p><strong>publisher</strong> is the overall spider taking care of threads, what connector to use and if the outgoing file should be modified in any way. Currently there is only one publisher, the standard_publisher.</p></li>
-<li><p><strong>connection</strong> this is the approach to use when distributing the file. For example if the file should be sent with some sort of failover, duplication, …</p></li>
-<li><p><strong>sender</strong> is the actual protocol to use when sending the file, like to another node, a dex-node or some sort of sftp, scp-protocol</p></li>
+<li><p><strong>publisher</strong> is the overall spider taking care of threads, what connector to use and if the outgoing file should be modified in any way. Currently there are two publishers, the standard_publisher and the zmq publisher.</p></li>
 </ul>
+<p>The zmq publisher doesn’t have a connection and/or sender since it’s using the internal ZeroMQ framework for communication.
+- <strong>connection</strong> this is the approach to use when distributing the file. For example if the file should be sent with some sort of failover, duplication, …
+- <strong>sender</strong> is the actual protocol to use when sending the file, like to another node, a dex-node or some sort of sftp, scp-protocol</p>
 </dd>
 <dt><strong>Runners</strong></dt><dd><p>If a file isn’t injected into the system we need to be able to get the file into the system some other way and here is where the runners comes into action. A runner is a separate entity that
 uses the server backend to trigger and pass a file into the system like if it had passed the <strong>Authentication</strong> part. The runners can for example be event triggered variants like inotify. It can also be
@@ -418,7 +419,7 @@ will result in <em>2022/11/03/22/00/sella_scan_202211032203_0.5.h5</em>.</p>
 </section>
 </section>
 <section id="publications-publication">
-<h3>Publications (publication)<a class="headerlink" href="#publications-publication" title="Permalink to this headline">¶</a></h3>
+<span id="ug-publications"></span><h3>Publications (publication)<a class="headerlink" href="#publications-publication" title="Permalink to this headline">¶</a></h3>
 <p>Whenever a subscription has approved an incoming file, this file will be posted to all publications which in turn will have to decide if the file should be
 distributed or not depending on the file content. Obviously, this might cause some problems if not configuring the system properly since if more than one
 subscription approves the same file, then this file might be sent twice. In the same way, if a publication filter is to generic files might be sent more than once.
@@ -624,7 +625,7 @@ the ones that was configured.</p>
 </section>
 </section>
 <section id="runners-runner">
-<h3>Runners (runner)<a class="headerlink" href="#runners-runner" title="Permalink to this headline">¶</a></h3>
+<span id="ug-runners"></span><h3>Runners (runner)<a class="headerlink" href="#runners-runner" title="Permalink to this headline">¶</a></h3>
 <p>A runner is something that is running on the side of the actual file handling taking care of miscellaneous tasks. The two most typical runners are used for getting aware of when files are available for injection into the system like
 an active or triggered subscription. The runners have a different entrance to the system by going directly to the subscription-handling in the backend without any authentication.
 Currently, there are two runners implemented in the exchange server but like with the rest of the system it is easy to extend with new runners.</p>

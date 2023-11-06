@@ -294,7 +294,7 @@
 <div class="viewcode-block" id="create_signable_string"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.create_signable_string">[docs]</a><span class="k">def</span> <span class="nf">create_signable_string</span><span class="p">(</span><span class="n">req</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;construct a signable string from a :class:`.Request`</span>
 
-<span class="sd">    See :ref:`doc-rest-authentication` for details.</span>
+<span class="sd">    See :ref:`doc-rest-crypto-authentication` for details.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">fragments</span> <span class="o">=</span> <span class="p">[</span><span class="n">req</span><span class="o">.</span><span class="n">method</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;content-md5&quot;</span><span class="p">,</span> <span class="s2">&quot;content-type&quot;</span><span class="p">,</span> <span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;message-id&quot;</span><span class="p">):</span>

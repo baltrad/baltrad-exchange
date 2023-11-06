@@ -98,7 +98,7 @@
         <span class="sd">&quot;&quot;&quot;Adds a key from key config</span>
 
 <span class="sd">        :param conf: The key config</span>
-<span class="sd">        :return the node name this key should be associated with</span>
+<span class="sd">        :return: the node name this key should be associated with</span>
 <span class="sd">        &quot;&quot;&quot;</span>        
         <span class="n">handle</span> <span class="o">=</span> <span class="n">cleartext_keyset_handle</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">tink</span><span class="o">.</span><span class="n">JsonKeysetReader</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;key&quot;</span><span class="p">])))</span>
         <span class="n">verifier</span> <span class="o">=</span> <span class="n">handle</span><span class="o">.</span><span class="n">primitive</span><span class="p">(</span><span class="n">signature</span><span class="o">.</span><span class="n">PublicKeyVerify</span><span class="p">)</span>
