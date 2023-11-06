@@ -66,7 +66,7 @@ class KeyczarAuth(coreauth.Auth):
         """Adds a key from key config
 
         :param conf: The key config
-        :return the node name this key should be associated with
+        :return: the node name this key should be associated with
         """         
         try:
             pubkey = conf["pubkey"]

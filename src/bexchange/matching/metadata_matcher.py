@@ -73,10 +73,10 @@ class metadata_matcher:
         self.evaluator = evaluator
         self.lock = threading.Lock()
     
-    def find_value(self, name, type_):
+    def find_value(self, name, ttype):
         """Finds a value within the metadata with specified name
         :param name: The name that is requested
-        :param type_: The type we are looking for
+        :param ttype: The type we are looking for
         :return: the value if found
         """
         if name.startswith("what/source:"):
@@ -85,7 +85,7 @@ class metadata_matcher:
             return self.find_source(name, Source.from_string(self.meta.bdb_source))
         elif name.startswith("_bdb/source_name"):
             return[self.meta.bdb_source_name]
-        return self.find_plain(name, type_)
+        return self.find_plain(name, ttype)
 
     def find_source(self, name, source):
         """Finds a source identifier within the source.
@@ -98,10 +98,10 @@ class metadata_matcher:
             return [source[key]]
         return []
     
-    def find_plain(self, name, type_):
+    def find_plain(self, name, ttype):
         """Finds any name within the metadata.
         :param name: The name of the attribute
-        :param type_: Not used
+        :param ttype: Not used
         :return: The value
         """
         result = []
@@ -129,7 +129,7 @@ class metadata_matcher:
         return any(item in rhs for item in lhs)
 
     def like(self, lhs, rhs):
-        """Matches against a *-pattern.
+        """Matches against a \*-pattern.
         :param lhs: Left hand side which is a list of value
         :param rhs: Right hand side which is pattern
         :return: True or False

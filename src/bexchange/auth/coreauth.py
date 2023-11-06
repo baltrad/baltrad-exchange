@@ -157,7 +157,7 @@ class auth_manager(object):
         """Adds a key from key config
 
         :param conf: The key config
-        :return the node name this key should be associated with
+        :return: the node name this key should be associated with
         """ 
         if conf["auth"] in self._providers:
             return self.get_provider(conf["auth"]).add_key_config(conf["conf"])

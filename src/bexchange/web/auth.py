@@ -35,7 +35,7 @@ logger = logging.getLogger("baltard.exchange.web.auth")
 
 class AuthMiddleware(object):
     """WSGI middleware providing authentication. Actual authentication is
-    delegated to an :class:`~.Auth` implementation registered as a *provider*
+    delegated to an :class:`~.coreauth.Auth` implementation registered as a *provider*
     here.
      
     The provider and credentials are extracted using :func:`get_credentials`.

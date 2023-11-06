@@ -300,6 +300,7 @@ class always_filter(node_filter):
     def from_value(cls, value, manager):
         """Used to create a not filter from a dictionary containing the information about this not filter. Format is:
              {"filter_type": "always_filter"}
+
            :param value: The dictionary
            :param manager: The manager used to instantiate objects       
         """

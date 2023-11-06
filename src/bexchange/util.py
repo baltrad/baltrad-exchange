@@ -32,7 +32,9 @@ class abstractclassmethod(classmethod):
 
         class C(metaclass=ABCMeta):
             @abstractclassmethod
+
             def my_abstract_classmethod(cls, ...):
+
                 ...
     """
 

@@ -12,4 +12,5 @@ baltrad-exchange documentation index
    userguide
    commandline
    rest
+   zeromq
    api/modules

@@ -254,7 +254,7 @@ class TinkAuth(Auth):
 def create_signable_string(req):
     """construct a signable string from a :class:`.Request`
 
-    See :ref:`doc-rest-authentication` for details.
+    See :ref:`doc-rest-crypto-authentication` for details.
     """
     fragments = [req.method]
     for key in ("content-md5", "content-type", "date", "message-id"):

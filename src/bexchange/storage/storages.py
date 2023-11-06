@@ -109,7 +109,6 @@ class file_storage(storage):
       { "path":"/tmp/baltrad_bdb",
         "name_pattern":"${_baltrad/datetime_l:15:%Y/%m/%d/%H/%M}/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z.h5"
       }]
-
     """
     def __init__(self, name, backend, **kwargs):
         """Constructor
