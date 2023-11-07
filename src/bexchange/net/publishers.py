@@ -292,6 +292,9 @@ class publisher_manager:
         if "active" in config:
             active = config["active"]
         
+        if not active:
+            return None
+
         if "connection" in config:
             conncfg = config["connection"]
             if "class" in conncfg:
@@ -321,4 +324,5 @@ class publisher_manager:
         p.initialize()
 
         p.start()
+
         return p

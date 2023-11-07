@@ -27,7 +27,7 @@ below example. The filter is used if you want to distinguish what the subscriber
   {
   "publication":{
      "_comment_":"ZeroMQ (datatransporter) publisher.",
-     "name":"Use the internal rest protocol",
+     "name":"ZMQ publisher",
      "class":"bexchange.net.zmq.publisher.publisher",
      "extra_arguments": {
   	   "publisher_address":"tcp://*:8078",
@@ -58,6 +58,25 @@ below example. The filter is used if you want to distinguish what the subscriber
       ]
     }
   }
+
+DMZ Publisher
+'''''''''''''''''''''''''''''''
+
+The dmz zmq publisher assumes that there is a dmz-layer that should be used as a proxy before the files are published. The configuration for this is almost the same as the one used
+for the standard zmq publisher except that the class that should be used is **bexchange.net.zmq.publisher.publisher** and the publisher_address should be pointing at the proxy backend
+server port instead. For example "tcp://dmz.server:5090".
+
+.. code-block:: json
+   
+  {
+  "publication":{
+     "_comment_":"ZeroMQ (datatransporter) dmz publisher.",
+     "name":"Remote dmz publisher",
+     "class":"bexchange.net.zmq.publisher.dmzpublisher",
+     "extra_arguments": {
+  	   "publisher_address":"tcp://dmz.server:5090",
+  	   ...
+
 
 Subscribers
 '''''''''''''''''''''''''''''''

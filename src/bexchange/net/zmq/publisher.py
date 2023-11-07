@@ -37,7 +37,11 @@ class publisher(publishers.standard_publisher):
         """Constructor
         :param backend: The backend
         :param active: If this runner is active or not. NOT USED
-        :param **args: A number of arguments can be provided
+        :param origin: Can be used to identify allowed originators
+        :param ifilter: Filter of what files that should be passed on
+        :param connections: NOT USED
+        :param decorators: If any decorator should be applied
+        :param extra_arguments: The arguments allowed for this publisher
         """
         super(publisher, self).__init__(backend, name, active, origin, ifilter, [], decorators, extra_arguments)
         self._name = "zmqpublisher"
@@ -63,9 +67,27 @@ class publisher(publishers.standard_publisher):
         self._context = None
         self._socket = None
 
+    def address(self):
+        """Return the address
+        :return: the address
+        """
+        return self._address
+
+    def name(self):
+        """Return the name
+        :return: the name
+        """
+        return self._name
+
+    def hmackey(self):
+        """Return the hmackey
+        :return: the hmac key
+        """
+        return self._hmackey
+
     def setup_connection(self):
         self._context = zmq.Context()
-        self._socket = self._context.socket(zmq.PUB)        
+        self._socket = self._context.socket(zmq.PUB)
         self._socket.bind(self._address)
 
     def initialize(self):
@@ -126,3 +148,21 @@ class publisher(publishers.standard_publisher):
         self._socket.send(buffer_to_publish)
 
         tmpfile.close()
+
+class dmzpublisher(publisher):
+    """The zmqdmz publisher is used to publish messages to a dmz proxy. It is run in a separate thread
+    """
+    def __init__(self, backend, name, active, origin, ifilter, connections, decorators, extra_arguments):
+        """Constructor
+        :param backend: The backend
+        :param active: If this runner is active or not. NOT USED
+        :param **args: A number of arguments can be provided
+        """
+        super(dmzpublisher, self).__init__(backend, name, active, origin, ifilter, [], decorators, extra_arguments)
+
+    def setup_connection(self):
+        """Connects to the remote publisher proxy
+        """
+        self._context = zmq.Context()
+        self._socket = self._context.socket(zmq.PUB)
+        self._socket.connect(self.address())

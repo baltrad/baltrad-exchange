@@ -178,13 +178,15 @@ class SimpleBackend(backend.Backend):
                 data = json.load(fp)
                 if "publication" in data:
                     p = publisher_manager.from_conf(data["publication"], self)
-                    logger.info("Adding publication from configuration file: %s"%(f))
-                    self.publications.append(p)
+                    if p:
+                        logger.info("Adding publication from configuration file: %s"%(f))
+                        self.publications.append(p)
 
                 elif "subscription" in data:
                     subs = subscription_manager.from_conf(data["subscription"], self)
-                    logger.info("Adding subscription from configuration file: %s"%(f))
-                    self.subscriptions.append(subs)
+                    if subs:
+                        logger.info("Adding subscription from configuration file: %s"%(f))
+                        self.subscriptions.append(subs)
                 
                 elif "storage" in data:
                     s = self.storage_manager.from_conf(data["storage"], self)

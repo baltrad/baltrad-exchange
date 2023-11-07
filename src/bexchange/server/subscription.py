@@ -150,7 +150,10 @@ class subscription_manager:
         
         if "active" in config:
             active = config["active"]
-        
+
+        if not active:
+            return None
+
         if "statdef" in config:
             statplugins = statistics_manager.plugins_from_conf(config["statdef"], backend.get_statistics_manager())
 

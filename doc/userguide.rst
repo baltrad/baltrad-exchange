@@ -505,15 +505,7 @@ The **bexchange.net.publishers.standard_publisher** class takes a number of argu
     A definition for generating statistics when publication failed. This should be a statistics plugin definition: [{"id":"stat-subscription-1", "type": "count"}]
       *id*   is the spid this will be stored with in the database
       *type* defines if how the statistics should be stored. **add** == only add entries to statentry, **count** == only update count or **both** == do both
-
-Connections
------------
-
-As mentioned earlier a connection takes one ore more senders. So what is the difference between a connection and a sender. In short, a
-connection is just determining how to ensure the transmission. The sender is actually taking care of the transmission protocol and
-how to get the data to it's location. 
-
-This first example just shows that we are using a simple_connection which only supports one sender.
+`sing a simple_connection which only supports one sender.
 The sender used will be a *baltrad.exchange.net.senders.rest_sender* which uses the "stock" baltrad-exchange exchange protocol.
 
 When the publisher sends a file to the simple_connection it will be passed to the sender that will atempt to send the message to the

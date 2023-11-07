@@ -112,6 +112,7 @@ class subscriber(runners.runner):
     def start(self):
         """Starts this runner by starting a daemonized thread.
         """
-        self._thread = Thread(target=self.run)
-        self._thread.daemon = True
-        self._thread.start()
+        if self.active():
+            self._thread = Thread(target=self.run)
+            self._thread.daemon = True
+            self._thread.start()
