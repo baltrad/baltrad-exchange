@@ -64,7 +64,7 @@ below example. The filter is used if you want to distinguish what the subscriber
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
 <span class="nt">&quot;publication&quot;</span><span class="p">:{</span><span class="w"></span>
 <span class="w">   </span><span class="nt">&quot;_comment_&quot;</span><span class="p">:</span><span class="s2">&quot;ZeroMQ (datatransporter) publisher.&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">   </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Use the internal rest protocol&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">   </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;ZMQ publisher&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">   </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;bexchange.net.zmq.publisher.publisher&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">   </span><span class="nt">&quot;extra_arguments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">         </span><span class="nt">&quot;publisher_address&quot;</span><span class="p">:</span><span class="s2">&quot;tcp://*:8078&quot;</span><span class="p">,</span><span class="w"></span>
@@ -95,6 +95,22 @@ below example. The filter is used if you want to distinguish what the subscriber
 <span class="w">    </span><span class="p">]</span><span class="w"></span>
 <span class="w">  </span><span class="p">}</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+</section>
+<section id="dmz-publisher">
+<h3>DMZ Publisher<a class="headerlink" href="#dmz-publisher" title="Permalink to this headline">¶</a></h3>
+<p>The dmz zmq publisher assumes that there is a dmz-layer that should be used as a proxy before the files are published. The configuration for this is almost the same as the one used
+for the standard zmq publisher except that the class that should be used is <strong>bexchange.net.zmq.publisher.publisher</strong> and the publisher_address should be pointing at the proxy backend
+server port instead. For example “<a class="reference external" href="tcp://dmz.server:5090">tcp://dmz.server:5090</a>”.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span>{
+&quot;publication&quot;:{
+   &quot;_comment_&quot;:&quot;ZeroMQ (datatransporter) dmz publisher.&quot;,
+   &quot;name&quot;:&quot;Remote dmz publisher&quot;,
+   &quot;class&quot;:&quot;bexchange.net.zmq.publisher.dmzpublisher&quot;,
+   &quot;extra_arguments&quot;: {
+         &quot;publisher_address&quot;:&quot;tcp://dmz.server:5090&quot;,
+         ...
 </pre></div>
 </div>
 </section>
@@ -135,6 +151,7 @@ subscription to work you will have to specify a address and the hmac-key provide
 <li><a class="reference internal" href="#">ZeroMQ interface</a><ul>
 <li><a class="reference internal" href="#overview">Overview</a><ul>
 <li><a class="reference internal" href="#publisher">Publisher</a></li>
+<li><a class="reference internal" href="#dmz-publisher">DMZ Publisher</a></li>
 <li><a class="reference internal" href="#subscribers">Subscribers</a></li>
 </ul>
 </li>

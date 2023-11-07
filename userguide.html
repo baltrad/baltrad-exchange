@@ -482,12 +482,7 @@ be explained further down.</p>
 </dd>
 </dl>
 </div></blockquote>
-<section id="connections">
-<h4>Connections<a class="headerlink" href="#connections" title="Permalink to this headline">¶</a></h4>
-<p>As mentioned earlier a connection takes one ore more senders. So what is the difference between a connection and a sender. In short, a
-connection is just determining how to ensure the transmission. The sender is actually taking care of the transmission protocol and
-how to get the data to it’s location.</p>
-<p>This first example just shows that we are using a simple_connection which only supports one sender.
+<p><a href="#id1"><span class="problematic" id="id2">`</span></a>sing a simple_connection which only supports one sender.
 The sender used will be a <em>baltrad.exchange.net.senders.rest_sender</em> which uses the “stock” baltrad-exchange exchange protocol.</p>
 <p>When the publisher sends a file to the simple_connection it will be passed to the sender that will atempt to send the message to the
 destination.</p>
@@ -552,7 +547,6 @@ we can use a failover_connection instead. This connection type allows a list of 
 <dt><strong>bexchange.net.connections.backup_connection</strong></dt><dd><p>Takes a list of senders and will send to all senders regardless if the previous one succeeded or failed.</p>
 </dd>
 </dl>
-</section>
 <section id="senders">
 <h4>Senders<a class="headerlink" href="#senders" title="Permalink to this headline">¶</a></h4>
 <p>The senders are protocol specific and ensures that the data is sent correctly and if applicable, in a secure way. There are several predefined ways to send files. Since each sender has it’s own
@@ -740,7 +734,6 @@ python packages will be needed lockfile, pycryptodomex numpy, paramiko, scp, bal
 </ul>
 </li>
 <li><a class="reference internal" href="#publications-publication">Publications (publication)</a><ul>
-<li><a class="reference internal" href="#connections">Connections</a></li>
 <li><a class="reference internal" href="#senders">Senders</a></li>
 <li><a class="reference internal" href="#decorators">Decorators</a></li>
 </ul>
