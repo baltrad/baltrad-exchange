@@ -711,7 +711,33 @@ Finally you should install the baltrad-exchange server
 
    %> sudo dnf install baltrad-exchange
 
-Installation from software
+Installation of software from github
+------------------------------------
+
+If you want to create a local installation directly from github where the code resides you can use pip for that.
+
+First you will have to install all dependencies, either using the distributions packages or else you can use pip for that as well.
+In either case you will have to install several components like lockfile, pycryptodomex, numpy, paramiko, scp, baltrad bdbcommon & bdbclient as well as hlhdf or h5py.
+
+The next step to do is to to create a virtual environment and install the baltrad software. Change to a suitable location, for example /opt/baltrad
+
+.. code:: sh
+   %> cd /opt/baltrad
+   %> python3 -m venv --system-site-packages env
+   %> . env/bin/activate
+
+Then you can install the software by running the following commands.
+
+.. code:: sh
+    %> pip3 install 'git+https://github.com/baltrad/baltrad-db.git/#egg=baltrad-bdbcommon&subdirectory=common'
+    %> pip3 install 'git+https://github.com/baltrad/baltrad-db.git/#egg=baltrad-bdbclient&subdirectory=client/python'
+    %> pip3 install 'git+https://github.com/baltrad/baltrad-crypto.git'
+    %> pip3 install 'git+https://github.com/baltrad/baltrad-utils.git'
+    %> pip3 install 'git+https://github.com/baltrad/baltrad-exchange.git'
+
+Then you should configure the system to your likings.
+
+Preparing for development
 --------------------------
 
 The installation process from source can be used for either running the server or for development purposes.
@@ -738,4 +764,4 @@ With the virtual environment created you can just install the baltrad-exchange s
 
 .. code:: sh
 
-  %> python3 setup.py install
+  %> python3 -m pip install .
