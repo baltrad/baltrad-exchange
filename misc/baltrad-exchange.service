@@ -1,0 +1,18 @@
+[Unit]
+Description=Baltrad exchange server
+After=syslog.target network-online.target
+Wants=network-online.target
+
+[Service]
+Type=forking
+PIDFile=/run/baltrad/baltrad-exchange-server.pid
+ExecStart=/usr/bin/baltrad-exchange-server --pidfile=/run/baltrad/baltrad-exchange-server.pid --conf=/etc/baltrad/exchange/etc/baltrad-exchange.properties
+KillSignal=SIGHUP
+User=baltrad
+Group=baltrad
+RuntimeDirectory=baltrad
+RuntimeDirectoryPreserve=yes
+
+[Install]
+WantedBy=multi-user.target
+
