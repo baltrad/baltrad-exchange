@@ -685,8 +685,17 @@ packages. Other distributions requires installation from source for both bdb and
 </pre></div>
 </div>
 </section>
-<section id="installation-from-software">
-<h4>Installation from software<a class="headerlink" href="#installation-from-software" title="Permalink to this headline">¶</a></h4>
+<section id="installation-of-software-from-github">
+<h4>Installation of software from github<a class="headerlink" href="#installation-of-software-from-github" title="Permalink to this headline">¶</a></h4>
+<p>If you want to create a local installation directly from github where the code resides you can use pip for that.</p>
+<p>First you will have to install all dependencies, either using the distributions packages or else you can use pip for that as well.
+In either case you will have to install several components like lockfile, pycryptodomex, numpy, paramiko, scp, baltrad bdbcommon &amp; bdbclient as well as hlhdf or h5py.</p>
+<p>The next step to do is to to create a virtual environment and install the baltrad software. Change to a suitable location, for example /opt/baltrad</p>
+<p>Then you can install the software by running the following commands.</p>
+<p>Then you should configure the system to your likings.</p>
+</section>
+<section id="preparing-for-development">
+<h4>Preparing for development<a class="headerlink" href="#preparing-for-development" title="Permalink to this headline">¶</a></h4>
 <p>The installation process from source can be used for either running the server or for development purposes.</p>
 <p>The first step that will be required is to get all dependencies in place. Either using prebuilt packages or directly from source. The following
 python packages will be needed lockfile, pycryptodomex numpy, paramiko, scp, baltrad-db bdbcommon &amp; bdbclient and hlhdf.</p>
@@ -702,7 +711,7 @@ python packages will be needed lockfile, pycryptodomex numpy, paramiko, scp, bal
 </pre></div>
 </div>
 <p>With the virtual environment created you can just install the baltrad-exchange software into your own environment by typing</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt; python3 setup.py install
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt; python3 -m pip install .
 </pre></div>
 </div>
 </section>
@@ -742,7 +751,8 @@ python packages will be needed lockfile, pycryptodomex numpy, paramiko, scp, bal
 <li><a class="reference internal" href="#processors-processor">Processors (processor)</a></li>
 <li><a class="reference internal" href="#installation">Installation</a><ul>
 <li><a class="reference internal" href="#installing-from-rpm">Installing from RPM</a></li>
-<li><a class="reference internal" href="#installation-from-software">Installation from software</a></li>
+<li><a class="reference internal" href="#installation-of-software-from-github">Installation of software from github</a></li>
+<li><a class="reference internal" href="#preparing-for-development">Preparing for development</a></li>
 </ul>
 </li>
 </ul>
