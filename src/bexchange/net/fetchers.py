@@ -193,7 +193,7 @@ class sftp_fetcher(baseuri_patternmatching_fetcher):
                 fullname = "%s/%s"%(self.path(), f)
                 if not c.isfile(fullname):
                     continue
-                ntfargs={}
+                ntfargs={"dir":self.backend().get_tmp_folder()}
                 with NamedTemporaryFile(**ntfargs) as tfo:
                     c.getfo(fullname, tfo)
                     self.backend().store_file(fullname, self.id())
@@ -281,7 +281,7 @@ class ftp_fetcher(baseuri_patternmatching_fetcher):
             files = ftp.nlst()
             
             for f in files:
-                tdargs={}
+                tdargs={"dir":self.backend().get_tmp_folder()}
                 if self.fnpattern() and not fnmatch.fnmatch(f, self.fnpattern()):
                     continue
                 if self.pattern_matcher() and not self.pattern_matcher().match(f):

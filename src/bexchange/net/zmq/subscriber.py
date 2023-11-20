@@ -63,7 +63,7 @@ class subscriber(runners.runner):
         """Creates a named temporary file. This method only exists for unittest purpose
         :return: A NamedTemporaryFile
         """
-        return NamedTemporaryFile()
+        return NamedTemporaryFile(dir = self.backend().get_tmp_folder())
 
     def process(self, message):
         """Processes a received message. The format is according to the data transporter

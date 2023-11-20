@@ -179,7 +179,7 @@ class standard_publisher(publisher):
         :param file: Actual file to be duplicated and sent.
         :param meta: The metadata to be verified by the connections
         """
-        tmpfile = NamedTemporaryFile()
+        tmpfile = NamedTemporaryFile(dir=self.backend().get_tmp_folder())
         with open(file, "rb") as fp:
             shutil.copyfileobj(fp, tmpfile)
         tmpfile.flush()

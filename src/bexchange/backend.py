@@ -85,3 +85,10 @@ class Backend(object):
         :return the auth manager
         """
         raise NotImplementedError()    
+
+    @abstractmethod
+    def get_tmp_folder(self):
+        """Returns the global temporary folder name if defined
+        :return the temporary folder name
+        """
+        raise NotImplementedError()

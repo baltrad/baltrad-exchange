@@ -30,9 +30,6 @@ from bexchange.web import util as webutil
 from http import client as httplibclient
 import urllib.parse as urlparse
 
-#from baltrad.bdbcommon import expr, filter
-#from baltrad.bdbcommon.oh5 import Source
-
 from .util import (
     HttpConflict,
     HttpForbidden,
@@ -42,14 +39,6 @@ from .util import (
     Response,
 )
 import json
-
-# 
-# from ..backend import (
-#     AttributeQuery,
-#     DuplicateEntry,
-#     FileQuery,
-#     IntegrityError,
-# )
 
 import logging
 logger = logging.getLogger("bexchange.handler")
@@ -69,7 +58,7 @@ def post_file(ctx):
         logger.info("post_file: anonymous calls are not allowed")
         return Response("", status=httplibclient.UNAUTHORIZED)
 
-    with NamedTemporaryFile() as tmp:
+    with NamedTemporaryFile(dir=ctx.backend.get_tmp_folder()) as tmp:
         shutil.copyfileobj(ctx.request.stream, tmp)
         tmp.flush()
         metadata = ctx.backend.store_file(tmp.name, ctx.backend.get_auth_manager().get_nodename(ctx.request))

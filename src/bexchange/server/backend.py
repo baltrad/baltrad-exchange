@@ -88,7 +88,7 @@ class SimpleBackend(backend.Backend):
     :param engine_or_url: an SqlAlchemy engine or a database url
     :param storage: a `~.storage.FileStorage` instance to use.
     """
-    def __init__(self, confdirs, nodename, authmgr, db_uri, source_db_uri, odim_source_file):
+    def __init__(self, confdirs, nodename, authmgr, db_uri, source_db_uri, odim_source_file, tmpfolder=None):
         """Constructor
         :param confdirs: a list of directories where the configuration (.json) files can be found
         :param nodename: name of this node
@@ -96,11 +96,13 @@ class SimpleBackend(backend.Backend):
         :param db_uri: general database uri for miscellaneous purposes
         :param source_db_uri: The uri to the source db
         :param odim_source_file: the file containing odim sources for identification of incomming files
+        :param tmpfolder: The temporary folder to use if specified
         """
         self.confdirs = confdirs
         self.nodename = nodename
+        self.tmpfolder = tmpfolder
         self.authmgr = authmgr
-        
+
         self.handled_files = HandledFiles()
         
         self._hasher = oh5.MetadataHasher()
@@ -137,6 +139,12 @@ class SimpleBackend(backend.Backend):
         :returns the authorization manager used
         """
         return self.authmgr
+
+    def get_tmp_folder(self):
+        """Returns the global temporary folder name if defined
+        :return the temporary folder name
+        """
+        return self.tmpfolder
 
     def get_statistics_manager(self):
         """
@@ -212,9 +220,11 @@ class SimpleBackend(backend.Backend):
         parameters are looked up under *'baltrad.exchange.server'*.
         """
         nodename = conf.get("baltrad.exchange.node.name")
+
+        tmpfolder = conf.get("baltrad.exchange.tmp.folder", None)
         
         fconf = conf.filter("baltrad.exchange.server.")
-        
+
         authmgr = auth.auth_manager.from_conf(conf)
         
         configdirs = fconf.get_list("config.dirs", default="/etc/baltrad/exchange/config", sep=",")
@@ -243,7 +253,8 @@ class SimpleBackend(backend.Backend):
             authmgr,
             db_uri,
             source_db_uri,
-            odim_source_file
+            odim_source_file,
+            tmpfolder = tmpfolder
           )
 
         backend.statistics_incomming = stat_incomming
