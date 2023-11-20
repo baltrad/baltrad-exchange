@@ -219,7 +219,7 @@
 <span class="sd">        :param file: Actual file to be duplicated and sent.</span>
 <span class="sd">        :param meta: The metadata to be verified by the connections</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">tmpfile</span> <span class="o">=</span> <span class="n">NamedTemporaryFile</span><span class="p">()</span>
+        <span class="n">tmpfile</span> <span class="o">=</span> <span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="p">()</span><span class="o">.</span><span class="n">get_tmp_folder</span><span class="p">())</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
             <span class="n">shutil</span><span class="o">.</span><span class="n">copyfileobj</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">tmpfile</span><span class="p">)</span>
         <span class="n">tmpfile</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>

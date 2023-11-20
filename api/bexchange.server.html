@@ -76,7 +76,7 @@ False.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.server.backend.SimpleBackend">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.server.backend.</span></span><span class="sig-name descname"><span class="pre">SimpleBackend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">confdirs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">authmgr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_db_uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">odim_source_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.server.backend.</span></span><span class="sig-name descname"><span class="pre">SimpleBackend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">confdirs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">authmgr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_db_uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">odim_source_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmpfolder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="bexchange.html#bexchange.backend.Backend" title="bexchange.backend.Backend"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.backend.Backend</span></code></a></p>
 <p>A backend taking care of the exchange</p>
 <dl class="field-list simple">
@@ -140,6 +140,13 @@ parameters are looked up under <em>‘baltrad.exchange.server’</em>.</p>
 <dt class="sig sig-object py" id="bexchange.server.backend.SimpleBackend.get_storage_manager">
 <span class="sig-name descname"><span class="pre">get_storage_manager</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.get_storage_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.get_storage_manager" title="Permalink to this definition">¶</a></dt>
 <dd><p>:returns the storage manager used</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.server.backend.SimpleBackend.get_tmp_folder">
+<span class="sig-name descname"><span class="pre">get_tmp_folder</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.get_tmp_folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.get_tmp_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the global temporary folder name if defined
+:return the temporary folder name</p>
 </dd></dl>
 
 <dl class="py method">

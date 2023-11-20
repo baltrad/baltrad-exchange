@@ -70,9 +70,6 @@
 <span class="kn">from</span> <span class="nn">http</span> <span class="kn">import</span> <span class="n">client</span> <span class="k">as</span> <span class="n">httplibclient</span>
 <span class="kn">import</span> <span class="nn">urllib.parse</span> <span class="k">as</span> <span class="nn">urlparse</span>
 
-<span class="c1">#from baltrad.bdbcommon import expr, filter</span>
-<span class="c1">#from baltrad.bdbcommon.oh5 import Source</span>
-
 <span class="kn">from</span> <span class="nn">.util</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">HttpConflict</span><span class="p">,</span>
     <span class="n">HttpForbidden</span><span class="p">,</span>
@@ -82,14 +79,6 @@
     <span class="n">Response</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">import</span> <span class="nn">json</span>
-
-<span class="c1"># </span>
-<span class="c1"># from ..backend import (</span>
-<span class="c1">#     AttributeQuery,</span>
-<span class="c1">#     DuplicateEntry,</span>
-<span class="c1">#     FileQuery,</span>
-<span class="c1">#     IntegrityError,</span>
-<span class="c1"># )</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;bexchange.handler&quot;</span><span class="p">)</span>
@@ -109,7 +98,7 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;post_file: anonymous calls are not allowed&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">httplibclient</span><span class="o">.</span><span class="n">UNAUTHORIZED</span><span class="p">)</span>
 
-    <span class="k">with</span> <span class="n">NamedTemporaryFile</span><span class="p">()</span> <span class="k">as</span> <span class="n">tmp</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">ctx</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">get_tmp_folder</span><span class="p">())</span> <span class="k">as</span> <span class="n">tmp</span><span class="p">:</span>
         <span class="n">shutil</span><span class="o">.</span><span class="n">copyfileobj</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">stream</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span>
         <span class="n">tmp</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
         <span class="n">metadata</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">store_file</span><span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">get_auth_manager</span><span class="p">()</span><span class="o">.</span><span class="n">get_nodename</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">request</span><span class="p">))</span>

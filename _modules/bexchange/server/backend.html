@@ -128,7 +128,7 @@
 <span class="sd">    :param engine_or_url: an SqlAlchemy engine or a database url</span>
 <span class="sd">    :param storage: a `~.storage.FileStorage` instance to use.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">confdirs</span><span class="p">,</span> <span class="n">nodename</span><span class="p">,</span> <span class="n">authmgr</span><span class="p">,</span> <span class="n">db_uri</span><span class="p">,</span> <span class="n">source_db_uri</span><span class="p">,</span> <span class="n">odim_source_file</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">confdirs</span><span class="p">,</span> <span class="n">nodename</span><span class="p">,</span> <span class="n">authmgr</span><span class="p">,</span> <span class="n">db_uri</span><span class="p">,</span> <span class="n">source_db_uri</span><span class="p">,</span> <span class="n">odim_source_file</span><span class="p">,</span> <span class="n">tmpfolder</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        :param confdirs: a list of directories where the configuration (.json) files can be found</span>
 <span class="sd">        :param nodename: name of this node</span>
@@ -136,11 +136,13 @@
 <span class="sd">        :param db_uri: general database uri for miscellaneous purposes</span>
 <span class="sd">        :param source_db_uri: The uri to the source db</span>
 <span class="sd">        :param odim_source_file: the file containing odim sources for identification of incomming files</span>
+<span class="sd">        :param tmpfolder: The temporary folder to use if specified</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">confdirs</span> <span class="o">=</span> <span class="n">confdirs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nodename</span> <span class="o">=</span> <span class="n">nodename</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tmpfolder</span> <span class="o">=</span> <span class="n">tmpfolder</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">authmgr</span> <span class="o">=</span> <span class="n">authmgr</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">handled_files</span> <span class="o">=</span> <span class="n">HandledFiles</span><span class="p">()</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">_hasher</span> <span class="o">=</span> <span class="n">oh5</span><span class="o">.</span><span class="n">MetadataHasher</span><span class="p">()</span>
@@ -177,6 +179,12 @@
 <span class="sd">        :returns the authorization manager used</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">authmgr</span></div>
+
+<div class="viewcode-block" id="SimpleBackend.get_tmp_folder"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.get_tmp_folder">[docs]</a>    <span class="k">def</span> <span class="nf">get_tmp_folder</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the global temporary folder name if defined</span>
+<span class="sd">        :return the temporary folder name</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmpfolder</span></div>
 
 <div class="viewcode-block" id="SimpleBackend.get_statistics_manager"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.get_statistics_manager">[docs]</a>    <span class="k">def</span> <span class="nf">get_statistics_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -252,9 +260,11 @@
 <span class="sd">        parameters are looked up under *&#39;baltrad.exchange.server&#39;*.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">nodename</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;baltrad.exchange.node.name&quot;</span><span class="p">)</span>
+
+        <span class="n">tmpfolder</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;baltrad.exchange.tmp.folder&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         
         <span class="n">fconf</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s2">&quot;baltrad.exchange.server.&quot;</span><span class="p">)</span>
-        
+
         <span class="n">authmgr</span> <span class="o">=</span> <span class="n">auth</span><span class="o">.</span><span class="n">auth_manager</span><span class="o">.</span><span class="n">from_conf</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
         
         <span class="n">configdirs</span> <span class="o">=</span> <span class="n">fconf</span><span class="o">.</span><span class="n">get_list</span><span class="p">(</span><span class="s2">&quot;config.dirs&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;/etc/baltrad/exchange/config&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
@@ -283,7 +293,8 @@
             <span class="n">authmgr</span><span class="p">,</span>
             <span class="n">db_uri</span><span class="p">,</span>
             <span class="n">source_db_uri</span><span class="p">,</span>
-            <span class="n">odim_source_file</span>
+            <span class="n">odim_source_file</span><span class="p">,</span>
+            <span class="n">tmpfolder</span> <span class="o">=</span> <span class="n">tmpfolder</span>
           <span class="p">)</span>
 
         <span class="n">backend</span><span class="o">.</span><span class="n">statistics_incomming</span> <span class="o">=</span> <span class="n">stat_incomming</span>
