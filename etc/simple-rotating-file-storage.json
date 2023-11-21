@@ -1,0 +1,10 @@
+{
+  "storage": {
+    "class":"bexchange.storage.storages.simple_rotating_file_storage",
+    "name":"rotating_file_storage",
+    "arguments": {
+      "folder":"/tmp/rotating",
+      "number_of_files":50
+    }
+  }
+}

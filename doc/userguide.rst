@@ -370,6 +370,22 @@ The above storage-mechanism (baltrad.exchange.storage.storages.file_storage) is 
 between what/object types and store them with different names in different places. This storage-class also provides the chance of using metadata naming which is quite powerful
 when saving the files.
 
+There is another storage that can be used for monitoring incomming files and rotate them so that the most recent files always are kept. The files will all be stored in the same folder 
+and the maximum limit is to keep 500 files stored at any given time. This value can be lower but not above 500.
+
+.. code-block:: json
+
+   {
+     "storage": {
+     "class":"bexchange.storage.storages.simple_rotating_file_storage",
+     "name":"rotating_file_storage",
+     "arguments": {
+       "folder":"/tmp/rotating",
+       "number_of_files":50
+     }
+     }
+   }
+
 Naming
 ------
 
