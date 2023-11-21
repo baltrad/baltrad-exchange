@@ -43,23 +43,38 @@
 
 <span class="kn">from</span> <span class="nn">baltrad.bdbcommon</span> <span class="kn">import</span> <span class="n">oh5</span><span class="p">,</span> <span class="n">expr</span>
 
-<span class="c1">#from baltrad.bdbcommon.oh5 import (</span>
-<span class="c1">#    Attribute,</span>
-<span class="c1">#    Group,</span>
-<span class="c1">#    Metadata,</span>
-<span class="c1">#    Source,</span>
-<span class="c1">#)</span>
+<span class="n">_pyhl</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">h5py</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">_pyhl</span> <span class="k">as</span> <span class="nn">_pyhl</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">h5py</span> <span class="k">as</span> <span class="nn">h5py</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="k">pass</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;bexchange.odimutil&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="metadata_helper"><a class="viewcode-back" href="../../api/bexchange.html#bexchange.odimutil.metadata_helper">[docs]</a><span class="k">class</span> <span class="nc">metadata_helper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    
+<div class="viewcode-block" id="metadata_helper.is_hdf5_file"><a class="viewcode-back" href="../../api/bexchange.html#bexchange.odimutil.metadata_helper.is_hdf5_file">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">is_hdf5_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">_pyhl</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">_pyhl</span><span class="o">.</span><span class="n">is_file_hdf5</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="k">elif</span> <span class="n">h5py</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">h5py</span><span class="o">.</span><span class="n">is_hdf5</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
 <div class="viewcode-block" id="metadata_helper.metadata_from_file"><a class="viewcode-back" href="../../api/bexchange.html#bexchange.odimutil.metadata_helper.metadata_from_file">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">metadata_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_manager</span><span class="p">,</span> <span class="n">hasher</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;creates metadata from the file</span>
 <span class="sd">        :param path: full path to the file</span>
 <span class="sd">        :returns the metadata</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_hdf5_file</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s2">&quot;Not a HDF5 file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">path</span><span class="p">)</span>
+
         <span class="n">meta</span> <span class="o">=</span> <span class="n">oh5</span><span class="o">.</span><span class="n">Metadata</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_source</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">LookupError</span><span class="p">(</span><span class="s2">&quot;No source in metadata&quot;</span><span class="p">)</span>

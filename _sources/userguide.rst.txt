@@ -98,6 +98,9 @@ json configuration but without them the system won't do anything.
   # How logging should be performed
   baltrad.exchange.log.type=logfile
   
+  # The logfile to use if logfile logging is choosen. Is overridden by server options
+  # baltrad.exchange.log.logfile=/var/log/baltrad/baltrad-exchange-server.log
+
   # The logfile to use if logfile logging is choosen. Can be overridden by server options.
   # baltrad.exchange.log.logfile=/var/log/baltrad/baltrad-exchange-server.log
 
