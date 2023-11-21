@@ -369,6 +369,20 @@ Then only files sent from an id that is in list of allowed ids will be allowed.<
 <p>The above storage-mechanism (baltrad.exchange.storage.storages.file_storage) is probably the one that is going to be used the most. It gives the user a possibility differentiate
 between what/object types and store them with different names in different places. This storage-class also provides the chance of using metadata naming which is quite powerful
 when saving the files.</p>
+<p>There is another storage that can be used for monitoring incomming files and rotate them so that the most recent files always are kept. The files will all be stored in the same folder
+and the maximum limit is to keep 500 files stored at any given time. This value can be lower but not above 500.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;storage&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;bexchange.storage.storages.simple_rotating_file_storage&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;rotating_file_storage&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">&quot;arguments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;folder&quot;</span><span class="p">:</span><span class="s2">&quot;/tmp/rotating&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;number_of_files&quot;</span><span class="p">:</span><span class="mi">50</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
 <section id="naming">
 <h4>Naming<a class="headerlink" href="#naming" title="Permalink to this headline">¶</a></h4>
 <p>The metadata namer is a separate class that can be used when a string should be created from the metadata. The ${..} is used as a placeholder for an ODIM H5 metadata attribute to retrive the value of the metadata attribute.
