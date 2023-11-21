@@ -22,7 +22,7 @@
 ## @author Anders Henja, SMHI
 ## @date 2023-10-26
 
-import zmq, hmac, hashlib
+import zmq, hmac, hashlib, shutil, os
 import logging, time
 from tempfile import NamedTemporaryFile
 from threading import Thread, Event
@@ -44,14 +44,30 @@ class subscriber(runners.runner):
         self._name = "zmqsubscriber"
         self._address = args["address"]
         self._hmackey = args["hmac"].encode('ascii')
+        self._jail = None
         if "name" in args:
             self._name = args["name"]
+        if "jail" in args:
+            self._jail = args["jail"]
 
     def handle_file(self, filename):
         """Handles the file (by sending it to the backend using the name given to this runner
         :param filename: The filename to handle
         """
         self._backend.store_file(filename, self._name)
+
+
+    def store_file_in_jail(self, filetostore, outname):
+        """Stored the file in jail if jail has been configured
+        :param filetostore: Name of the file to store
+        :param outname: The basename to use of the file that is stored.
+        """
+        if self._jail:
+            outfilename = os.path.join(self._jail, outname)
+            try:
+                shutil.copyfile(filetostore, outfilename)
+            except:
+                logger.exception("Failed to store in jail: %s"%outfilename)
 
     def calculate_hmac(self, message):
         """Calculates the hmac for the message with the hmackey
@@ -75,7 +91,7 @@ class subscriber(runners.runner):
         
         try:
             senderHmac = message[:20]
-            fname = message[20:(20+256)].decode()
+            fname = message[20:(20+256)].decode('utf-8').replace("\0", "")
             calculatedHmac = self.calculate_hmac(message[20:])
             if senderHmac.hex() == calculatedHmac.digest().hex():
                 with self.create_named_temporary_file() as tmp:
@@ -85,6 +101,8 @@ class subscriber(runners.runner):
                         self.handle_file(tmp.name)                
                     except:
                         logger.exception("Failed to process file %s"%fname)
+                        if self._jail:
+                            self.store_file_in_jail(tmp.name, fname)
             else:
                 logger.debug("Dropping message from %s"%self._address)
         except:
