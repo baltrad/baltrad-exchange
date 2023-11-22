@@ -173,7 +173,7 @@
             <span class="s2">&quot;optime&quot;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">optime</span><span class="p">,</span>
             <span class="s2">&quot;optime_info&quot;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">optime_info</span>
         <span class="p">}</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;attributes&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="p">:</span>
                 <span class="n">result</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
 
