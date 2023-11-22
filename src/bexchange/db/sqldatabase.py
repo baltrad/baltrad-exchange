@@ -133,7 +133,7 @@ class statentry(object):
             "optime":self.optime,
             "optime_info":self.optime_info
         }
-        if self.attributes:
+        if "attributes" in self.__dict__:
             for a in self.attributes:
                 result[a] = self.attributes[a]
 
