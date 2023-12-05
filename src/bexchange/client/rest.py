@@ -109,7 +109,7 @@ class RestfulServer(object):
                 "Unhandled response code: %s" % response.status
             )
 
-    def get_statistics(self, spid, sources, totals=False, qmethod=None):
+    def get_statistics(self, spid, sources, totals=False, qmethod=None, qdtfilter=None, object_type=None):
         """posts a json message to the exchange server. 
         :param data: The data
         """
@@ -117,7 +117,9 @@ class RestfulServer(object):
             "spid":spid,
             "sources":sources,
             "totals":totals,
-            "method":qmethod
+            "method":qmethod,
+            "dtfilter":qdtfilter,
+            "object_type":object_type
         }
         request = Request(
             "GET", "/statistics/", json.dumps(json_message_d),
@@ -153,6 +155,28 @@ class RestfulServer(object):
         """
         request = Request(
             "GET", "/serverinfo/%s"%subcommand,
+            headers={
+                "content-type": "application/json",
+                "message-id": str(uuid.uuid4()),
+                "date":datetime.utcnow().strftime("%Y%m%d%H%M%S%f")
+            }
+        )
+
+        response = self.execute_request(request)
+        return response
+
+    def file_arrival(self, source, object_type, limit):
+        """posts a json message to the exchange server. 
+        :param data: The data
+        """
+        json_message_d = {
+            "source":source,
+            "object_type":object_type,
+            "limit":limit
+        }
+
+        request = Request(
+            "GET", "/filearrival/",json.dumps(json_message_d),
             headers={
                 "content-type": "application/json",
                 "message-id": str(uuid.uuid4()),

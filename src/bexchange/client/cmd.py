@@ -255,8 +255,18 @@ Example: baltrad-exchange-client get_statistics --spid=server-incomming --totals
             help="If some sort of analysis should be performed. Currently only average"
         )
 
+        parser.add_option(
+            "--dtfilter", dest="dtfilter", default=None,
+            help="If filtering should be performed on datetime. Must be specified datetime<operation><value>. If you want to specify a range you can use && between two filters like --dtfilter='datetime>=202010000000 && datetime<=202011000000'"
+        )
+
+        parser.add_option(
+            "--object_type", dest="object_type", default=None,
+            help="If filtering should be performed on object_type. E.g. --object_type=PVOL"
+        )
+
     def execute(self, server, opts, args):
-        response = server.get_statistics(opts.spid, opts.sources, opts.totals, opts.method)
+        response = server.get_statistics(opts.spid, opts.sources, opts.totals, opts.method, opts.dtfilter, opts.object_type)
         if response.status == httplibclient.OK:
             ldata = json.loads(response.read())
             for l in ldata:
@@ -324,3 +334,44 @@ Example: baltrad-exchange-client server_info uptime
                     raise Exception("Unhandled response code: %s"%response.status)
             else:
                 print("Only valid subcommands are uptime and nodename")
+
+class FileArrival(Command):
+    def update_optionparser(self, parser):
+        usg = parser.get_usage().strip()
+
+        description = """
+
+Functionality for querying if a file from a specific source has arrived within a given time.
+
+The returned data will be a json dictionary with status as name and either ERROR or OK in the value.
+
+Example: baltrad-exchange-client file_arrival --source=sella --object_type=PVOL --limit=5
+{"status: "OK"}
+        """
+
+        usage = usg + description
+
+        parser.set_usage(usage)
+
+        parser.add_option(
+            "--sources", dest="source", default="",
+            help="The source that should be queried")
+
+        parser.add_option(
+            "--object_type", dest="object_type", default=None,
+            help="If filtering should be performed on object_type. E.g. --object_type=PVOL"
+        )
+
+        parser.add_option(
+            "--limit", dest="limit", default=5, type="int",
+            help="How many minutes back that should be taken into account. Default is 5 minutes."
+        )
+
+    def execute(self, server, opts, args):
+        response = server.file_arrival(opts.source, opts.object_type, opts.limit)
+        if response.status == httplibclient.OK:
+            ldata = json.loads(response.read())
+            print(ldata)
+            return ldata["status"]
+        else:
+            return '{"status":"ERROR"}'

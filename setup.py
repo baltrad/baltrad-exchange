@@ -52,6 +52,7 @@ setuptools.setup(name="bexchange",
             "get_statistics = bexchange.client.cmd:GetStatistics",
             "list_statistic_ids = bexchange.client.cmd:ListStatisticIds",
             "server_info = bexchange.client.cmd:ServerInfo",
+            "file_arrival = bexchange.client.cmd:FileArrival",
         ],
         "bexchange.config.commands": [
             "create_keys = bexchange.client.cfgcmd:CreateKeys",

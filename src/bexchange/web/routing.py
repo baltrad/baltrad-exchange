@@ -78,6 +78,11 @@ URL_MAP = Map(
                 endpoint="handler.get_server_publickey"
             ),
         ]),
+        Submount("/filearrival", [
+            Rule("/", methods=["GET"],
+                endpoint="handler.file_arrival"
+            ),
+        ]),
         Submount("/json_message", [
             Rule("/", methods=["POST"],
                 endpoint="handler.post_json_message"

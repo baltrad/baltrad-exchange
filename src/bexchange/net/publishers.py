@@ -212,11 +212,11 @@ class standard_publisher(publisher):
             try:
                 self.do_publish(tmpfile, meta)
                 if self._statistics_ok_plugin:
-                    self._statistics_ok_plugin.increment("", meta)
+                    self._statistics_ok_plugin.increment(self.name(), meta)
             except:
                 logger.exception("Failed to publish file %s"%(tmpfile.name))
                 if self._statistics_error_plugin:
-                    self._statistics_error_plugin.increment("", meta)
+                    self._statistics_error_plugin.increment(self.name(), meta)
             finally:
                 self._queue.task_done()
 
@@ -271,7 +271,7 @@ class publisher_manager:
         :return: the created publisher
         """
         filter_manager = filters.filter_manager()
-        name = "unknown"
+        name = "unknown-publisher"
         publisher_clazz = "bexchange.net.publishers.standard_publisher"
         active = False
         connections = []

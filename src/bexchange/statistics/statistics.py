@@ -24,8 +24,11 @@
 from abc import abstractmethod
 import logging
 import datetime
-import json
+import json, re
 from bexchange.db.sqldatabase import statistics, statentry
+
+RE_DTFILTER_PATTERN=re.compile("^\s*(datetime)\s*([<>!=]+)\s*([0-9:\-T\.]+)\s*$")
+
 
 logger = logging.getLogger("bexchange.statistics.statistics")
 
@@ -87,13 +90,32 @@ class statistics_manager:
 
         return json.dumps(result)
 
-    def get_statistics(self, nid, querydata):
-        """Returns the statistics for the specified post, origin and source_name"""
+    def parse_dtfilter(self, parsestr):
+        result = []
+        tokens = parsestr.split("&&")
+        for dtstr in tokens:
+            m = RE_DTFILTER_PATTERN.match(dtstr)
+            if m:
+                dt = None
+                try:
+                    dt = datetime.datetime.fromisoformat(m.group(3))
+                except ValueError:
+                    dt = datetime.datetime.strptime(m.group(3), '%Y%m%d%H%M')
+                criteria = [m.group(1), m.group(2), dt]
+                result.append(criteria)
+            else:
+                raise Exception("Format of dtfilter must be datetime[OP]value-")
+        return result
+
+    def get_statistics_entries(self, nid, querydata):
+        """Returns the statistic entries for the specified post, origin and source_name"""
         spid = None
         origin = None
         totals = False
         hashid = None
         sources = []
+        dtfilter = None
+        object_type = None
         if "spid" in querydata:
             spid = querydata["spid"]
 
@@ -106,10 +128,17 @@ class statistics_manager:
                 sources = ssources.split(",")
 
         if "hashid" in querydata:
-            hashid = querydata["sources"]
+            hashid = querydata["hashid"]
 
         if "totals" in querydata:
             totals = querydata["totals"]
+
+        if "dtfilter" in querydata:
+            dtfilter = querydata["dtfilter"].strip()
+            dtfilters = self.parse_dtfilter(dtfilter)
+
+        if "object_type" in querydata:
+            object_type = querydata["object_type"]
 
         qmethod=None
         if "method" in querydata:
@@ -119,10 +148,15 @@ class statistics_manager:
             entries = self._sqldatabase.find_statistics(spid, origin, sources)
         else:
             if qmethod is None or qmethod != "average":
-                entries = self._sqldatabase.find_statentries(spid, origin, sources, hashid=hashid)
+                entries = self._sqldatabase.find_statentries(spid, origin, sources, hashid=hashid, dtfilters=dtfilters, object_type=object_type)
             else:
                 entries = self._sqldatabase.get_average_statentries(spid, origin, sources)
-                
+        
+        return entries
+
+    def get_statistics(self, nid, querydata):
+        """Returns the statistics for the specified post, origin and source_name"""
+        entries = self.get_statistics_entries(nid, querydata)
         jslist = [e.json_repr() for e in entries]
         return json.dumps(jslist)
 
@@ -142,7 +176,17 @@ class statistics_manager:
             self._sqldatabase.increment_statistics(spid, origin, source)
 
         if save_post:
-            self._sqldatabase.add(statentry(spid, origin, source, meta.bdb_metadata_hash, datetime.datetime.now(), optime, optime_info))
+            file_datetime = datetime.datetime(meta.what_date.year, meta.what_date.month, meta.what_date.day, meta.what_time.hour, meta.what_time.minute, meta.what_time.second, 0)
+            file_object = meta.what_object
+            file_elangle = None
+            if file_object == "SCAN":
+                mn = meta.find_node("/dataset1/where/elangle")
+                if not mn:
+                    mn = meta.find_node("/where/elangle")
+                if mn:
+                    file_elangle = mn.value
+
+            self._sqldatabase.add(statentry(spid, origin, source, meta.bdb_metadata_hash, datetime.datetime.now(), optime, optime_info, file_datetime, file_object, file_elangle))
 
     @classmethod
     def plugin_from_conf(self, conf, statmgr):

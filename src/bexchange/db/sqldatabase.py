@@ -35,6 +35,7 @@ from sqlalchemy.orm import mapper, sessionmaker
 from sqlalchemy.types import (
     Integer,
     BigInteger,
+    Float,
     Text,
     DateTime,
     TIMESTAMP
@@ -45,6 +46,7 @@ from sqlalchemy import (
     ForeignKey,
     MetaData,
     PrimaryKeyConstraint,
+    UniqueConstraint,
     Table,
 )
 
@@ -68,6 +70,7 @@ db_statistics = Table("exchange_statistics", dbmeta,
 )
 
 db_statentry = Table("exchange_statentry", dbmeta,
+                Column('id', Integer, primary_key=True),
                 Column("spid", Text, nullable=False),
                 Column("origin", Text, nullable=False),
                 Column("source", Text, nullable=True),
@@ -75,8 +78,10 @@ db_statentry = Table("exchange_statentry", dbmeta,
                 Column("entrytime", TIMESTAMP, nullable=False),
                 Column("optime", Integer, nullable=False),
                 Column("optime_info", Text, nullable=True),
-
-                PrimaryKeyConstraint("spid","origin","source", "entrytime")
+                Column("datetime", DateTime, nullable=True),
+                Column("object_type", Text, nullable=True),
+                Column("elevation_angle", Float, nullable=True),
+                UniqueConstraint("spid", "origin", "source", "entrytime")
 )
 
 class statistics(object):
@@ -104,7 +109,7 @@ class statistics(object):
         }
 
 class statentry(object):
-    def __init__(self, spid, origin, source, hashid, entrytime, optime=0, optime_info=None):
+    def __init__(self, spid, origin, source, hashid, entrytime, optime=0, optime_info=None, ndatetime=None, object_type=None, elevation_angle=None):
         """ Represents one increment entry. Used for creating averages and such information
         :param spid: The statistics plugin id
         :param origin: Origin for this stat
@@ -121,6 +126,9 @@ class statentry(object):
         self.entrytime = entrytime
         self.optime = optime
         self.optime_info = optime_info
+        self.datetime = ndatetime
+        self.object_type = object_type
+        self.elevation_angle = elevation_angle
         self.attributes = {}
 
     def json_repr(self):
@@ -131,7 +139,10 @@ class statentry(object):
             "hashid":self.hashid,
             "entrytime":self.entrytime.isoformat(),
             "optime":self.optime,
-            "optime_info":self.optime_info
+            "optime_info":self.optime_info,
+            "datetime":self.datetime.isoformat(),
+            "object_type":self.object_type,
+            "elevation_angle":self.elevation_angle
         }
         if "attributes" in self.__dict__:
             for a in self.attributes:
@@ -216,7 +227,7 @@ class SqlAlchemyDatabase(object):
                 q = q.filter(statistics.source.in_(sources))
             return q.all()
 
-    def find_statentries(self, spid, origin, sources, hashid=None):
+    def find_statentries(self, spid, origin, sources, hashid=None, dtfilters=None, object_type=None):
         with self.get_session() as s:
             q = s.query(statentry).filter(statentry.spid == spid)
             if origin:
@@ -225,6 +236,22 @@ class SqlAlchemyDatabase(object):
                 q = q.filter(statentry.source.in_(sources))
             if hashid:
                 q = q.filter(statentry.hashid == hashid)
+            if dtfilters:
+                for dtfilter in dtfilters:
+                    if dtfilter[0] == "datetime":
+                        if dtfilter[1] == ">":
+                            q = q.filter(statentry.datetime > dtfilter[2])
+                        elif dtfilter[1] == ">=":
+                            q = q.filter(statentry.datetime >= dtfilter[2])
+                        elif dtfilter[1] == "=":
+                            q = q.filter(statentry.datetime == dtfilter[2])
+                        elif dtfilter[1] == "<=":
+                            q = q.filter(statentry.datetime <= dtfilter[2])
+                        elif dtfilter[1] == "<":
+                            q = q.filter(statentry.datetime < dtfilter[2])
+            if object_type:
+                q = q.filter(statentry.object_type == object_type)
+
             q = q.order_by(asc(statentry.origin)) \
                 .order_by(asc(statentry.source)) \
                 .order_by(asc(statentry.entrytime))

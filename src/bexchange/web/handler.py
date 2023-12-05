@@ -26,7 +26,7 @@ from tempfile import NamedTemporaryFile
 import sys
 from bexchange.web import auth
 from bexchange.web import util as webutil
-
+import datetime
 from http import client as httplibclient
 import urllib.parse as urlparse
 
@@ -130,7 +130,6 @@ def list_statistic_ids(ctx):
     if ctx.is_anonymous():
         logger.info("list_statistic_ids: anonymous calls are not allowed")
         return Response("", status=httplibclient.UNAUTHORIZED)
-    #data = ctx.request.get_json_data()
     stats = ctx.backend.get_statistics_manager().list_statistic_ids(ctx.backend.get_auth_manager().get_nodename(ctx.request))
     return Response(stats, status=httplibclient.OK)
 
@@ -173,3 +172,37 @@ def get_server_publickey(ctx):
         return Response("", status=httplibclient.UNAUTHORIZED)
     publickey = ctx.backend.get_server_publickey()
     return Response(publickey, status=httplibclient.OK)
+
+def file_arrival(ctx):
+    """Returns if a file with specified source, object type has arrived within limit
+
+    :param ctx: the request context
+    :type ctx: :class:`~.util.RequestContext`
+    :return: :class:`~.util.JsonResponse` with status
+             *200 Created* and information in body
+
+    See :ref:`doc-rest-cmd-file-arrival` for details
+    """
+    logger.debug("bexchange.handler.file_arrival(ctx)")
+    if ctx.is_anonymous():
+        logger.info("file_arrival: anonymous calls are not allowed")
+        return Response("", status=httplibclient.UNAUTHORIZED)
+    data = ctx.request.get_json_data()
+    source = None
+    object_type = None
+    limit = 5
+    if "source" in data:
+        source = data["source"]
+    if "object_type" in data:
+        object_type = data["object_type"]
+    if "limit" in data:
+        limit = int(data["limit"])
+
+    dtfilterdate = (datetime.datetime.utcnow() - datetime.timedelta(minutes=limit))
+    dtfilter = "datetime>=%s"%((datetime.datetime.utcnow() - datetime.timedelta(minutes=limit)).strftime("%Y%m%d%H%M"))
+    querydata = {"spid":"server-incomming", "sources":source, "object_type":object_type, "dtfilter":dtfilter}
+    stats = ctx.backend.get_statistics_manager().get_statistics_entries(ctx.backend.get_auth_manager().get_nodename(ctx.request), querydata)
+    result={"status":"ERROR"}
+    if stats and len(stats) > 0:
+        result={"status":"OK"}
+    return Response(json.dumps(result), status=httplibclient.OK)
