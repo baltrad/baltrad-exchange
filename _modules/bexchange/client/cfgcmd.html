@@ -227,7 +227,26 @@
 
 <div class="viewcode-block" id="TestFilter"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.TestFilter">[docs]</a><span class="k">class</span> <span class="nc">TestFilter</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
 <div class="viewcode-block" id="TestFilter.update_optionparser"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.TestFilter.update_optionparser">[docs]</a>    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
-        <span class="n">parser</span><span class="o">.</span><span class="n">set_usage</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">get_usage</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot; &lt;filename&gt;&quot;</span><span class="p">)</span>
+        <span class="n">usg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_usage</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+
+<span class="s2">Provides functionality for matching a file against a json filter. The matching uses the baltrad-db metadata querying and will generate </span>
+<span class="s2">a odim-source sqlite database so that the _bdb/source_name, _bdb/source:WMO and other bdb-specific meta attributes can be ued. This is </span>
+<span class="s2">in contrast with the naming that instead uses _baltrad/ as prefix for internal meta data usage.</span>
+
+<span class="s2">The returned response will be either MATCHING or NOT MATCHING.</span>
+
+<span class="s2">Example: baltrad-exchange-config test_filter --odim-source=/etc/baltrad/rave/config/odim_source.xml</span>
+<span class="s2">                                             --filter=etc/example_subscription.json</span>
+<span class="s2">                                             /data/in1/sehem_scan_20200414T160000Z.h5</span>
+
+<span class="s2">        &quot;&quot;&quot;</span>
+
+        <span class="n">usage</span> <span class="o">=</span> <span class="n">usg</span> <span class="o">+</span> <span class="s2">&quot; &lt;filename&gt;&quot;</span>  <span class="o">+</span> <span class="n">description</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">set_usage</span><span class="p">(</span><span class="n">usage</span><span class="p">)</span>        
+        <span class="c1">#parser.set_usage(parser.get_usage().strip() + &quot; &lt;filename&gt;&quot;)</span>
 
         <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
             <span class="s2">&quot;--odim-source&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;odim_source&quot;</span><span class="p">,</span>
@@ -239,7 +258,12 @@
         
         <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
             <span class="s2">&quot;--filter&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;filter&quot;</span><span class="p">,</span>
-            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Specifies a file containing a filter. Can be either a subscription or publication cfg-file or else a separate file containing toplevel &#39;filter&#39;&quot;</span><span class="p">)</span></div>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Specifies a file containing a filter. Can be either a subscription or publication cfg-file or else a separate file containing toplevel &#39;filter&#39;&quot;</span><span class="p">)</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
+            <span class="s2">&quot;--filter-path&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;filter_path&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path within the json entry where the filter can be found.&quot;</span>
+        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="TestFilter.execute"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.TestFilter.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">odim_source</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
@@ -254,15 +278,28 @@
         
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">filter</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
             <span class="n">json_cfg</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
-        
-        <span class="k">if</span> <span class="s2">&quot;subscription&quot;</span> <span class="ow">in</span> <span class="n">json_cfg</span><span class="p">:</span>
-            <span class="n">tfilter</span> <span class="o">=</span> <span class="n">filter_manager</span><span class="p">()</span><span class="o">.</span><span class="n">from_value</span><span class="p">(</span><span class="n">json_cfg</span><span class="p">[</span><span class="s2">&quot;subscription&quot;</span><span class="p">][</span><span class="s2">&quot;filter&quot;</span><span class="p">])</span>
-        <span class="k">elif</span> <span class="s2">&quot;publication&quot;</span> <span class="ow">in</span> <span class="n">json_cfg</span><span class="p">:</span>
-            <span class="n">tfilter</span> <span class="o">=</span> <span class="n">filter_manager</span><span class="p">()</span><span class="o">.</span><span class="n">from_value</span><span class="p">(</span><span class="n">json_cfg</span><span class="p">[</span><span class="s2">&quot;publication&quot;</span><span class="p">][</span><span class="s2">&quot;filter&quot;</span><span class="p">])</span>
-        <span class="k">elif</span> <span class="s2">&quot;filter&quot;</span> <span class="ow">in</span> <span class="n">json_cfg</span><span class="p">:</span>
-            <span class="n">tfilter</span> <span class="o">=</span> <span class="n">filter_manager</span><span class="p">()</span><span class="o">.</span><span class="n">from_value</span><span class="p">(</span><span class="n">json_cfg</span><span class="p">[</span><span class="s2">&quot;filter&quot;</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">opts</span><span class="o">.</span><span class="n">filter_path</span><span class="p">:</span>
+            <span class="n">tmp_json_cfg</span> <span class="o">=</span> <span class="n">json_cfg</span>
+            <span class="n">tokens</span><span class="o">=</span><span class="n">opts</span><span class="o">.</span><span class="n">filter_path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">tokens</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;&quot;</span><span class="p">:</span>
+                <span class="n">tokens</span><span class="o">=</span><span class="n">tokens</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tmp_json_cfg</span><span class="p">:</span>
+                    <span class="n">tmp_json_cfg</span> <span class="o">=</span> <span class="n">tmp_json_cfg</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;No such entry: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">opts</span><span class="o">.</span><span class="n">filter_path</span><span class="p">)</span>
+            <span class="n">tfilter</span> <span class="o">=</span> <span class="n">filter_manager</span><span class="p">()</span><span class="o">.</span><span class="n">from_value</span><span class="p">(</span><span class="n">tmp_json_cfg</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Unsupported json-format&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;subscription&quot;</span> <span class="ow">in</span> <span class="n">json_cfg</span> <span class="ow">and</span> <span class="s2">&quot;filter&quot;</span> <span class="ow">in</span> <span class="n">json_cfg</span><span class="p">[</span><span class="s2">&quot;subscription&quot;</span><span class="p">]:</span>
+                <span class="n">tfilter</span> <span class="o">=</span> <span class="n">filter_manager</span><span class="p">()</span><span class="o">.</span><span class="n">from_value</span><span class="p">(</span><span class="n">json_cfg</span><span class="p">[</span><span class="s2">&quot;subscription&quot;</span><span class="p">][</span><span class="s2">&quot;filter&quot;</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="s2">&quot;publication&quot;</span> <span class="ow">in</span> <span class="n">json_cfg</span> <span class="ow">and</span> <span class="s2">&quot;filter&quot;</span> <span class="ow">in</span> <span class="n">json_cfg</span><span class="p">[</span><span class="s2">&quot;publication&quot;</span><span class="p">]:</span>
+                <span class="n">tfilter</span> <span class="o">=</span> <span class="n">filter_manager</span><span class="p">()</span><span class="o">.</span><span class="n">from_value</span><span class="p">(</span><span class="n">json_cfg</span><span class="p">[</span><span class="s2">&quot;publication&quot;</span><span class="p">][</span><span class="s2">&quot;filter&quot;</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="s2">&quot;filter&quot;</span> <span class="ow">in</span> <span class="n">json_cfg</span><span class="p">:</span>
+                <span class="n">tfilter</span> <span class="o">=</span> <span class="n">filter_manager</span><span class="p">()</span><span class="o">.</span><span class="n">from_value</span><span class="p">(</span><span class="n">json_cfg</span><span class="p">[</span><span class="s2">&quot;filter&quot;</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Unsupported json-format&quot;</span><span class="p">)</span>
 
         <span class="n">matcher</span> <span class="o">=</span> <span class="n">metadata_matcher</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">matcher</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span> <span class="n">tfilter</span><span class="o">.</span><span class="n">to_xpr</span><span class="p">()):</span>

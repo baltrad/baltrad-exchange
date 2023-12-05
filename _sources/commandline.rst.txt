@@ -142,7 +142,10 @@ A typical filter will have a structure will look something like.
  
 Since this section is about the test_filter command in the config-tool we will not explain more about the filter and refer to :ref: filters.rst.
 
-The tool requires two mandatory options and the odim-h5 file to be matched against.    
+The tool requires two mandatory options and the odim-h5 file to be matched against. If you for example have a test-filter in a json-file that you want
+match against you can also specify the --filter-path which will extract the filter definition from that path. 
+
+For example: --filter-path=/subscription/__test_filter 
 
 .. code:: sh
 
@@ -167,6 +170,9 @@ The tool requires two mandatory options and the odim-h5 file to be matched again
     --filter=FILTER       Specifies a file containing a filter. Can be either a
                           subscription or publication cfg-file or else a
                           separate file containing toplevel 'filter'
+    --filter-path=FILTER_PATH
+                          Path within the json entry where the filter can be
+                          found.
 
 -----------------------
 baltrad-exchange-client

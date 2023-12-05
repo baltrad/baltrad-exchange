@@ -193,7 +193,9 @@ that instead uses _baltrad/ as prefix for internal meta data usage.</p>
 </pre></div>
 </div>
 <p>Since this section is about the test_filter command in the config-tool we will not explain more about the filter and refer to :ref: filters.rst.</p>
-<p>The tool requires two mandatory options and the odim-h5 file to be matched against.</p>
+<p>The tool requires two mandatory options and the odim-h5 file to be matched against. If you for example have a test-filter in a json-file that you want
+match against you can also specify the –filter-path which will extract the filter definition from that path.</p>
+<p>For example: –filter-path=/subscription/__test_filter</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>anders@host: ~ %&gt; baltrad-exchange-config test_filter --help
 Usage: baltrad-exchange-config COMMAND <span class="o">[</span>ARGS<span class="o">]</span>
 
@@ -215,6 +217,9 @@ Options:
   --filter<span class="o">=</span>FILTER       Specifies a file containing a filter. Can be either a
                         subscription or publication cfg-file or <span class="k">else</span> a
                         separate file containing toplevel <span class="s1">&#39;filter&#39;</span>
+  --filter-path<span class="o">=</span>FILTER_PATH
+                        Path within the json entry where the filter can be
+                        found.
 </pre></div>
 </div>
 </section>
