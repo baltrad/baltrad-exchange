@@ -228,7 +228,9 @@ Usage: baltrad-exchange-client COMMAND <span class="o">[</span>ARGS<span class="
 
 where COMMAND can be one of:
   - batchtest
+  - file_arrival
   - get_statistics
+  - list_statistic_ids
   - post_message
   - server_info
   - store
@@ -259,6 +261,15 @@ WMO:02666,RAD:SE51,PLC:Karlskrona,CMT:sekaa,NOD:sekaa.</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt; baltrad-exchange-client batchtest --basefile<span class="o">=</span>/data/incomming/seang_scan_202212150100_0_5.h5
 </pre></div>
 </div>
+</section>
+<section id="file-arrival">
+<span id="doc-rest-cmd-file-arrival"></span><h3>file_arrival<a class="headerlink" href="#file-arrival" title="Permalink to this headline">¶</a></h3>
+<p>Usage: baltrad-exchange-client file_arrival [OPTIONS]</p>
+<p>Functionality for querying if a file from a specific source has arrived within a given time.</p>
+<p>The returned data will be a json dictionary with status as name and either ERROR or OK in the value.</p>
+<p>Example: baltrad-exchange-client file_arrival –source=sella –object_type=PVOL –limit=5
+{“status: “OK”}</p>
+<p><strong>Note</strong> The property <strong>baltrad.exchange.server.statistics.incomming</strong> has to be True in order for this command to work.</p>
 </section>
 <section id="get-statistics">
 <span id="doc-rest-cmd-get-statistics"></span><h3>get_statistics<a class="headerlink" href="#get-statistics" title="Permalink to this headline">¶</a></h3>
@@ -330,6 +341,7 @@ The public key that can be used to identify myself as</p></li>
 </li>
 <li><a class="reference internal" href="#baltrad-exchange-client">baltrad-exchange-client</a><ul>
 <li><a class="reference internal" href="#batchtest">batchtest</a></li>
+<li><a class="reference internal" href="#file-arrival">file_arrival</a></li>
 <li><a class="reference internal" href="#get-statistics">get_statistics</a></li>
 <li><a class="reference internal" href="#list-statistic-ids">list_statistic_ids</a></li>
 <li><a class="reference internal" href="#post-message">post_message</a></li>

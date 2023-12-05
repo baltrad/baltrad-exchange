@@ -64,8 +64,11 @@
 <span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">abstractmethod</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">json</span><span class="o">,</span> <span class="nn">re</span>
 <span class="kn">from</span> <span class="nn">bexchange.db.sqldatabase</span> <span class="kn">import</span> <span class="n">statistics</span><span class="p">,</span> <span class="n">statentry</span>
+
+<span class="n">RE_DTFILTER_PATTERN</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;^\s*(datetime)\s*([&lt;&gt;!=]+)\s*([0-9:\-T\.]+)\s*$&quot;</span><span class="p">)</span>
+
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;bexchange.statistics.statistics&quot;</span><span class="p">)</span>
 
@@ -127,13 +130,32 @@
 
         <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="statistics_manager.get_statistics"><a class="viewcode-back" href="../../../api/bexchange.statistics.html#bexchange.statistics.statistics.statistics_manager.get_statistics">[docs]</a>    <span class="k">def</span> <span class="nf">get_statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nid</span><span class="p">,</span> <span class="n">querydata</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the statistics for the specified post, origin and source_name&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="statistics_manager.parse_dtfilter"><a class="viewcode-back" href="../../../api/bexchange.statistics.html#bexchange.statistics.statistics.statistics_manager.parse_dtfilter">[docs]</a>    <span class="k">def</span> <span class="nf">parse_dtfilter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parsestr</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="n">parsestr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;&amp;&amp;&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">dtstr</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="n">RE_DTFILTER_PATTERN</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">dtstr</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+                <span class="n">dt</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">dt</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                    <span class="n">dt</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">%H%M&#39;</span><span class="p">)</span>
+                <span class="n">criteria</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">dt</span><span class="p">]</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">criteria</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Format of dtfilter must be datetime[OP]value-&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+<div class="viewcode-block" id="statistics_manager.get_statistics_entries"><a class="viewcode-back" href="../../../api/bexchange.statistics.html#bexchange.statistics.statistics.statistics_manager.get_statistics_entries">[docs]</a>    <span class="k">def</span> <span class="nf">get_statistics_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nid</span><span class="p">,</span> <span class="n">querydata</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the statistic entries for the specified post, origin and source_name&quot;&quot;&quot;</span>
         <span class="n">spid</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">origin</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">totals</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">hashid</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">sources</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">dtfilter</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">object_type</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="s2">&quot;spid&quot;</span> <span class="ow">in</span> <span class="n">querydata</span><span class="p">:</span>
             <span class="n">spid</span> <span class="o">=</span> <span class="n">querydata</span><span class="p">[</span><span class="s2">&quot;spid&quot;</span><span class="p">]</span>
 
@@ -146,10 +168,17 @@
                 <span class="n">sources</span> <span class="o">=</span> <span class="n">ssources</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="s2">&quot;hashid&quot;</span> <span class="ow">in</span> <span class="n">querydata</span><span class="p">:</span>
-            <span class="n">hashid</span> <span class="o">=</span> <span class="n">querydata</span><span class="p">[</span><span class="s2">&quot;sources&quot;</span><span class="p">]</span>
+            <span class="n">hashid</span> <span class="o">=</span> <span class="n">querydata</span><span class="p">[</span><span class="s2">&quot;hashid&quot;</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="s2">&quot;totals&quot;</span> <span class="ow">in</span> <span class="n">querydata</span><span class="p">:</span>
             <span class="n">totals</span> <span class="o">=</span> <span class="n">querydata</span><span class="p">[</span><span class="s2">&quot;totals&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="s2">&quot;dtfilter&quot;</span> <span class="ow">in</span> <span class="n">querydata</span><span class="p">:</span>
+            <span class="n">dtfilter</span> <span class="o">=</span> <span class="n">querydata</span><span class="p">[</span><span class="s2">&quot;dtfilter&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">dtfilters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_dtfilter</span><span class="p">(</span><span class="n">dtfilter</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s2">&quot;object_type&quot;</span> <span class="ow">in</span> <span class="n">querydata</span><span class="p">:</span>
+            <span class="n">object_type</span> <span class="o">=</span> <span class="n">querydata</span><span class="p">[</span><span class="s2">&quot;object_type&quot;</span><span class="p">]</span>
 
         <span class="n">qmethod</span><span class="o">=</span><span class="kc">None</span>
         <span class="k">if</span> <span class="s2">&quot;method&quot;</span> <span class="ow">in</span> <span class="n">querydata</span><span class="p">:</span>
@@ -159,10 +188,15 @@
             <span class="n">entries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sqldatabase</span><span class="o">.</span><span class="n">find_statistics</span><span class="p">(</span><span class="n">spid</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">sources</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">qmethod</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">qmethod</span> <span class="o">!=</span> <span class="s2">&quot;average&quot;</span><span class="p">:</span>
-                <span class="n">entries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sqldatabase</span><span class="o">.</span><span class="n">find_statentries</span><span class="p">(</span><span class="n">spid</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">sources</span><span class="p">,</span> <span class="n">hashid</span><span class="o">=</span><span class="n">hashid</span><span class="p">)</span>
+                <span class="n">entries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sqldatabase</span><span class="o">.</span><span class="n">find_statentries</span><span class="p">(</span><span class="n">spid</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">sources</span><span class="p">,</span> <span class="n">hashid</span><span class="o">=</span><span class="n">hashid</span><span class="p">,</span> <span class="n">dtfilters</span><span class="o">=</span><span class="n">dtfilters</span><span class="p">,</span> <span class="n">object_type</span><span class="o">=</span><span class="n">object_type</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">entries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sqldatabase</span><span class="o">.</span><span class="n">get_average_statentries</span><span class="p">(</span><span class="n">spid</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">sources</span><span class="p">)</span>
-                
+        
+        <span class="k">return</span> <span class="n">entries</span></div>
+
+<div class="viewcode-block" id="statistics_manager.get_statistics"><a class="viewcode-back" href="../../../api/bexchange.statistics.html#bexchange.statistics.statistics.statistics_manager.get_statistics">[docs]</a>    <span class="k">def</span> <span class="nf">get_statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nid</span><span class="p">,</span> <span class="n">querydata</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the statistics for the specified post, origin and source_name&quot;&quot;&quot;</span>
+        <span class="n">entries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_statistics_entries</span><span class="p">(</span><span class="n">nid</span><span class="p">,</span> <span class="n">querydata</span><span class="p">)</span>
         <span class="n">jslist</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="n">json_repr</span><span class="p">()</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">entries</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">jslist</span><span class="p">)</span></div>
 
@@ -182,7 +216,17 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_sqldatabase</span><span class="o">.</span><span class="n">increment_statistics</span><span class="p">(</span><span class="n">spid</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">source</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">save_post</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_sqldatabase</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">statentry</span><span class="p">(</span><span class="n">spid</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">bdb_metadata_hash</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span> <span class="n">optime</span><span class="p">,</span> <span class="n">optime_info</span><span class="p">))</span></div>
+            <span class="n">file_datetime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">meta</span><span class="o">.</span><span class="n">what_date</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_date</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_date</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_time</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_time</span><span class="o">.</span><span class="n">minute</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_time</span><span class="o">.</span><span class="n">second</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">file_object</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_object</span>
+            <span class="n">file_elangle</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">file_object</span> <span class="o">==</span> <span class="s2">&quot;SCAN&quot;</span><span class="p">:</span>
+                <span class="n">mn</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">find_node</span><span class="p">(</span><span class="s2">&quot;/dataset1/where/elangle&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">mn</span><span class="p">:</span>
+                    <span class="n">mn</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">find_node</span><span class="p">(</span><span class="s2">&quot;/where/elangle&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">mn</span><span class="p">:</span>
+                    <span class="n">file_elangle</span> <span class="o">=</span> <span class="n">mn</span><span class="o">.</span><span class="n">value</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sqldatabase</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">statentry</span><span class="p">(</span><span class="n">spid</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">bdb_metadata_hash</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span> <span class="n">optime</span><span class="p">,</span> <span class="n">optime_info</span><span class="p">,</span> <span class="n">file_datetime</span><span class="p">,</span> <span class="n">file_object</span><span class="p">,</span> <span class="n">file_elangle</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="statistics_manager.plugin_from_conf"><a class="viewcode-back" href="../../../api/bexchange.statistics.html#bexchange.statistics.statistics.statistics_manager.plugin_from_conf">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">plugin_from_conf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conf</span><span class="p">,</span> <span class="n">statmgr</span><span class="p">):</span>

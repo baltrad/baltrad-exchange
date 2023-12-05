@@ -252,11 +252,11 @@
             <span class="k">try</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">do_publish</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_statistics_ok_plugin</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_statistics_ok_plugin</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_statistics_ok_plugin</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="n">meta</span><span class="p">)</span>
             <span class="k">except</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Failed to publish file </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">tmpfile</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_statistics_error_plugin</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_statistics_error_plugin</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_statistics_error_plugin</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="n">meta</span><span class="p">)</span>
             <span class="k">finally</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">task_done</span><span class="p">()</span></div>
 
@@ -311,7 +311,7 @@
 <span class="sd">        :return: the created publisher</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">filter_manager</span> <span class="o">=</span> <span class="n">filters</span><span class="o">.</span><span class="n">filter_manager</span><span class="p">()</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;unknown&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;unknown-publisher&quot;</span>
         <span class="n">publisher_clazz</span> <span class="o">=</span> <span class="s2">&quot;bexchange.net.publishers.standard_publisher&quot;</span>
         <span class="n">active</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">connections</span> <span class="o">=</span> <span class="p">[]</span>

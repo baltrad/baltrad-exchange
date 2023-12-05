@@ -182,7 +182,9 @@ It is possible to get available commands by running
 
   where COMMAND can be one of:
     - batchtest
+    - file_arrival
     - get_statistics
+    - list_statistic_ids
     - post_message
     - server_info
     - store
@@ -226,6 +228,22 @@ Example:
 
   %> baltrad-exchange-client batchtest --basefile=/data/incomming/seang_scan_202212150100_0_5.h5
 
+
+.. _doc-rest-cmd-file_arrival:
+
+file_arrival
+______________
+
+Usage: baltrad-exchange-client file_arrival [OPTIONS]
+
+Functionality for querying if a file from a specific source has arrived within a given time.
+
+The returned data will be a json dictionary with status as name and either ERROR or OK in the value.
+
+Example: baltrad-exchange-client file_arrival --source=sella --object_type=PVOL --limit=5
+{"status: "OK"}
+
+**Note** The property **baltrad.exchange.server.statistics.incomming** has to be True in order for this command to work.
 
 .. _doc-rest-cmd-get_statistics:
 
