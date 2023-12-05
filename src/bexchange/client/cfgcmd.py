@@ -187,7 +187,26 @@ class CreateKeys(Command):
 
 class TestFilter(Command):
     def update_optionparser(self, parser):
-        parser.set_usage(parser.get_usage().strip() + " <filename>")
+        usg = parser.get_usage().strip()
+
+        description = """
+
+Provides functionality for matching a file against a json filter. The matching uses the baltrad-db metadata querying and will generate 
+a odim-source sqlite database so that the _bdb/source_name, _bdb/source:WMO and other bdb-specific meta attributes can be ued. This is 
+in contrast with the naming that instead uses _baltrad/ as prefix for internal meta data usage.
+
+The returned response will be either MATCHING or NOT MATCHING.
+
+Example: baltrad-exchange-config test_filter --odim-source=/etc/baltrad/rave/config/odim_source.xml
+                                             --filter=etc/example_subscription.json
+                                             /data/in1/sehem_scan_20200414T160000Z.h5
+
+        """
+
+        usage = usg + " <filename>"  + description
+
+        parser.set_usage(usage)        
+        #parser.set_usage(parser.get_usage().strip() + " <filename>")
 
         parser.add_option(
             "--odim-source", dest="odim_source",
@@ -202,7 +221,7 @@ class TestFilter(Command):
             help="Specifies a file containing a filter. Can be either a subscription or publication cfg-file or else a separate file containing toplevel 'filter'")
 
         parser.add_option(
-            "--filter_path", dest="filter_path", default=None,
+            "--filter-path", dest="filter_path", default=None,
             help="Path within the json entry where the filter can be found."
         )
 
