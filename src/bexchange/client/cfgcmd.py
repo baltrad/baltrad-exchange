@@ -201,6 +201,11 @@ class TestFilter(Command):
             "--filter", dest="filter",
             help="Specifies a file containing a filter. Can be either a subscription or publication cfg-file or else a separate file containing toplevel 'filter'")
 
+        parser.add_option(
+            "--filter_path", dest="filter_path", default=None,
+            help="Path within the json entry where the filter can be found."
+        )
+
     def execute(self, opts, args):
         with open(opts.odim_source) as f:
             sources = oh5.Source.from_rave_xml(f.read())
@@ -214,15 +219,28 @@ class TestFilter(Command):
         
         with open(opts.filter) as fp:
             json_cfg = json.load(fp)
-        
-        if "subscription" in json_cfg:
-            tfilter = filter_manager().from_value(json_cfg["subscription"]["filter"])
-        elif "publication" in json_cfg:
-            tfilter = filter_manager().from_value(json_cfg["publication"]["filter"])
-        elif "filter" in json_cfg:
-            tfilter = filter_manager().from_value(json_cfg["filter"])
+
+        if opts.filter_path:
+            tmp_json_cfg = json_cfg
+            tokens=opts.filter_path.split("/")
+            if tokens[0]=="":
+                tokens=tokens[1:]
+
+            for t in tokens:
+                if t in tmp_json_cfg:
+                    tmp_json_cfg = tmp_json_cfg[t]
+                else:
+                    raise Exception("No such entry: %s"%opts.filter_path)
+            tfilter = filter_manager().from_value(tmp_json_cfg)
         else:
-            raise Exception("Unsupported json-format")
+            if "subscription" in json_cfg and "filter" in json_cfg["subscription"]:
+                tfilter = filter_manager().from_value(json_cfg["subscription"]["filter"])
+            elif "publication" in json_cfg and "filter" in json_cfg["publication"]:
+                tfilter = filter_manager().from_value(json_cfg["publication"]["filter"])
+            elif "filter" in json_cfg:
+                tfilter = filter_manager().from_value(json_cfg["filter"])
+            else:
+                raise Exception("Unsupported json-format")
 
         matcher = metadata_matcher()
         if matcher.match(meta, tfilter.to_xpr()):
