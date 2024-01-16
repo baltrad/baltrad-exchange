@@ -60,10 +60,14 @@ setuptools.setup(name="bexchange",
             "create_publication = bexchange.client.cfgcmd:CreatePublication",
             "create_subscription = bexchange.client.cfgcmd:CreateSubscription",
         ],
+        "bexchange.zmq.commands": [
+            "monitor = bexchange.client.zmqcmd:Monitor",
+        ],
         "console_scripts" : [
             "baltrad-exchange-server = bexchange.server_main:run",
             "baltrad-exchange-client = bexchange.client_main:run",
-            "baltrad-exchange-config = bexchange.config_main:run"
+            "baltrad-exchange-config = bexchange.config_main:run",
+            "baltrad-exchange-zmq = bexchange.zmq_main:run"
         ]
     },
     test_suite="nose.collector",
