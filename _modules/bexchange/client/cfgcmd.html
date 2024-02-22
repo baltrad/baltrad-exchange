@@ -84,6 +84,7 @@
 <span class="kn">from</span> <span class="nn">bexchange.matching.filters</span> <span class="kn">import</span> <span class="n">filter_manager</span>
 <span class="kn">from</span> <span class="nn">bexchange.matching.metadata_matcher</span> <span class="kn">import</span> <span class="n">metadata_matcher</span>
 <span class="kn">from</span> <span class="nn">baltrad.bdbcommon</span> <span class="kn">import</span> <span class="n">oh5</span>
+<span class="kn">from</span> <span class="nn">bexchange.net</span> <span class="kn">import</span> <span class="n">dexutils</span>
 
 <span class="kn">from</span> <span class="nn">baltradcrypto</span> <span class="kn">import</span> <span class="n">crypto</span>
 <span class="kn">from</span> <span class="nn">baltradcrypto.crypto</span> <span class="kn">import</span> <span class="n">keyczarcrypto</span>
@@ -568,6 +569,135 @@
 <span class="s2">just want a subset of what is provided, please notifiy the remote server admin about this so that they can modify the </span>
 <span class="s2">outgoing publication to keep both their and your bandwidth usage limited.</span>
 <span class="s2">&quot;&quot;&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">nodename</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M&quot;</span><span class="p">),</span> <span class="n">nodename</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="SendDexKey"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.SendDexKey">[docs]</a><span class="k">class</span> <span class="nc">SendDexKey</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+<div class="viewcode-block" id="SendDexKey.update_optionparser"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.SendDexKey.update_optionparser">[docs]</a>    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+        <span class="n">usg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_usage</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+
+<span class="s2">In order to be able to setup this node to send files to a DEX-instance it is nessecary to send a key for approval</span>
+<span class="s2">to the dex-node. The user must specify the public key to pass on as well as the node-name that will be used for </span>
+<span class="s2">signing the data. </span>
+<span class="s2">NOTE! This is a deprecated behaviour and is just there for backward compatibility purposes.</span>
+
+
+<span class="s2">Example: baltrad-exchange-config send_dexkey --url=https://remote.server --pubkey=... --nodename=....</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+
+        <span class="n">usage</span> <span class="o">=</span> <span class="n">usg</span> <span class="o">+</span> <span class="n">description</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">set_usage</span><span class="p">(</span><span class="n">usage</span><span class="p">)</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
+            <span class="s2">&quot;--url&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;url&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Specify the url that should receive the public key. The url will get BaltradDex/post_key.htm appended to it.&quot;</span><span class="p">)</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
+            <span class="s2">&quot;--pubkey&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;pubkey&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The public key filename that should be passed to the remote server&quot;</span><span class="p">)</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
+            <span class="s2">&quot;--nodename&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;nodename&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The node-name that will be used during the validation of the signature&quot;</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="SendDexKey.execute"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.SendDexKey.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">pubkey</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Must provide a valid dex public key&quot;</span><span class="p">);</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">verifier</span> <span class="o">=</span> <span class="n">keyczarcrypto</span><span class="o">.</span><span class="n">load_key</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">pubkey</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">verifier</span><span class="p">,</span> <span class="n">keyczarcrypto</span><span class="o">.</span><span class="n">keyczar_verifier</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;You shouldn&#39;t provide the private key&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;You shouldn&#39;t provide the private key&quot;</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">traceback</span>
+            <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Failed to send the public key&quot;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">opts</span><span class="o">.</span><span class="n">nodename</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Must specify nodename&quot;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">opts</span><span class="o">.</span><span class="n">url</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Must specify url&quot;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        
+        <span class="n">du</span> <span class="o">=</span> <span class="n">dexutils</span><span class="o">.</span><span class="n">dexutils</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">nodename</span><span class="p">)</span>
+        <span class="n">du</span><span class="o">.</span><span class="n">send_key</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">pubkey</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="SendDexFile"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.SendDexFile">[docs]</a><span class="k">class</span> <span class="nc">SendDexFile</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+<div class="viewcode-block" id="SendDexFile.update_optionparser"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.SendDexFile.update_optionparser">[docs]</a>    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+        <span class="n">usg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_usage</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+
+        <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+
+<span class="s2">Can be used to pass on a HDF5 file using the dex protocol to a remote server. Useful for verifying</span>
+<span class="s2">the dex-communication.</span>
+
+<span class="s2">NOTE! This is a deprecated behaviour and is just there for backward compatibility purposes.</span>
+
+<span class="s2">Example: baltrad-exchange-config send_dexfile --url=https://remote.server --privkey=... --nodename=....  &lt;file&gt; &lt;file2&gt; ....</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+
+        <span class="n">usage</span> <span class="o">=</span> <span class="n">usg</span> <span class="o">+</span> <span class="s2">&quot; FILE [ FILE]&quot;</span> <span class="o">+</span> <span class="n">description</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">set_usage</span><span class="p">(</span><span class="n">usage</span><span class="p">)</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
+            <span class="s2">&quot;--url&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;url&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Specify the url that should receive the public key. The url will get BaltradDex/post_key.htm appended to it.&quot;</span><span class="p">)</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
+            <span class="s2">&quot;--privkey&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;privkey&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The private key that should be used to sign the message&quot;</span><span class="p">)</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
+            <span class="s2">&quot;--nodename&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;nodename&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The node-name that will be used during the validation of the signature&quot;</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="SendDexFile.execute"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.SendDexFile.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">privkey</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Must provide a valid dex private key&quot;</span><span class="p">);</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">signer</span> <span class="o">=</span> <span class="n">keyczarcrypto</span><span class="o">.</span><span class="n">load_key</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">privkey</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">signer</span><span class="p">,</span> <span class="n">keyczarcrypto</span><span class="o">.</span><span class="n">keyczar_signer</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;You need to provide the private key&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;You need to provide the private key&quot;</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">traceback</span>
+            <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">opts</span><span class="o">.</span><span class="n">nodename</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Must specify nodename&quot;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">opts</span><span class="o">.</span><span class="n">url</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Must specify url&quot;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Must provide at least one filename&quot;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">filenames</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> is not a file&quot;</span><span class="o">%</span><span class="n">p</span><span class="p">)</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">filenames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+        <span class="n">du</span> <span class="o">=</span> <span class="n">dexutils</span><span class="o">.</span><span class="n">dexutils</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">nodename</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span>
+            <span class="n">du</span><span class="o">.</span><span class="n">send_file</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">privkey</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span></div></div>
 </pre></div>
 
             <div class="clearer"></div>
