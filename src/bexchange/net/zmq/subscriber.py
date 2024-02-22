@@ -86,9 +86,13 @@ class subscriber(runners.runner):
         :param message: The incomming data message
         """
         if len(message) < 276:
-            logger.info("Dropping message since it's to short")
+            logger.info("zmqsubsriber dropping message since it's to short")
             return
         
+        if self.backend().max_content_length is not None and  len(message) > self.backend().max_content_length:
+            logger.warn("zmqsubsriber dropping message since it's too large")
+            return
+
         try:
             senderHmac = message[:20]
             fname = message[20:(20+256)].decode('utf-8').replace("\0", "")

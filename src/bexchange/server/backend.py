@@ -124,6 +124,8 @@ class SimpleBackend(backend.Backend):
         self.statistics_add_entries = False
         self.statistics_file_handling = False
 
+        self.max_content_length = None
+
         self._starttime = datetime.datetime.now()
 
         self.initialize_configuration(self.confdirs)
@@ -257,6 +259,8 @@ class SimpleBackend(backend.Backend):
             tmpfolder = tmpfolder
           )
 
+        backend.max_content_length = conf.get_int("baltrad.exchange.max_content_length", 33554432)
+
         backend.statistics_incomming = stat_incomming
         backend.statistics_duplicates = stat_duplicates
         backend.statistics_add_entries = stat_add_entries
@@ -273,6 +277,11 @@ class SimpleBackend(backend.Backend):
         startTime = time.time()
 
         meta = self.metadata_from_file(path)
+
+        if self.max_content_length is not None and meta.bdb_file_size > self.max_content_length:
+            # We won't do anything about the file and will not indicate that anything has gone wrong. We just return the metadata without any more action
+            logger.info("Received a file that is too large (%d) from %s: %s, %s, %s %s" % (meta.bdb_file_size, nid, meta.bdb_metadata_hash, meta.bdb_source_name, meta.what_date, meta.what_time))
+            return meta
 
         metadataTime = time.time()
 

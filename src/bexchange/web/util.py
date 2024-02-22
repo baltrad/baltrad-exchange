@@ -51,8 +51,10 @@ class JsonRequestMixin(object):
 
 class Request(WerkzeugRequest,
               JsonRequestMixin):
-    def __init__(self, environ):
+    def __init__(self, environ, max_content_length=None, max_form_memory_size=None):
         WerkzeugRequest.__init__(self, environ)
+        self.max_content_length = max_content_length
+        self.max_form_memory_size = max_form_memory_size
 
 
 class RequestContext(object):

@@ -57,7 +57,7 @@ class Application(object):
         return self.backend
     
     def __call__(self, env, start_response, provider):
-        request = webutil.Request(env)
+        request = webutil.Request(env, self.backend.max_content_length, self.backend.max_content_length)
         response = self.dispatch_request(request, provider)
         return response(env, start_response)
     
