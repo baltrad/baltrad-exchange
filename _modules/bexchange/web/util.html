@@ -91,8 +91,10 @@
 
 <div class="viewcode-block" id="Request"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.Request">[docs]</a><span class="k">class</span> <span class="nc">Request</span><span class="p">(</span><span class="n">WerkzeugRequest</span><span class="p">,</span>
               <span class="n">JsonRequestMixin</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environ</span><span class="p">):</span>
-        <span class="n">WerkzeugRequest</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environ</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environ</span><span class="p">,</span> <span class="n">max_content_length</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_form_memory_size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">WerkzeugRequest</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environ</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_content_length</span> <span class="o">=</span> <span class="n">max_content_length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_form_memory_size</span> <span class="o">=</span> <span class="n">max_form_memory_size</span></div>
 
 
 <div class="viewcode-block" id="RequestContext"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.RequestContext">[docs]</a><span class="k">class</span> <span class="nc">RequestContext</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>

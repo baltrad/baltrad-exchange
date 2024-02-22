@@ -164,6 +164,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">statistics_add_entries</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">statistics_file_handling</span> <span class="o">=</span> <span class="kc">False</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_content_length</span> <span class="o">=</span> <span class="kc">None</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">_starttime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">initialize_configuration</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">confdirs</span><span class="p">)</span>
@@ -297,6 +299,8 @@
             <span class="n">tmpfolder</span> <span class="o">=</span> <span class="n">tmpfolder</span>
           <span class="p">)</span>
 
+        <span class="n">backend</span><span class="o">.</span><span class="n">max_content_length</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get_int</span><span class="p">(</span><span class="s2">&quot;baltrad.exchange.max_content_length&quot;</span><span class="p">,</span> <span class="mi">33554432</span><span class="p">)</span>
+
         <span class="n">backend</span><span class="o">.</span><span class="n">statistics_incomming</span> <span class="o">=</span> <span class="n">stat_incomming</span>
         <span class="n">backend</span><span class="o">.</span><span class="n">statistics_duplicates</span> <span class="o">=</span> <span class="n">stat_duplicates</span>
         <span class="n">backend</span><span class="o">.</span><span class="n">statistics_add_entries</span> <span class="o">=</span> <span class="n">stat_add_entries</span>
@@ -313,6 +317,11 @@
         <span class="n">startTime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 
         <span class="n">meta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata_from_file</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_content_length</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">meta</span><span class="o">.</span><span class="n">bdb_file_size</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_content_length</span><span class="p">:</span>
+            <span class="c1"># We won&#39;t do anything about the file and will not indicate that anything has gone wrong. We just return the metadata without any more action</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Received a file that is too large (</span><span class="si">%d</span><span class="s2">) from </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">meta</span><span class="o">.</span><span class="n">bdb_file_size</span><span class="p">,</span> <span class="n">nid</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">bdb_metadata_hash</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">bdb_source_name</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_date</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_time</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">meta</span>
 
         <span class="n">metadataTime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 
