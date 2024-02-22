@@ -153,6 +153,10 @@ json configuration but without them the system won't do anything.
   baltrad.exchange.backlog=10
   baltrad.exchange.timeout=10
 
+  # Restrict content size that is sent. 32MB (1024*1024*32). This should not be considered as the exact file size. It
+  # can also be the content size of the complete message that can be some bytes larger than actual file.
+  baltrad.exchange.max_content_length = 33554432
+  
   # Name of this server. Will be used when communicating with other nodes
   baltrad.exchange.node.name = example-server
 
