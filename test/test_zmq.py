@@ -170,12 +170,32 @@ class test_subscriber(unittest.TestCase):
         self._subscriber.calculate_hmac = MagicMock(return_value=hmacmock)
         self._subscriber.handle_file = MagicMock()
         self._subscriber.create_named_temporary_file = MagicMock(return_value=tempfilemock)
+        self._subscriber._backend.max_content_length=1234567
 
         self._subscriber.process(b_payload)
 
         tempfilemock.__enter__().write.assert_called_with(b_content)
         tempfilemock.__enter__().flush.assert_called()
         self._subscriber.handle_file.assert_called_with('tmpfilename')
+
+    def test_process_too_large_file(self):
+        b_filename = "myfilename.h5".ljust(256, '\0').encode('latin1')
+        b_content = b'1234'
+        b_hmac = b'12345678901234567890'
+        b_payload = b_hmac + b_filename + b_content
+        hmacmock = MagicMock()
+        hmacmock.digest = MagicMock(return_value=b'12345678901234567890')
+        tempfilemock = MagicMock()
+        tempfilemock.__enter__().name = "tmpfilename"
+
+        self._subscriber.calculate_hmac = MagicMock(return_value=hmacmock)
+        self._subscriber.handle_file = MagicMock()
+        self._subscriber.create_named_temporary_file = MagicMock(return_value=tempfilemock)
+        self._subscriber._backend.max_content_length=276
+
+        self._subscriber.process(b_payload)
+
+        tempfilemock.__enter__().write.assert_not_called()
 
     def test_process_failed_handle(self):
         b_filename = "myfilename.h5".ljust(256, '\0').encode('latin1')
@@ -190,6 +210,7 @@ class test_subscriber(unittest.TestCase):
         self._subscriber.calculate_hmac = MagicMock(return_value=hmacmock)
         self._subscriber.handle_file = MagicMock(side_effect=Exception("No luck"))
         self._subscriber.create_named_temporary_file = MagicMock(return_value=tempfilemock)
+        self._subscriber._backend.max_content_length=1234567
 
         self._subscriber.process(b_payload)
 

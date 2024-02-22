@@ -90,7 +90,7 @@ class subscriber(runners.runner):
             return
         
         if self.backend().max_content_length is not None and  len(message) > self.backend().max_content_length:
-            logger.warn("zmqsubsriber dropping message since it's too large")
+            logger.warning("zmqsubsriber dropping message since it's too large")
             return
 
         try:
