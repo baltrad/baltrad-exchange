@@ -83,6 +83,43 @@ As you see in the example, three files will be created. A private key in PEM-for
 The one in json format will typically be used when setting up the subscriptions. The json-file contains some meta information and the public PEM-key with newlines escaped to be compatible
 with json. !!!NOTE!!! It might be reasonable to also have configured a folder containing all the keys!!!
 
+Baltrad-DEX authorization (for backward compatibility)
+=======================================================
+
+The DEX exchange mechanism needs to be replaced due to a couple of reasons. One is that the keyczar implementation no longer is supported and the other is that all exchange is based on WMO-numbers and since
+WMO are no longer issued to new radars we have decided to switch out this functionality. However, due to the fact that if you still need to pass files into the DEX tomcat server it has to be done using the
+DEX protocol that is using keyczar for signature handling and therefor it is possible to both create key-pairs and also send them to a remote node.
+
+Creating the dex-key
+--------------------
+
+If you have installed a full baltrad-node and ran baltrad-config you already have a private/public key that can be used for keyczar signing which makes this step obsolete. However, if you dont, you 
+create the key using:
+
+.. code-block:: sh
+
+  > baltrad-exchange-config create_keys --type=keyczar --destination=/some/folder --nodename=my-local-nodename
+
+This command will create two folders, **my-local-nodename.pub** and **my-local-nodename.priv** under the folder /some/folder. These files have two different purposes. The pub key is used by a remote server 
+for validating that the origin is correct. The private key is used to create a signature before sending the file to a remote server.
+
+Following this rule, the first thing that should be done if you want to publish files to a remote server using the dex-protocol is to send the public key to the remote DEX server. This is done by issuing
+the following command:
+
+.. code-block:: sh
+
+  %> baltrad-exchange-config send_dexkey --pubkey=/some/folder/my-local-nodename.pub --url=https://<remote server> --nodename=my-local-nodename
+
+This will generate a request on the remote server that has to be approved by the remote administrator.
+
+Since there is no additional filter passed on in this request the remote administrator has to set this key to be an injector. After this has been done you will be able to verify the sending of files
+using:
+
+.. code-block:: sh
+
+  %> baltrad-exchange-config send_dexfile --privkey=/some/folder/my-local-nodename.priv --url=https://<remote server> --nodename=my-local-nodename <filename>
+
+
 .. _ug_configuration:
 
 Configuration
