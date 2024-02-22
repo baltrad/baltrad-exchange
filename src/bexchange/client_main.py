@@ -143,6 +143,8 @@ def run():
         keyPath = opts.key
     if opts.name is not None:
         nodeName = opts.name
+    if opts.server_url is not None:
+        serverUrl = opts.server_url
 
     logging.basicConfig(format="%(message)s")
     if opts.verbose:
@@ -156,6 +158,7 @@ def run():
             auth = rest.TinkAuth(keyPath, nodeName)
         else:
             auth = rest.NoAuth()
+
 
     database = rest.RestfulServer(serverUrl, auth)
 

@@ -59,6 +59,8 @@ setuptools.setup(name="bexchange",
             "test_filter = bexchange.client.cfgcmd:TestFilter",
             "create_publication = bexchange.client.cfgcmd:CreatePublication",
             "create_subscription = bexchange.client.cfgcmd:CreateSubscription",
+            "send_dexkey = bexchange.client.cfgcmd:SendDexKey",
+            "send_dexfile = bexchange.client.cfgcmd:SendDexFile"
         ],
         "bexchange.zmq.commands": [
             "monitor = bexchange.client.zmqcmd:Monitor",

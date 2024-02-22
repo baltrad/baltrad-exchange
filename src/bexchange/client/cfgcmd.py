@@ -44,6 +44,7 @@ from bexchange.server import sqlbackend
 from bexchange.matching.filters import filter_manager
 from bexchange.matching.metadata_matcher import metadata_matcher
 from baltrad.bdbcommon import oh5
+from bexchange.net import dexutils
 
 from baltradcrypto import crypto
 from baltradcrypto.crypto import keyczarcrypto
@@ -528,3 +529,132 @@ The subscription configuration describes what the template assumes is published 
 just want a subset of what is provided, please notifiy the remote server admin about this so that they can modify the 
 outgoing publication to keep both their and your bandwidth usage limited.
 """%(nodename, datetime.datetime.now().strftime("%Y-%m-%d %H:%M"), nodename)
+
+class SendDexKey(Command):
+    def update_optionparser(self, parser):
+        usg = parser.get_usage().strip()
+
+        description = """
+
+In order to be able to setup this node to send files to a DEX-instance it is nessecary to send a key for approval
+to the dex-node. The user must specify the public key to pass on as well as the node-name that will be used for 
+signing the data. 
+NOTE! This is a deprecated behaviour and is just there for backward compatibility purposes.
+
+
+Example: baltrad-exchange-config send_dexkey --url=https://remote.server --pubkey=... --nodename=....
+        """
+
+        usage = usg + description
+
+        parser.set_usage(usage)
+
+        parser.add_option(
+            "--url", dest="url",
+            help="Specify the url that should receive the public key. The url will get BaltradDex/post_key.htm appended to it.")
+
+        parser.add_option(
+            "--pubkey", dest="pubkey",
+            help="The public key filename that should be passed to the remote server")
+
+        parser.add_option(
+            "--nodename", dest="nodename",
+            help="The node-name that will be used during the validation of the signature"
+        )
+
+    def execute(self, opts, args):
+        if not os.path.exists(opts.pubkey):
+            print("Must provide a valid dex public key");
+            sys.exit(1)
+
+        try:
+            verifier = keyczarcrypto.load_key(opts.pubkey)
+            if not isinstance(verifier, keyczarcrypto.keyczar_verifier):
+                print("You shouldn't provide the private key")
+                raise Exception("You shouldn't provide the private key")
+        except:
+            import traceback
+            traceback.print_exc()
+            print("Failed to send the public key")
+            sys.exit(1)
+
+        if not opts.nodename:
+            print("Must specify nodename")
+            sys.exit(1)
+        
+        if not opts.url:
+            print("Must specify url")
+            sys.exit(1)
+        
+        du = dexutils.dexutils(opts.url, opts.nodename)
+        du.send_key(opts.pubkey)
+
+class SendDexFile(Command):
+    def update_optionparser(self, parser):
+        usg = parser.get_usage().strip()
+
+
+        description = """
+
+Can be used to pass on a HDF5 file using the dex protocol to a remote server. Useful for verifying
+the dex-communication.
+
+NOTE! This is a deprecated behaviour and is just there for backward compatibility purposes.
+
+Example: baltrad-exchange-config send_dexfile --url=https://remote.server --privkey=... --nodename=....  <file> <file2> ....
+        """
+
+        usage = usg + " FILE [ FILE]" + description
+
+        parser.set_usage(usage)
+
+        parser.add_option(
+            "--url", dest="url",
+            help="Specify the url that should receive the public key. The url will get BaltradDex/post_key.htm appended to it.")
+
+        parser.add_option(
+            "--privkey", dest="privkey",
+            help="The private key that should be used to sign the message")
+
+        parser.add_option(
+            "--nodename", dest="nodename",
+            help="The node-name that will be used during the validation of the signature"
+        )
+
+    def execute(self, opts, args):
+        if not os.path.exists(opts.privkey):
+            print("Must provide a valid dex private key");
+            sys.exit(1)
+
+        try:
+            signer = keyczarcrypto.load_key(opts.privkey)
+            if not isinstance(signer, keyczarcrypto.keyczar_signer):
+                print("You need to provide the private key")
+                raise Exception("You need to provide the private key")
+        except:
+            import traceback
+            traceback.print_exc()
+            sys.exit(1)
+
+        if not opts.nodename:
+            print("Must specify nodename")
+            sys.exit(1)
+
+        if not opts.url:
+            print("Must specify url")
+            sys.exit(1)
+        
+        if len(args) == 0:
+            print("Must provide at least one filename")
+            sys.exit(1)
+
+        filenames = []
+        for p in args:
+            if not os.path.isfile(p):
+                print("%s is not a file"%p)
+                sys.exit(1)
+            filenames.append(p)
+
+        du = dexutils.dexutils(opts.url, opts.nodename)
+        for f in filenames:
+            du.send_file(opts.privkey, f)
