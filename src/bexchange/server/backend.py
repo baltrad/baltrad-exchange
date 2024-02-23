@@ -304,6 +304,7 @@ class SimpleBackend(backend.Backend):
                 continue
             
             if subscription.filter_matching(meta):
+                logger.debug("store_file: filter matching for subscription with id: %s"%subscription.id())
                 for storage in subscription.storages():
                     self.storage_manager.store(storage, path, meta)
 
@@ -344,6 +345,7 @@ class SimpleBackend(backend.Backend):
             origin = publication.origin()
             if len(origin) == 0 or (len(publication.origin()) > 0 and sid in publication.origin()):
                 if publication.active() and matcher.match(meta, publication.filter().to_xpr()):
+                    logger.debug("publish: publishing file using: %s %s"%(publication.name(), publication))
                     publication.publish(path, meta)
     
     def metadata_from_file(self, path):
