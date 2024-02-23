@@ -103,9 +103,12 @@ Posts a sequence of files to the exchange server.
 
     def execute(self, server, opts, args):
         for path in args: 
-            with open(path, "rb") as data:
-                entry = server.store(data)
-            print("%s stored"%(path))
+            try:
+                with open(path, "rb") as data:
+                    entry = server.store(data)
+                print("%s stored"%(path))
+            except Exception as e:
+                print("Error occured when storing '%s': %s"%(path, e.__str__()))
 
 class BatchTest(Command):
     SRC_MAPPING={
