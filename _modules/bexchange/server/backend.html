@@ -240,7 +240,7 @@
                 
                 <span class="k">elif</span> <span class="s2">&quot;storage&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
                     <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_manager</span><span class="o">.</span><span class="n">from_conf</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;storage&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="p">)</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Adding storage from csourceonfiguration file </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Adding storage from configuration file </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">storage_manager</span><span class="o">.</span><span class="n">add_storage</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
                 
                 <span class="k">elif</span> <span class="s2">&quot;runner&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
