@@ -98,7 +98,11 @@ class statistics_manager:
             if m:
                 dt = None
                 try:
-                    dt = datetime.datetime.fromisoformat(m.group(3))
+                    cfun = getattr(datetime.datetime, "fromisoformat", None)
+                    if callable(cfun): # Introduced in python 3.7
+                        dt = datetime.datetime.fromisoformat(m.group(3))
+                    else:
+                        dt = datetime.datetime.strptime(m.group(3), '%Y%m%d%H%M')
                 except ValueError:
                     dt = datetime.datetime.strptime(m.group(3), '%Y%m%d%H%M')
                 criteria = [m.group(1), m.group(2), dt]
@@ -114,7 +118,7 @@ class statistics_manager:
         totals = False
         hashid = None
         sources = []
-        dtfilter = None
+        dtfilters = None
         object_type = None
         if "spid" in querydata:
             spid = querydata["spid"]
@@ -133,7 +137,7 @@ class statistics_manager:
         if "totals" in querydata:
             totals = querydata["totals"]
 
-        if "dtfilter" in querydata:
+        if "dtfilter" in querydata and querydata["dtfilter"]:
             dtfilter = querydata["dtfilter"].strip()
             dtfilters = self.parse_dtfilter(dtfilter)
 
