@@ -200,7 +200,7 @@ class SimpleBackend(backend.Backend):
                 
                 elif "storage" in data:
                     s = self.storage_manager.from_conf(data["storage"], self)
-                    logger.info("Adding storage from csourceonfiguration file %s"%(f))
+                    logger.info("Adding storage from configuration file %s"%(f))
                     self.storage_manager.add_storage(s)
                 
                 elif "runner" in data:

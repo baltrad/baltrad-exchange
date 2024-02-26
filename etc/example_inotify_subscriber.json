@@ -6,6 +6,7 @@
   "extra_arguments": {
     "name":"inotify_monitor_1",
     "ignore-pattern":false,
+    "process-pending-files":true,
     "pattern":"(^\\..*|.*\\.tmp$)",
     "folders":[
     	"/projects/baltrad/baltrad-exchange/inotify/in1",

@@ -25,6 +25,10 @@ import importlib
 import logging
 import pyinotify
 import os, re
+from os import listdir
+from os.path import isfile, join
+import time
+
 from threading import Thread, Event
 
 from bexchange.naming import namer
@@ -111,6 +115,7 @@ class inotify_runner(runner):
         self._name = "inotify-runner"
         self._folders = args["folders"]
         self._ignore_pattern = True
+        self._process_pending_files = False
         self._pattern = ""
         if "ignore-pattern" in args:
             self._ignore_pattern = args["ignore-pattern"]
@@ -118,6 +123,9 @@ class inotify_runner(runner):
             self._pattern = args["pattern"]
         if "name" in args:
             self._name = args["name"]
+        if "process-pending-files" in args:
+            self._process_pending_files=args["process-pending-files"]
+
         self._wm = pyinotify.WatchManager()
         self._notifier = pyinotify.Notifier(self._wm, inotify_runner_event_handler(self))
 
@@ -144,12 +152,36 @@ class inotify_runner(runner):
         """
         self._notifier.loop()
 
+    def pending_run(self, pending_filenames):
+        if pending_filenames:
+            for filename in pending_filenames:
+                self.handle_file(filename)
+                time.sleep(0.1) # Just to not starve real time data handling
+
+    def get_pending_files(self, folder):
+        """Lists all files in specified folder
+        """
+        result=[]
+        files = [f for f in listdir(folder) if isfile(join(folder, f))]
+        for f in files:
+            filename = join(folder, f)
+            if not self.is_ignored(filename):
+                result.append(filename)
+        return result
+
     def start(self):
         """Starts this runner by adding the watched folders and then starting a daemonized thread.
         """
+        pending_files=[]
         for folder in self._folders:
             logger.info("inotify_runner(%s) watching '%s'"%(self._name, folder))
+            pending_files.extend(self.get_pending_files(folder))
             self._wm.add_watch(folder, self.MASK)
+
+        if len(pending_files) > 0 and self._process_pending_files:
+            self._pending_thread = Thread(target=self.pending_run, args=(pending_files,))
+            self._pending_thread.daemon = True
+            self._pending_thread.start()
 
         self._thread = Thread(target=self.run)
         self._thread.daemon = True
