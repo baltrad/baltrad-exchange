@@ -83,6 +83,11 @@ URL_MAP = Map(
                 endpoint="handler.file_arrival"
             ),
         ]),
+        Submount("/supervise", [
+            Rule("/", methods=["GET"],
+                endpoint="handler.supervise"
+            ),
+        ]),
         Submount("/json_message", [
             Rule("/", methods=["POST"],
                 endpoint="handler.post_json_message"

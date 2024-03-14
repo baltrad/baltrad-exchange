@@ -37,7 +37,7 @@
       "auth":"crypto",
       "conf":{
         "nodename": "anders-silent", 
-        "creator": "baltrad.exchange.crypto", 
+        "creator": "baltradcrypto.crypto", 
         "_key": "-----BEGIN PUBLIC KEY-----\nMIIDQjCCAjUGByqGSM44BAEwggIoAoIBAQCAINQxhuFkqiVszBOTu87YFzEK5mVK\n2/1OUMrwi07m9ixweNCiMq1MxgyVCjO3SMQTSVWJwWgVQaP7fVKpUDBWKO41GR/w\nqdHInXpTNky5gUIE1q8dBHTLxE22P/LzBP63i3UgbUTgIQR/CaLrBCiPvYo+4Foh\nqU+6DzAdPOo/qEnCmd8AzjB7OZc2RV4V9grR+nozpkFwQwMytJyHMOjFtEtg0VZY\nf3DkmbP3YGCahR/Mc8j4S+yBCEtY3nEtaDSCSj1ts56xhW4Pke/VazmZXDh8Xc0a\nmUq7ltm+X9BLkGx5/g9EysDGHF35gsJm4kj4m3UaXO1ga36VbamiaGlxAh0AriLV\nUok+JZHsuLJecIXzjNX8a5iMdmv3mRy3SwKCAQArvKLijVx0Hokp9p4alFWHAbVw\n1EkuDLng+p5vQsEQnnGT+HTdXSkeYzlbYPBFEH/fhzsdXM4FJ5oX+k79hkD47OxF\nUKUKrU5J0A+h+JmU6AMuf6/dFP7qNrG+yXIzfjNoOfSYUhAeBEXBPcUS1WzSMt5S\nqW1Q7ReW/3MJQU329qAJ7oYpMvWwxBfofimck8zxxMjVe8SFilJ61109RU4nNAvG\nfeU06j1kbEuT+4DpEukgHM9l21poanKh9OOzEGEqewE1oIuVGDVSUQktkYo5/9tY\nypky4x8V0IB1vmq70MqLTTNPpctT2Px99eUxtj4voBGWpbYzpEZ4N83C6iwFA4IB\nBQACggEARG2sugZ7XBqoHxzyG8KjAsdpRyZwZNMKKkYRBHzPSeH5sx+c012OR/A5\n1IshX0p5o74gbGqr68iwXvfxDMMhVrpH0tCnDeILbce3VaWINWLkEAb7t2FEv5hA\nDPgsNts7+5nxip51AX+dF45o8XkiLWEmRnDJjGl8SHznczz4uRnJzLN8kG2sfqAe\nBqA6KUnqkxdqyMjce9VLELSr1XzDOtKaKC0gMa6DARyw6pohMuURzhkFbQ6hwlGi\nJPFRANptr44HvtHlOgRYQqxROV7t4Au/BBLYruZGS7Xk9rnf/AztdbldfOnnRHfy\nmPT9+jEKitHgwEf5taHxqoPEjjqJgQ==\n-----END PUBLIC KEY-----",
         "_comment_":"If the pubkey is not pointing to an absolute path it will be using the keystore roots as well",
         "pubkey":"anders-silent.public", 

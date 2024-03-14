@@ -27,6 +27,7 @@ import os
 import shutil
 import stat
 import uuid
+import threading
 from abc import abstractmethod
 import importlib
 from pathlib import Path
@@ -191,6 +192,8 @@ class simple_rotating_file_storage(storage):
         self._scanstore = file_store(self._folder, "${_baltrad/source_name}_scan_${/dataset1/where/elangle}_${/what/date}T${/what/time}.h5", False, True)
         self._otherstore = file_store(self._folder, "${_baltrad/source_name}_${/what/object}.tolower()_${/what/date}T${/what/time}.h5", False, True)
 
+        self.lock = threading.Lock()
+
         if "number_of_files" in kwargs and isinstance(kwargs["number_of_files"], int):
             if kwargs["number_of_files"] <= 500:
                 self._number_of_files = kwargs["number_of_files"]
@@ -226,10 +229,11 @@ class simple_rotating_file_storage(storage):
         return self._name
     
     def trim_folder(self, path):
-        paths = sorted(Path(path).iterdir(), key=os.path.getmtime)
-        while len(paths) >= self._number_of_files and len(paths) > 0:
-            fpath = paths.pop(0)
-            os.unlink(fpath)
+        with self.lock:
+            paths = sorted(Path(path).iterdir(), key=os.path.getmtime)
+            while len(paths) >= self._number_of_files and len(paths) > 0:
+                fpath = paths.pop(0)
+                os.unlink(fpath)
 
 class storage_manager:
     """ The storage manager

@@ -53,6 +53,7 @@ setuptools.setup(name="bexchange",
             "list_statistic_ids = bexchange.client.cmd:ListStatisticIds",
             "server_info = bexchange.client.cmd:ServerInfo",
             "file_arrival = bexchange.client.cmd:FileArrival",
+            "supervise = bexchange.client.cmd:Supervise",
         ],
         "bexchange.config.commands": [
             "create_keys = bexchange.client.cfgcmd:CreateKeys",

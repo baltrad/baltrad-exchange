@@ -187,6 +187,30 @@ class RestfulServer(object):
         response = self.execute_request(request)
         return response
 
+    def supervise(self, infotype, source, object_type, limit, entrylimit):
+        """posts a json message to the exchange server. 
+        :param data: The data
+        """
+        json_message_d = {
+            "info_type":infotype,
+            "source":source,
+            "object_type":object_type,
+            "limit":limit,
+            "entrylimit":entrylimit
+        }
+
+        request = Request(
+            "GET", "/supervise/",json.dumps(json_message_d),
+            headers={
+                "content-type": "application/json",
+                "message-id": str(uuid.uuid4()),
+                "date":datetime.utcnow().strftime("%Y%m%d%H%M%S%f")
+            }
+        )
+
+        response = self.execute_request(request)
+        return response
+
     def execute_request(self, req):
         """Exececutes the actual rest request over http or https. Will also add credentials to the request
         :param req: The REST request

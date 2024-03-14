@@ -206,3 +206,43 @@ def file_arrival(ctx):
     if stats and len(stats) > 0:
         result={"status":"OK"}
     return Response(json.dumps(result), status=httplibclient.OK)
+
+def supervise(ctx):
+    """Provides functionality for supervising the node
+
+    :param ctx: the request context
+    :type ctx: :class:`~.util.RequestContext`
+    :return: :class:`~.util.JsonResponse` with status
+             *200 Created* and information in body
+
+    See :ref:`doc-rest-cmd-file-arrival` for details
+    """
+    logger.debug("bexchange.handler.supervise(ctx)")
+    if ctx.is_anonymous():
+        logger.info("supervise: anonymous calls are not allowed")
+        return Response("", status=httplibclient.UNAUTHORIZED)
+    data = ctx.request.get_json_data()
+    source = None
+    object_type = None
+    limit = 5
+    entrylimit = 0
+    if "source" in data:
+        source = data["source"]
+    if "object_type" in data:
+        object_type = data["object_type"]
+    if "limit" in data:
+        limit = int(data["limit"])
+    if "entrylimit" in data:
+        entrylimit = int(data["entrylimit"])
+
+    dtfilterdate = (datetime.datetime.utcnow() - datetime.timedelta(seconds=limit))
+    dtfilter = "datetime>=%s"%((datetime.datetime.utcnow() - datetime.timedelta(seconds=limit)).strftime("%Y%m%d%H%M%S"))
+    if entrylimit > 0:
+        dtfilter = dtfilter + "&&entrytime>=%s"%((datetime.datetime.utcnow() - datetime.timedelta(seconds=entrylimit)).strftime("%Y%m%d%H%M%S"))
+    querydata = {"spid":"server-incomming", "sources":source, "object_type":object_type, "dtfilter":dtfilter}
+    logger.info("supervise query=%s"%str(querydata))
+    stats = ctx.backend.get_statistics_manager().get_statistics_entries(ctx.backend.get_auth_manager().get_nodename(ctx.request), querydata)
+    result={"status":"ERROR"}
+    if stats and len(stats) > 0:
+        result={"status":"OK"}
+    return Response(json.dumps(result), status=httplibclient.OK)

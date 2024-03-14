@@ -479,7 +479,7 @@ Example: baltrad-exchange-config create_subscription --output=subscription_bundl
                 cryptod["auth"] = "crypto"
                 cryptod["conf"] = {}
                 cryptod["conf"]["nodename"] = cfg.get("baltrad.exchange.node.name")
-                cryptod["conf"]["creator"] = "baltrad.exchange.crypto"
+                cryptod["conf"]["creator"] = "baltradcrypto.crypto"
                 cryptod["conf"]["pubkey"] = "%s.public"%cfg.get("baltrad.exchange.node.name")
                 cryptod["conf"]["type"] = "public"
 
@@ -604,7 +604,7 @@ NOTE! This is a deprecated behaviour and is just there for backward compatibilit
 Example: baltrad-exchange-config send_dexfile --url=https://remote.server --privkey=... --nodename=....  <file> <file2> ....
         """
 
-        usage = usg + " FILE [ FILE]" + description
+        usage = usg + " FILE [ FILE]" + description.exchange
 
         parser.set_usage(usage)
 

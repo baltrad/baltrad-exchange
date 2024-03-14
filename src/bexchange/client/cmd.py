@@ -260,7 +260,7 @@ Example: baltrad-exchange-client get_statistics --spid=server-incomming --totals
 
         parser.add_option(
             "--dtfilter", dest="dtfilter", default=None,
-            help="If filtering should be performed on datetime. Must be specified datetime<operation><value>. If you want to specify a range you can use && between two filters like --dtfilter='datetime>=202010000000 && datetime<=202011000000'"
+            help="If filtering should be performed on datetime. Must be specified datetime<operation><value>. If you want to specify a range you can use && between two filters like --dtfilter='datetime>=20201000000000 && datetime<=20201100000000'"
         )
 
         parser.add_option(
@@ -348,7 +348,7 @@ Functionality for querying if a file from a specific source has arrived within a
 
 The returned data will be a json dictionary with status as name and either ERROR or OK in the value.
 
-Example: baltrad-exchange-client file_arrival --source=sella --object_type=PVOL --limit=5
+Example: baltrad-exchange-client file_arrival --source=sella --object_type=PVOL --limit=60
 {"status: "OK"}
         """
 
@@ -366,12 +366,62 @@ Example: baltrad-exchange-client file_arrival --source=sella --object_type=PVOL 
         )
 
         parser.add_option(
-            "--limit", dest="limit", default=5, type="int",
-            help="How many minutes back that should be taken into account. Default is 5 minutes."
+            "--limit", dest="limit", default=300, type="int",
+            help="How many minutes back that should be taken into account. Default is 300 seconds."
         )
 
     def execute(self, server, opts, args):
         response = server.file_arrival(opts.source, opts.object_type, opts.limit)
+        if response.status == httplibclient.OK:
+            ldata = json.loads(response.read())
+            print(ldata)
+            return ldata["status"]
+        else:
+            return '{"status":"ERROR"}'
+
+class Supervise(Command):
+    def update_optionparser(self, parser):
+        usg = parser.get_usage().strip()
+
+        description = """
+
+Functionality for supervising a node. Usually, the response will be a json dictionary with status
+as name and either ERROR or OK in the value. Other examples can be that a count is returned. It all
+depends on what type of information is required.
+
+Example: baltrad-exchange-client supervise --type=filearrival --source=sella --object_type=PVOL --limit=300
+{"status: "OK"}
+        """
+
+        usage = usg + description
+
+        parser.set_usage(usage)
+
+        parser.add_option(
+            "--infotype", dest="infotype", default="filearrival",
+            help="The type of information required that should be queried")
+
+        parser.add_option(
+            "--sources", dest="source", default="",
+            help="The source that should be queried (if applicable)")
+
+        parser.add_option(
+            "--object_type", dest="object_type", default=None,
+            help="If filtering should be performed on object_type. E.g. --object_type=PVOL"
+        )
+
+        parser.add_option(
+            "--limit", dest="limit", default=300, type="int",
+            help="How many seconds back that should be taken into account when checking for nominal datetime in file. Default is 300 seconds."
+        )
+
+        parser.add_option(
+            "--entrylimit", dest="entrylimit", default=0, type="int",
+            help="How many seconds back that should be taken into account when checking for file arrival. Default is disabled."
+        )
+
+    def execute(self, server, opts, args):
+        response = server.supervise(opts.infotype, opts.source, opts.object_type, opts.limit, opts.entrylimit)
         if response.status == httplibclient.OK:
             ldata = json.loads(response.read())
             print(ldata)

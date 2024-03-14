@@ -27,7 +27,7 @@ import datetime
 import json, re
 from bexchange.db.sqldatabase import statistics, statentry
 
-RE_DTFILTER_PATTERN=re.compile("^\s*(datetime)\s*([<>!=]+)\s*([0-9:\-T\.]+)\s*$")
+RE_DTFILTER_PATTERN=re.compile("^\s*(datetime|entrytime)\s*([<>!=]+)\s*([0-9:\-T\.]+)\s*$")
 
 
 logger = logging.getLogger("bexchange.statistics.statistics")
@@ -98,13 +98,13 @@ class statistics_manager:
             if m:
                 dt = None
                 try:
-                    cfun = getattr(datetime.datetime, "fromisoformat", None)
-                    if callable(cfun): # Introduced in python 3.7
-                        dt = datetime.datetime.fromisoformat(m.group(3))
+                    tstr = m.group(3)
+                    if len(tstr) == 12:
+                        dt = datetime.datetime.strptime(tstr, '%Y%m%d%H%M')
                     else:
-                        dt = datetime.datetime.strptime(m.group(3), '%Y%m%d%H%M')
+                        dt = datetime.datetime.strptime(tstr, '%Y%m%d%H%M%S')
                 except ValueError:
-                    dt = datetime.datetime.strptime(m.group(3), '%Y%m%d%H%M')
+                    dt = datetime.datetime.strptime(m.group(3), '%Y%m%d%H%M%S')
                 criteria = [m.group(1), m.group(2), dt]
                 result.append(criteria)
             else:
@@ -190,7 +190,7 @@ class statistics_manager:
                 if mn:
                     file_elangle = mn.value
 
-            self._sqldatabase.add(statentry(spid, origin, source, meta.bdb_metadata_hash, datetime.datetime.now(), optime, optime_info, file_datetime, file_object, file_elangle))
+            self._sqldatabase.add(statentry(spid, origin, source, meta.bdb_metadata_hash, datetime.datetime.utcnow(), optime, optime_info, file_datetime, file_object, file_elangle))
 
     @classmethod
     def plugin_from_conf(self, conf, statmgr):

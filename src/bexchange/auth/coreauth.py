@@ -291,10 +291,10 @@ class CryptoAuth(Auth):
         return self._verifiers[nodename]
 
     def add_key_config(self, conf):
-        """Adding key from a json-conf. Will ensure that creator is baltrad.exchange.crypto.
+        """Adding key from a json-conf. Will ensure that creator is baltradcrypto.crypto.
         :param conf: The json configuration
         """
-        if "creator" in conf and conf["creator"] == "baltrad.exchange.crypto":
+        if "creator" in conf and conf["creator"] == "baltradcrypto.crypto":
             if conf["type"] == "public":
                 if "pubkey" in conf:
                     if not os.path.isabs(conf["pubkey"]):

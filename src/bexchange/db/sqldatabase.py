@@ -249,6 +249,18 @@ class SqlAlchemyDatabase(object):
                             q = q.filter(statentry.datetime <= dtfilter[2])
                         elif dtfilter[1] == "<":
                             q = q.filter(statentry.datetime < dtfilter[2])
+                    elif dtfilter[0] == "entrytime":
+                        if dtfilter[1] == ">":
+                            q = q.filter(statentry.entrytime > dtfilter[2])
+                        elif dtfilter[1] == ">=":
+                            q = q.filter(statentry.entrytime >= dtfilter[2])
+                        elif dtfilter[1] == "=":
+                            q = q.filter(statentry.entrytime == dtfilter[2])
+                        elif dtfilter[1] == "<=":
+                            q = q.filter(statentry.entrytime <= dtfilter[2])
+                        elif dtfilter[1] == "<":
+                            q = q.filter(statentry.entrytime < dtfilter[2])
+
             if object_type:
                 q = q.filter(statentry.object_type == object_type)
 
@@ -259,7 +271,6 @@ class SqlAlchemyDatabase(object):
 
     def get_average_statentries(self, spid, origin, sources, hashid=None):
         with self.get_session() as s:
-            print("Creating query")
             q = s.query(statentry, func.avg(statentry.optime)).filter(statentry.spid == spid)
             if origin:
                 q = q.filter(statentry.origin == origin)
