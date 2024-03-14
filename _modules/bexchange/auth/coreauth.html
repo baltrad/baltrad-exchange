@@ -331,10 +331,10 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_verifiers</span><span class="p">[</span><span class="n">nodename</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="CryptoAuth.add_key_config"><a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.CryptoAuth.add_key_config">[docs]</a>    <span class="k">def</span> <span class="nf">add_key_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conf</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Adding key from a json-conf. Will ensure that creator is baltrad.exchange.crypto.</span>
+        <span class="sd">&quot;&quot;&quot;Adding key from a json-conf. Will ensure that creator is baltradcrypto.crypto.</span>
 <span class="sd">        :param conf: The json configuration</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="s2">&quot;creator&quot;</span> <span class="ow">in</span> <span class="n">conf</span> <span class="ow">and</span> <span class="n">conf</span><span class="p">[</span><span class="s2">&quot;creator&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;baltrad.exchange.crypto&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;creator&quot;</span> <span class="ow">in</span> <span class="n">conf</span> <span class="ow">and</span> <span class="n">conf</span><span class="p">[</span><span class="s2">&quot;creator&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;baltradcrypto.crypto&quot;</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">conf</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;public&quot;</span><span class="p">:</span>
                 <span class="k">if</span> <span class="s2">&quot;pubkey&quot;</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">:</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;pubkey&quot;</span><span class="p">]):</span>

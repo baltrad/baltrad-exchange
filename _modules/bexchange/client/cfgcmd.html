@@ -519,7 +519,7 @@
                 <span class="n">cryptod</span><span class="p">[</span><span class="s2">&quot;auth&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;crypto&quot;</span>
                 <span class="n">cryptod</span><span class="p">[</span><span class="s2">&quot;conf&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
                 <span class="n">cryptod</span><span class="p">[</span><span class="s2">&quot;conf&quot;</span><span class="p">][</span><span class="s2">&quot;nodename&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;baltrad.exchange.node.name&quot;</span><span class="p">)</span>
-                <span class="n">cryptod</span><span class="p">[</span><span class="s2">&quot;conf&quot;</span><span class="p">][</span><span class="s2">&quot;creator&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;baltrad.exchange.crypto&quot;</span>
+                <span class="n">cryptod</span><span class="p">[</span><span class="s2">&quot;conf&quot;</span><span class="p">][</span><span class="s2">&quot;creator&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;baltradcrypto.crypto&quot;</span>
                 <span class="n">cryptod</span><span class="p">[</span><span class="s2">&quot;conf&quot;</span><span class="p">][</span><span class="s2">&quot;pubkey&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.public&quot;</span><span class="o">%</span><span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;baltrad.exchange.node.name&quot;</span><span class="p">)</span>
                 <span class="n">cryptod</span><span class="p">[</span><span class="s2">&quot;conf&quot;</span><span class="p">][</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;public&quot;</span>
 
@@ -644,7 +644,7 @@
 <span class="s2">Example: baltrad-exchange-config send_dexfile --url=https://remote.server --privkey=... --nodename=....  &lt;file&gt; &lt;file2&gt; ....</span>
 <span class="s2">        &quot;&quot;&quot;</span>
 
-        <span class="n">usage</span> <span class="o">=</span> <span class="n">usg</span> <span class="o">+</span> <span class="s2">&quot; FILE [ FILE]&quot;</span> <span class="o">+</span> <span class="n">description</span>
+        <span class="n">usage</span> <span class="o">=</span> <span class="n">usg</span> <span class="o">+</span> <span class="s2">&quot; FILE [ FILE]&quot;</span> <span class="o">+</span> <span class="n">description</span><span class="o">.</span><span class="n">exchange</span>
 
         <span class="n">parser</span><span class="o">.</span><span class="n">set_usage</span><span class="p">(</span><span class="n">usage</span><span class="p">)</span>
 

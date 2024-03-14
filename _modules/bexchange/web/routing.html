@@ -123,6 +123,11 @@
                 <span class="n">endpoint</span><span class="o">=</span><span class="s2">&quot;handler.file_arrival&quot;</span>
             <span class="p">),</span>
         <span class="p">]),</span>
+        <span class="n">Submount</span><span class="p">(</span><span class="s2">&quot;/supervise&quot;</span><span class="p">,</span> <span class="p">[</span>
+            <span class="n">Rule</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">],</span>
+                <span class="n">endpoint</span><span class="o">=</span><span class="s2">&quot;handler.supervise&quot;</span>
+            <span class="p">),</span>
+        <span class="p">]),</span>
         <span class="n">Submount</span><span class="p">(</span><span class="s2">&quot;/json_message&quot;</span><span class="p">,</span> <span class="p">[</span>
             <span class="n">Rule</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">],</span>
                 <span class="n">endpoint</span><span class="o">=</span><span class="s2">&quot;handler.post_json_message&quot;</span>
