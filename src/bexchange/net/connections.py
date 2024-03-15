@@ -127,7 +127,28 @@ class backup_connection(publisher_connection):
                 logger.info("Successfully sent %s to %s"%(path, sender.id()))
             except Exception as e:
                 logger.exception("Failed to send %s to %s"%(path, sender.id()), e);
-    
+
+class distributed_connection(publisher_connection):
+    """Distributed connection, expects a list of senders in arguments. Where all senders are run. This is the same
+    behavior as the backup connection but it's here for readability.
+    """
+    def __init__(self, backend, arguments):
+        super(distributed_connection, self).__init__(backend)
+        self._senders = []
+        if "senders" in arguments:
+            for sender_conf in arguments["senders"]:
+                self._senders.append(sender_manager.from_conf(backend, sender_conf))
+        else:
+            raise Exception("Requires 'senders' in arguments")
+        
+    def publish(self, path, meta):
+        for sender in self._senders:
+            try:
+                sender.send(path, meta)
+                logger.info("Successfully sent %s to %s"%(path, sender.id()))
+            except Exception as e:
+                logger.exception("Failed to send %s to %s"%(path, sender.id()), e);
+
 class connection_manager(object):
     """The connection manager is used for creating connection instances from the provided configuration
     """

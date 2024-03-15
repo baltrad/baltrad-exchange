@@ -1,0 +1,63 @@
+{
+"publication": {
+   "_comment_":"Usually publications should use this publisher. Extra arguments is number of threads and queue_size.",
+   "name":"FTP file to remote server with failover",
+   "class":"bexchange.net.publishers.standard_publisher",
+   "extra_arguments": {
+  	 "threads":1,
+  	 "queue_size":50
+   },
+   "active":true,
+   "connection":{
+     "_comment_":"This is a connection used when publishing files to multiple recipients",
+     "class":"bexchange.net.connections.distributed_connection",
+     "arguments":{
+       "senders":[
+        { 
+          "id":"localhost.exchange.sender",
+          "class":"bexchange.net.senders.rest_sender",
+          "arguments": {
+            "address":"http://localhost:8089",
+            "protocol_version":"1.0",
+            "crypto":{
+              "libname":"crypto",
+              "nodename":"anders-silent",
+              "privatekey":"/projects/baltrad/baltrad-exchange/etc/exchange-keys/anders-silent.private"
+            }        
+          }
+        },
+        { 
+          "id":"otherhost.exchange.sender",
+          "class":"bexchange.net.senders.rest_sender",
+          "arguments": {
+            "address":"https://otherhost:8089",
+            "protocol_version":"1.0",
+            "crypto":{
+              "libname":"crypto",
+              "nodename":"anders-silent",
+              "privatekey":"/projects/baltrad/baltrad-exchange/etc/exchange-keys/anders-silent.private"
+            }        
+          }
+        }
+       ]
+     }
+   },
+   "filter":{
+  	 "filter_type": "and_filter", 
+  	 "value": [
+  	   {"filter_type": "attribute_filter", 
+  	    "name": "_bdb/source_name", 
+        "operation": "in", 
+        "value_type": "string", 
+        "value": ["sehem","seang"]}, 
+  	   {"filter_type": "attribute_filter", 
+        "name": "/what/object", 
+        "operation": "=", 
+        "value_type": "string", 
+        "value": ["SCAN"]}
+    ]
+  },
+  "decorators":[
+  ]
+}
+}
