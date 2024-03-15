@@ -85,6 +85,22 @@
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="bexchange.net.connections.distributed_connection">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.connections.</span></span><span class="sig-name descname"><span class="pre">distributed_connection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#distributed_connection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.distributed_connection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bexchange.net.connections.publisher_connection" title="bexchange.net.connections.publisher_connection"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.net.connections.publisher_connection</span></code></a></p>
+<p>Distributed connection, expects a list of senders in arguments. Where all senders are run. This is the same
+behavior as the backup connection but it’s here for readability.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.net.connections.distributed_connection.publish">
+<span class="sig-name descname"><span class="pre">publish</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#distributed_connection.publish"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.distributed_connection.publish" title="Permalink to this definition">¶</a></dt>
+<dd><p>Publishes a file in some way using the underlying implementation
+:param path: The path to the file
+:param meta: The metadata of the file</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="bexchange.net.connections.failover_connection">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.connections.</span></span><span class="sig-name descname"><span class="pre">failover_connection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#failover_connection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.failover_connection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#bexchange.net.connections.publisher_connection" title="bexchange.net.connections.publisher_connection"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.net.connections.publisher_connection</span></code></a></p>
