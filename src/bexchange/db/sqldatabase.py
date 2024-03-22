@@ -218,26 +218,26 @@ class SqlAlchemyDatabase(object):
             result = [e[0] for e in entries]
             return result
 
-    def find_statistics(self, spid, origin, sources):
+    def find_statistics(self, spid, origins, sources):
         with self.get_session() as s:
             q = s.query(statistics).filter(statistics.spid == spid)
-            if origin:
-                q = q.filter(statistics.origin == origin)
+            if origins and len(origins) > 0:
+                q = q.filter(statistics.origin.in_(origins))
             if sources and len(sources) > 0:
                 q = q.filter(statistics.source.in_(sources))
             return q.all()
 
-    def find_statentries(self, spid, origin, sources, hashid=None, dtfilters=None, object_type=None):
+    def find_statentries(self, spid, origins, sources, hashid=None, filters=None, object_type=None):
         with self.get_session() as s:
             q = s.query(statentry).filter(statentry.spid == spid)
-            if origin:
-                q = q.filter(statentry.origin == origin)
+            if origins and len(origins) > 0:
+                q = q.filter(statentry.origin.in_(origins))
             if sources and len(sources) > 0:
                 q = q.filter(statentry.source.in_(sources))
             if hashid:
                 q = q.filter(statentry.hashid == hashid)
-            if dtfilters:
-                for dtfilter in dtfilters:
+            if filters:
+                for dtfilter in filters:
                     if dtfilter[0] == "datetime":
                         if dtfilter[1] == ">":
                             q = q.filter(statentry.datetime > dtfilter[2])
@@ -260,6 +260,17 @@ class SqlAlchemyDatabase(object):
                             q = q.filter(statentry.entrytime <= dtfilter[2])
                         elif dtfilter[1] == "<":
                             q = q.filter(statentry.entrytime < dtfilter[2])
+                    elif dtfilter[0] == "optime":
+                        if dtfilter[1] == ">":
+                            q = q.filter(statentry.optime > dtfilter[2])
+                        elif dtfilter[1] == ">=":
+                            q = q.filter(statentry.optime >= dtfilter[2])
+                        elif dtfilter[1] == "=":
+                            q = q.filter(statentry.optime == dtfilter[2])
+                        elif dtfilter[1] == "<=":
+                            q = q.filter(statentry.optime <= dtfilter[2])
+                        elif dtfilter[1] == "<":
+                            q = q.filter(statentry.optime < dtfilter[2])
 
             if object_type:
                 q = q.filter(statentry.object_type == object_type)
@@ -269,11 +280,11 @@ class SqlAlchemyDatabase(object):
                 .order_by(asc(statentry.entrytime))
             return q.all()
 
-    def get_average_statentries(self, spid, origin, sources, hashid=None):
+    def get_average_statentries(self, spid, origins, sources, hashid=None):
         with self.get_session() as s:
             q = s.query(statentry, func.avg(statentry.optime)).filter(statentry.spid == spid)
-            if origin:
-                q = q.filter(statentry.origin == origin)
+            if origins and len(origins) > 0:
+                q = q.filter(statentry.origin.in_(origins))
             if sources and len(sources) > 0:
                 q = q.filter(statentry.source.in_(sources))
 
@@ -287,7 +298,6 @@ class SqlAlchemyDatabase(object):
             result = []
             for e in qresult:
                 e[0].add_attribute("average", e[1])
-                print("Appending: %s"%e[0])
                 result.append(e[0])
             return result
 

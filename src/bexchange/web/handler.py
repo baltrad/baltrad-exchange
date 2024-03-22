@@ -252,7 +252,7 @@ def supervise(ctx):
     dtfilter = "datetime>=%s"%((datetime.datetime.utcnow() - datetime.timedelta(seconds=limit)).strftime("%Y%m%d%H%M%S"))
     if entrylimit > 0:
         dtfilter = dtfilter + "&&entrytime>=%s"%((datetime.datetime.utcnow() - datetime.timedelta(seconds=entrylimit)).strftime("%Y%m%d%H%M%S"))
-    querydata = {"spid":"server-incomming", "sources":source, "object_type":object_type, "dtfilter":dtfilter}
+    querydata = {"spid":"server-incomming", "sources":source, "object_type":object_type, "filter":dtfilter}
     logger.info("supervise query=%s"%str(querydata))
     stats = ctx.backend.get_statistics_manager().get_statistics_entries(ctx.backend.get_auth_manager().get_nodename(ctx.request), querydata)
     result={"status":"ERROR"}

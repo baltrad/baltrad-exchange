@@ -259,7 +259,7 @@ Example: baltrad-exchange-client get_statistics --spid=server-incomming --totals
         )
 
         parser.add_option(
-            "--dtfilter", dest="dtfilter", default=None,
+            "--filter", dest="filter", default=None,
             help="If filtering should be performed on datetime. Must be specified datetime<operation><value>. If you want to specify a range you can use && between two filters like --dtfilter='datetime>=20201000000000 && datetime<=20201100000000'"
         )
 
@@ -268,8 +268,14 @@ Example: baltrad-exchange-client get_statistics --spid=server-incomming --totals
             help="If filtering should be performed on object_type. E.g. --object_type=PVOL"
         )
 
+        parser.add_option(
+            "--origins", dest="origins", default=None,
+            help="The origins that should be included in query"
+        )
+
+
     def execute(self, server, opts, args):
-        response = server.get_statistics(opts.spid, opts.sources, opts.totals, opts.method, opts.dtfilter, opts.object_type)
+        response = server.get_statistics(opts.spid, opts.sources, opts.totals, opts.method, opts.filter, opts.object_type, opts.origins)
         if response.status == httplibclient.OK:
             ldata = json.loads(response.read())
             for l in ldata:

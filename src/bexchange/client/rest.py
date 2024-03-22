@@ -112,7 +112,7 @@ class RestfulServer(object):
                 "Unhandled response code: %s" % response.status
             )
 
-    def get_statistics(self, spid, sources, totals=False, qmethod=None, qdtfilter=None, object_type=None):
+    def get_statistics(self, spid, sources, totals=False, qmethod=None, qfilter=None, object_type=None, origins=None):
         """posts a json message to the exchange server. 
         :param data: The data
         """
@@ -121,8 +121,9 @@ class RestfulServer(object):
             "sources":sources,
             "totals":totals,
             "method":qmethod,
-            "dtfilter":qdtfilter,
-            "object_type":object_type
+            "filter":qfilter,
+            "object_type":object_type,
+            "origins":origins
         }
         request = Request(
             "GET", "/statistics/", json.dumps(json_message_d),

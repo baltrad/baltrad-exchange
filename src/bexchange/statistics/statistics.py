@@ -27,8 +27,7 @@ import datetime
 import json, re
 from bexchange.db.sqldatabase import statistics, statentry
 
-RE_DTFILTER_PATTERN=re.compile("^\s*(datetime|entrytime)\s*([<>!=]+)\s*([0-9:\-T\.]+)\s*$")
-
+RE_DTFILTER_PATTERN=re.compile("^\s*(datetime|entrytime|optime)\s*([<>!=]+)\s*([0-9:\-T\.]+)\s*$")
 
 logger = logging.getLogger("bexchange.statistics.statistics")
 
@@ -90,25 +89,30 @@ class statistics_manager:
 
         return json.dumps(result)
 
-    def parse_dtfilter(self, parsestr):
+    def parse_filter(self, parsestr):
         result = []
         tokens = parsestr.split("&&")
         for dtstr in tokens:
             m = RE_DTFILTER_PATTERN.match(dtstr)
             if m:
                 dt = None
-                try:
-                    tstr = m.group(3)
-                    if len(tstr) == 12:
-                        dt = datetime.datetime.strptime(tstr, '%Y%m%d%H%M')
-                    else:
-                        dt = datetime.datetime.strptime(tstr, '%Y%m%d%H%M%S')
-                except ValueError:
-                    dt = datetime.datetime.strptime(m.group(3), '%Y%m%d%H%M%S')
-                criteria = [m.group(1), m.group(2), dt]
-                result.append(criteria)
+                name=m.group(1)
+                if name in ["datetime", "entrytime"]:
+                    try:
+                        tstr = m.group(3)
+                        if len(tstr) == 12:
+                            dt = datetime.datetime.strptime(tstr, '%Y%m%d%H%M')
+                        else:
+                            dt = datetime.datetime.strptime(tstr, '%Y%m%d%H%M%S')
+                    except ValueError:
+                        dt = datetime.datetime.strptime(m.group(3), '%Y%m%d%H%M%S')
+                    criteria = [m.group(1), m.group(2), dt]
+                    result.append(criteria)
+                elif name == "optime":
+                    criteria = [m.group(1), m.group(2), int(m.group(3))]
+                    result.append(criteria)
             else:
-                raise Exception("Format of dtfilter must be datetime[OP]value-")
+                raise Exception("Format of dtfilter must be name[OP]value where name is one of datetime, entrytime or optime")
         return result
 
     def get_statistics_entries(self, nid, querydata):
@@ -118,13 +122,17 @@ class statistics_manager:
         totals = False
         hashid = None
         sources = []
-        dtfilters = None
+        filters = None
         object_type = None
+        origins = []
+        logger.debug("querydata: %s"%querydata)
         if "spid" in querydata:
             spid = querydata["spid"]
 
-        if "origin" in querydata:
-            origin = querydata["origin"]
+        if "origins" in querydata:
+            sorigins = querydata["origins"]
+            if sorigins:
+                origins = sorigins.split(",")
 
         if "sources" in querydata:
             ssources = querydata["sources"]
@@ -137,9 +145,9 @@ class statistics_manager:
         if "totals" in querydata:
             totals = querydata["totals"]
 
-        if "dtfilter" in querydata and querydata["dtfilter"]:
-            dtfilter = querydata["dtfilter"].strip()
-            dtfilters = self.parse_dtfilter(dtfilter)
+        if "filter" in querydata and querydata["filter"]:
+            opfilter = querydata["filter"].strip()
+            filters = self.parse_filter(opfilter)
 
         if "object_type" in querydata:
             object_type = querydata["object_type"]
@@ -149,12 +157,12 @@ class statistics_manager:
             qmethod = querydata["method"]
 
         if totals:
-            entries = self._sqldatabase.find_statistics(spid, origin, sources)
+            entries = self._sqldatabase.find_statistics(spid, origins, sources)
         else:
             if qmethod is None or qmethod != "average":
-                entries = self._sqldatabase.find_statentries(spid, origin, sources, hashid=hashid, dtfilters=dtfilters, object_type=object_type)
+                entries = self._sqldatabase.find_statentries(spid, origins, sources, hashid=hashid, filters=filters, object_type=object_type)
             else:
-                entries = self._sqldatabase.get_average_statentries(spid, origin, sources)
+                entries = self._sqldatabase.get_average_statentries(spid, origins, sources)
         
         return entries
 
