@@ -28,7 +28,7 @@ import contextlib
 import datetime
 import logging
 
-from sqlalchemy import asc,desc,func
+from sqlalchemy import asc,desc,func,text
 from sqlalchemy import engine, event, exc as sqlexc, sql
 from sqlalchemy.orm import mapper, sessionmaker
 
@@ -77,6 +77,7 @@ db_statentry = Table("exchange_statentry", dbmeta,
                 Column("hashid", Text, nullable=True),
                 Column("entrytime", TIMESTAMP, nullable=False),
                 Column("optime", Integer, nullable=False),
+                Column("delay", Integer, nullable=False),
                 Column("optime_info", Text, nullable=True),
                 Column("datetime", DateTime, nullable=True),
                 Column("object_type", Text, nullable=True),
@@ -109,7 +110,7 @@ class statistics(object):
         }
 
 class statentry(object):
-    def __init__(self, spid, origin, source, hashid, entrytime, optime=0, optime_info=None, ndatetime=None, object_type=None, elevation_angle=None):
+    def __init__(self, spid, origin, source, hashid, entrytime, optime=0, optime_info=None, delay=0, ndatetime=None, object_type=None, elevation_angle=None):
         """ Represents one increment entry. Used for creating averages and such information
         :param spid: The statistics plugin id
         :param origin: Origin for this stat
@@ -118,6 +119,7 @@ class statentry(object):
         :param entrytime: When this entry was created
         :param optime: Operation time entry in ms
         :param optime_info: Used to identify what was timed
+        :param delay: Difference between arrival of file and nominal datetime
         """
         self.spid = spid
         self.origin = origin
@@ -126,6 +128,7 @@ class statentry(object):
         self.entrytime = entrytime
         self.optime = optime
         self.optime_info = optime_info
+        self.delay = delay
         self.datetime = ndatetime
         self.object_type = object_type
         self.elevation_angle = elevation_angle
@@ -140,6 +143,7 @@ class statentry(object):
             "entrytime":self.entrytime.isoformat(),
             "optime":self.optime,
             "optime_info":self.optime_info,
+            "delay":self.delay,
             "datetime":self.datetime.isoformat(),
             "object_type":self.object_type,
             "elevation_angle":self.elevation_angle
@@ -271,6 +275,17 @@ class SqlAlchemyDatabase(object):
                             q = q.filter(statentry.optime <= dtfilter[2])
                         elif dtfilter[1] == "<":
                             q = q.filter(statentry.optime < dtfilter[2])
+                    elif dtfilter[0] == "delay":
+                        if dtfilter[1] == ">":
+                            q = q.filter(statentry.delay > dtfilter[2])
+                        elif dtfilter[1] == ">=":
+                            q = q.filter(statentry.delay >= dtfilter[2])
+                        elif dtfilter[1] == "=":
+                            q = q.filter(statentry.delay == dtfilter[2])
+                        elif dtfilter[1] == "<=":
+                            q = q.filter(statentry.delay <= dtfilter[2])
+                        elif dtfilter[1] == "<":
+                            q = q.filter(statentry.delay < dtfilter[2])
 
             if object_type:
                 q = q.filter(statentry.object_type == object_type)

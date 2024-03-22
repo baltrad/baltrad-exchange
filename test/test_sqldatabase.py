@@ -68,9 +68,9 @@ class test_publisher(unittest.TestCase):
         self.assertEqual("sella", entries[1].source)
 
     def test_add_statentry(self):
-        self._database.add(sqldatabase.statentry("abcd", "myorigin", "sella", '123123', datetime.now(), 10, None, datetime(2023,11,27,1,15,0), 'SCAN', 0.5))
-        self._database.add(sqldatabase.statentry("abcd", "myorigin", "sella", '123123', datetime.now(), 10, None, datetime(2023,11,27,1,15,0), 'SCAN', 1.0))
-        self._database.add(sqldatabase.statentry("abcd", "myorigin", "sella", '123123', datetime.now(), 10, None, datetime(2023,11,27,1,15,0), 'PVOL', None))
+        self._database.add(sqldatabase.statentry("abcd", "myorigin", "sella", '123123', datetime.now(), 10, None, 123, datetime(2023,11,27,1,15,0), 'SCAN', 0.5))
+        self._database.add(sqldatabase.statentry("abcd", "myorigin", "sella", '123123', datetime.now(), 10, None, 123, datetime(2023,11,27,1,15,0), 'SCAN', 1.0))
+        self._database.add(sqldatabase.statentry("abcd", "myorigin", "sella", '123123', datetime.now(), 10, None, 123, datetime(2023,11,27,1,15,0), 'PVOL', None))
 
         with self._database.get_session() as s:
             entries = s.query(sqldatabase.statentry).all()
@@ -101,3 +101,37 @@ class test_publisher(unittest.TestCase):
             self.assertEqual(datetime(2023,11,27,1,15,0), entries[1].datetime)
             self.assertEqual("PVOL", entries[2].object_type)
             self.assertEqual(None, entries[2].elevation_angle)
+
+    def test_find_statentries_filter_delay(self):
+        self._database.add(sqldatabase.statentry("abcd", "myorigin", "sella", '123123', datetime(2023,11,27,1,15,31), 10, None, 31, datetime(2023,11,27,1,15,0), 'SCAN', 0.5))
+        self._database.add(sqldatabase.statentry("abcd", "myorigin", "sella", '123124', datetime(2023,11,27,1,15,32), 10, None, 32, datetime(2023,11,27,1,15,0), 'SCAN', 1.0))
+
+        entries = self._database.find_statentries("abcd", [], [], hashid=None, filters=[["delay",">", 31]], object_type=None)
+        self.assertEqual(1, len(entries))
+
+        entries = self._database.find_statentries("abcd", [], [], hashid=None, filters=[["delay",">", 32]], object_type=None)
+        self.assertEqual(0, len(entries))
+
+        entries = self._database.find_statentries("abcd", [], [], hashid=None, filters=[["delay","<=", 32]], object_type=None)
+        self.assertEqual(2, len(entries))
+
+
+    def test_find_statentries_filter_delay_and_datetime(self):
+        self._database.add(sqldatabase.statentry("abcd", "myorigin", "sella", '123123', datetime(2023,11,27,1,15,31), 10, None, 31, datetime(2023,11,27,1,15,0), 'SCAN', 0.5))
+        self._database.add(sqldatabase.statentry("abcd", "myorigin", "sella", '123124', datetime(2023,11,27,1,15,32), 10, None, 32, datetime(2023,11,27,1,15,0), 'SCAN', 1.0))
+        self._database.add(sqldatabase.statentry("abcd", "myorigin", "sella", '123124', datetime(2023,11,27,1,20,2), 10, None, 2, datetime(2023,11,27,1,20,0), 'SCAN', 1.0))
+
+        entries = self._database.find_statentries("abcd", [], [], hashid=None, filters=[["delay","<", 33], ["datetime",">", datetime(2023,11,27,1,15,0)]], object_type=None)
+        self.assertEqual(1, len(entries))
+
+        entries = self._database.find_statentries("abcd", [], [], hashid=None, filters=[["delay","<", 30], ["datetime",">", datetime(2023,11,27,1,15,0)]], object_type=None)
+        self.assertEqual(1, len(entries))
+
+        entries = self._database.find_statentries("abcd", [], [], hashid=None, filters=[["delay","<", 2], ["datetime",">", datetime(2023,11,27,1,15,0)]], object_type=None)
+        self.assertEqual(0, len(entries))
+
+        #entries = self._database.find_statentries("abcd", [], [], hashid=None, filters=[["delay",">", 32]], object_type=None)
+        #self.assertEqual(0, len(entries))
+
+        #entries = self._database.find_statentries("abcd", [], [], hashid=None, filters=[["delay","<=", 32]], object_type=None)
+        #self.assertEqual(2, len(entries))

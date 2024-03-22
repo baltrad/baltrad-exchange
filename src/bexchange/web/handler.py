@@ -239,6 +239,7 @@ def supervise(ctx):
     object_type = None
     limit = 5
     entrylimit = 0
+    delay = 0
     if "source" in data:
         source = data["source"]
     if "object_type" in data:
@@ -247,11 +248,16 @@ def supervise(ctx):
         limit = int(data["limit"])
     if "entrylimit" in data:
         entrylimit = int(data["entrylimit"])
+    if "delay" in data:
+        delay = int(data["delay"])
 
     dtfilterdate = (datetime.datetime.utcnow() - datetime.timedelta(seconds=limit))
     dtfilter = "datetime>=%s"%((datetime.datetime.utcnow() - datetime.timedelta(seconds=limit)).strftime("%Y%m%d%H%M%S"))
     if entrylimit > 0:
         dtfilter = dtfilter + "&&entrytime>=%s"%((datetime.datetime.utcnow() - datetime.timedelta(seconds=entrylimit)).strftime("%Y%m%d%H%M%S"))
+    if delay > 0:
+        dtfilter = dtfilter + "&&delay<=%d"%delay
+
     querydata = {"spid":"server-incomming", "sources":source, "object_type":object_type, "filter":dtfilter}
     logger.info("supervise query=%s"%str(querydata))
     stats = ctx.backend.get_statistics_manager().get_statistics_entries(ctx.backend.get_auth_manager().get_nodename(ctx.request), querydata)

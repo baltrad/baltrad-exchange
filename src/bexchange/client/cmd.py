@@ -425,8 +425,13 @@ OK
             help="How many seconds back that should be taken into account when checking for file arrival. Default is disabled."
         )
 
+        parser.add_option(
+            "--delay", dest="delay", default=0, type="int",
+            help="Checks difference between nominal time and entry time and if the delay is higher then it's an error. Default is to be disabled."
+        )
+
     def execute(self, server, opts, args):
-        response = server.supervise(opts.infotype, opts.source, opts.object_type, opts.limit, opts.entrylimit)
+        response = server.supervise(opts.infotype, opts.source, opts.object_type, opts.limit, opts.entrylimit, opts.delay)
         if response.status == httplibclient.OK:
             ldata = json.loads(response.read())
             #print(ldata)

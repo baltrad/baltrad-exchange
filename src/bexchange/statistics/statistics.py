@@ -27,7 +27,7 @@ import datetime
 import json, re
 from bexchange.db.sqldatabase import statistics, statentry
 
-RE_DTFILTER_PATTERN=re.compile("^\s*(datetime|entrytime|optime)\s*([<>!=]+)\s*([0-9:\-T\.]+)\s*$")
+RE_DTFILTER_PATTERN=re.compile("^\s*(datetime|entrytime|optime|delay)\s*([<>!=]+)\s*([0-9:\-T\.]+)\s*$")
 
 logger = logging.getLogger("bexchange.statistics.statistics")
 
@@ -108,7 +108,7 @@ class statistics_manager:
                         dt = datetime.datetime.strptime(m.group(3), '%Y%m%d%H%M%S')
                     criteria = [m.group(1), m.group(2), dt]
                     result.append(criteria)
-                elif name == "optime":
+                elif name in ["optime", "delay"]:
                     criteria = [m.group(1), m.group(2), int(m.group(3))]
                     result.append(criteria)
             else:
@@ -198,7 +198,9 @@ class statistics_manager:
                 if mn:
                     file_elangle = mn.value
 
-            self._sqldatabase.add(statentry(spid, origin, source, meta.bdb_metadata_hash, datetime.datetime.utcnow(), optime, optime_info, file_datetime, file_object, file_elangle))
+            entrytime = datetime.datetime.utcnow()
+            delay = (entrytime - file_datetime).seconds
+            self._sqldatabase.add(statentry(spid, origin, source, meta.bdb_metadata_hash, datetime.datetime.utcnow(), optime, optime_info, delay, file_datetime, file_object, file_elangle))
 
     @classmethod
     def plugin_from_conf(self, conf, statmgr):
