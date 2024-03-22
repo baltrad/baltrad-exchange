@@ -152,7 +152,7 @@
                 <span class="s2">&quot;Unhandled response code: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span>
             <span class="p">)</span></div>
 
-<div class="viewcode-block" id="RestfulServer.get_statistics"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.RestfulServer.get_statistics">[docs]</a>    <span class="k">def</span> <span class="nf">get_statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spid</span><span class="p">,</span> <span class="n">sources</span><span class="p">,</span> <span class="n">totals</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">qmethod</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">qdtfilter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">object_type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="RestfulServer.get_statistics"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.RestfulServer.get_statistics">[docs]</a>    <span class="k">def</span> <span class="nf">get_statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spid</span><span class="p">,</span> <span class="n">sources</span><span class="p">,</span> <span class="n">totals</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">qmethod</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">qfilter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">object_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">origins</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;posts a json message to the exchange server. </span>
 <span class="sd">        :param data: The data</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -161,8 +161,9 @@
             <span class="s2">&quot;sources&quot;</span><span class="p">:</span><span class="n">sources</span><span class="p">,</span>
             <span class="s2">&quot;totals&quot;</span><span class="p">:</span><span class="n">totals</span><span class="p">,</span>
             <span class="s2">&quot;method&quot;</span><span class="p">:</span><span class="n">qmethod</span><span class="p">,</span>
-            <span class="s2">&quot;dtfilter&quot;</span><span class="p">:</span><span class="n">qdtfilter</span><span class="p">,</span>
-            <span class="s2">&quot;object_type&quot;</span><span class="p">:</span><span class="n">object_type</span>
+            <span class="s2">&quot;filter&quot;</span><span class="p">:</span><span class="n">qfilter</span><span class="p">,</span>
+            <span class="s2">&quot;object_type&quot;</span><span class="p">:</span><span class="n">object_type</span><span class="p">,</span>
+            <span class="s2">&quot;origins&quot;</span><span class="p">:</span><span class="n">origins</span>
         <span class="p">}</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">Request</span><span class="p">(</span>
             <span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="s2">&quot;/statistics/&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">json_message_d</span><span class="p">),</span>
