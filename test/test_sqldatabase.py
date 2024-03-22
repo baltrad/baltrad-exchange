@@ -130,8 +130,3 @@ class test_publisher(unittest.TestCase):
         entries = self._database.find_statentries("abcd", [], [], hashid=None, filters=[["delay","<", 2], ["datetime",">", datetime(2023,11,27,1,15,0)]], object_type=None)
         self.assertEqual(0, len(entries))
 
-        #entries = self._database.find_statentries("abcd", [], [], hashid=None, filters=[["delay",">", 32]], object_type=None)
-        #self.assertEqual(0, len(entries))
-
-        #entries = self._database.find_statentries("abcd", [], [], hashid=None, filters=[["delay","<=", 32]], object_type=None)
-        #self.assertEqual(2, len(entries))
