@@ -328,7 +328,7 @@ class SimpleBackend(backend.Backend):
         
         finishedTime = time.time()
 
-        logger.info("store_file: Total processing time of file from %s was %d ms, ID:'%s'" % (nid, int((finishedTime - startTime)*1000), util.create_fileid_from_meta(meta)))
+        logger.info("store_file: Total processing time of file from %s, ID:'%s', %d ms" % (nid, util.create_fileid_from_meta(meta), int((finishedTime - startTime)*1000)))
 
         if self.statistics_file_handling:
             self.get_statistics_manager().increment("server-filehandling", nid, meta, True, False, optime=int((finishedTime - startTime)*1000), optime_info="total")
