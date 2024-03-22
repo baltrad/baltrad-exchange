@@ -43,7 +43,7 @@ class test_publisher(unittest.TestCase):
         self._database.add(sqldatabase.statistics("abc", "myorigin", "sekkr", 1, datetime.now()))
         self._database.add(sqldatabase.statistics("abcd", "myotherorigin", "sella", 2, datetime.now()))
 
-        entries = self._database.find_statistics("abc", "myorigin", ["sekkr"])
+        entries = self._database.find_statistics("abc", ["myorigin"], ["sekkr"])
         self.assertEqual(1, len(entries))
         self.assertEqual("abc", entries[0].spid)
         self.assertEqual("myorigin", entries[0].origin)
@@ -54,7 +54,7 @@ class test_publisher(unittest.TestCase):
         self._database.add(sqldatabase.statistics("abc", "myorigin", "sella", 1, datetime.now()))
         self._database.add(sqldatabase.statistics("abcd", "myotherorigin", "sella", 2, datetime.now()))
 
-        entries = self._database.find_statistics("abc", "myorigin", ["sekkr", "sella"])
+        entries = self._database.find_statistics("abc", ["myorigin"], ["sekkr", "sella"])
         self.assertEqual(2, len(entries))
         if entries[0].source == "sella":
             tmp = entries[0]

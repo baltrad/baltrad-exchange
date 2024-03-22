@@ -56,27 +56,27 @@ class test_statistics(unittest.TestCase):
         self.assertEqual("id_4", result[3]["spid"])
         self.assertEqual(False, result[3]["totals"])        
 
-    def test_parse_dtfilter_1(self):
-        result = self._statistics_mgr.parse_dtfilter('datetime<202301011000')
+    def test_parse_filter_1(self):
+        result = self._statistics_mgr.parse_filter('datetime<202301011000')
         self.assertEqual(1, len(result))
         self.assertEqual("datetime", result[0][0])
         self.assertEqual("<", result[0][1])
         self.assertEqual(datetime(2023,1,1,10,0), result[0][2])
 
-        result = self._statistics_mgr.parse_dtfilter('datetime<=202301011000')
+        result = self._statistics_mgr.parse_filter('datetime<=202301011000')
         self.assertEqual(1, len(result))
         self.assertEqual("datetime", result[0][0])
         self.assertEqual("<=", result[0][1])
         self.assertEqual(datetime(2023,1,1,10,0), result[0][2])
 
-        result = self._statistics_mgr.parse_dtfilter('  datetime  <=  202301011000  ')
+        result = self._statistics_mgr.parse_filter('  datetime  <=  202301011000  ')
         self.assertEqual(1, len(result))
         self.assertEqual("datetime", result[0][0])
         self.assertEqual("<=", result[0][1])
         self.assertEqual(datetime(2023,1,1,10,0), result[0][2])
 
-    def test_parse_dtfilter_combination(self):
-        result = self._statistics_mgr.parse_dtfilter('datetime>=202301011000&&datetime<202301011000')
+    def test_parse_filter_combination(self):
+        result = self._statistics_mgr.parse_filter('datetime>=202301011000&&datetime<202301011000')
         self.assertEqual(2, len(result))
         self.assertEqual("datetime", result[0][0])
         self.assertEqual(">=", result[0][1])
@@ -86,7 +86,7 @@ class test_statistics(unittest.TestCase):
         self.assertEqual("<", result[1][1])
         self.assertEqual(datetime(2023,1,1,10,0), result[1][2])
 
-        result = self._statistics_mgr.parse_dtfilter('datetime>202301011000&&datetime<=202301011000')
+        result = self._statistics_mgr.parse_filter('datetime>202301011000&&datetime<=202301011000')
         self.assertEqual(2, len(result))
         self.assertEqual("datetime", result[0][0])
         self.assertEqual(">", result[0][1])
@@ -96,7 +96,7 @@ class test_statistics(unittest.TestCase):
         self.assertEqual("<=", result[1][1])
         self.assertEqual(datetime(2023,1,1,10,0), result[1][2])
 
-        result = self._statistics_mgr.parse_dtfilter('  datetime >= 202301011000 && datetime < 202301011000  ')
+        result = self._statistics_mgr.parse_filter('  datetime >= 202301011000 && datetime < 202301011000  ')
         self.assertEqual(2, len(result))
         self.assertEqual("datetime", result[0][0])
         self.assertEqual(">=", result[0][1])
