@@ -38,6 +38,7 @@ from http import client as httplibclient
 
 from baltradcrypto.crypto import keyczarcrypto
 from baltradcrypto import crypto
+from bexchange.net.exceptions import DuplicateException
 
 try:
     import tink
@@ -82,6 +83,8 @@ class RestfulServer(object):
         
         if response.status == httplibclient.OK:
             return True
+        elif response.status == httplibclient.CONFLICT:
+            raise DuplicateException("Duplicate file, response status: %s"%response.status)
         else:
             raise RuntimeError(
                 "Unhandled response code: %s" % response.status

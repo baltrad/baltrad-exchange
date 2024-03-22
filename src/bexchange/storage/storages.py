@@ -278,7 +278,7 @@ class storage_manager:
         :param arguments: a list of arguments that should be used to initialize the class       
         """
         if clz.find(".") > 0:
-            logger.debug("Creating storage '%s'"%clz)
+            logger.info("Creating storage '%s' with name='%s'"%(clz, name))
             lastdot = clz.rfind(".")
             module = importlib.import_module(clz[:lastdot])
             classname = clz[lastdot+1:]

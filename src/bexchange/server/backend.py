@@ -30,7 +30,7 @@ from bexchange.processor import processors
 from bexchange.server.subscription import subscription_manager
 from bexchange.net import publishers
 from bexchange.runner import runners
-from bexchange import auth
+from bexchange import auth, util
 from bexchange.odimutil import metadata_helper
 from bexchange.statistics.statistics import statistics_manager
 from bexchange.db import sqldatabase
@@ -183,7 +183,7 @@ class SimpleBackend(backend.Backend):
         files = glob.glob("%s/*.json"%d)
         
         for f in files:
-            logger.debug("Processing configuration file: %s"%f)
+            logger.info("Processing configuration file: %s"%f)
             with open(f,"r") as fp:
                 data = json.load(fp)
                 if "publication" in data:
@@ -205,13 +205,15 @@ class SimpleBackend(backend.Backend):
                 
                 elif "runner" in data:
                     runner = self.runner_manager.from_conf(data["runner"], self)
-                    logger.info("Adding runner from configuration file %s"%(f))
-                    self.runner_manager.add_runner(runner)
+                    if runner:
+                        logger.info("Adding runner from configuration file %s"%(f))
+                        self.runner_manager.add_runner(runner)
                 
                 elif "processor" in data:
                     p = processors.processor_manager.from_conf(data["processor"], self)
-                    logger.info("Adding processor from configuration file %s"%(f))
-                    self.processor_manager.add_processor(p)
+                    if p:
+                        logger.debug("Adding processor from configuration file %s"%(f))
+                        self.processor_manager.add_processor(p)
                 else:
                     logger.info("Could not identify content of configuration file %s"%f)
 
@@ -280,21 +282,30 @@ class SimpleBackend(backend.Backend):
 
         if self.max_content_length is not None and meta.bdb_file_size > self.max_content_length:
             # We won't do anything about the file and will not indicate that anything has gone wrong. We just return the metadata without any more action
-            logger.info("Received a file that is too large (%d) from %s: %s, %s, %s %s" % (meta.bdb_file_size, nid, meta.bdb_metadata_hash, meta.bdb_source_name, meta.what_date, meta.what_time))
+            logger.info("Received a file that is too large (%d) from %s, ID:'%s'" % (meta.bdb_file_size, nid, util.create_fileid_from_meta(meta)))
             return meta
 
         metadataTime = time.time()
 
-        logger.info("Received file from %s: %s, %s, %s %s" % (nid, meta.bdb_metadata_hash, meta.bdb_source_name, meta.what_date, meta.what_time))
+        logger.info("store_file: Received file from %s: ID:'%s'" % (nid, util.create_fileid_from_meta(meta)))
         
         if self.statistics_incomming:
             self.get_statistics_manager().increment("server-incomming", nid, meta, self.statistics_add_entries, optime=int((metadataTime - startTime)*1000), optime_info="metadata")
 
         already_handled = not self.handled_files.add(meta.bdb_metadata_hash)
         if already_handled:
-            logger.debug("File recently handled: %s, %s" % (meta.bdb_metadata_hash, meta.bdb_source_name))
+            logger.info("store_file: File recently handled: %s, %s" % (nid, util.create_fileid_from_meta(meta)))
             if self.statistics_duplicates:
                 self.get_statistics_manager().increment("server-duplicates", nid, meta, self.statistics_add_entries)
+
+            do_raiseduplicateexception=True
+            for subscription in self.subscriptions:
+                if subscription.allow_duplicates():
+                    do_raiseduplicateexception=False
+
+            if do_raiseduplicateexception:
+                from bexchange.net.exceptions import DuplicateException
+                raise DuplicateException("Received duplicate ID:'%s'" % (util.create_fileid_from_meta(meta)))
 
         for subscription in self.subscriptions: # Should only be passive subscriptions here. Active subscriptions should be handled in separate threads.
             if already_handled and not subscription.allow_duplicates():
@@ -304,7 +315,7 @@ class SimpleBackend(backend.Backend):
                 continue
             
             if subscription.filter_matching(meta):
-                logger.debug("store_file: filter matching for subscription with id: %s"%subscription.id())
+                logger.debug("store_file: filter matching for subscription with id: %s, ID:'%s'"%(subscription.id(), util.create_fileid_from_meta(meta)))
                 for storage in subscription.storages():
                     self.storage_manager.store(storage, path, meta)
 
@@ -317,7 +328,7 @@ class SimpleBackend(backend.Backend):
         
         finishedTime = time.time()
 
-        logger.info("Total processing time of file from %s (%s, %s, %s, %s): %d ms" % (nid, meta.bdb_metadata_hash, meta.bdb_source_name, meta.what_date, meta.what_time, int((finishedTime - startTime)*1000)))
+        logger.info("store_file: Total processing time of file from %s was %d ms, ID:'%s'" % (nid, int((finishedTime - startTime)*1000), util.create_fileid_from_meta(meta)))
 
         if self.statistics_file_handling:
             self.get_statistics_manager().increment("server-filehandling", nid, meta, True, False, optime=int((finishedTime - startTime)*1000), optime_info="total")

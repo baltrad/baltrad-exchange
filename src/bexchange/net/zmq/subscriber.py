@@ -66,8 +66,9 @@ class subscriber(runners.runner):
             outfilename = os.path.join(self._jail, outname)
             try:
                 shutil.copyfile(filetostore, outfilename)
+                logger.info("zmq_subscriber: Stored in jail: %s"%outfilename)
             except:
-                logger.exception("Failed to store in jail: %s"%outfilename)
+                logger.exception("zmq_subscriber: Failed to store in jail: %s"%outfilename)
 
     def calculate_hmac(self, message):
         """Calculates the hmac for the message with the hmackey
@@ -86,11 +87,11 @@ class subscriber(runners.runner):
         :param message: The incomming data message
         """
         if len(message) < 276:
-            logger.info("zmqsubsriber dropping message since it's to short")
+            logger.info("zmqsubsriber: dropping message since it's to short")
             return
         
         if self.backend().max_content_length is not None and  len(message) > self.backend().max_content_length:
-            logger.warning("zmqsubsriber dropping message since it's too large")
+            logger.warning("zmqsubsriber: dropping message since it's too large")
             return
 
         try:

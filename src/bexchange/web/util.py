@@ -81,9 +81,18 @@ class Response(WerkzeugResponse):
         )
 
 class NoContentResponse(WerkzeugResponse):
-    
     def __init__(self):
         WerkzeugResponse.__init__(self, None, status=httplibclient.NO_CONTENT)
+
+class TemporaryRedirectResponse(WerkzeugResponse):
+    def __init__(self, newlocation):
+        WerkzeugResponse.__init__(self, None, status=httplibclient.TEMPORARY_REDIRECT)
+        self.location = newlocation
+
+class PermanentRedirectResponse(WerkzeugResponse):
+    def __init__(self, newlocation):
+        WerkzeugResponse.__init__(self, None, status=httplibclient.PERMANENT_REDIRECT)
+        self.location = newlocation
 
 class JsonResponse(WerkzeugResponse):
     def __init__(self, response, status=httplibclient.OK):

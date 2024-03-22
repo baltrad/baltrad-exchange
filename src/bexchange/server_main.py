@@ -87,7 +87,7 @@ def configure_logging(opts, logtype, logfile, logid, level=logging.INFO):
     logger = logging.getLogger()
     logger.setLevel(level)
 
-    default_formatter = logging.Formatter('%(asctime)-15s %(levelname)-8s %(message)s')
+    default_formatter = logging.Formatter('%(asctime)-15s %(levelname)-8s %(name)s: %(message)s')
     if opts.foreground or logtype == 'stdout':
         handler = logging.StreamHandler(sys.stdout)
         add_loghandler(logger, handler, default_formatter)

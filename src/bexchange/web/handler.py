@@ -30,6 +30,8 @@ import datetime
 from http import client as httplibclient
 import urllib.parse as urlparse
 
+from bexchange.net.exceptions import DuplicateException
+
 from .util import (
     HttpConflict,
     HttpForbidden,
@@ -37,6 +39,7 @@ from .util import (
     JsonResponse,
     NoContentResponse,
     Response,
+    TemporaryRedirectResponse
 )
 import json
 
@@ -61,7 +64,12 @@ def post_file(ctx):
     with NamedTemporaryFile(dir=ctx.backend.get_tmp_folder()) as tmp:
         shutil.copyfileobj(ctx.request.stream, tmp)
         tmp.flush()
-        metadata = ctx.backend.store_file(tmp.name, ctx.backend.get_auth_manager().get_nodename(ctx.request))
+        try:
+            metadata = ctx.backend.store_file(tmp.name, ctx.backend.get_auth_manager().get_nodename(ctx.request))
+        except LookupError as e:
+            raise HttpNotAccepatble(str(e))
+        except DuplicateException as e:
+            raise HttpConflict("duplicate file entry: %s"%str(e))
 
     return Response("", status=httplibclient.OK)
 
@@ -74,7 +82,12 @@ def post_dex_file(ctx):
     with NamedTemporaryFile() as tmp:
         shutil.copyfileobj(ctx.request.stream, tmp)
         tmp.flush()
-        metadata = ctx.backend.store_file(tmp.name, ctx.backend.get_auth_manager().get_nodename(ctx.request))
+        try:
+            metadata = ctx.backend.store_file(tmp.name, ctx.backend.get_auth_manager().get_nodename(ctx.request))
+        except LookupError as e:
+            raise HttpNotAccepatble(str(e))
+        except DuplicateException as e:
+            raise HttpConflict("duplicate file entry: %s"%str(e))
 
     return Response("", status=httplibclient.OK)
 

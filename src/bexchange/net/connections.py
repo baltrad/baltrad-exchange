@@ -22,6 +22,7 @@
 ## @author Anders Henja, SMHI
 ## @date 2021-12-01
 from bexchange.net.senders import sender_manager
+from bexchange import util
 import logging
 import importlib
 
@@ -100,11 +101,11 @@ class failover_connection(publisher_connection):
         for sender in self._senders:
             try:
                 sender.send(path, meta)
-                logger.info("Successfully sent %s to %s"%(path, sender.id()))
+                logger.info("failover_connection: Successfully sent file to %s, ID:'%s'"%(sender.id(), util.create_fileid_from_meta(meta)))
                 successful = True
                 break
-            except Exception as e:
-                logger.exception("Failed to send %s to %s"%(path, sender.id()), e);
+            except:
+                logger.exception("failover_connection: Failed to send file to %s, ID:'%s', trying next in list"%(sender.id(), util.create_fileid_from_meta(meta)))
         if not successful:
             raise Exception("Failed to publish using the failover connection")
 
@@ -124,9 +125,9 @@ class backup_connection(publisher_connection):
         for sender in self._senders:
             try:
                 sender.send(path, meta)
-                logger.info("Successfully sent %s to %s"%(path, sender.id()))
+                logger.info("Successfully sent file to %s, ID:'%s'"%(sender.id(), util.create_fileid_from_meta(meta)))
             except Exception as e:
-                logger.exception("Failed to send %s to %s"%(path, sender.id()), e);
+                logger.exception("Failed to send file to %s, ID:'%s'"%(sender.id(), util.create_fileid_from_meta(meta)))
 
 class distributed_connection(publisher_connection):
     """Distributed connection, expects a list of senders in arguments. Where all senders are run. This is the same
@@ -145,9 +146,9 @@ class distributed_connection(publisher_connection):
         for sender in self._senders:
             try:
                 sender.send(path, meta)
-                logger.info("Successfully sent %s to %s"%(path, sender.id()))
+                logger.info("Successfully sent file to %s, ID:'%s'"%(sender.id(), util.create_fileid_from_meta(meta)))
             except Exception as e:
-                logger.exception("Failed to send %s to %s"%(path, sender.id()), e);
+                logger.exception("Failed to send file to %s, ID:'%s'"%(sender.id(), util.create_fileid_from_meta(meta)))
 
 class connection_manager(object):
     """The connection manager is used for creating connection instances from the provided configuration
@@ -164,7 +165,7 @@ class connection_manager(object):
         :param arguments: a list of arguments that should be used to initialize the class       
         """
         if clz.find(".") > 0:
-            logger.debug("Creating connection handler '%s'"%clz)
+            logger.info("Creating connection handler '%s'"%clz)
             lastdot = clz.rfind(".")
             module = importlib.import_module(clz[:lastdot])
             classname = clz[lastdot+1:]

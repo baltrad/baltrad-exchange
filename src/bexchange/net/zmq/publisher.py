@@ -27,6 +27,7 @@ from tempfile import NamedTemporaryFile
 from threading import Thread, Event
 from bexchange.net import connections, publishers
 from bexchange.naming.namer import metadata_namer
+from bexchange import util
 
 logger = logging.getLogger("bexchange.net.zmq.publisher")
 
@@ -143,7 +144,7 @@ class publisher(publishers.standard_publisher):
         
         buffer_to_publish = bytearray(payload_hmac + b_payload)
 
-        logger.info("Publishing file '%s' over zmq" % filename.strip())
+        logger.info("zmq: publishing file '%s', ID:'%s'" % (filename.strip(), util.create_fileid_from_meta(meta)))
 
         self._socket.send(buffer_to_publish)
 

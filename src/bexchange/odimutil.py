@@ -2,6 +2,7 @@ import datetime, stat, os
 import logging
 
 from baltrad.bdbcommon import oh5, expr
+from bexchange import util
 
 _pyhl = None
 h5py = None
@@ -47,7 +48,7 @@ class metadata_helper(object):
         meta.bdb_metadata_hash = metadata_hash
         meta.bdb_file_size = os.stat(path)[stat.ST_SIZE]
         
-        logger.debug("Got a source identifier: %s"%str(meta.bdb_source))
+        logger.debug("Got a source identifier: %s, ID:'%s'"%(str(meta.bdb_source), util.create_fileid_from_meta(meta)))
 
         stored_timestamp = datetime.datetime.utcnow()
         meta.bdb_stored_date = stored_timestamp.date()

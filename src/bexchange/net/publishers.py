@@ -41,6 +41,7 @@ import shutil
 from bexchange.decorators.decorator import decorator_manager
 from bexchange.net.connections import connection_manager
 from bexchange.statistics.statistics import statistics_manager
+from bexchange import util
 
 logger = logging.getLogger("bexchange.net.publishers")
 
@@ -187,7 +188,7 @@ class standard_publisher(publisher):
         logger.debug("Decorating file with %d decorators before adding it on queue"%len(self._decorators))
         if len(self._decorators) > 0:
             for d in self._decorators:
-                logger.info("Decorator %s"%type(d))
+                logger.info("Running decorator %s on ID:'%s'"%(type(d), util.create_fileid_from_meta(meta)))
                 tmpfile = d.decorate(tmpfile)
             tmpfile.flush()
             meta = self.backend().metadata_from_file(tmpfile.name)
@@ -195,7 +196,13 @@ class standard_publisher(publisher):
         try:
             self._queue.put((tmpfile, meta), False)
         except Full as e:
-            logger.exception("Queue for publisher %s is full."%self.name())
+            logger.exception("Queue for publisher '%s' is full, dropping message with ID:'%s'"%(self.name(), util.create_fileid_from_meta(meta)))
+            try:
+                tmpfile.close()
+            except:
+                pass
+            if self._statistics_error_plugin:
+                self._statistics_error_plugin.increment(self.name(), meta)
 
     def do_publish(self, tmpfile, meta):
         """Passes a file to all connections
@@ -203,7 +210,7 @@ class standard_publisher(publisher):
         for c in self._connections:
             c.publish(tmpfile.name, meta)
         tmpfile.close()
-        
+
     def consumer(self):
         """ The consumer called by the individual threads. Will grab one entry from the queue and pass it on to the connections.
         """
@@ -213,8 +220,8 @@ class standard_publisher(publisher):
                 self.do_publish(tmpfile, meta)
                 if self._statistics_ok_plugin:
                     self._statistics_ok_plugin.increment(self.name(), meta)
-            except:
-                logger.exception("Failed to publish file %s"%(tmpfile.name))
+            except Exception as e:
+                logger.exception("Publisher: '%s' failed to publish with ID:'%s'"%(self.name(), util.create_fileid_from_meta(meta)))
                 if self._statistics_error_plugin:
                     self._statistics_error_plugin.increment(self.name(), meta)
             finally:
@@ -255,7 +262,7 @@ class publisher_manager:
         :param arguments: a list of arguments that should be used to initialize the class       
         """
         if clz.find(".") > 0:
-            logger.debug("Creating publisher '%s'"%clz)
+            logger.info("Creating publisher '%s' with name '%s'"%(clz, name))
             lastdot = clz.rfind(".")
             module = importlib.import_module(clz[:lastdot])
             classname = clz[lastdot+1:]
@@ -293,6 +300,7 @@ class publisher_manager:
             active = config["active"]
         
         if not active:
+            logger.info("Publisher with name %s is not active!"%name)
             return None
 
         if "connection" in config:

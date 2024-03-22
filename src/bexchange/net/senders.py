@@ -41,7 +41,8 @@ from scp import SCPClient
 from bexchange.naming.namer import metadata_namer
 from bexchange.client import rest
 from bexchange.net.sftpclient import sftpclient
-
+from bexchange.net.exceptions import *
+from bexchange import util
 from baltradcrypto import crypto
 from baltradcrypto.crypto.keyczarcrypto import keyczar_signer
 
@@ -201,7 +202,7 @@ class dex_sender(sender):
         finally:
             conn.close();
       
-        return response.status, response.reason, response.read()
+        return response.status, response.reason, response.read(), response
   
     def send(self, path, meta):
         """Sends the file to the dex server
@@ -215,7 +216,18 @@ class dex_sender(sender):
         fp = open(path, 'rb')
     
         try:
-            return self._post(scheme, host, query, fp.read(), headers)
+            status, reason, data, response = self._post(scheme, host, query, fp.read(), headers)
+            logger.info("dex_sender: host:%s, status %s, reason: %s, ID:'%s'" % (host, str(status), reason, util.create_fileid_from_meta(meta)))
+            if status == 307 or status == 308:
+                newlocation = response.getheader("Location")
+                logger.warn("Redirecting message to: %s, check configuration!"%newlocation)
+                status, reason, data, response = self._post(scheme, newlocation, query, fp.read(), headers)
+                logger.info("dex_sender (redirected): host:%s, status %s, reason: %s, ID:'%s'" % (newlocation, str(status), reason, util.create_fileid_from_meta(meta)))
+                if status != 200:
+                    raise SenderException(reason)    
+            elif status != 200:
+                raise SenderException(reason)
+            return status, reason, data
         finally:
             fp.close()    
 
@@ -270,11 +282,19 @@ class rest_sender(sender):
         """Sends the file to the bexchange server
         :param file: path to file that should be sent
         :param meta: the meta object for all metadata of file
-        """        
+        """
         auth = rest.CryptoAuth(self._privatekey, self._nodename)
         server = rest.RestfulServer(self._address, auth)
-        with open(path, "rb") as data:
-            entry = server.store(data)
+        try:
+            with open(path, "rb") as data:
+                entry = server.store(data)
+                logger.info("rest_sender: address:%s published ID:'%s'" % (self._address, util.create_fileid_from_meta(meta)))
+        except DuplicateException:
+            logger.warn("rest_sender: address:%s failed to publish ID:'%s' CONFLICT!" % (self._address, util.create_fileid_from_meta(meta)))
+            raise
+        except:
+            logger.warn("rest_sender: address:%s failed to publish ID:'%s'" % (self._address, util.create_fileid_from_meta(meta)))
+            raise
 
 class baseuri_sender(sender):
     """Base class for basic file transmission protocols like sftp, ftp, ...
@@ -369,11 +389,11 @@ class sftp_sender(baseuri_sender):
         with sftpclient(self.hostname(), port=self.port(), username=self.username(), password=self.password()) as c:
             bdir = os.path.dirname(publishedname)
             fname = os.path.basename(publishedname)
-            logger.info("Connected to %s"%self.hostname())
+            logger.debug("Connected to %s"%self.hostname())
             if self.create_missing_directories():
                 c.makedirs(bdir)
             c.chdir(bdir)
-            logger.info("sftp_sender: Uploading %s as %s to %s"%(path, fname, self.hostname()))
+            logger.info("sftp_sender: address:%s, basename:%s uploaded ID:'%s'" % (self.hostname(), fname, util.create_fileid_from_meta(meta)))
             c.put(path, fname)
 
 class scp_sender(baseuri_sender):
@@ -407,8 +427,9 @@ class scp_sender(baseuri_sender):
             if self.create_missing_directories():
                 dirname = os.path.dirname(publishedname)
                 ssh.exec_command("test -d %s || mkdir -p %s"%(dirname, dirname))
-            logger.info("scp_sender: Uploading %s as %s to %s"%(path, publishedname, self.hostname()))
+            fname = os.path.basename(publishedname)
             scp.put(path, publishedname)
+            logger.info("scp_sender: address:%s, basename:%s uploaded ID:'%s'" % (self.hostname(), fname, util.create_fileid_from_meta(meta)))
         finally:
             if scp:
                 try:
@@ -441,13 +462,13 @@ class ftp_sender(baseuri_sender):
         :param meta: the meta object for all metadata of file
         """        
         publishedname = self.name(meta)
-        logger.info("ftp_sender: connecting to: host=%s, port=%d, user=%s"%(self.hostname(), self.port(), self.username()))
+        logger.debug("ftp_sender: connecting to: host=%s, port=%d, user=%s"%(self.hostname(), self.port(), self.username()))
         bdir = os.path.dirname(publishedname)
         fname = os.path.basename(publishedname)
         ftp = self.connect()
         if bdir != "/":
             try:
-                logger.info("CWD: %s"%bdir)
+                logger.debug("CWD: %s"%bdir)
                 ftp.cwd(bdir)
             except ftplib.Error as e :
                 if self.create_missing_directories():
@@ -455,8 +476,11 @@ class ftp_sender(baseuri_sender):
                 else:
                     raise e
         try:
-            logger.info("ftp_sender: Uploading %s as %s to %s"%(path, fname, self.hostname()))
             ftp.storbinary("STOR %s"%fname, open(path, "rb"))
+            logger.info("ftp_sender: address:%s, basename=%s uploaded ID:'%s'" % (self.hostname(), fname, util.create_fileid_from_meta(meta)))
+        except:
+            logger.info("ftp_sender: address:%s, basename=%s failed to upload ID:'%s'" % (self.hostname(), fname, util.create_fileid_from_meta(meta)))
+            raise
         finally:
             ftp.quit()
 
@@ -485,11 +509,11 @@ class ftp_sender(baseuri_sender):
             if nextpath == "/" or nextpath == "":
                 raise Exception("Not even root folder exist")  
             self.change_and_create_dir(ftp, nextpath)
-            logger.info("Changing directory to: %s and creating %s"%(nextpath, createdir))
+            logger.debug("Changing directory to: %s and creating %s"%(nextpath, createdir))
             ftp.cwd(nextpath)
             ftp.mkd(createdir)
             ftp.cwd(createdir)
-            logger.info("Current working directory: %s/%s"%(nextpath, createdir))
+            logger.debug("Current working directory: %s/%s"%(nextpath, createdir))
         else:
             ftp.cwd(path)
         
@@ -545,11 +569,15 @@ class copy_sender(sender):
         publishedname = self.name(meta)
         dirname = os.path.dirname(publishedname)
         filename = os.path.basename(publishedname)
-        logger.info("copy_sender: copying %s to %s"%(filename, dirname))
-        if not os.path.exists(dirname) and self.create_missing_directories():
-            os.makedirs(dirname)
-        logger.info("copy_sender: Copying %s to %s"%(path, publishedname))
-        shutil.copyfile(path, publishedname)
+        try:
+            if not os.path.exists(dirname) and self.create_missing_directories():
+                os.makedirs(dirname)
+            shutil.copyfile(path, publishedname)
+            logger.info("copy_sender: copied %s to %s, ID:'%s'" % (filename, dirname, util.create_fileid_from_meta(meta)))
+        except:
+            logger.info("copy_sender: failed to copy %s to %s, ID:'%s'" % (filename, dirname, util.create_fileid_from_meta(meta)))
+            raise
+
 
 class sender_manager:
     def __init__(self):
@@ -573,7 +601,7 @@ class sender_manager:
         if "arguments" in arguments:
             senderargs = arguments["arguments"]
         if clz.find(".") > 0:
-            logger.debug("Creating sender '%s'"%clz)
+            logger.info("Creating sender '%s' with id: %s"%(clz, aid))
             lastdot = clz.rfind(".")
             module = importlib.import_module(clz[:lastdot])
             classname = clz[lastdot+1:]

@@ -306,7 +306,7 @@ class runner_manager:
         :param arguments: a list of arguments that should be used to initialize the class       
         """
         if clz.find(".") > 0:
-            logger.debug("Creating runner '%s'"%clz)
+            logger.info("Creating runner '%s'"%clz)
             lastdot = clz.rfind(".")
             module = importlib.import_module(clz[:lastdot])
             classname = clz[lastdot+1:]
@@ -333,7 +333,10 @@ class runner_manager:
         if "active" in config:
             active = config["active"]
         
-        p = self.create_runner(runner_clazz, backend, active, extra_arguments)
-        
-        return p
+        if active:
+            p = self.create_runner(runner_clazz, backend, active, extra_arguments)
+            return p
+        else:
+            logger.info("Runner of class '%s' is not active!"%runner_clazz)
+
         
