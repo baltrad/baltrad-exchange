@@ -262,11 +262,28 @@ Queries the exchange server for various statistics information. The spid is used
 id that should be queried for. It is possible to query for all existing ids by executing the command
 list_statistic_ids.
 
-Example:
+Example: Using totals to know the total amount of entries for one source and spid
 
 .. code:: sh
 
   %> baltrad-exchange-client get_statistics --spid=server-incomming --totals
+
+It is also possible to use filters and origins and object_type for identifying specific entries and get more detailed information.
+
+Example: Identifying entries that arrived more than 5 minutes delay and processing time greater than 7 ms from test-node
+
+.. code:: sh
+
+  %> baltrad-exchange-client get_statistics --spid=server-incomming --filter='datetime>=20240322080000&&entrytime>=20240322080500&&optime>=7' --origins=test-node
+  {'spid': 'server-incomming', 'origin': 'anders-nzxt', 'source': 'sebaa', 'hashid': '7b76c8342a796f3809d01eb07f91f0adb3065402', 
+   'entrytime': '2024-03-22T08:06:38.619946', 'optime': 7, 'optime_info': 'metadata', 'datetime': '2024-03-22T08:00:00', 'object_type': 'SCAN', 'elevation_angle': 0.5}
+
+Currently the syntax for --filter is one entry follow by a number of entries separated by &&. Each entry should have the following syntax "name[OP]value" where OP can be 
+<, >, <=, >= and =. Supported attributes are:
+
+* datetime - Nominal date time. In format YYYYmmddHHMMSS.
+* entrytime - When file was registered in the statistics database in UTC. Format YYYYmmddHHMMSS
+* optime - Time to process the file. Integer.
 
 .. _doc-rest-cmd-list_statistic_ids:
 
@@ -316,6 +333,42 @@ Provides some useful information about the server. Currently the following thing
 
    %> baltrad-exchange-client server_info uptime
         
+
+.. _doc-rest-cmd-get_statistics:
+
+supervise
+______________
+
+Usage: baltrad-exchange-client supervise [OPTIONS]
+
+This operation is using the statistics database to monitor that files are received timely. It can be seen
+like a call to get_statistics with --spid=server-incomming and instead of returning the entries only a message
+is returned indicating if criteria is meet or not.
+
+Example: Check if any file from sebaa has arrived that has a nominal time within last 300 seconds
+
+.. code:: sh
+
+  %> baltrad-exchange-client supervise --source=sebaa --limit=300
+  {'status': 'OK'}
+  OK
+
+
+Example: Check if a PVOL has arrived for sebaa that has a nominal time within last 300 seconds
+
+.. code:: sh
+
+  %> baltrad-exchange-client supervise --source=sebaa --object_type=PVOL --limit=300
+  {'status': 'ERROR'}
+  ERROR
+
+Example: Check if any file arrived within last 300 seconds. Note, that entrylimit is used instead and limit is using default value
+
+.. code:: sh
+
+  %> baltrad-exchange-client supervise --source=sebaa --entrylimit=300
+  {'status': 'OK'}
+  OK
 
 .. _doc-rest-cmd-store-file:
 

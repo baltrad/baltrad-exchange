@@ -282,10 +282,24 @@ WMO:02666,RAD:SE51,PLC:Karlskrona,CMT:sekaa,NOD:sekaa.</p>
 <p>Queries the exchange server for various statistics information. The spid is used to identify what statistics
 id that should be queried for. It is possible to query for all existing ids by executing the command
 list_statistic_ids.</p>
-<p>Example:</p>
+<p>Example: Using totals to know the total amount of entries for one source and spid</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt; baltrad-exchange-client get_statistics --spid<span class="o">=</span>server-incomming --totals
 </pre></div>
 </div>
+<p>It is also possible to use filters and origins and object_type for identifying specific entries and get more detailed information.</p>
+<p>Example: Identifying entries that arrived more than 5 minutes delay and processing time greater than 7 ms from test-node</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt; baltrad-exchange-client get_statistics --spid<span class="o">=</span>server-incomming --filter<span class="o">=</span><span class="s1">&#39;datetime&gt;=20240322080000&amp;&amp;entrytime&gt;=20240322080500&amp;&amp;optime&gt;=7&#39;</span> --origins<span class="o">=</span>test-node
+<span class="o">{</span><span class="s1">&#39;spid&#39;</span>: <span class="s1">&#39;server-incomming&#39;</span>, <span class="s1">&#39;origin&#39;</span>: <span class="s1">&#39;anders-nzxt&#39;</span>, <span class="s1">&#39;source&#39;</span>: <span class="s1">&#39;sebaa&#39;</span>, <span class="s1">&#39;hashid&#39;</span>: <span class="s1">&#39;7b76c8342a796f3809d01eb07f91f0adb3065402&#39;</span>,
+ <span class="s1">&#39;entrytime&#39;</span>: <span class="s1">&#39;2024-03-22T08:06:38.619946&#39;</span>, <span class="s1">&#39;optime&#39;</span>: <span class="m">7</span>, <span class="s1">&#39;optime_info&#39;</span>: <span class="s1">&#39;metadata&#39;</span>, <span class="s1">&#39;datetime&#39;</span>: <span class="s1">&#39;2024-03-22T08:00:00&#39;</span>, <span class="s1">&#39;object_type&#39;</span>: <span class="s1">&#39;SCAN&#39;</span>, <span class="s1">&#39;elevation_angle&#39;</span>: <span class="m">0</span>.5<span class="o">}</span>
+</pre></div>
+</div>
+<p>Currently the syntax for –filter is one entry follow by a number of entries separated by &amp;&amp;. Each entry should have the following syntax “name[OP]value” where OP can be
+&lt;, &gt;, &lt;=, &gt;= and =. Supported attributes are:</p>
+<ul class="simple">
+<li><p>datetime - Nominal date time. In format YYYYmmddHHMMSS.</p></li>
+<li><p>entrytime - When file was registered in the statistics database in UTC. Format YYYYmmddHHMMSS</p></li>
+<li><p>optime - Time to process the file. Integer.</p></li>
+</ul>
 </section>
 <section id="list-statistic-ids">
 <span id="doc-rest-cmd-list-statistic-ids"></span><h3>list_statistic_ids<a class="headerlink" href="#list-statistic-ids" title="Permalink to this headline">¶</a></h3>
@@ -316,6 +330,31 @@ The public key that can be used to identify myself as</p></li>
 </ul>
 </div></blockquote>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt; baltrad-exchange-client server_info uptime
+</pre></div>
+</div>
+</section>
+<section id="supervise">
+<span id="id1"></span><h3>supervise<a class="headerlink" href="#supervise" title="Permalink to this headline">¶</a></h3>
+<p>Usage: baltrad-exchange-client supervise [OPTIONS]</p>
+<p>This operation is using the statistics database to monitor that files are received timely. It can be seen
+like a call to get_statistics with –spid=server-incomming and instead of returning the entries only a message
+is returned indicating if criteria is meet or not.</p>
+<p>Example: Check if any file from sebaa has arrived that has a nominal time within last 300 seconds</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt; baltrad-exchange-client supervise --source<span class="o">=</span>sebaa --limit<span class="o">=</span><span class="m">300</span>
+<span class="o">{</span><span class="s1">&#39;status&#39;</span>: <span class="s1">&#39;OK&#39;</span><span class="o">}</span>
+OK
+</pre></div>
+</div>
+<p>Example: Check if a PVOL has arrived for sebaa that has a nominal time within last 300 seconds</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt; baltrad-exchange-client supervise --source<span class="o">=</span>sebaa --object_type<span class="o">=</span>PVOL --limit<span class="o">=</span><span class="m">300</span>
+<span class="o">{</span><span class="s1">&#39;status&#39;</span>: <span class="s1">&#39;ERROR&#39;</span><span class="o">}</span>
+ERROR
+</pre></div>
+</div>
+<p>Example: Check if any file arrived within last 300 seconds. Note, that entrylimit is used instead and limit is using default value</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt; baltrad-exchange-client supervise --source<span class="o">=</span>sebaa --entrylimit<span class="o">=</span><span class="m">300</span>
+<span class="o">{</span><span class="s1">&#39;status&#39;</span>: <span class="s1">&#39;OK&#39;</span><span class="o">}</span>
+OK
 </pre></div>
 </div>
 </section>
@@ -350,6 +389,7 @@ The public key that can be used to identify myself as</p></li>
 <li><a class="reference internal" href="#get-statistics">get_statistics</a></li>
 <li><a class="reference internal" href="#list-statistic-ids">list_statistic_ids</a></li>
 <li><a class="reference internal" href="#post-message">post_message</a></li>
+<li><a class="reference internal" href="#supervise">supervise</a></li>
 <li><a class="reference internal" href="#store">store</a></li>
 </ul>
 </li>
