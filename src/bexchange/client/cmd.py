@@ -391,12 +391,11 @@ class Supervise(Command):
 
         description = """
 
-Functionality for supervising a node. Usually, the response will be a json dictionary with status
-as name and either ERROR or OK in the value. Other examples can be that a count is returned. It all
-depends on what type of information is required.
+Functionality for supervising a node. Usually, the response will be a string that either says ERROR or OK.
+ Other examples can be that a count is returned. It all depends on what type of information is required.
 
 Example: baltrad-exchange-client supervise --type=filearrival --source=sella --object_type=PVOL --limit=300
-{"status: "OK"}
+OK
         """
 
         usage = usg + description
@@ -430,7 +429,7 @@ Example: baltrad-exchange-client supervise --type=filearrival --source=sella --o
         response = server.supervise(opts.infotype, opts.source, opts.object_type, opts.limit, opts.entrylimit)
         if response.status == httplibclient.OK:
             ldata = json.loads(response.read())
-            print(ldata)
+            #print(ldata)
             return ldata["status"]
         else:
             return '{"status":"ERROR"}'
