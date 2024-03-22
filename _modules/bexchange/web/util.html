@@ -121,9 +121,18 @@
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="NoContentResponse"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.NoContentResponse">[docs]</a><span class="k">class</span> <span class="nc">NoContentResponse</span><span class="p">(</span><span class="n">WerkzeugResponse</span><span class="p">):</span>
-    
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">WerkzeugResponse</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">httplibclient</span><span class="o">.</span><span class="n">NO_CONTENT</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TemporaryRedirectResponse"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.TemporaryRedirectResponse">[docs]</a><span class="k">class</span> <span class="nc">TemporaryRedirectResponse</span><span class="p">(</span><span class="n">WerkzeugResponse</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">newlocation</span><span class="p">):</span>
+        <span class="n">WerkzeugResponse</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">httplibclient</span><span class="o">.</span><span class="n">TEMPORARY_REDIRECT</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">newlocation</span></div>
+
+<div class="viewcode-block" id="PermanentRedirectResponse"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.PermanentRedirectResponse">[docs]</a><span class="k">class</span> <span class="nc">PermanentRedirectResponse</span><span class="p">(</span><span class="n">WerkzeugResponse</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">newlocation</span><span class="p">):</span>
+        <span class="n">WerkzeugResponse</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">httplibclient</span><span class="o">.</span><span class="n">PERMANENT_REDIRECT</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">newlocation</span></div>
 
 <div class="viewcode-block" id="JsonResponse"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.JsonResponse">[docs]</a><span class="k">class</span> <span class="nc">JsonResponse</span><span class="p">(</span><span class="n">WerkzeugResponse</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">httplibclient</span><span class="o">.</span><span class="n">OK</span><span class="p">):</span>

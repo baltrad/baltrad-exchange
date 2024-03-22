@@ -81,6 +81,7 @@
 <span class="kn">from</span> <span class="nn">bexchange.decorators.decorator</span> <span class="kn">import</span> <span class="n">decorator_manager</span>
 <span class="kn">from</span> <span class="nn">bexchange.net.connections</span> <span class="kn">import</span> <span class="n">connection_manager</span>
 <span class="kn">from</span> <span class="nn">bexchange.statistics.statistics</span> <span class="kn">import</span> <span class="n">statistics_manager</span>
+<span class="kn">from</span> <span class="nn">bexchange</span> <span class="kn">import</span> <span class="n">util</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;bexchange.net.publishers&quot;</span><span class="p">)</span>
 
@@ -227,7 +228,7 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Decorating file with </span><span class="si">%d</span><span class="s2"> decorators before adding it on queue&quot;</span><span class="o">%</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_decorators</span><span class="p">))</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_decorators</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decorators</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Decorator </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="nb">type</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Running decorator </span><span class="si">%s</span><span class="s2"> on ID:&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="o">%</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)))</span>
                 <span class="n">tmpfile</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">decorate</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">)</span>
             <span class="n">tmpfile</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
             <span class="n">meta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="p">()</span><span class="o">.</span><span class="n">metadata_from_file</span><span class="p">(</span><span class="n">tmpfile</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
@@ -235,7 +236,13 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="n">tmpfile</span><span class="p">,</span> <span class="n">meta</span><span class="p">),</span> <span class="kc">False</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">Full</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Queue for publisher </span><span class="si">%s</span><span class="s2"> is full.&quot;</span><span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">())</span></div>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Queue for publisher &#39;</span><span class="si">%s</span><span class="s2">&#39; is full, dropping message with ID:&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)))</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">tmpfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_statistics_error_plugin</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_statistics_error_plugin</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="n">meta</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="standard_publisher.do_publish"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.standard_publisher.do_publish">[docs]</a>    <span class="k">def</span> <span class="nf">do_publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tmpfile</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Passes a file to all connections</span>
@@ -243,7 +250,7 @@
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connections</span><span class="p">:</span>
             <span class="n">c</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">tmpfile</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>
         <span class="n">tmpfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
-        
+
 <div class="viewcode-block" id="standard_publisher.consumer"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.standard_publisher.consumer">[docs]</a>    <span class="k">def</span> <span class="nf">consumer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; The consumer called by the individual threads. Will grab one entry from the queue and pass it on to the connections.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -253,8 +260,8 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">do_publish</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_statistics_ok_plugin</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_statistics_ok_plugin</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="n">meta</span><span class="p">)</span>
-            <span class="k">except</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Failed to publish file </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">tmpfile</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Publisher: &#39;</span><span class="si">%s</span><span class="s2">&#39; failed to publish with ID:&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)))</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_statistics_error_plugin</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_statistics_error_plugin</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="n">meta</span><span class="p">)</span>
             <span class="k">finally</span><span class="p">:</span>
@@ -295,7 +302,7 @@
 <span class="sd">        :param arguments: a list of arguments that should be used to initialize the class       </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">clz</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Creating publisher &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="o">%</span><span class="n">clz</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Creating publisher &#39;</span><span class="si">%s</span><span class="s2">&#39; with name &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">clz</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
             <span class="n">lastdot</span> <span class="o">=</span> <span class="n">clz</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
             <span class="n">module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">clz</span><span class="p">[:</span><span class="n">lastdot</span><span class="p">])</span>
             <span class="n">classname</span> <span class="o">=</span> <span class="n">clz</span><span class="p">[</span><span class="n">lastdot</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
@@ -333,6 +340,7 @@
             <span class="n">active</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;active&quot;</span><span class="p">]</span>
         
         <span class="k">if</span> <span class="ow">not</span> <span class="n">active</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Publisher with name </span><span class="si">%s</span><span class="s2"> is not active!&quot;</span><span class="o">%</span><span class="n">name</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="s2">&quot;connection&quot;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
