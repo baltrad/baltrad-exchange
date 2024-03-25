@@ -59,7 +59,7 @@ class metadata_matcher:
         evaluator.add_procedure("<=", operator.le)
         evaluator.add_procedure("and", operator.and_)
         evaluator.add_procedure("or", operator.or_)
-        evaluator.add_procedure("not", operator.inv)
+        evaluator.add_procedure("not", operator.not_)
         evaluator.add_procedure("like", self.like)
         evaluator.add_procedure("in", self.in_)
         evaluator.add_procedure("date", lambda *args: datetime.date(*args))
@@ -134,7 +134,9 @@ class metadata_matcher:
         :param rhs: Right hand side which is pattern
         :return: True or False
         """
-        pattern = rhs[0].replace("*", ".*")
+        if isinstance(rhs, list) and len(rhs) > 0:
+            rhs = rhs[0]
+        pattern = rhs.replace("*", ".*")
         p = re.compile(pattern)
         for i in lhs:
             if p.match(i):

@@ -67,3 +67,34 @@ class test_matcher(unittest.TestCase):
         ifilter = self._manager.from_value(v)
 
         self.assertEqual(True, self._matcher.match(meta, ifilter.to_xpr()))
+
+
+    def test_notfilter(self):
+        meta = Metadata();
+        meta.add_node("/", Group("what"))
+
+        v = {"filter_type": "not_filter",
+             "value": {
+               "filter_type": "attribute_filter", 
+               "name": "_bdb/source_name", 
+               "operation": "like", 
+               "value_type": "string", 
+               "value": "se*"
+              }
+            }
+        ifilter = self._manager.from_value(v)
+
+        meta.bdb_source_name = "fipet"
+        self.assertEqual(True, self._matcher.match(meta, ifilter.to_xpr()))
+
+        meta.bdb_source_name = "skpet"
+        self.assertEqual(True, self._matcher.match(meta, ifilter.to_xpr()))
+
+        meta.bdb_source_name = "s"
+        self.assertEqual(True, self._matcher.match(meta, ifilter.to_xpr()))
+
+        meta.bdb_source_name = "sebaa"
+        self.assertEqual(False, self._matcher.match(meta, ifilter.to_xpr()))
+
+        meta.bdb_source_name = "sekaa"
+        self.assertEqual(False, self._matcher.match(meta, ifilter.to_xpr()))
