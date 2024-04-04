@@ -48,7 +48,8 @@ The exchange of any files can be divided into a number of different steps.
 
 **Publications**
   Since different parties want to have files distributed in various ways the publication has been divided into three different parts. The publisher, the connector and the sender.
-  
+  **Be aware that for each matching subscription all matching publications are run which means that one file can be published more than once.**
+
   - **publisher** is the overall spider taking care of threads, what connector to use and if the outgoing file should be modified in any way. Currently there are two publishers, the standard_publisher and the zmq publisher. 
   The zmq publisher doesn't have a connection and/or sender since it's using the internal ZeroMQ framework for communication.
   - **connection** this is the approach to use when distributing the file. For example if the file should be sent with some sort of failover, duplication, ...
