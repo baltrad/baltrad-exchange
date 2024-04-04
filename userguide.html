@@ -82,7 +82,8 @@ and not baltrad_exchange or any other variant.</p>
 - If both of above checks has passed. Then the incomming file is stored at zero or more storages before it is published to all publications that matches the file metadata
 - It is also possible to put the file on a processor queue if the above checks has passed if further processing should be done within the scope of the exchange mechanism</p>
 </dd>
-<dt><strong>Publications</strong></dt><dd><p>Since different parties want to have files distributed in various ways the publication has been divided into three different parts. The publisher, the connector and the sender.</p>
+<dt><strong>Publications</strong></dt><dd><p>Since different parties want to have files distributed in various ways the publication has been divided into three different parts. The publisher, the connector and the sender.
+<strong>Be aware that for each matching subscription all matching publications are run which means that one file can be published more than once.</strong></p>
 <ul class="simple">
 <li><p><strong>publisher</strong> is the overall spider taking care of threads, what connector to use and if the outgoing file should be modified in any way. Currently there are two publishers, the standard_publisher and the zmq publisher.</p></li>
 </ul>
