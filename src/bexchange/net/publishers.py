@@ -201,6 +201,7 @@ class standard_publisher(publisher):
                 tmpfile.close()
             except:
                 pass
+
             if self._statistics_error_plugin:
                 self._statistics_error_plugin.increment(self.name(), meta)
 

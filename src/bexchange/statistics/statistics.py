@@ -26,6 +26,7 @@ import logging
 import datetime
 import json, re
 from bexchange.db.sqldatabase import statistics, statentry
+from bexchange import util
 
 RE_DTFILTER_PATTERN=re.compile("^\s*(datetime|entrytime|optime|delay)\s*([<>!=]+)\s*([0-9:\-T\.]+)\s*$")
 
@@ -183,9 +184,12 @@ class statistics_manager:
         :param orgin: the origin (may be null, indicating unknown origin)
         :param meta: the metadata
         """
-        source = meta.bdb_source_name
-        if increment_counter:
-            self._sqldatabase.increment_statistics(spid, origin, source)
+        try:
+            source = meta.bdb_source_name
+            if increment_counter:
+                self._sqldatabase.increment_statistics(spid, origin, source)
+        except:
+            logger.exception("An error occured when incrementing statistics for spid:%s, origin:%s, ID:%s"%(spid, origin, util.create_fileid_from_meta(meta)))
 
         if save_post:
             file_datetime = datetime.datetime(meta.what_date.year, meta.what_date.month, meta.what_date.day, meta.what_time.hour, meta.what_time.minute, meta.what_time.second, 0)
@@ -200,7 +204,11 @@ class statistics_manager:
 
             entrytime = datetime.datetime.utcnow()
             delay = (entrytime - file_datetime).seconds
-            self._sqldatabase.add(statentry(spid, origin, source, meta.bdb_metadata_hash, datetime.datetime.utcnow(), optime, optime_info, delay, file_datetime, file_object, file_elangle))
+            try:
+                self._sqldatabase.add(statentry(spid, origin, source, meta.bdb_metadata_hash, datetime.datetime.utcnow(), optime, optime_info, delay, file_datetime, file_object, file_elangle))
+            except:
+                logger.exception("An error occured when adding statentry for spid:%s, origin:%s, ID:%s"%(spid, origin, util.create_fileid_from_meta(meta)))
+
 
     @classmethod
     def plugin_from_conf(self, conf, statmgr):

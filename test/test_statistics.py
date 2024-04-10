@@ -24,26 +24,30 @@
 from __future__ import absolute_import
 
 import unittest
-from unittest.mock import MagicMock
-import logging, os, json
-from datetime import datetime
+from unittest.mock import MagicMock, ANY
+import datetime, json, logging
 from tempfile import NamedTemporaryFile
 from bexchange.statistics import statistics
+
+from baltrad.bdbcommon.oh5.meta import Metadata
+from baltrad.bdbcommon.oh5.node import Attribute, Group
 
 logger = logging.getLogger("test_statistics")
 
 class test_statistics(unittest.TestCase):
     def setUp(self):
-        self._dbmgr = MagicMock()
-        self._statistics_mgr = statistics.statistics_manager(self._dbmgr)
-    
+        self._sqldatabase = MagicMock()
+        self._statistics_mgr = statistics.statistics_manager(self._sqldatabase)
+        logging.getLogger("bexchange.statistics.statistics").disabled = True
+
     def tearDown(self):
         self._statistics_mgr = None
-        self._dbmgr = None
+        self._sqldatabase = None
+        logging.getLogger("bexchange.statistics.statistics").disabled = False
 
     def test_list_statistic_ids(self):
-        self._dbmgr.list_statistic_ids = MagicMock(return_value=["id_1","id_2"])
-        self._dbmgr.list_statentry_ids = MagicMock(return_value=["id_3","id_4"])
+        self._sqldatabase.list_statistic_ids = MagicMock(return_value=["id_1","id_2"])
+        self._sqldatabase.list_statentry_ids = MagicMock(return_value=["id_3","id_4"])
 
         result = json.loads(self._statistics_mgr.list_statistic_ids("abc"))
         self.assertEqual(4, len(result))
@@ -61,47 +65,120 @@ class test_statistics(unittest.TestCase):
         self.assertEqual(1, len(result))
         self.assertEqual("datetime", result[0][0])
         self.assertEqual("<", result[0][1])
-        self.assertEqual(datetime(2023,1,1,10,0), result[0][2])
+        self.assertEqual(datetime.datetime(2023,1,1,10,0), result[0][2])
 
         result = self._statistics_mgr.parse_filter('datetime<=202301011000')
         self.assertEqual(1, len(result))
         self.assertEqual("datetime", result[0][0])
         self.assertEqual("<=", result[0][1])
-        self.assertEqual(datetime(2023,1,1,10,0), result[0][2])
+        self.assertEqual(datetime.datetime(2023,1,1,10,0), result[0][2])
 
         result = self._statistics_mgr.parse_filter('  datetime  <=  202301011000  ')
         self.assertEqual(1, len(result))
         self.assertEqual("datetime", result[0][0])
         self.assertEqual("<=", result[0][1])
-        self.assertEqual(datetime(2023,1,1,10,0), result[0][2])
+        self.assertEqual(datetime.datetime(2023,1,1,10,0), result[0][2])
 
     def test_parse_filter_combination(self):
         result = self._statistics_mgr.parse_filter('datetime>=202301011000&&datetime<202301011000')
         self.assertEqual(2, len(result))
         self.assertEqual("datetime", result[0][0])
         self.assertEqual(">=", result[0][1])
-        self.assertEqual(datetime(2023,1,1,10,0), result[0][2])
+        self.assertEqual(datetime.datetime(2023,1,1,10,0), result[0][2])
 
         self.assertEqual("datetime", result[1][0])
         self.assertEqual("<", result[1][1])
-        self.assertEqual(datetime(2023,1,1,10,0), result[1][2])
+        self.assertEqual(datetime.datetime(2023,1,1,10,0), result[1][2])
 
         result = self._statistics_mgr.parse_filter('datetime>202301011000&&datetime<=202301011000')
         self.assertEqual(2, len(result))
         self.assertEqual("datetime", result[0][0])
         self.assertEqual(">", result[0][1])
-        self.assertEqual(datetime(2023,1,1,10,0), result[0][2])
+        self.assertEqual(datetime.datetime(2023,1,1,10,0), result[0][2])
 
         self.assertEqual("datetime", result[1][0])
         self.assertEqual("<=", result[1][1])
-        self.assertEqual(datetime(2023,1,1,10,0), result[1][2])
+        self.assertEqual(datetime.datetime(2023,1,1,10,0), result[1][2])
 
         result = self._statistics_mgr.parse_filter('  datetime >= 202301011000 && datetime < 202301011000  ')
         self.assertEqual(2, len(result))
         self.assertEqual("datetime", result[0][0])
         self.assertEqual(">=", result[0][1])
-        self.assertEqual(datetime(2023,1,1,10,0), result[0][2])
+        self.assertEqual(datetime.datetime(2023,1,1,10,0), result[0][2])
 
         self.assertEqual("datetime", result[1][0])
         self.assertEqual("<", result[1][1])
-        self.assertEqual(datetime(2023,1,1,10,0), result[1][2])
+        self.assertEqual(datetime.datetime(2023,1,1,10,0), result[1][2])
+
+    def create_meta(self, what_object="PVOL", nod="senod", d=datetime.date(2000, 1, 2), t=datetime.time(12, 5), mdhash="123"):
+        meta = Metadata();
+        meta.bdb_source_name=nod
+        meta.bdb_metadata_hash=mdhash
+        meta.add_node("/", Group("what"))
+        meta.add_node("/what", Attribute("source", "NOD:%s"%nod))
+        meta.add_node("/what", Attribute("date", d))
+        meta.add_node("/what", Attribute("time", t))
+        meta.add_node("/what", Attribute("object", what_object))
+        return meta        
+
+    def test_increment_noop(self):
+        spid = "test-id"
+        origin = "origin"
+        meta = self.create_meta("PVOL", "senod")
+
+        self._statistics_mgr.increment(spid, origin, meta, save_post=False, increment_counter=False, optime=0, optime_info=None)
+
+        assert not self._sqldatabase.increment_statistics.called
+        assert not self._sqldatabase.add.called
+
+    def test_increment_increment_ctr(self):
+        spid = "test-id"
+        origin = "origin"
+        meta = self.create_meta("PVOL", "senod")
+
+        self._statistics_mgr.increment(spid, origin, meta, save_post=False, increment_counter=True, optime=0, optime_info=None)
+
+        self._sqldatabase.increment_statistics.assert_called_with(spid, origin, "senod")
+
+    def test_increment_increment_ctr_exception(self):
+        spid = "test-id"
+        origin = "origin"
+        meta = self.create_meta("PVOL", "senod")
+
+        self._sqldatabase.increment_statistics = MagicMock(side_effect=Exception("an error"))
+
+        self._statistics_mgr.increment(spid, origin, meta, save_post=False, increment_counter=True, optime=0, optime_info=None)
+
+    def test_increment_save_post(self):
+        spid = "test-id"
+        origin = "origin"
+        op_time = 5
+        optime_info = None
+        dt = datetime.datetime(2024,4,10,10,0,0)
+        meta = self.create_meta("PVOL", "senod", dt.date(), dt.time(), "123")
+
+        self._statistics_mgr.increment(spid, origin, meta, save_post=True, increment_counter=False, optime=op_time, optime_info=optime_info)
+
+        assert self._sqldatabase.add.called
+        statentry = self._sqldatabase.method_calls[0].args[0]
+        self.assertEqual(spid, statentry.spid)
+        self.assertEqual(origin, statentry.origin)
+        self.assertEqual("123", statentry.hashid)
+        self.assertTrue(isinstance(statentry.entrytime, datetime.datetime))
+        self.assertEqual(op_time, statentry.optime)
+        self.assertEqual("PVOL", statentry.object_type)
+        self.assertEqual(None, statentry.elevation_angle)
+
+    def test_increment_save_post_exception(self):
+        spid = "test-id"
+        origin = "origin"
+        op_time = 5
+        optime_info = None
+        dt = datetime.datetime(2024,4,10,10,0,0)
+        meta = self.create_meta("PVOL", "senod", dt.date(), dt.time(), "123")
+
+        self._sqldatabase.add = MagicMock(side_effect=Exception("an error"))
+
+        self._statistics_mgr.increment(spid, origin, meta, save_post=True, increment_counter=False, optime=op_time, optime_info=optime_info)
+
+        assert self._sqldatabase.add.called
