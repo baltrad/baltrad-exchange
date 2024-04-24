@@ -411,6 +411,10 @@ OK
             help="The source that should be queried (if applicable)")
 
         parser.add_option(
+            "--origins", dest="origins", default="",
+            help="The origin that should be checked.")
+
+        parser.add_option(
             "--object_type", dest="object_type", default=None,
             help="If filtering should be performed on object_type. E.g. --object_type=PVOL"
         )
@@ -431,7 +435,7 @@ OK
         )
 
     def execute(self, server, opts, args):
-        response = server.supervise(opts.infotype, opts.source, opts.object_type, opts.limit, opts.entrylimit, opts.delay)
+        response = server.supervise(opts.infotype, opts.source, opts.origins, opts.object_type, opts.limit, opts.entrylimit, opts.delay)
         if response.status == httplibclient.OK:
             ldata = json.loads(response.read())
             #print(ldata)

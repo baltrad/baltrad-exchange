@@ -293,6 +293,7 @@ class SqlAlchemyDatabase(object):
             q = q.order_by(asc(statentry.origin)) \
                 .order_by(asc(statentry.source)) \
                 .order_by(asc(statentry.entrytime))
+            
             return q.all()
 
     def get_average_statentries(self, spid, origins, sources, hashid=None):

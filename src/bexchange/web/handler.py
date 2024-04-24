@@ -236,12 +236,15 @@ def supervise(ctx):
         return Response("", status=httplibclient.UNAUTHORIZED)
     data = ctx.request.get_json_data()
     source = None
+    origins = None
     object_type = None
     limit = 5
     entrylimit = 0
     delay = 0
     if "source" in data:
         source = data["source"]
+    if "origins" in data:
+        origins = data["origins"]
     if "object_type" in data:
         object_type = data["object_type"]
     if "limit" in data:
@@ -258,8 +261,7 @@ def supervise(ctx):
     if delay > 0:
         dtfilter = dtfilter + "&&delay<=%d"%delay
 
-    querydata = {"spid":"server-incomming", "sources":source, "object_type":object_type, "filter":dtfilter}
-    logger.info("supervise query=%s"%str(querydata))
+    querydata = {"spid":"server-incomming", "sources":source, "origins":origins, "object_type":object_type, "filter":dtfilter}
     stats = ctx.backend.get_statistics_manager().get_statistics_entries(ctx.backend.get_auth_manager().get_nodename(ctx.request), querydata)
     result={"status":"ERROR"}
     if stats and len(stats) > 0:
