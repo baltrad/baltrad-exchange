@@ -191,7 +191,7 @@ class RestfulServer(object):
         response = self.execute_request(request)
         return response
 
-    def supervise(self, infotype, source, origins, object_type, limit, entrylimit, delay):
+    def supervise(self, infotype, source, origins, object_type, limit, entrylimit, delay, count):
         """posts a json message to the exchange server. 
         :param data: The data
         """
@@ -202,7 +202,8 @@ class RestfulServer(object):
             "object_type":object_type,
             "limit":limit,
             "entrylimit":entrylimit,
-            "delay":delay
+            "delay":delay,
+            "count":count
         }
 
         request = Request(

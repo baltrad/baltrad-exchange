@@ -31,7 +31,7 @@ import os, sys
 import socket
 import urllib.parse as urlparse
 import pkg_resources
-import datetime,time
+import datetime,time,math
 import subprocess
 from tempfile import NamedTemporaryFile
 
@@ -164,7 +164,13 @@ WMO:02666,RAD:SE51,PLC:Karlskrona,CMT:sekaa,NOD:sekaa.
             "--interval", dest="interval", type="int",
             default=5,
             help="Minutes between each period")
-    
+
+        parser.add_option(
+            "--elangles", dest="elangles",
+            default=None,
+            help="Comma separated list of elevation angles (only actual for scans)")
+
+
     def execute(self, server, opts, args):
         import _raveio, _polarvolume, _polarscan
         if not opts.basefile:
@@ -174,7 +180,14 @@ WMO:02666,RAD:SE51,PLC:Karlskrona,CMT:sekaa,NOD:sekaa.
         dt = self.parse_datetime_str(opts.datetime, opts.interval)
         if not opts.datetime:
             dt = self.get_closest_time(opts.interval)
-        
+
+        elangles = None
+        if opts.elangles:
+            elangles=[]
+            telangles = opts.elangles.split(",")
+            for tel in telangles:
+                elangles.append(float(tel))
+
         for pindex in range(opts.periods):
             tstr = (dt + datetime.timedelta(minutes = pindex*opts.interval)).strftime("%Y%m%d%H%M%S")
             o = _raveio.open(opts.basefile).object
@@ -182,15 +195,29 @@ WMO:02666,RAD:SE51,PLC:Karlskrona,CMT:sekaa,NOD:sekaa.
             t = tstr[8:]
             o.date = d
             o.time = t
-            
+
+            ispolarscan=False
+            if _polarscan.isPolarScan(o):
+                ispolarscan=True
+                if elangles is None or len(elangles)==0:
+                    elangles=[o.elangle * 180.0/math.pi]
+
             for src in opts.sources.split(","):
                 o.source = self.SRC_MAPPING[src]
                 rio = _raveio.new()
                 rio.object = o
-                with NamedTemporaryFile() as f:
-                    rio.save(f.name)
-                    with open(f.name, "rb") as data:
-                        entry = server.store(data)                    
+                if ispolarscan:
+                    for e in elangles:
+                        o.elangle = e * math.pi / 180.0
+                        with NamedTemporaryFile() as f:
+                            rio.save(f.name)
+                            with open(f.name, "rb") as data:
+                                entry = server.store(data)
+                else:
+                    with NamedTemporaryFile() as f:
+                        rio.save(f.name)
+                        with open(f.name, "rb") as data:
+                            entry = server.store(data)                    
 
     def get_closest_time(self, interval):
         t = time.localtime()
@@ -434,11 +461,15 @@ OK
             help="Checks difference between nominal time and entry time and if the delay is higher then it's an error. Default is to be disabled."
         )
 
+        parser.add_option(
+            "--count", dest="count", default=0, type="int",
+            help="Counts matches and validates that there are at least count number of occurances."
+        )
+
     def execute(self, server, opts, args):
-        response = server.supervise(opts.infotype, opts.source, opts.origins, opts.object_type, opts.limit, opts.entrylimit, opts.delay)
+        response = server.supervise(opts.infotype, opts.source, opts.origins, opts.object_type, opts.limit, opts.entrylimit, opts.delay, opts.count)
         if response.status == httplibclient.OK:
             ldata = json.loads(response.read())
-            #print(ldata)
             return ldata["status"]
         else:
             return '{"status":"ERROR"}'

@@ -241,6 +241,8 @@ def supervise(ctx):
     limit = 5
     entrylimit = 0
     delay = 0
+    count = 1
+
     if "source" in data:
         source = data["source"]
     if "origins" in data:
@@ -253,6 +255,10 @@ def supervise(ctx):
         entrylimit = int(data["entrylimit"])
     if "delay" in data:
         delay = int(data["delay"])
+    if "count" in data:
+        count = int(data["count"])
+        if count == 0:
+            count = 1
 
     dtfilterdate = (datetime.datetime.utcnow() - datetime.timedelta(seconds=limit))
     dtfilter = "datetime>=%s"%((datetime.datetime.utcnow() - datetime.timedelta(seconds=limit)).strftime("%Y%m%d%H%M%S"))
@@ -264,6 +270,6 @@ def supervise(ctx):
     querydata = {"spid":"server-incomming", "sources":source, "origins":origins, "object_type":object_type, "filter":dtfilter}
     stats = ctx.backend.get_statistics_manager().get_statistics_entries(ctx.backend.get_auth_manager().get_nodename(ctx.request), querydata)
     result={"status":"ERROR"}
-    if stats and len(stats) > 0:
+    if stats and len(stats) >= count:
         result={"status":"OK"}
     return Response(json.dumps(result), status=httplibclient.OK)
