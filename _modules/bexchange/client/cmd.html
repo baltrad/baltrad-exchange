@@ -71,7 +71,7 @@
 <span class="kn">import</span> <span class="nn">socket</span>
 <span class="kn">import</span> <span class="nn">urllib.parse</span> <span class="k">as</span> <span class="nn">urlparse</span>
 <span class="kn">import</span> <span class="nn">pkg_resources</span>
-<span class="kn">import</span> <span class="nn">datetime</span><span class="o">,</span><span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">datetime</span><span class="o">,</span><span class="nn">time</span><span class="o">,</span><span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">from</span> <span class="nn">tempfile</span> <span class="kn">import</span> <span class="n">NamedTemporaryFile</span>
 
@@ -203,8 +203,14 @@
         <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
             <span class="s2">&quot;--interval&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;interval&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;int&quot;</span><span class="p">,</span>
             <span class="n">default</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Minutes between each period&quot;</span><span class="p">)</span></div>
-    
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Minutes between each period&quot;</span><span class="p">)</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
+            <span class="s2">&quot;--elangles&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;elangles&quot;</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Comma separated list of elevation angles (only actual for scans)&quot;</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="BatchTest.execute"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.BatchTest.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
         <span class="kn">import</span> <span class="nn">_raveio</span><span class="o">,</span> <span class="nn">_polarvolume</span><span class="o">,</span> <span class="nn">_polarscan</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">opts</span><span class="o">.</span><span class="n">basefile</span><span class="p">:</span>
@@ -214,7 +220,14 @@
         <span class="n">dt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_datetime_str</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">interval</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">opts</span><span class="o">.</span><span class="n">datetime</span><span class="p">:</span>
             <span class="n">dt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_closest_time</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">interval</span><span class="p">)</span>
-        
+
+        <span class="n">elangles</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">opts</span><span class="o">.</span><span class="n">elangles</span><span class="p">:</span>
+            <span class="n">elangles</span><span class="o">=</span><span class="p">[]</span>
+            <span class="n">telangles</span> <span class="o">=</span> <span class="n">opts</span><span class="o">.</span><span class="n">elangles</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">tel</span> <span class="ow">in</span> <span class="n">telangles</span><span class="p">:</span>
+                <span class="n">elangles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">tel</span><span class="p">))</span>
+
         <span class="k">for</span> <span class="n">pindex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">periods</span><span class="p">):</span>
             <span class="n">tstr</span> <span class="o">=</span> <span class="p">(</span><span class="n">dt</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span> <span class="o">=</span> <span class="n">pindex</span><span class="o">*</span><span class="n">opts</span><span class="o">.</span><span class="n">interval</span><span class="p">))</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">%H%M%S&quot;</span><span class="p">)</span>
             <span class="n">o</span> <span class="o">=</span> <span class="n">_raveio</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">basefile</span><span class="p">)</span><span class="o">.</span><span class="n">object</span>
@@ -222,15 +235,29 @@
             <span class="n">t</span> <span class="o">=</span> <span class="n">tstr</span><span class="p">[</span><span class="mi">8</span><span class="p">:]</span>
             <span class="n">o</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="n">d</span>
             <span class="n">o</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">t</span>
-            
+
+            <span class="n">ispolarscan</span><span class="o">=</span><span class="kc">False</span>
+            <span class="k">if</span> <span class="n">_polarscan</span><span class="o">.</span><span class="n">isPolarScan</span><span class="p">(</span><span class="n">o</span><span class="p">):</span>
+                <span class="n">ispolarscan</span><span class="o">=</span><span class="kc">True</span>
+                <span class="k">if</span> <span class="n">elangles</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">elangles</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                    <span class="n">elangles</span><span class="o">=</span><span class="p">[</span><span class="n">o</span><span class="o">.</span><span class="n">elangle</span> <span class="o">*</span> <span class="mf">180.0</span><span class="o">/</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">]</span>
+
             <span class="k">for</span> <span class="n">src</span> <span class="ow">in</span> <span class="n">opts</span><span class="o">.</span><span class="n">sources</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">):</span>
                 <span class="n">o</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">SRC_MAPPING</span><span class="p">[</span><span class="n">src</span><span class="p">]</span>
                 <span class="n">rio</span> <span class="o">=</span> <span class="n">_raveio</span><span class="o">.</span><span class="n">new</span><span class="p">()</span>
                 <span class="n">rio</span><span class="o">.</span><span class="n">object</span> <span class="o">=</span> <span class="n">o</span>
-                <span class="k">with</span> <span class="n">NamedTemporaryFile</span><span class="p">()</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-                    <span class="n">rio</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">data</span><span class="p">:</span>
-                        <span class="n">entry</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>                    </div>
+                <span class="k">if</span> <span class="n">ispolarscan</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">elangles</span><span class="p">:</span>
+                        <span class="n">o</span><span class="o">.</span><span class="n">elangle</span> <span class="o">=</span> <span class="n">e</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.0</span>
+                        <span class="k">with</span> <span class="n">NamedTemporaryFile</span><span class="p">()</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                            <span class="n">rio</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">data</span><span class="p">:</span>
+                                <span class="n">entry</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">with</span> <span class="n">NamedTemporaryFile</span><span class="p">()</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                        <span class="n">rio</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">data</span><span class="p">:</span>
+                            <span class="n">entry</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>                    </div>
 
 <div class="viewcode-block" id="BatchTest.get_closest_time"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.BatchTest.get_closest_time">[docs]</a>    <span class="k">def</span> <span class="nf">get_closest_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interval</span><span class="p">):</span>
         <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span>
@@ -472,13 +499,17 @@
         <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
             <span class="s2">&quot;--delay&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;delay&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;int&quot;</span><span class="p">,</span>
             <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Checks difference between nominal time and entry time and if the delay is higher then it&#39;s an error. Default is to be disabled.&quot;</span>
+        <span class="p">)</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
+            <span class="s2">&quot;--count&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Counts matches and validates that there are at least count number of occurances.&quot;</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="Supervise.execute"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.Supervise.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">supervise</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">infotype</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">origins</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">object_type</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">limit</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">entrylimit</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">delay</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">supervise</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">infotype</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">origins</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">object_type</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">limit</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">entrylimit</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">delay</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">count</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">httplibclient</span><span class="o">.</span><span class="n">OK</span><span class="p">:</span>
             <span class="n">ldata</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
-            <span class="c1">#print(ldata)</span>
             <span class="k">return</span> <span class="n">ldata</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="s1">&#39;{&quot;status&quot;:&quot;ERROR&quot;}&#39;</span></div></div>
