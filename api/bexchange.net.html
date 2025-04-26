@@ -476,6 +476,15 @@ Each (or most) publisher_connection is associated with one or more senders.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="bexchange.net.publishers.standard_publisher.handle_consumer_file">
+<span class="sig-name descname"><span class="pre">handle_consumer_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tmpfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#standard_publisher.handle_consumer_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.standard_publisher.handle_consumer_file" title="Link to this definition">¶</a></dt>
+<dd><p>Will handle the file that the consumer retrieved from the queue
+:param self: self
+:param tmpfile: the tmp file
+:param meta: the meta data</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.publishers.standard_publisher.initialize">
 <span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#standard_publisher.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.standard_publisher.initialize" title="Link to this definition">¶</a></dt>
 <dd><p>Initializes the publisher before it is started.</p>
@@ -979,6 +988,7 @@ with NamedTemporaryFile() as fp: c.getfo(”….”, fp)</p>
 <li><a class="reference internal" href="#bexchange.net.publishers.standard_publisher"><code class="docutils literal notranslate"><span class="pre">standard_publisher</span></code></a><ul>
 <li><a class="reference internal" href="#bexchange.net.publishers.standard_publisher.consumer"><code class="docutils literal notranslate"><span class="pre">standard_publisher.consumer()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.net.publishers.standard_publisher.do_publish"><code class="docutils literal notranslate"><span class="pre">standard_publisher.do_publish()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.publishers.standard_publisher.handle_consumer_file"><code class="docutils literal notranslate"><span class="pre">standard_publisher.handle_consumer_file()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.net.publishers.standard_publisher.initialize"><code class="docutils literal notranslate"><span class="pre">standard_publisher.initialize()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.net.publishers.standard_publisher.publish"><code class="docutils literal notranslate"><span class="pre">standard_publisher.publish()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.net.publishers.standard_publisher.start"><code class="docutils literal notranslate"><span class="pre">standard_publisher.start()</span></code></a></li>
