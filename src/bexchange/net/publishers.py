@@ -225,14 +225,15 @@ class standard_publisher(publisher):
         while self._running:
             tmpfile, meta = None, None
 
-            self._event.wait()
-
             try:
                 tmpfile, meta = self._queue.get_nowait()
             except:
                 pass
 
             if tmpfile is None: # In 3.13 there will be support for shutdown. For now, just except that we might get None..
+                if not self._running:
+                    break
+                self._event.wait(0.1)
                 continue
 
             try:
