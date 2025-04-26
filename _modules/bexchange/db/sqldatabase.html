@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>bexchange.db.sqldatabase &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -125,9 +123,11 @@
                 <span class="n">UniqueConstraint</span><span class="p">(</span><span class="s2">&quot;spid&quot;</span><span class="p">,</span> <span class="s2">&quot;origin&quot;</span><span class="p">,</span> <span class="s2">&quot;source&quot;</span><span class="p">,</span> <span class="s2">&quot;entrytime&quot;</span><span class="p">)</span>
 <span class="p">)</span>
 
-<div class="viewcode-block" id="statistics"><a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.statistics">[docs]</a><span class="k">class</span> <span class="nc">statistics</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="statistics">
+<a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.statistics">[docs]</a>
+<span class="k">class</span> <span class="nc">statistics</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spid</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">counter</span><span class="p">,</span> <span class="n">updated_at</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Keeps the totals for a specified spid + origin + source</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Keeps the totals for a specified spid + origin + source</span>
 <span class="sd">        :param spid: The statistics plugin id</span>
 <span class="sd">        :param origin: Origin for this stat</span>
 <span class="sd">        :param source: Source</span>
@@ -140,18 +140,24 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">counter</span> <span class="o">=</span> <span class="n">counter</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">updated_at</span> <span class="o">=</span> <span class="n">updated_at</span>
 
-<div class="viewcode-block" id="statistics.json_repr"><a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.statistics.json_repr">[docs]</a>    <span class="k">def</span> <span class="nf">json_repr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="statistics.json_repr">
+<a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.statistics.json_repr">[docs]</a>
+    <span class="k">def</span> <span class="nf">json_repr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">&quot;spid&quot;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">spid</span><span class="p">,</span>
             <span class="s2">&quot;origin&quot;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">origin</span><span class="p">,</span>
             <span class="s2">&quot;source&quot;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="p">,</span>
             <span class="s2">&quot;counter&quot;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">counter</span><span class="p">,</span>
             <span class="s2">&quot;updated_at&quot;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">updated_at</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
-        <span class="p">}</span></div></div>
+        <span class="p">}</span></div>
+</div>
 
-<div class="viewcode-block" id="statentry"><a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.statentry">[docs]</a><span class="k">class</span> <span class="nc">statentry</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+<div class="viewcode-block" id="statentry">
+<a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.statentry">[docs]</a>
+<span class="k">class</span> <span class="nc">statentry</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spid</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">hashid</span><span class="p">,</span> <span class="n">entrytime</span><span class="p">,</span> <span class="n">optime</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">optime_info</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ndatetime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">object_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">elevation_angle</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Represents one increment entry. Used for creating averages and such information</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Represents one increment entry. Used for creating averages and such information</span>
 <span class="sd">        :param spid: The statistics plugin id</span>
 <span class="sd">        :param origin: Origin for this stat</span>
 <span class="sd">        :param source: Source</span>
@@ -174,7 +180,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">elevation_angle</span> <span class="o">=</span> <span class="n">elevation_angle</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span> <span class="o">=</span> <span class="p">{}</span>
 
-<div class="viewcode-block" id="statentry.json_repr"><a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.statentry.json_repr">[docs]</a>    <span class="k">def</span> <span class="nf">json_repr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="statentry.json_repr">
+<a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.statentry.json_repr">[docs]</a>
+    <span class="k">def</span> <span class="nf">json_repr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">result</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;spid&quot;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">spid</span><span class="p">,</span>
             <span class="s2">&quot;origin&quot;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">origin</span><span class="p">,</span>
@@ -194,17 +202,24 @@
 
         <span class="k">return</span> <span class="n">result</span></div>
 
-<div class="viewcode-block" id="statentry.add_attribute"><a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.statentry.add_attribute">[docs]</a>    <span class="k">def</span> <span class="nf">add_attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+
+<div class="viewcode-block" id="statentry.add_attribute">
+<a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.statentry.add_attribute">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="s2">&quot;attributes&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
+</div>
+
 
 <span class="n">mapper</span><span class="p">(</span><span class="n">statistics</span><span class="p">,</span> <span class="n">db_statistics</span><span class="p">)</span>
 <span class="n">mapper</span><span class="p">(</span><span class="n">statentry</span><span class="p">,</span> <span class="n">db_statentry</span><span class="p">)</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;bexchange.db.sqldatabase&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="force_sqlite_foreign_keys"><a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.force_sqlite_foreign_keys">[docs]</a><span class="k">def</span> <span class="nf">force_sqlite_foreign_keys</span><span class="p">(</span><span class="n">dbapi_con</span><span class="p">,</span> <span class="n">con_record</span><span class="p">):</span>
+<div class="viewcode-block" id="force_sqlite_foreign_keys">
+<a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.force_sqlite_foreign_keys">[docs]</a>
+<span class="k">def</span> <span class="nf">force_sqlite_foreign_keys</span><span class="p">(</span><span class="n">dbapi_con</span><span class="p">,</span> <span class="n">con_record</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="kn">import</span> <span class="nn">sqlite3</span>
     <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
@@ -213,9 +228,12 @@
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dbapi_con</span><span class="p">,</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Connection</span><span class="p">):</span>
         <span class="n">dbapi_con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;pragma foreign_keys=ON&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SqlAlchemyDatabase"><a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.SqlAlchemyDatabase">[docs]</a><span class="k">class</span> <span class="nc">SqlAlchemyDatabase</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SqlAlchemyDatabase">
+<a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.SqlAlchemyDatabase">[docs]</a>
+<span class="k">class</span> <span class="nc">SqlAlchemyDatabase</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uri</span><span class="o">=</span><span class="s2">&quot;sqlite:///tmp/baltrad-exchange.db&quot;</span><span class="p">,</span> <span class="n">poolsize</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        :param uri: The uri pointing to the database.</span>
 <span class="sd">        :param poolsize: How many database connections we should use</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -228,41 +246,61 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">driver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;database driver name</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;database driver name</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_engine</span><span class="o">.</span><span class="n">driver</span>
 
-<div class="viewcode-block" id="SqlAlchemyDatabase.init_tables"><a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.SqlAlchemyDatabase.init_tables">[docs]</a>    <span class="k">def</span> <span class="nf">init_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SqlAlchemyDatabase.init_tables">
+<a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.SqlAlchemyDatabase.init_tables">[docs]</a>
+    <span class="k">def</span> <span class="nf">init_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">dbmeta</span><span class="o">.</span><span class="n">create_all</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_engine</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Initialized alchemy database&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SqlAlchemyDatabase.get_connection"><a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.SqlAlchemyDatabase.get_connection">[docs]</a>    <span class="k">def</span> <span class="nf">get_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;get a context managed connection to the database</span>
+
+<div class="viewcode-block" id="SqlAlchemyDatabase.get_connection">
+<a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.SqlAlchemyDatabase.get_connection">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;get a context managed connection to the database</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">closing</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_engine</span><span class="o">.</span><span class="n">connect</span><span class="p">())</span></div>
 
-<div class="viewcode-block" id="SqlAlchemyDatabase.get_session"><a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.SqlAlchemyDatabase.get_session">[docs]</a>    <span class="k">def</span> <span class="nf">get_session</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SqlAlchemyDatabase.get_session">
+<a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.SqlAlchemyDatabase.get_session">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_session</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">closing</span><span class="p">(</span><span class="n">session</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SqlAlchemyDatabase.get_statistics_entry"><a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.SqlAlchemyDatabase.get_statistics_entry">[docs]</a>    <span class="k">def</span> <span class="nf">get_statistics_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spid</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">source</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SqlAlchemyDatabase.get_statistics_entry">
+<a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.SqlAlchemyDatabase.get_statistics_entry">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_statistics_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spid</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">source</span><span class="p">):</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_session</span><span class="p">()</span> <span class="k">as</span> <span class="n">s</span><span class="p">:</span>
             <span class="n">q</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">statistics</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">statistics</span><span class="o">.</span><span class="n">spid</span> <span class="o">==</span> <span class="n">spid</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">statistics</span><span class="o">.</span><span class="n">origin</span> <span class="o">==</span> <span class="n">origin</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">statistics</span><span class="o">.</span><span class="n">source</span> <span class="o">==</span> <span class="n">source</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">q</span><span class="o">.</span><span class="n">one_or_none</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="SqlAlchemyDatabase.list_statistic_ids"><a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.SqlAlchemyDatabase.list_statistic_ids">[docs]</a>    <span class="k">def</span> <span class="nf">list_statistic_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SqlAlchemyDatabase.list_statistic_ids">
+<a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.SqlAlchemyDatabase.list_statistic_ids">[docs]</a>
+    <span class="k">def</span> <span class="nf">list_statistic_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_session</span><span class="p">()</span> <span class="k">as</span> <span class="n">s</span><span class="p">:</span>
             <span class="n">entries</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">statistics</span><span class="o">.</span><span class="n">spid</span><span class="p">)</span><span class="o">.</span><span class="n">distinct</span><span class="p">(</span><span class="n">statistics</span><span class="o">.</span><span class="n">spid</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
             <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">entries</span><span class="p">]</span>
             <span class="k">return</span> <span class="n">result</span></div>
 
-<div class="viewcode-block" id="SqlAlchemyDatabase.list_statentry_ids"><a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.SqlAlchemyDatabase.list_statentry_ids">[docs]</a>    <span class="k">def</span> <span class="nf">list_statentry_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SqlAlchemyDatabase.list_statentry_ids">
+<a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.SqlAlchemyDatabase.list_statentry_ids">[docs]</a>
+    <span class="k">def</span> <span class="nf">list_statentry_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_session</span><span class="p">()</span> <span class="k">as</span> <span class="n">s</span><span class="p">:</span>
             <span class="n">entries</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">statentry</span><span class="o">.</span><span class="n">spid</span><span class="p">)</span><span class="o">.</span><span class="n">distinct</span><span class="p">(</span><span class="n">statentry</span><span class="o">.</span><span class="n">spid</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
             <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">entries</span><span class="p">]</span>
             <span class="k">return</span> <span class="n">result</span></div>
 
-<div class="viewcode-block" id="SqlAlchemyDatabase.find_statistics"><a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.SqlAlchemyDatabase.find_statistics">[docs]</a>    <span class="k">def</span> <span class="nf">find_statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spid</span><span class="p">,</span> <span class="n">origins</span><span class="p">,</span> <span class="n">sources</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SqlAlchemyDatabase.find_statistics">
+<a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.SqlAlchemyDatabase.find_statistics">[docs]</a>
+    <span class="k">def</span> <span class="nf">find_statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spid</span><span class="p">,</span> <span class="n">origins</span><span class="p">,</span> <span class="n">sources</span><span class="p">):</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_session</span><span class="p">()</span> <span class="k">as</span> <span class="n">s</span><span class="p">:</span>
             <span class="n">q</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">statistics</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">statistics</span><span class="o">.</span><span class="n">spid</span> <span class="o">==</span> <span class="n">spid</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">origins</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">origins</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -271,7 +309,10 @@
                 <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">statistics</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="n">sources</span><span class="p">))</span>
             <span class="k">return</span> <span class="n">q</span><span class="o">.</span><span class="n">all</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="SqlAlchemyDatabase.find_statentries"><a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.SqlAlchemyDatabase.find_statentries">[docs]</a>    <span class="k">def</span> <span class="nf">find_statentries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spid</span><span class="p">,</span> <span class="n">origins</span><span class="p">,</span> <span class="n">sources</span><span class="p">,</span> <span class="n">hashid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">object_type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SqlAlchemyDatabase.find_statentries">
+<a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.SqlAlchemyDatabase.find_statentries">[docs]</a>
+    <span class="k">def</span> <span class="nf">find_statentries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spid</span><span class="p">,</span> <span class="n">origins</span><span class="p">,</span> <span class="n">sources</span><span class="p">,</span> <span class="n">hashid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">object_type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_session</span><span class="p">()</span> <span class="k">as</span> <span class="n">s</span><span class="p">:</span>
             <span class="n">q</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">statentry</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">statentry</span><span class="o">.</span><span class="n">spid</span> <span class="o">==</span> <span class="n">spid</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">origins</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">origins</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -336,7 +377,10 @@
             
             <span class="k">return</span> <span class="n">q</span><span class="o">.</span><span class="n">all</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="SqlAlchemyDatabase.get_average_statentries"><a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.SqlAlchemyDatabase.get_average_statentries">[docs]</a>    <span class="k">def</span> <span class="nf">get_average_statentries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spid</span><span class="p">,</span> <span class="n">origins</span><span class="p">,</span> <span class="n">sources</span><span class="p">,</span> <span class="n">hashid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SqlAlchemyDatabase.get_average_statentries">
+<a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.SqlAlchemyDatabase.get_average_statentries">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_average_statentries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spid</span><span class="p">,</span> <span class="n">origins</span><span class="p">,</span> <span class="n">sources</span><span class="p">,</span> <span class="n">hashid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_session</span><span class="p">()</span> <span class="k">as</span> <span class="n">s</span><span class="p">:</span>
             <span class="n">q</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">statentry</span><span class="p">,</span> <span class="n">func</span><span class="o">.</span><span class="n">avg</span><span class="p">(</span><span class="n">statentry</span><span class="o">.</span><span class="n">optime</span><span class="p">))</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">statentry</span><span class="o">.</span><span class="n">spid</span> <span class="o">==</span> <span class="n">spid</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">origins</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">origins</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -358,13 +402,19 @@
             <span class="k">return</span> <span class="n">result</span></div>
 
 
-<div class="viewcode-block" id="SqlAlchemyDatabase.cleanup_statentries"><a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.SqlAlchemyDatabase.cleanup_statentries">[docs]</a>    <span class="k">def</span> <span class="nf">cleanup_statentries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maxagedt</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SqlAlchemyDatabase.cleanup_statentries">
+<a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.SqlAlchemyDatabase.cleanup_statentries">[docs]</a>
+    <span class="k">def</span> <span class="nf">cleanup_statentries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maxagedt</span><span class="p">):</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Cleanup of statentries older than </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">maxagedt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M&quot;</span><span class="p">))</span>
         <span class="n">q</span> <span class="o">=</span> <span class="n">db_statentry</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">db_statentry</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">entrytime</span> <span class="o">&lt;</span> <span class="n">maxagedt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M&quot;</span><span class="p">))</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Query: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">q</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_engine</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">q</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SqlAlchemyDatabase.increment_statistics"><a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.SqlAlchemyDatabase.increment_statistics">[docs]</a>    <span class="k">def</span> <span class="nf">increment_statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spid</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">source</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SqlAlchemyDatabase.increment_statistics">
+<a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.SqlAlchemyDatabase.increment_statistics">[docs]</a>
+    <span class="k">def</span> <span class="nf">increment_statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spid</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">source</span><span class="p">):</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="n">stats</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">statistics</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">statistics</span><span class="o">.</span><span class="n">spid</span> <span class="o">==</span> <span class="n">spid</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">statistics</span><span class="o">.</span><span class="n">origin</span> <span class="o">==</span> <span class="n">origin</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">statistics</span><span class="o">.</span><span class="n">source</span> <span class="o">==</span> <span class="n">source</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">stats</span><span class="p">:</span>
@@ -380,7 +430,10 @@
             <span class="k">finally</span><span class="p">:</span>
                 <span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="SqlAlchemyDatabase.add"><a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.SqlAlchemyDatabase.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SqlAlchemyDatabase.add">
+<a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.SqlAlchemyDatabase.add">[docs]</a>
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
         <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
         <span class="n">xlist</span> <span class="o">=</span> <span class="n">obj</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
@@ -396,7 +449,10 @@
             <span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="n">session</span> <span class="o">=</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="SqlAlchemyDatabase.update"><a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.SqlAlchemyDatabase.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SqlAlchemyDatabase.update">
+<a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.SqlAlchemyDatabase.update">[docs]</a>
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
         <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
         <span class="n">xlist</span> <span class="o">=</span> <span class="n">obj</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
@@ -411,7 +467,9 @@
             <span class="k">raise</span>
         <span class="k">finally</span><span class="p">:</span>
             <span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="n">session</span> <span class="o">=</span> <span class="kc">None</span></div></div>
+        <span class="n">session</span> <span class="o">=</span> <span class="kc">None</span></div>
+</div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -429,7 +487,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -449,8 +507,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Anders Henja.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

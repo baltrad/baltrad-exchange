@@ -1,19 +1,17 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>bexchange.storage package &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
+    <script src="../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -48,16 +46,16 @@
           <div class="body" role="main">
             
   <section id="bexchange-storage-package">
-<h1>bexchange.storage package<a class="headerlink" href="#bexchange-storage-package" title="Permalink to this headline">¶</a></h1>
+<h1>bexchange.storage package<a class="headerlink" href="#bexchange-storage-package" title="Link to this heading">¶</a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
 </section>
 <section id="module-bexchange.storage.storages">
-<span id="bexchange-storage-storages-module"></span><h2>bexchange.storage.storages module<a class="headerlink" href="#module-bexchange.storage.storages" title="Permalink to this headline">¶</a></h2>
+<span id="bexchange-storage-storages-module"></span><h2>bexchange.storage.storages module<a class="headerlink" href="#module-bexchange.storage.storages" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.storage.storages.file_storage">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.storage.storages.</span></span><span class="sig-name descname"><span class="pre">file_storage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#file_storage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.file_storage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bexchange.storage.storages.storage" title="bexchange.storage.storages.storage"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.storage.storages.storage</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.storage.storages.</span></span><span class="sig-name descname"><span class="pre">file_storage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#file_storage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.file_storage" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bexchange.storage.storages.storage" title="bexchange.storage.storages.storage"><code class="xref py py-class docutils literal notranslate"><span class="pre">storage</span></code></a></p>
 <p>A basic file storage that allows separation of files based on object types. A typical structure passed to kwargs would be</p>
 <dl>
 <dt>“structure”: [</dt><dd><dl class="simple">
@@ -75,15 +73,15 @@
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.storage.storages.file_storage.get_attribute_value">
-<span class="sig-name descname"><span class="pre">get_attribute_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#file_storage.get_attribute_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.file_storage.get_attribute_value" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_attribute_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#file_storage.get_attribute_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.file_storage.get_attribute_value" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> – Name of attribute</p></li>
 <li><p><strong>meta</strong> – Metadata from where value for name should be taken</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>the value for the name or None if not found</p>
 </dd>
 </dl>
@@ -91,13 +89,13 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.storage.storages.file_storage.name">
-<span class="sig-name descname"><span class="pre">name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#file_storage.name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.file_storage.name" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#file_storage.name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.file_storage.name" title="Link to this definition">¶</a></dt>
 <dd><p>:return the name of this storage</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.storage.storages.file_storage.store">
-<span class="sig-name descname"><span class="pre">store</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#file_storage.store"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.file_storage.store" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">store</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#file_storage.store"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.file_storage.store" title="Link to this definition">¶</a></dt>
 <dd><p>Stores a file in the correct directory structure
 :param path: The path to the file to be stored
 :param meta: The meta data for the file</p>
@@ -107,29 +105,29 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.storage.storages.file_store">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.storage.storages.</span></span><span class="sig-name descname"><span class="pre">file_store</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_pattern</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_same_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#file_store"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.file_store" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.storage.storages.</span></span><span class="sig-name descname"><span class="pre">file_store</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_pattern</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_same_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#file_store"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.file_store" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.storage.storages.file_store.store">
-<span class="sig-name descname"><span class="pre">store</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#file_store.store"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.file_store.store" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">store</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#file_store.store"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.file_store.store" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.storage.storages.none_storage">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.storage.storages.</span></span><span class="sig-name descname"><span class="pre">none_storage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#none_storage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.none_storage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bexchange.storage.storages.storage" title="bexchange.storage.storages.storage"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.storage.storages.storage</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.storage.storages.</span></span><span class="sig-name descname"><span class="pre">none_storage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#none_storage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.none_storage" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bexchange.storage.storages.storage" title="bexchange.storage.storages.storage"><code class="xref py py-class docutils literal notranslate"><span class="pre">storage</span></code></a></p>
 <p>Simple storage that does nothing</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.storage.storages.none_storage.name">
-<span class="sig-name descname"><span class="pre">name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#none_storage.name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.none_storage.name" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#none_storage.name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.none_storage.name" title="Link to this definition">¶</a></dt>
 <dd><p>:return the name identifying this storage</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.storage.storages.none_storage.store">
-<span class="sig-name descname"><span class="pre">store</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#none_storage.store"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.none_storage.store" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">store</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#none_storage.store"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.none_storage.store" title="Link to this definition">¶</a></dt>
 <dd><p>Does nothing but prints that a file would have been stored
 :param path: The full path to the file to be stored
 :param meta: The meta data for this file.</p>
@@ -139,23 +137,23 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.storage.storages.simple_rotating_file_storage">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.storage.storages.</span></span><span class="sig-name descname"><span class="pre">simple_rotating_file_storage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#simple_rotating_file_storage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.simple_rotating_file_storage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bexchange.storage.storages.storage" title="bexchange.storage.storages.storage"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.storage.storages.storage</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.storage.storages.</span></span><span class="sig-name descname"><span class="pre">simple_rotating_file_storage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#simple_rotating_file_storage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.simple_rotating_file_storage" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bexchange.storage.storages.storage" title="bexchange.storage.storages.storage"><code class="xref py py-class docutils literal notranslate"><span class="pre">storage</span></code></a></p>
 <p>A very simple rotating file storage that keeps a limited number of files in a single folder. The files will get two different names. Either:
 ${_baltrad/source_name}_scan_${/dataset1/where/elangle}_${/what/date}T${/what/time}.h5  - for scans
 ${_baltrad/source_name}_${/what/object}.tolower()_${/what/date}T${/what/time}.h5        - for any other file type
 NOTE! The number of files can be set to a maximum of 500</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.storage.storages.simple_rotating_file_storage.get_attribute_value">
-<span class="sig-name descname"><span class="pre">get_attribute_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#simple_rotating_file_storage.get_attribute_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.simple_rotating_file_storage.get_attribute_value" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_attribute_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#simple_rotating_file_storage.get_attribute_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.simple_rotating_file_storage.get_attribute_value" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> – Name of attribute</p></li>
 <li><p><strong>meta</strong> – Metadata from where value for name should be taken</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>the value for the name or None if not found</p>
 </dd>
 </dl>
@@ -163,13 +161,13 @@ NOTE! The number of files can be set to a maximum of 500</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.storage.storages.simple_rotating_file_storage.name">
-<span class="sig-name descname"><span class="pre">name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#simple_rotating_file_storage.name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.simple_rotating_file_storage.name" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#simple_rotating_file_storage.name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.simple_rotating_file_storage.name" title="Link to this definition">¶</a></dt>
 <dd><p>:return the name of this storage</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.storage.storages.simple_rotating_file_storage.store">
-<span class="sig-name descname"><span class="pre">store</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#simple_rotating_file_storage.store"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.simple_rotating_file_storage.store" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">store</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#simple_rotating_file_storage.store"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.simple_rotating_file_storage.store" title="Link to this definition">¶</a></dt>
 <dd><p>Stores a file in the correct directory structure
 :param path: The path to the file to be stored
 :param meta: The meta data for the file</p>
@@ -177,25 +175,25 @@ NOTE! The number of files can be set to a maximum of 500</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.storage.storages.simple_rotating_file_storage.trim_folder">
-<span class="sig-name descname"><span class="pre">trim_folder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#simple_rotating_file_storage.trim_folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.simple_rotating_file_storage.trim_folder" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">trim_folder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#simple_rotating_file_storage.trim_folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.simple_rotating_file_storage.trim_folder" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.storage.storages.storage">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.storage.storages.</span></span><span class="sig-name descname"><span class="pre">storage</span></span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#storage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.storage" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.storage.storages.</span></span><span class="sig-name descname"><span class="pre">storage</span></span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#storage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.storage" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Base class for all storages</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.storage.storages.storage.name">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#storage.name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.storage.name" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#storage.name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.storage.name" title="Link to this definition">¶</a></dt>
 <dd><p>:return the name identifying this storage</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.storage.storages.storage.store">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">store</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#storage.store"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.storage.store" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">store</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#storage.store"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.storage.store" title="Link to this definition">¶</a></dt>
 <dd><p>Passes on the file to the storage
 :param path: The full path to the file to be stored
 :param meta: The meta data for this file.</p>
@@ -205,19 +203,19 @@ NOTE! The number of files can be set to a maximum of 500</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.storage.storages.storage_manager">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.storage.storages.</span></span><span class="sig-name descname"><span class="pre">storage_manager</span></span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#storage_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.storage_manager" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.storage.storages.</span></span><span class="sig-name descname"><span class="pre">storage_manager</span></span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#storage_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.storage_manager" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>The storage manager</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.storage.storages.storage_manager.add_storage">
-<span class="sig-name descname"><span class="pre">add_storage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storage</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#storage_manager.add_storage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.storage_manager.add_storage" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">add_storage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storage</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#storage_manager.add_storage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.storage_manager.add_storage" title="Link to this definition">¶</a></dt>
 <dd><p>Adds a storage instance to the internal list
 :param storage: The created storage that is a subclass of  bexchange.storage.storages.storage</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.storage.storages.storage_manager.create_storage">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_storage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clz</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#storage_manager.create_storage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.storage_manager.create_storage" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_storage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clz</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#storage_manager.create_storage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.storage_manager.create_storage" title="Link to this definition">¶</a></dt>
 <dd><p>Creates an instance of clz with specified arguments
 :param clz: class name specified as &lt;module&gt;.&lt;classname&gt;
 :param arguments: a list of arguments that should be used to initialize the class</p>
@@ -225,10 +223,10 @@ NOTE! The number of files can be set to a maximum of 500</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.storage.storages.storage_manager.from_conf">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_conf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#storage_manager.from_conf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.storage_manager.from_conf" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_conf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#storage_manager.from_conf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.storage_manager.from_conf" title="Link to this definition">¶</a></dt>
 <dd><p>Creates a storage from the specified configuration if it is possible</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>config</strong> – A runner config pattern. Should at least contain the following</p>
 </dd>
 </dl>
@@ -242,12 +240,12 @@ NOTE! The number of files can be set to a maximum of 500</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.storage.storages.storage_manager.get_storage">
-<span class="sig-name descname"><span class="pre">get_storage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#storage_manager.get_storage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.storage_manager.get_storage" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_storage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#storage_manager.get_storage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.storage_manager.get_storage" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>name</strong> – Name of the storage</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>the storage with provided name</p>
 </dd>
 </dl>
@@ -255,20 +253,30 @@ NOTE! The number of files can be set to a maximum of 500</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.storage.storages.storage_manager.has_storage">
-<span class="sig-name descname"><span class="pre">has_storage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#storage_manager.has_storage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.storage_manager.has_storage" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">has_storage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#storage_manager.has_storage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.storage_manager.has_storage" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>name</strong> – Name of the storage</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>if there is a storage with specified name</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="bexchange.storage.storages.storage_manager.remove_storage">
+<span class="sig-name descname"><span class="pre">remove_storage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#storage_manager.remove_storage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.storage_manager.remove_storage" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – Name of the storage</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="bexchange.storage.storages.storage_manager.store">
-<span class="sig-name descname"><span class="pre">store</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#storage_manager.store"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.storage_manager.store" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">store</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/storage/storages.html#storage_manager.store"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.storage.storages.storage_manager.store" title="Link to this definition">¶</a></dt>
 <dd><p>Stores a file in the specified storage.
 :param name: Name in which the file should be stored
 :param path: The file name that should be stored
@@ -279,7 +287,7 @@ NOTE! The number of files can be set to a maximum of 500</p>
 
 </section>
 <section id="module-bexchange.storage">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-bexchange.storage" title="Permalink to this headline">¶</a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-bexchange.storage" title="Link to this heading">¶</a></h2>
 </section>
 </section>
 
@@ -290,22 +298,67 @@ NOTE! The number of files can be set to a maximum of 500</p>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">bexchange.storage package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-bexchange.storage.storages">bexchange.storage.storages module</a></li>
+<li><a class="reference internal" href="#module-bexchange.storage.storages">bexchange.storage.storages module</a><ul>
+<li><a class="reference internal" href="#bexchange.storage.storages.file_storage"><code class="docutils literal notranslate"><span class="pre">file_storage</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.storage.storages.file_storage.get_attribute_value"><code class="docutils literal notranslate"><span class="pre">file_storage.get_attribute_value()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.storage.storages.file_storage.name"><code class="docutils literal notranslate"><span class="pre">file_storage.name()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.storage.storages.file_storage.store"><code class="docutils literal notranslate"><span class="pre">file_storage.store()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.storage.storages.file_store"><code class="docutils literal notranslate"><span class="pre">file_store</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.storage.storages.file_store.store"><code class="docutils literal notranslate"><span class="pre">file_store.store()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.storage.storages.none_storage"><code class="docutils literal notranslate"><span class="pre">none_storage</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.storage.storages.none_storage.name"><code class="docutils literal notranslate"><span class="pre">none_storage.name()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.storage.storages.none_storage.store"><code class="docutils literal notranslate"><span class="pre">none_storage.store()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.storage.storages.simple_rotating_file_storage"><code class="docutils literal notranslate"><span class="pre">simple_rotating_file_storage</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.storage.storages.simple_rotating_file_storage.get_attribute_value"><code class="docutils literal notranslate"><span class="pre">simple_rotating_file_storage.get_attribute_value()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.storage.storages.simple_rotating_file_storage.name"><code class="docutils literal notranslate"><span class="pre">simple_rotating_file_storage.name()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.storage.storages.simple_rotating_file_storage.store"><code class="docutils literal notranslate"><span class="pre">simple_rotating_file_storage.store()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.storage.storages.simple_rotating_file_storage.trim_folder"><code class="docutils literal notranslate"><span class="pre">simple_rotating_file_storage.trim_folder()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.storage.storages.storage"><code class="docutils literal notranslate"><span class="pre">storage</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.storage.storages.storage.name"><code class="docutils literal notranslate"><span class="pre">storage.name()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.storage.storages.storage.store"><code class="docutils literal notranslate"><span class="pre">storage.store()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.storage.storages.storage_manager"><code class="docutils literal notranslate"><span class="pre">storage_manager</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.storage.storages.storage_manager.add_storage"><code class="docutils literal notranslate"><span class="pre">storage_manager.add_storage()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.storage.storages.storage_manager.create_storage"><code class="docutils literal notranslate"><span class="pre">storage_manager.create_storage()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.storage.storages.storage_manager.from_conf"><code class="docutils literal notranslate"><span class="pre">storage_manager.from_conf()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.storage.storages.storage_manager.get_storage"><code class="docutils literal notranslate"><span class="pre">storage_manager.get_storage()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.storage.storages.storage_manager.has_storage"><code class="docutils literal notranslate"><span class="pre">storage_manager.has_storage()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.storage.storages.storage_manager.remove_storage"><code class="docutils literal notranslate"><span class="pre">storage_manager.remove_storage()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.storage.storages.storage_manager.store"><code class="docutils literal notranslate"><span class="pre">storage_manager.store()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-bexchange.storage">Module contents</a></li>
 </ul>
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="bexchange.statistics.html"
-                        title="previous chapter">bexchange.statistics package</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="bexchange.web.html"
-                        title="next chapter">bexchange.web package</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="bexchange.statistics.html"
+                          title="previous chapter">bexchange.statistics package</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="bexchange.web.html"
+                          title="next chapter">bexchange.web package</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -322,7 +375,7 @@ NOTE! The number of files can be set to a maximum of 500</p>
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -349,8 +402,8 @@ NOTE! The number of files can be set to a maximum of 500</p>
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Anders Henja.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

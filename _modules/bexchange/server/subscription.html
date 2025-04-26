@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>bexchange.server.subscription &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -70,9 +68,11 @@
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;bexchange.server.subscription&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="subscription"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.subscription.subscription">[docs]</a><span class="k">class</span> <span class="nc">subscription</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="subscription">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.subscription.subscription">[docs]</a>
+<span class="k">class</span> <span class="nc">subscription</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">storages</span><span class="p">,</span> <span class="n">subscription_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ifilter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">allow_duplicates</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allowed_ids</span><span class="o">=</span><span class="p">[]):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        :param storages: List of storage names</span>
 <span class="sd">        :param subscription_id: Id this subscription should be identified if tunneling</span>
 <span class="sd">        :param active: If this subscription is active or not</span>
@@ -88,50 +88,73 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_allowed_ids</span> <span class="o">=</span> <span class="n">allowed_ids</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_statistics_plugins</span> <span class="o">=</span> <span class="p">[]</span>
 
-<div class="viewcode-block" id="subscription.storages"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.subscription.subscription.storages">[docs]</a>    <span class="k">def</span> <span class="nf">storages</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="subscription.storages">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.subscription.subscription.storages">[docs]</a>
+    <span class="k">def</span> <span class="nf">storages</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return the storage names</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storages</span></div>
+
     
-<div class="viewcode-block" id="subscription.id"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.subscription.subscription.id">[docs]</a>    <span class="k">def</span> <span class="nf">id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="subscription.id">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.subscription.subscription.id">[docs]</a>
+    <span class="k">def</span> <span class="nf">id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return the subscription id (or None if there is none)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subscription_id</span></div>
+
     
-<div class="viewcode-block" id="subscription.isactive"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.subscription.subscription.isactive">[docs]</a>    <span class="k">def</span> <span class="nf">isactive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="subscription.isactive">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.subscription.subscription.isactive">[docs]</a>
+    <span class="k">def</span> <span class="nf">isactive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return if this subscription is active or not</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_active</span></div>
+
     
-<div class="viewcode-block" id="subscription.setactive"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.subscription.subscription.setactive">[docs]</a>    <span class="k">def</span> <span class="nf">setactive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">active</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Sets this subscription active or not</span>
+<div class="viewcode-block" id="subscription.setactive">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.subscription.subscription.setactive">[docs]</a>
+    <span class="k">def</span> <span class="nf">setactive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">active</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Sets this subscription active or not</span>
 <span class="sd">        :param active: If subscription should be set to active or not</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_active</span> <span class="o">=</span> <span class="n">active</span></div>
+
     
-<div class="viewcode-block" id="subscription.filter"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.subscription.subscription.filter">[docs]</a>    <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="subscription.filter">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.subscription.subscription.filter">[docs]</a>
+    <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return the filter</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter</span></div>
+
     
-<div class="viewcode-block" id="subscription.allow_duplicates"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.subscription.subscription.allow_duplicates">[docs]</a>    <span class="k">def</span> <span class="nf">allow_duplicates</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="subscription.allow_duplicates">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.subscription.subscription.allow_duplicates">[docs]</a>
+    <span class="k">def</span> <span class="nf">allow_duplicates</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return if duplicates are handled by this subscription or not</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_allow_duplicates</span></div>
+
     
-<div class="viewcode-block" id="subscription.allowed_ids"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.subscription.subscription.allowed_ids">[docs]</a>    <span class="k">def</span> <span class="nf">allowed_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="subscription.allowed_ids">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.subscription.subscription.allowed_ids">[docs]</a>
+    <span class="k">def</span> <span class="nf">allowed_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return the nodenames</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_allowed_ids</span></div>
 
-<div class="viewcode-block" id="subscription.filter_matching"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.subscription.subscription.filter_matching">[docs]</a>    <span class="k">def</span> <span class="nf">filter_matching</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Matches the meta against the filter.</span>
+
+<div class="viewcode-block" id="subscription.filter_matching">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.subscription.subscription.filter_matching">[docs]</a>
+    <span class="k">def</span> <span class="nf">filter_matching</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Matches the meta against the filter.</span>
 <span class="sd">        :param meta: The metadata</span>
 <span class="sd">        :return True if filter is None or if metadata matches the filter.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -139,26 +162,38 @@
             <span class="n">matcher</span> <span class="o">=</span> <span class="n">metadata_matcher</span><span class="o">.</span><span class="n">metadata_matcher</span><span class="p">()</span>
             <span class="k">return</span> <span class="n">matcher</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter</span><span class="o">.</span><span class="n">to_xpr</span><span class="p">())</span>
         <span class="k">return</span> <span class="kc">True</span></div>
+
        
-<div class="viewcode-block" id="subscription.set_statistics_plugins"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.subscription.subscription.set_statistics_plugins">[docs]</a>    <span class="k">def</span> <span class="nf">set_statistics_plugins</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plugins</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="subscription.set_statistics_plugins">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.subscription.subscription.set_statistics_plugins">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_statistics_plugins</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plugins</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_statistics_plugins</span> <span class="o">=</span> <span class="n">plugins</span></div>
 
-<div class="viewcode-block" id="subscription.get_statistics_plugins"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.subscription.subscription.get_statistics_plugins">[docs]</a>    <span class="k">def</span> <span class="nf">get_statistics_plugins</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; </span>
+
+<div class="viewcode-block" id="subscription.get_statistics_plugins">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.subscription.subscription.get_statistics_plugins">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_statistics_plugins</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; </span>
 <span class="sd">        :returns the stat plugins belonging to this subscription</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_statistics_plugins</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_statistics_plugins</span></div>
+</div>
 
 
-<div class="viewcode-block" id="subscription_manager"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.subscription.subscription_manager">[docs]</a><span class="k">class</span> <span class="nc">subscription_manager</span><span class="p">:</span>
+
+<div class="viewcode-block" id="subscription_manager">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.subscription.subscription_manager">[docs]</a>
+<span class="k">class</span> <span class="nc">subscription_manager</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span>
 
-<div class="viewcode-block" id="subscription_manager.create_subscription"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.subscription.subscription_manager.create_subscription">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="subscription_manager.create_subscription">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.subscription.subscription_manager.create_subscription">[docs]</a>
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">create_subscription</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">storages</span><span class="p">,</span> <span class="n">subscription_id</span><span class="p">,</span> <span class="n">active</span><span class="p">,</span> <span class="n">ifilter</span><span class="p">,</span> <span class="n">allow_duplicates</span><span class="p">,</span> <span class="n">allowed_ids</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Creates a subscription instance</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a subscription instance</span>
 <span class="sd">        :param storages: List of storage names</span>
 <span class="sd">        :param subscription_id: Subscription id</span>
 <span class="sd">        :param active: If subscription should be set to active or not</span>
@@ -167,8 +202,11 @@
 <span class="sd">        :param allowed_ids: A list of ids that should be allowed for this subscription</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">subscription</span><span class="p">(</span><span class="n">storages</span><span class="p">,</span> <span class="n">subscription_id</span><span class="p">,</span> <span class="n">active</span><span class="p">,</span> <span class="n">ifilter</span><span class="p">,</span> <span class="n">allow_duplicates</span><span class="p">,</span> <span class="n">allowed_ids</span><span class="p">)</span></div>
+
     
-<div class="viewcode-block" id="subscription_manager.from_conf"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.subscription.subscription_manager.from_conf">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="subscription_manager.from_conf">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.subscription.subscription_manager.from_conf">[docs]</a>
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_conf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">backend</span><span class="p">):</span>
         <span class="n">filter_manager</span> <span class="o">=</span> <span class="n">filters</span><span class="o">.</span><span class="n">filter_manager</span><span class="p">()</span>
         <span class="n">storages</span><span class="o">=</span><span class="p">[]</span>
@@ -215,7 +253,9 @@
 
         <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_subscription</span><span class="p">(</span><span class="n">storages</span><span class="p">,</span> <span class="n">subscription_id</span><span class="p">,</span> <span class="n">active</span><span class="p">,</span> <span class="n">ifilter</span><span class="p">,</span> <span class="n">allow_duplicates</span><span class="p">,</span> <span class="n">allowed_ids</span><span class="p">)</span>
         <span class="n">s</span><span class="o">.</span><span class="n">set_statistics_plugins</span><span class="p">(</span><span class="n">statplugins</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">s</span></div></div>
+        <span class="k">return</span> <span class="n">s</span></div>
+</div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -233,7 +273,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -253,8 +293,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Anders Henja.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

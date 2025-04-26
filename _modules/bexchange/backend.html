@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>bexchange.backend &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -70,32 +68,45 @@
 
 <span class="kn">from</span> <span class="nn">bexchange</span> <span class="kn">import</span> <span class="n">config</span>
 
-<div class="viewcode-block" id="DuplicateEntry"><a class="viewcode-back" href="../../api/bexchange.html#bexchange.backend.DuplicateEntry">[docs]</a><span class="k">class</span> <span class="nc">DuplicateEntry</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;thrown to indicate that an entry already exists</span>
+<div class="viewcode-block" id="DuplicateEntry">
+<a class="viewcode-back" href="../../api/bexchange.html#bexchange.backend.DuplicateEntry">[docs]</a>
+<span class="k">class</span> <span class="nc">DuplicateEntry</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;thrown to indicate that an entry already exists</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
-<div class="viewcode-block" id="IntegrityError"><a class="viewcode-back" href="../../api/bexchange.html#bexchange.backend.IntegrityError">[docs]</a><span class="k">class</span> <span class="nc">IntegrityError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;thrown to indicate a conflict between resources</span>
+
+<div class="viewcode-block" id="IntegrityError">
+<a class="viewcode-back" href="../../api/bexchange.html#bexchange.backend.IntegrityError">[docs]</a>
+<span class="k">class</span> <span class="nc">IntegrityError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;thrown to indicate a conflict between resources</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="Backend"><a class="viewcode-back" href="../../api/bexchange.html#bexchange.backend.Backend">[docs]</a><span class="k">class</span> <span class="nc">Backend</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Backend interface</span>
+
+<div class="viewcode-block" id="Backend">
+<a class="viewcode-back" href="../../api/bexchange.html#bexchange.backend.Backend">[docs]</a>
+<span class="k">class</span> <span class="nc">Backend</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Backend interface</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">ABCMeta</span>
 
-<div class="viewcode-block" id="Backend.store_file"><a class="viewcode-back" href="../../api/bexchange.html#bexchange.backend.Backend.store_file">[docs]</a>    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="Backend.store_file">
+<a class="viewcode-back" href="../../api/bexchange.html#bexchange.backend.Backend.store_file">[docs]</a>
+    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">store_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">nodename</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;store a file in the database</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;store a file in the database</span>
 <span class="sd">        :param path: path to the file</span>
 <span class="sd">        :type path: string</span>
 <span class="sd">        :param nodename: The origin that tries to store the file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Backend.post_message"><a class="viewcode-back" href="../../api/bexchange.html#bexchange.backend.Backend.post_message">[docs]</a>    <span class="nd">@abstractmethod</span>
+
+<div class="viewcode-block" id="Backend.post_message">
+<a class="viewcode-back" href="../../api/bexchange.html#bexchange.backend.Backend.post_message">[docs]</a>
+    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">post_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_message</span><span class="p">,</span> <span class="n">node_name</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;ensures that a posted message arrives to interested parties</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;ensures that a posted message arrives to interested parties</span>
 <span class="sd">        :param json_message: The json message</span>
 <span class="sd">        :type path: string</span>
 <span class="sd">        :param nodename: The origin that sent the message</span>
@@ -103,35 +114,49 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="Backend.metadata_from_file"><a class="viewcode-back" href="../../api/bexchange.html#bexchange.backend.Backend.metadata_from_file">[docs]</a>    <span class="nd">@abstractmethod</span>
+
+<div class="viewcode-block" id="Backend.metadata_from_file">
+<a class="viewcode-back" href="../../api/bexchange.html#bexchange.backend.Backend.metadata_from_file">[docs]</a>
+    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">metadata_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Parses a file and returns the metadata for this file.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parses a file and returns the metadata for this file.</span>
 <span class="sd">        :param path: path to the file</span>
 <span class="sd">        :type path: string</span>
 <span class="sd">        :return the metadata for this file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
     
-<div class="viewcode-block" id="Backend.get_storage_manager"><a class="viewcode-back" href="../../api/bexchange.html#bexchange.backend.Backend.get_storage_manager">[docs]</a>    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="Backend.get_storage_manager">
+<a class="viewcode-back" href="../../api/bexchange.html#bexchange.backend.Backend.get_storage_manager">[docs]</a>
+    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">get_storage_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the storage manager</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the storage manager</span>
 <span class="sd">        :return the storage manager</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>    </div>
+
     
-<div class="viewcode-block" id="Backend.get_auth_manager"><a class="viewcode-back" href="../../api/bexchange.html#bexchange.backend.Backend.get_auth_manager">[docs]</a>    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="Backend.get_auth_manager">
+<a class="viewcode-back" href="../../api/bexchange.html#bexchange.backend.Backend.get_auth_manager">[docs]</a>
+    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">get_auth_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the auth manager</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the auth manager</span>
 <span class="sd">        :return the auth manager</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>    </div>
 
-<div class="viewcode-block" id="Backend.get_tmp_folder"><a class="viewcode-back" href="../../api/bexchange.html#bexchange.backend.Backend.get_tmp_folder">[docs]</a>    <span class="nd">@abstractmethod</span>
+
+<div class="viewcode-block" id="Backend.get_tmp_folder">
+<a class="viewcode-back" href="../../api/bexchange.html#bexchange.backend.Backend.get_tmp_folder">[docs]</a>
+    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">get_tmp_folder</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the global temporary folder name if defined</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the global temporary folder name if defined</span>
 <span class="sd">        :return the temporary folder name</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+</div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -149,7 +174,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -169,8 +194,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Anders Henja.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

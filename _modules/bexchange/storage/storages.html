@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>bexchange.storage.storages &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -75,53 +73,73 @@
 <span class="kn">from</span> <span class="nn">bexchange.naming</span> <span class="kn">import</span> <span class="n">namer</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;bexchange.server.backend&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="storage"><a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.storage">[docs]</a><span class="k">class</span> <span class="nc">storage</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Base class for all storages</span>
+<div class="viewcode-block" id="storage">
+<a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.storage">[docs]</a>
+<span class="k">class</span> <span class="nc">storage</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for all storages</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">storage</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
     
-<div class="viewcode-block" id="storage.name"><a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.storage.name">[docs]</a>    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="storage.name">
+<a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.storage.name">[docs]</a>
+    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return the name identifying this storage</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
     
-<div class="viewcode-block" id="storage.store"><a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.storage.store">[docs]</a>    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="storage.store">
+<a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.storage.store">[docs]</a>
+    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Passes on the file to the storage</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Passes on the file to the storage</span>
 <span class="sd">        :param path: The full path to the file to be stored</span>
 <span class="sd">        :param meta: The meta data for this file.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+</div>
 
-<div class="viewcode-block" id="none_storage"><a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.none_storage">[docs]</a><span class="k">class</span> <span class="nc">none_storage</span><span class="p">(</span><span class="n">storage</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Simple storage that does nothing</span>
+
+<div class="viewcode-block" id="none_storage">
+<a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.none_storage">[docs]</a>
+<span class="k">class</span> <span class="nc">none_storage</span><span class="p">(</span><span class="n">storage</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simple storage that does nothing</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        :param name: The name identifying this storage</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">none_storage</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>        
         <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">name</span>
 
-<div class="viewcode-block" id="none_storage.store"><a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.none_storage.store">[docs]</a>    <span class="k">def</span> <span class="nf">store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Does nothing but prints that a file would have been stored</span>
+<div class="viewcode-block" id="none_storage.store">
+<a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.none_storage.store">[docs]</a>
+    <span class="k">def</span> <span class="nf">store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Does nothing but prints that a file would have been stored</span>
 <span class="sd">        :param path: The full path to the file to be stored</span>
 <span class="sd">        :param meta: The meta data for this file.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;[none_storage - </span><span class="si">%s</span><span class="s2">]: </span><span class="si">%s</span><span class="s2"> - </span><span class="si">%s</span><span class="s2"> - </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_source</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_date</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_time</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="none_storage.name"><a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.none_storage.name">[docs]</a>    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="none_storage.name">
+<a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.none_storage.name">[docs]</a>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return the name identifying this storage</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span></div>
+</div>
 
-<div class="viewcode-block" id="file_store"><a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.file_store">[docs]</a><span class="k">class</span> <span class="nc">file_store</span><span class="p">:</span>
+
+<div class="viewcode-block" id="file_store">
+<a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.file_store">[docs]</a>
+<span class="k">class</span> <span class="nc">file_store</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name_pattern</span><span class="p">,</span> <span class="n">simulate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">keep_same_name</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name_pattern</span> <span class="o">=</span> <span class="n">name_pattern</span>
@@ -129,7 +147,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_simulate</span> <span class="o">=</span> <span class="n">simulate</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_keep_same_name</span> <span class="o">=</span> <span class="n">keep_same_name</span>
     
-<div class="viewcode-block" id="file_store.store"><a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.file_store.store">[docs]</a>    <span class="k">def</span> <span class="nf">store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<div class="viewcode-block" id="file_store.store">
+<a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.file_store.store">[docs]</a>
+    <span class="k">def</span> <span class="nf">store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
         <span class="n">oname</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">namer</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="n">meta</span><span class="p">))</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simulate</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[SIMULATE]: Stored file:  </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">oname</span><span class="p">)</span>
@@ -143,10 +163,14 @@
             <span class="n">oname</span> <span class="o">=</span> <span class="n">oname</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())[:</span><span class="mi">8</span><span class="p">]</span>
 
         <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">oname</span><span class="p">)</span>        
-        <span class="n">os</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="n">oname</span><span class="p">,</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IRUSR</span> <span class="o">|</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IWUSR</span> <span class="o">|</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IRGRP</span> <span class="o">|</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IWGRP</span> <span class="o">|</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IROTH</span><span class="p">)</span></div></div>
+        <span class="n">os</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="n">oname</span><span class="p">,</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IRUSR</span> <span class="o">|</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IWUSR</span> <span class="o">|</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IRGRP</span> <span class="o">|</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IWGRP</span> <span class="o">|</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IROTH</span><span class="p">)</span></div>
+</div>
 
-<div class="viewcode-block" id="file_storage"><a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.file_storage">[docs]</a><span class="k">class</span> <span class="nc">file_storage</span><span class="p">(</span><span class="n">storage</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A basic file storage that allows separation of files based on object types. A typical structure passed to kwargs would be</span>
+
+<div class="viewcode-block" id="file_storage">
+<a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.file_storage">[docs]</a>
+<span class="k">class</span> <span class="nc">file_storage</span><span class="p">(</span><span class="n">storage</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A basic file storage that allows separation of files based on object types. A typical structure passed to kwargs would be</span>
 
 <span class="sd">    &quot;structure&quot;: [</span>
 <span class="sd">      { &quot;object&quot;:&quot;SCAN&quot;,</span>
@@ -158,7 +182,7 @@
 <span class="sd">      }]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        :param name: The name of this storage</span>
 <span class="sd">        :param backend: The backend (NOT USED)</span>
 <span class="sd">        :param kwargs: the configuration required for the file storage.</span>
@@ -181,8 +205,10 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">structures</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="s2">&quot;object&quot;</span><span class="p">]]</span><span class="o">=</span><span class="n">file_store</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">],</span><span class="n">s</span><span class="p">[</span><span class="s2">&quot;name_pattern&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simulate</span><span class="p">)</span>
 
-<div class="viewcode-block" id="file_storage.get_attribute_value"><a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.file_storage.get_attribute_value">[docs]</a>    <span class="k">def</span> <span class="nf">get_attribute_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="file_storage.get_attribute_value">
+<a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.file_storage.get_attribute_value">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_attribute_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param name: Name of attribute</span>
 <span class="sd">        :param meta: Metadata from where value for name should be taken</span>
 <span class="sd">        :return: the value for the name or None if not found</span>
@@ -192,8 +218,11 @@
         <span class="k">except</span> <span class="ne">LookupError</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="file_storage.store"><a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.file_storage.store">[docs]</a>    <span class="k">def</span> <span class="nf">store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Stores a file in the correct directory structure</span>
+
+<div class="viewcode-block" id="file_storage.store">
+<a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.file_storage.store">[docs]</a>
+    <span class="k">def</span> <span class="nf">store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Stores a file in the correct directory structure</span>
 <span class="sd">        :param path: The path to the file to be stored</span>
 <span class="sd">        :param meta: The meta data for the file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -206,20 +235,27 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Ignoring </span><span class="si">%s</span><span class="s2"> object of type: &quot;</span> <span class="o">%</span> <span class="n">q</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="file_storage.name"><a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.file_storage.name">[docs]</a>    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="file_storage.name">
+<a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.file_storage.name">[docs]</a>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return the name of this storage</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span></div>
+</div>
 
-<div class="viewcode-block" id="simple_rotating_file_storage"><a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.simple_rotating_file_storage">[docs]</a><span class="k">class</span> <span class="nc">simple_rotating_file_storage</span><span class="p">(</span><span class="n">storage</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A very simple rotating file storage that keeps a limited number of files in a single folder. The files will get two different names. Either:</span>
+
+<div class="viewcode-block" id="simple_rotating_file_storage">
+<a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.simple_rotating_file_storage">[docs]</a>
+<span class="k">class</span> <span class="nc">simple_rotating_file_storage</span><span class="p">(</span><span class="n">storage</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A very simple rotating file storage that keeps a limited number of files in a single folder. The files will get two different names. Either:</span>
 <span class="sd">    ${_baltrad/source_name}_scan_${/dataset1/where/elangle}_${/what/date}T${/what/time}.h5  - for scans</span>
 <span class="sd">    ${_baltrad/source_name}_${/what/object}.tolower()_${/what/date}T${/what/time}.h5        - for any other file type</span>
 <span class="sd">    NOTE! The number of files can be set to a maximum of 500</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        :param name: The name of this storage</span>
 <span class="sd">        :param backend: The backend (NOT USED)</span>
 <span class="sd">        :param kwargs: the configuration required for the file storage.</span>
@@ -238,8 +274,10 @@
             <span class="k">if</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;number_of_files&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">500</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_number_of_files</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;number_of_files&quot;</span><span class="p">]</span>
 
-<div class="viewcode-block" id="simple_rotating_file_storage.get_attribute_value"><a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.simple_rotating_file_storage.get_attribute_value">[docs]</a>    <span class="k">def</span> <span class="nf">get_attribute_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="simple_rotating_file_storage.get_attribute_value">
+<a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.simple_rotating_file_storage.get_attribute_value">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_attribute_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param name: Name of attribute</span>
 <span class="sd">        :param meta: Metadata from where value for name should be taken</span>
 <span class="sd">        :return: the value for the name or None if not found</span>
@@ -249,8 +287,11 @@
         <span class="k">except</span> <span class="ne">LookupError</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="simple_rotating_file_storage.store"><a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.simple_rotating_file_storage.store">[docs]</a>    <span class="k">def</span> <span class="nf">store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Stores a file in the correct directory structure</span>
+
+<div class="viewcode-block" id="simple_rotating_file_storage.store">
+<a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.simple_rotating_file_storage.store">[docs]</a>
+    <span class="k">def</span> <span class="nf">store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Stores a file in the correct directory structure</span>
 <span class="sd">        :param path: The path to the file to be stored</span>
 <span class="sd">        :param meta: The meta data for the file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -262,58 +303,94 @@
         
         <span class="bp">self</span><span class="o">.</span><span class="n">trim_folder</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_folder</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="simple_rotating_file_storage.name"><a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.simple_rotating_file_storage.name">[docs]</a>    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="simple_rotating_file_storage.name">
+<a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.simple_rotating_file_storage.name">[docs]</a>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return the name of this storage</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span></div>
+
     
-<div class="viewcode-block" id="simple_rotating_file_storage.trim_folder"><a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.simple_rotating_file_storage.trim_folder">[docs]</a>    <span class="k">def</span> <span class="nf">trim_folder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<div class="viewcode-block" id="simple_rotating_file_storage.trim_folder">
+<a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.simple_rotating_file_storage.trim_folder">[docs]</a>
+    <span class="k">def</span> <span class="nf">trim_folder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
             <span class="n">paths</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">iterdir</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getmtime</span><span class="p">)</span>
             <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">paths</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_number_of_files</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">paths</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">fpath</span> <span class="o">=</span> <span class="n">paths</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span></div></div>
+                <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span></div>
+</div>
 
-<div class="viewcode-block" id="storage_manager"><a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.storage_manager">[docs]</a><span class="k">class</span> <span class="nc">storage_manager</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot; The storage manager</span>
+
+<div class="viewcode-block" id="storage_manager">
+<a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.storage_manager">[docs]</a>
+<span class="k">class</span> <span class="nc">storage_manager</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; The storage manager</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">=</span><span class="p">{}</span>
     
-<div class="viewcode-block" id="storage_manager.add_storage"><a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.storage_manager.add_storage">[docs]</a>    <span class="k">def</span> <span class="nf">add_storage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">storage</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Adds a storage instance to the internal list</span>
+<div class="viewcode-block" id="storage_manager.add_storage">
+<a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.storage_manager.add_storage">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_storage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">storage</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Adds a storage instance to the internal list</span>
 <span class="sd">        :param storage: The created storage that is a subclass of  bexchange.storage.storages.storage</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="p">[</span><span class="n">storage</span><span class="o">.</span><span class="n">name</span><span class="p">()]</span> <span class="o">=</span> <span class="n">storage</span></div>
+
     
-<div class="viewcode-block" id="storage_manager.get_storage"><a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.storage_manager.get_storage">[docs]</a>    <span class="k">def</span> <span class="nf">get_storage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="storage_manager.get_storage">
+<a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.storage_manager.get_storage">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_storage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param name: Name of the storage</span>
 <span class="sd">        :return: the storage with provided name</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="p">[</span><span class="n">name</span><span class="p">]</span></div>
+
     
-<div class="viewcode-block" id="storage_manager.has_storage"><a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.storage_manager.has_storage">[docs]</a>    <span class="k">def</span> <span class="nf">has_storage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="storage_manager.has_storage">
+<a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.storage_manager.has_storage">[docs]</a>
+    <span class="k">def</span> <span class="nf">has_storage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param name: Name of the storage</span>
 <span class="sd">        :return: if there is a storage with specified name</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage</span></div>
+
     
-<div class="viewcode-block" id="storage_manager.store"><a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.storage_manager.store">[docs]</a>    <span class="k">def</span> <span class="nf">store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Stores a file in the specified storage.</span>
+<div class="viewcode-block" id="storage_manager.remove_storage">
+<a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.storage_manager.remove_storage">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_storage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param name: Name of the storage</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Failed to remove storage: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">name</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="storage_manager.store">
+<a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.storage_manager.store">[docs]</a>
+    <span class="k">def</span> <span class="nf">store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Stores a file in the specified storage.</span>
 <span class="sd">        :param name: Name in which the file should be stored</span>
 <span class="sd">        :param path: The file name that should be stored</span>
 <span class="sd">        :param meta: Metadata about the file that should be stored</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span></div>
-        
-<div class="viewcode-block" id="storage_manager.create_storage"><a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.storage_manager.create_storage">[docs]</a>    <span class="nd">@classmethod</span>
+
+    
+<div class="viewcode-block" id="storage_manager.create_storage">
+<a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.storage_manager.create_storage">[docs]</a>
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">create_storage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clz</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">extra_arguments</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Creates an instance of clz with specified arguments</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates an instance of clz with specified arguments</span>
 <span class="sd">        :param clz: class name specified as &lt;module&gt;.&lt;classname&gt;</span>
 <span class="sd">        :param arguments: a list of arguments that should be used to initialize the class       </span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -325,10 +402,13 @@
             <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">classname</span><span class="p">)(</span><span class="n">name</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="o">**</span><span class="n">extra_arguments</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Must specify class as module.class&quot;</span><span class="p">)</span></div>
+
     
-<div class="viewcode-block" id="storage_manager.from_conf"><a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.storage_manager.from_conf">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="storage_manager.from_conf">
+<a class="viewcode-back" href="../../../api/bexchange.storage.html#bexchange.storage.storages.storage_manager.from_conf">[docs]</a>
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_conf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">backend</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Creates a storage from the specified configuration if it is possible</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a storage from the specified configuration if it is possible</span>
 
 <span class="sd">        :param config: A runner config pattern. Should at least contain the following</span>
 
@@ -347,7 +427,9 @@
         
         <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_storage</span><span class="p">(</span><span class="n">storage_clazz</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">arguments</span><span class="p">)</span>
         
-        <span class="k">return</span> <span class="n">p</span></div></div>
+        <span class="k">return</span> <span class="n">p</span></div>
+</div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -365,7 +447,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -385,8 +467,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Anders Henja.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

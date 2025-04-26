@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>bexchange.net.fetchers &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -56,11 +54,13 @@
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;bexchange.net.fetchers&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="fetcher"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.fetcher">[docs]</a><span class="k">class</span> <span class="nc">fetcher</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Base fetcher. All classes implementing this should provide ability to fetch files in some way. </span>
+<div class="viewcode-block" id="fetcher">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.fetcher">[docs]</a>
+<span class="k">class</span> <span class="nc">fetcher</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base fetcher. All classes implementing this should provide ability to fetch files in some way. </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        :param backend: The server backend</span>
 <span class="sd">        :param aid: An id identifying this fetcher</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -68,27 +68,39 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span> <span class="o">=</span> <span class="n">backend</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">=</span> <span class="n">aid</span>
         
-<div class="viewcode-block" id="fetcher.id"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.fetcher.id">[docs]</a>    <span class="k">def</span> <span class="nf">id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns this fetcher id</span>
+<div class="viewcode-block" id="fetcher.id">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.fetcher.id">[docs]</a>
+    <span class="k">def</span> <span class="nf">id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns this fetcher id</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id</span></div>
 
-<div class="viewcode-block" id="fetcher.backend"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.fetcher.backend">[docs]</a>    <span class="k">def</span> <span class="nf">backend</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the server backend</span>
+
+<div class="viewcode-block" id="fetcher.backend">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.fetcher.backend">[docs]</a>
+    <span class="k">def</span> <span class="nf">backend</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the server backend</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span></div>
 
-<div class="viewcode-block" id="fetcher.fetch"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.fetcher.fetch">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Fetches some files</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Not implemented&quot;</span><span class="p">)</span></div></div>
 
-<div class="viewcode-block" id="baseuri_fetcher"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.baseuri_fetcher">[docs]</a><span class="k">class</span> <span class="nc">baseuri_fetcher</span><span class="p">(</span><span class="n">fetcher</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Base class for fetching data using basic file transmission protocols like sftp, ftp, ...</span>
+<div class="viewcode-block" id="fetcher.fetch">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.fetcher.fetch">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetches some files</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Not implemented&quot;</span><span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="baseuri_fetcher">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.baseuri_fetcher">[docs]</a>
+<span class="k">class</span> <span class="nc">baseuri_fetcher</span><span class="p">(</span><span class="n">fetcher</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for fetching data using basic file transmission protocols like sftp, ftp, ...</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        :param backend: The backend</span>
 <span class="sd">        :param aid: Id for this fetcher</span>
 <span class="sd">        :param arguments: Dictionary containg at least:</span>
@@ -119,48 +131,72 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_password</span> <span class="o">=</span> <span class="n">uri</span><span class="o">.</span><span class="n">password</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_path</span> <span class="o">=</span> <span class="n">uri</span><span class="o">.</span><span class="n">path</span>
 
-<div class="viewcode-block" id="baseuri_fetcher.uri"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.baseuri_fetcher.uri">[docs]</a>    <span class="k">def</span> <span class="nf">uri</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="baseuri_fetcher.uri">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.baseuri_fetcher.uri">[docs]</a>
+    <span class="k">def</span> <span class="nf">uri</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_uri</span></div>
 
-<div class="viewcode-block" id="baseuri_fetcher.hostname"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.baseuri_fetcher.hostname">[docs]</a>    <span class="k">def</span> <span class="nf">hostname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the hostname extracted from the uri</span>
+
+<div class="viewcode-block" id="baseuri_fetcher.hostname">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.baseuri_fetcher.hostname">[docs]</a>
+    <span class="k">def</span> <span class="nf">hostname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the hostname extracted from the uri</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hostname</span></div>
 
-<div class="viewcode-block" id="baseuri_fetcher.port"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.baseuri_fetcher.port">[docs]</a>    <span class="k">def</span> <span class="nf">port</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the port number extracted from the uri.</span>
+
+<div class="viewcode-block" id="baseuri_fetcher.port">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.baseuri_fetcher.port">[docs]</a>
+    <span class="k">def</span> <span class="nf">port</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the port number extracted from the uri.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_port</span></div>
+
     
-<div class="viewcode-block" id="baseuri_fetcher.set_port"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.baseuri_fetcher.set_port">[docs]</a>    <span class="k">def</span> <span class="nf">set_port</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">portno</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Sets the portnumber</span>
+<div class="viewcode-block" id="baseuri_fetcher.set_port">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.baseuri_fetcher.set_port">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_port</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">portno</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Sets the portnumber</span>
 <span class="sd">        :param portno: The portnumber to use</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_port</span> <span class="o">=</span> <span class="n">portno</span></div>
+
     
-<div class="viewcode-block" id="baseuri_fetcher.username"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.baseuri_fetcher.username">[docs]</a>    <span class="k">def</span> <span class="nf">username</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="baseuri_fetcher.username">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.baseuri_fetcher.username">[docs]</a>
+    <span class="k">def</span> <span class="nf">username</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return the user name</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_username</span></div>
+
     
-<div class="viewcode-block" id="baseuri_fetcher.password"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.baseuri_fetcher.password">[docs]</a>    <span class="k">def</span> <span class="nf">password</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="baseuri_fetcher.password">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.baseuri_fetcher.password">[docs]</a>
+    <span class="k">def</span> <span class="nf">password</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return the password</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_password</span></div>
 
-<div class="viewcode-block" id="baseuri_fetcher.path"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.baseuri_fetcher.path">[docs]</a>    <span class="k">def</span> <span class="nf">path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="baseuri_fetcher.path">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.baseuri_fetcher.path">[docs]</a>
+    <span class="k">def</span> <span class="nf">path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return the path</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_path</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_path</span></div>
+</div>
 
-<div class="viewcode-block" id="baseuri_patternmatching_fetcher"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.baseuri_patternmatching_fetcher">[docs]</a><span class="k">class</span> <span class="nc">baseuri_patternmatching_fetcher</span><span class="p">(</span><span class="n">baseuri_fetcher</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Base class for fetching data using basic file transmission protocols like sftp, ftp, ...</span>
+
+<div class="viewcode-block" id="baseuri_patternmatching_fetcher">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.baseuri_patternmatching_fetcher">[docs]</a>
+<span class="k">class</span> <span class="nc">baseuri_patternmatching_fetcher</span><span class="p">(</span><span class="n">baseuri_fetcher</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for fetching data using basic file transmission protocols like sftp, ftp, ...</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        :param backend: The backend</span>
 <span class="sd">        :param aid: Id for this fetcher</span>
 <span class="sd">        :param arguments: Dictionary containg at least</span>
@@ -182,29 +218,41 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pattern</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_pattern_matcher</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pattern</span><span class="p">)</span>
 
-<div class="viewcode-block" id="baseuri_patternmatching_fetcher.fnpattern"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.baseuri_patternmatching_fetcher.fnpattern">[docs]</a>    <span class="k">def</span> <span class="nf">fnpattern</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the fnpattern</span>
-<span class="sd">        :return: the filename pattern, like \*.h5</span>
+<div class="viewcode-block" id="baseuri_patternmatching_fetcher.fnpattern">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.baseuri_patternmatching_fetcher.fnpattern">[docs]</a>
+    <span class="k">def</span> <span class="nf">fnpattern</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the fnpattern</span>
+<span class="sd">        :return: the filename pattern, like \\*.h5</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fnpattern</span></div>
+
     
-<div class="viewcode-block" id="baseuri_patternmatching_fetcher.pattern"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.baseuri_patternmatching_fetcher.pattern">[docs]</a>    <span class="k">def</span> <span class="nf">pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="baseuri_patternmatching_fetcher.pattern">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.baseuri_patternmatching_fetcher.pattern">[docs]</a>
+    <span class="k">def</span> <span class="nf">pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return the regular expression matching pattern</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pattern</span></div>
+
     
-<div class="viewcode-block" id="baseuri_patternmatching_fetcher.pattern_matcher"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.baseuri_patternmatching_fetcher.pattern_matcher">[docs]</a>    <span class="k">def</span> <span class="nf">pattern_matcher</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="baseuri_patternmatching_fetcher.pattern_matcher">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.baseuri_patternmatching_fetcher.pattern_matcher">[docs]</a>
+    <span class="k">def</span> <span class="nf">pattern_matcher</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return the pattern matcher for the regular expression if there is one</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pattern_matcher</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pattern_matcher</span></div>
+</div>
 
-<div class="viewcode-block" id="sftp_fetcher"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.sftp_fetcher">[docs]</a><span class="k">class</span> <span class="nc">sftp_fetcher</span><span class="p">(</span><span class="n">baseuri_patternmatching_fetcher</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Fetcher files using sftp</span>
+
+<div class="viewcode-block" id="sftp_fetcher">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.sftp_fetcher">[docs]</a>
+<span class="k">class</span> <span class="nc">sftp_fetcher</span><span class="p">(</span><span class="n">baseuri_patternmatching_fetcher</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetcher files using sftp</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        :param backend: The backend</span>
 <span class="sd">        :param aid: Id for this fetcher</span>
 <span class="sd">        :param arguments: Dictionary containg at least:</span>
@@ -216,8 +264,10 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">fnpattern</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="p">():</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Neither fnpattern or pattern provided&quot;</span><span class="p">)</span> 
         
-<div class="viewcode-block" id="sftp_fetcher.fetch"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.sftp_fetcher.fetch">[docs]</a>    <span class="k">def</span> <span class="nf">fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Fetches the file using sftp.</span>
+<div class="viewcode-block" id="sftp_fetcher.fetch">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.sftp_fetcher.fetch">[docs]</a>
+    <span class="k">def</span> <span class="nf">fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetches the file using sftp.</span>
 <span class="sd">        :param file: path to file that should be published</span>
 <span class="sd">        :param meta: the meta object for all metadata of file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -236,13 +286,17 @@
                 <span class="n">ntfargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;dir&quot;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="p">()</span><span class="o">.</span><span class="n">get_tmp_folder</span><span class="p">()}</span>
                 <span class="k">with</span> <span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="o">**</span><span class="n">ntfargs</span><span class="p">)</span> <span class="k">as</span> <span class="n">tfo</span><span class="p">:</span>
                     <span class="n">c</span><span class="o">.</span><span class="n">getfo</span><span class="p">(</span><span class="n">fullname</span><span class="p">,</span> <span class="n">tfo</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="p">()</span><span class="o">.</span><span class="n">store_file</span><span class="p">(</span><span class="n">fullname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">())</span></div></div>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="p">()</span><span class="o">.</span><span class="n">store_file</span><span class="p">(</span><span class="n">fullname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">())</span></div>
+</div>
 
-<div class="viewcode-block" id="scp_fetcher"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.scp_fetcher">[docs]</a><span class="k">class</span> <span class="nc">scp_fetcher</span><span class="p">(</span><span class="n">baseuri_patternmatching_fetcher</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Fetcher file(s) using scp</span>
+
+<div class="viewcode-block" id="scp_fetcher">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.scp_fetcher">[docs]</a>
+<span class="k">class</span> <span class="nc">scp_fetcher</span><span class="p">(</span><span class="n">baseuri_patternmatching_fetcher</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetcher file(s) using scp</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        :param backend: The backend</span>
 <span class="sd">        :param aid: Id for this fetcher</span>
 <span class="sd">        :param arguments: Dictionary containg at least:</span>
@@ -252,8 +306,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">scp_fetcher</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">,</span> <span class="n">arguments</span><span class="p">)</span>
         
-<div class="viewcode-block" id="scp_fetcher.fetch"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.scp_fetcher.fetch">[docs]</a>    <span class="k">def</span> <span class="nf">fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Fetches the file(s) using scp.</span>
+<div class="viewcode-block" id="scp_fetcher.fetch">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.scp_fetcher.fetch">[docs]</a>
+    <span class="k">def</span> <span class="nf">fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetches the file(s) using scp.</span>
 <span class="sd">        :param file: path to file that should be published</span>
 <span class="sd">        :param meta: the meta object for all metadata of file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -285,13 +341,17 @@
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">ssh</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
                 <span class="k">except</span><span class="p">:</span>
-                    <span class="k">pass</span></div></div>
+                    <span class="k">pass</span></div>
+</div>
 
-<div class="viewcode-block" id="ftp_fetcher"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.ftp_fetcher">[docs]</a><span class="k">class</span> <span class="nc">ftp_fetcher</span><span class="p">(</span><span class="n">baseuri_patternmatching_fetcher</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Fetcher file(s) using scp</span>
+
+<div class="viewcode-block" id="ftp_fetcher">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.ftp_fetcher">[docs]</a>
+<span class="k">class</span> <span class="nc">ftp_fetcher</span><span class="p">(</span><span class="n">baseuri_patternmatching_fetcher</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetcher file(s) using scp</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        :param backend: The backend</span>
 <span class="sd">        :param aid: Id for this fetcher</span>
 <span class="sd">        :param arguments: Dictionary containg at least:</span>
@@ -305,8 +365,10 @@
             <span class="k">if</span> <span class="ow">not</span> <span class="n">uri</span><span class="o">.</span><span class="n">port</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">set_port</span><span class="p">(</span><span class="mi">21</span><span class="p">)</span>
 
-<div class="viewcode-block" id="ftp_fetcher.fetch"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.ftp_fetcher.fetch">[docs]</a>    <span class="k">def</span> <span class="nf">fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Fetches the file(s) using ftp.</span>
+<div class="viewcode-block" id="ftp_fetcher.fetch">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.ftp_fetcher.fetch">[docs]</a>
+    <span class="k">def</span> <span class="nf">fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetches the file(s) using ftp.</span>
 <span class="sd">        :param file: path to file that should be published</span>
 <span class="sd">        :param meta: the meta object for all metadata of file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -334,20 +396,27 @@
         <span class="k">finally</span><span class="p">:</span>
             <span class="n">ftp</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span></div>
 
+
     <span class="c1">##</span>
     <span class="c1"># Connects to remote server</span>
-<div class="viewcode-block" id="ftp_fetcher.connect"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.ftp_fetcher.connect">[docs]</a>    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ftp_fetcher.connect">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.ftp_fetcher.connect">[docs]</a>
+    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">ftp</span> <span class="o">=</span> <span class="n">ftplib</span><span class="o">.</span><span class="n">FTP</span><span class="p">()</span>
         <span class="n">ftp</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">())</span>
         <span class="n">ftp</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">())</span>
-        <span class="k">return</span> <span class="n">ftp</span></div></div>
+        <span class="k">return</span> <span class="n">ftp</span></div>
+</div>
 
 
-<div class="viewcode-block" id="copy_fetcher"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.copy_fetcher">[docs]</a><span class="k">class</span> <span class="nc">copy_fetcher</span><span class="p">(</span><span class="n">fetcher</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Fetcher file(s) using copy</span>
+
+<div class="viewcode-block" id="copy_fetcher">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.copy_fetcher">[docs]</a>
+<span class="k">class</span> <span class="nc">copy_fetcher</span><span class="p">(</span><span class="n">fetcher</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetcher file(s) using copy</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        :param backend: The backend</span>
 <span class="sd">        :param aid: Id for this fetcher</span>
 <span class="sd">        :param arguments: Dictionary containg at least:</span>
@@ -369,8 +438,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_pattern_matcher</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pattern</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="copy_fetcher.fetch"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.copy_fetcher.fetch">[docs]</a>    <span class="k">def</span> <span class="nf">fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Fetches the file(s) using copy.</span>
+<div class="viewcode-block" id="copy_fetcher.fetch">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.copy_fetcher.fetch">[docs]</a>
+    <span class="k">def</span> <span class="nf">fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetches the file(s) using copy.</span>
 <span class="sd">        :param file: path to file that should be published</span>
 <span class="sd">        :param meta: the meta object for all metadata of file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -384,20 +455,29 @@
                 <span class="k">continue</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="p">()</span><span class="o">.</span><span class="n">store_file</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">())</span></div>
 
-<div class="viewcode-block" id="copy_fetcher.pattern_matcher"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.copy_fetcher.pattern_matcher">[docs]</a>    <span class="k">def</span> <span class="nf">pattern_matcher</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="copy_fetcher.pattern_matcher">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.copy_fetcher.pattern_matcher">[docs]</a>
+    <span class="k">def</span> <span class="nf">pattern_matcher</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return the pattern matcher</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pattern_matcher</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pattern_matcher</span></div>
+</div>
 
 
-<div class="viewcode-block" id="fetcher_manager"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.fetcher_manager">[docs]</a><span class="k">class</span> <span class="nc">fetcher_manager</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot; Creates fetcher instances from a configuration entry</span>
+
+<div class="viewcode-block" id="fetcher_manager">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.fetcher_manager">[docs]</a>
+<span class="k">class</span> <span class="nc">fetcher_manager</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Creates fetcher instances from a configuration entry</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="fetcher_manager.from_conf"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.fetcher_manager.from_conf">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="fetcher_manager.from_conf">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.fetchers.fetcher_manager.from_conf">[docs]</a>
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_conf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Creates an instance of clz with specified arguments</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates an instance of clz with specified arguments</span>
 <span class="sd">        :param arguments: a list of arguments that should be used to initialize the class       </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">aid</span><span class="o">=</span><span class="kc">None</span>
@@ -418,7 +498,9 @@
 
             <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">classname</span><span class="p">)(</span><span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">,</span> <span class="n">fetcherargs</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Must specify class as module.class&quot;</span><span class="p">)</span></div></div>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Must specify class as module.class&quot;</span><span class="p">)</span></div>
+</div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -436,7 +518,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -456,8 +538,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Anders Henja.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

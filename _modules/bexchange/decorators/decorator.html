@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>bexchange.decorators.decorator &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -69,47 +67,63 @@
 
 <span class="c1">##</span>
 <span class="c1"># Decorator</span>
-<div class="viewcode-block" id="decorator"><a class="viewcode-back" href="../../../api/bexchange.decorators.html#bexchange.decorators.decorator.decorator">[docs]</a><span class="k">class</span> <span class="nc">decorator</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A decorator is used for modifying a file before it is distributed. Incomming files are not decorated before they are saved. Instead, if that function is</span>
+<div class="viewcode-block" id="decorator">
+<a class="viewcode-back" href="../../../api/bexchange.decorators.html#bexchange.decorators.decorator.decorator">[docs]</a>
+<span class="k">class</span> <span class="nc">decorator</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A decorator is used for modifying a file before it is distributed. Incomming files are not decorated before they are saved. Instead, if that function is</span>
 <span class="sd">    wanted a copy-publisher should be used instead.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span>
     
-<div class="viewcode-block" id="decorator.decorate"><a class="viewcode-back" href="../../../api/bexchange.decorators.html#bexchange.decorators.decorator.decorator.decorate">[docs]</a>    <span class="k">def</span> <span class="nf">decorate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ino</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;If this decorator decorates the infile, then a new temporary file will be created. The old temporary file will be removed and</span>
+<div class="viewcode-block" id="decorator.decorate">
+<a class="viewcode-back" href="../../../api/bexchange.decorators.html#bexchange.decorators.decorator.decorator.decorate">[docs]</a>
+    <span class="k">def</span> <span class="nf">decorate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ino</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;If this decorator decorates the infile, then a new temporary file will be created. The old temporary file will be removed and</span>
 <span class="sd">        then a new temporary file will be returned.</span>
 <span class="sd">        :param ino: A tempfile.NamedTemporaryFile instance</span>
 <span class="sd">        :returns: A tempfile.NamedTemporaryFile instance</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Not implemented&quot;</span><span class="p">)</span></div></div>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Not implemented&quot;</span><span class="p">)</span></div>
+</div>
+
 
 <span class="c1">##</span>
 <span class="c1"># Example..</span>
-<div class="viewcode-block" id="example_filter"><a class="viewcode-back" href="../../../api/bexchange.decorators.html#bexchange.decorators.decorator.example_filter">[docs]</a><span class="k">class</span> <span class="nc">example_filter</span><span class="p">(</span><span class="n">decorator</span><span class="p">):</span>
+<div class="viewcode-block" id="example_filter">
+<a class="viewcode-back" href="../../../api/bexchange.decorators.html#bexchange.decorators.decorator.example_filter">[docs]</a>
+<span class="k">class</span> <span class="nc">example_filter</span><span class="p">(</span><span class="n">decorator</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">example_filter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">arg1</span><span class="o">=</span><span class="n">arg1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">arg2</span><span class="o">=</span><span class="n">arg2</span>
     
-<div class="viewcode-block" id="example_filter.decorate"><a class="viewcode-back" href="../../../api/bexchange.decorators.html#bexchange.decorators.decorator.example_filter.decorate">[docs]</a>    <span class="k">def</span> <span class="nf">decorate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inf</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">inf</span></div></div>
+<div class="viewcode-block" id="example_filter.decorate">
+<a class="viewcode-back" href="../../../api/bexchange.decorators.html#bexchange.decorators.decorator.example_filter.decorate">[docs]</a>
+    <span class="k">def</span> <span class="nf">decorate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inf</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">inf</span></div>
+</div>
+
 
 <span class="c1">##</span>
 <span class="c1"># Manager that handles the creation of decorators from a class name and a number of arguments.</span>
 <span class="c1">#</span>
-<div class="viewcode-block" id="decorator_manager"><a class="viewcode-back" href="../../../api/bexchange.decorators.html#bexchange.decorators.decorator.decorator_manager">[docs]</a><span class="k">class</span> <span class="nc">decorator_manager</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;The manager for creating decorators used within bexchange. If a class extends the decorator</span>
+<div class="viewcode-block" id="decorator_manager">
+<a class="viewcode-back" href="../../../api/bexchange.decorators.html#bexchange.decorators.decorator.decorator_manager">[docs]</a>
+<span class="k">class</span> <span class="nc">decorator_manager</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The manager for creating decorators used within bexchange. If a class extends the decorator</span>
 <span class="sd">    class it can be created by invoking decorator_manager.create(&quot;module....class name&quot;, arguments as a list) </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span>
     
-<div class="viewcode-block" id="decorator_manager.create"><a class="viewcode-back" href="../../../api/bexchange.decorators.html#bexchange.decorators.decorator.decorator_manager.create">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="decorator_manager.create">
+<a class="viewcode-back" href="../../../api/bexchange.decorators.html#bexchange.decorators.decorator.decorator_manager.create">[docs]</a>
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clz</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Creates an instance of clz with specified arguments</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates an instance of clz with specified arguments</span>
 <span class="sd">        :param clz: class name specified as &lt;module&gt;.&lt;classname&gt;</span>
 <span class="sd">        :param arguments: a list of arguments that should be used to initialize the class       </span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -120,7 +134,9 @@
             <span class="n">classname</span> <span class="o">=</span> <span class="n">clz</span><span class="p">[</span><span class="n">lastdot</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
             <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">classname</span><span class="p">)(</span><span class="o">*</span><span class="n">arguments</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Must specify class as module.class&quot;</span><span class="p">)</span></div></div>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Must specify class as module.class&quot;</span><span class="p">)</span></div>
+</div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -138,7 +154,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -158,8 +174,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Anders Henja.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

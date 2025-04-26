@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>bexchange.net.senders &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -88,11 +86,13 @@
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;bexchange.net.senders&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="sender"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.sender">[docs]</a><span class="k">class</span> <span class="nc">sender</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Base sender. All classes implementing this should send the specified file path to a recipient over a specific protocol. </span>
+<div class="viewcode-block" id="sender">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.sender">[docs]</a>
+<span class="k">class</span> <span class="nc">sender</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base sender. All classes implementing this should send the specified file path to a recipient over a specific protocol. </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        :param backend: The server backend</span>
 <span class="sd">        :param aid: An id identifying this sender</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -100,29 +100,41 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span> <span class="o">=</span> <span class="n">backend</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">=</span> <span class="n">aid</span>
         
-<div class="viewcode-block" id="sender.id"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.sender.id">[docs]</a>    <span class="k">def</span> <span class="nf">id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns this uploader id</span>
+<div class="viewcode-block" id="sender.id">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.sender.id">[docs]</a>
+    <span class="k">def</span> <span class="nf">id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns this uploader id</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id</span></div>
 
-<div class="viewcode-block" id="sender.backend"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.sender.backend">[docs]</a>    <span class="k">def</span> <span class="nf">backend</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the server backend</span>
+
+<div class="viewcode-block" id="sender.backend">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.sender.backend">[docs]</a>
+    <span class="k">def</span> <span class="nf">backend</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the server backend</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span></div>
 
-<div class="viewcode-block" id="sender.send"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.sender.send">[docs]</a>    <span class="nd">@abstractmethod</span>
+
+<div class="viewcode-block" id="sender.send">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.sender.send">[docs]</a>
+    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Sends path with the metadata meta</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sends path with the metadata meta</span>
 <span class="sd">        :param path: Path to file to be uploaded</span>
 <span class="sd">        :param meta: Metadata of the uploaded file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Not implemented&quot;</span><span class="p">)</span></div></div>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Not implemented&quot;</span><span class="p">)</span></div>
+</div>
 
-<div class="viewcode-block" id="storage_sender"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.storage_sender">[docs]</a><span class="k">class</span> <span class="nc">storage_sender</span><span class="p">(</span><span class="n">sender</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Sends files using a number of storages.</span>
+
+<div class="viewcode-block" id="storage_sender">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.storage_sender">[docs]</a>
+<span class="k">class</span> <span class="nc">storage_sender</span><span class="p">(</span><span class="n">sender</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sends files using a number of storages.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        :param backend: The backend</span>
 <span class="sd">        :param aid: Id for this sender</span>
 <span class="sd">        :param arguments: Dictionary containg at least:</span>
@@ -138,8 +150,10 @@
         <span class="k">if</span> <span class="s2">&quot;file_storage&quot;</span> <span class="ow">in</span> <span class="n">arguments</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_storages</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;file_storage&quot;</span><span class="p">]</span>
     
-<div class="viewcode-block" id="storage_sender.send"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.storage_sender.send">[docs]</a>    <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Sends the file on all storages associated with self</span>
+<div class="viewcode-block" id="storage_sender.send">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.storage_sender.send">[docs]</a>
+    <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sends the file on all storages associated with self</span>
 <span class="sd">        :param file: path to file that should be sent</span>
 <span class="sd">        :param meta: the meta object for all metadata of file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -147,14 +161,18 @@
         <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storages</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">sm</span><span class="o">.</span><span class="n">has_storage</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
                 <span class="n">storage</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">get_storage</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-                <span class="n">storage</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>    </div></div>
+                <span class="n">storage</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>    </div>
+</div>
+
     
 
-<div class="viewcode-block" id="dex_sender"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.dex_sender">[docs]</a><span class="k">class</span> <span class="nc">dex_sender</span><span class="p">(</span><span class="n">sender</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Legacy DEX communication sending files to old nodes.</span>
+<div class="viewcode-block" id="dex_sender">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.dex_sender">[docs]</a>
+<span class="k">class</span> <span class="nc">dex_sender</span><span class="p">(</span><span class="n">sender</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Legacy DEX communication sending files to old nodes.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        :param backend: The backend</span>
 <span class="sd">        :param aid: Id for this sender</span>
 <span class="sd">        :param arguments: Dictionary containg at least:</span>
@@ -194,7 +212,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_signer</span> <span class="o">=</span> <span class="n">keyczar_signer</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_privatekey</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_generate_headers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uri</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Creates the headers that should be added to the dex message</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates the headers that should be added to the dex message</span>
 <span class="sd">        :param uri: The uri that should be added</span>
 <span class="sd">        :return: the headers as a dictonary</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -210,7 +228,7 @@
         <span class="k">return</span> <span class="n">headers</span>
   
     <span class="k">def</span> <span class="nf">_split_uri</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uri</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Splits an uri to the individual parts.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Splits an uri to the individual parts.</span>
 <span class="sd">        :param uri: The uri to be split</span>
 <span class="sd">        :return: tuple of scheme, host and query</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -221,7 +239,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">scheme</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span>
   
     <span class="k">def</span> <span class="nf">_post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scheme</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">headers</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Posts the message to the recipient.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Posts the message to the recipient.</span>
 <span class="sd">        :param scheme: The scheme to use, https or http</span>
 <span class="sd">        :param host: the host that should be connected to (including port)</span>
 <span class="sd">        :param query: the query data</span>
@@ -244,8 +262,10 @@
       
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="n">response</span>
   
-<div class="viewcode-block" id="dex_sender.send"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.dex_sender.send">[docs]</a>    <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Sends the file to the dex server</span>
+<div class="viewcode-block" id="dex_sender.send">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.dex_sender.send">[docs]</a>
+    <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sends the file to the dex server</span>
 <span class="sd">        :param file: path to file that should be sent</span>
 <span class="sd">        :param meta: the meta object for all metadata of file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -269,14 +289,18 @@
                 <span class="k">raise</span> <span class="n">SenderException</span><span class="p">(</span><span class="n">reason</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">status</span><span class="p">,</span> <span class="n">reason</span><span class="p">,</span> <span class="n">data</span>
         <span class="k">finally</span><span class="p">:</span>
-            <span class="n">fp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>    </div></div>
+            <span class="n">fp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>    </div>
+</div>
 
-<div class="viewcode-block" id="rest_sender"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.rest_sender">[docs]</a><span class="k">class</span> <span class="nc">rest_sender</span><span class="p">(</span><span class="n">sender</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Sends a file to another node that is running bexchange. The rest sender uses the internal crypto library for signing messages</span>
+
+<div class="viewcode-block" id="rest_sender">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.rest_sender">[docs]</a>
+<span class="k">class</span> <span class="nc">rest_sender</span><span class="p">(</span><span class="n">sender</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sends a file to another node that is running bexchange. The rest sender uses the internal crypto library for signing messages</span>
 <span class="sd">    which currently supports DSA &amp; RSA keys. DSA uses DSS, RSA uses pkcs1_15.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        :param backend: The backend</span>
 <span class="sd">        :param aid: Id for this sender</span>
 <span class="sd">        :param arguments: Dictionary containg at least:</span>
@@ -318,8 +342,10 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_signer</span><span class="p">,</span> <span class="n">crypto</span><span class="o">.</span><span class="n">private_key</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Can&#39;t use key: </span><span class="si">%s</span><span class="s2"> for signing&quot;</span><span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">_privatekey</span><span class="p">)</span>
             
-<div class="viewcode-block" id="rest_sender.send"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.rest_sender.send">[docs]</a>    <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Sends the file to the bexchange server</span>
+<div class="viewcode-block" id="rest_sender.send">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.rest_sender.send">[docs]</a>
+    <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sends the file to the bexchange server</span>
 <span class="sd">        :param file: path to file that should be sent</span>
 <span class="sd">        :param meta: the meta object for all metadata of file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -334,13 +360,17 @@
             <span class="k">raise</span>
         <span class="k">except</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;rest_sender: address:</span><span class="si">%s</span><span class="s2"> failed to publish ID:&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_address</span><span class="p">,</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)))</span>
-            <span class="k">raise</span></div></div>
+            <span class="k">raise</span></div>
+</div>
 
-<div class="viewcode-block" id="baseuri_sender"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.baseuri_sender">[docs]</a><span class="k">class</span> <span class="nc">baseuri_sender</span><span class="p">(</span><span class="n">sender</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Base class for basic file transmission protocols like sftp, ftp, ...</span>
+
+<div class="viewcode-block" id="baseuri_sender">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.baseuri_sender">[docs]</a>
+<span class="k">class</span> <span class="nc">baseuri_sender</span><span class="p">(</span><span class="n">sender</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for basic file transmission protocols like sftp, ftp, ...</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        :param backend: The backend</span>
 <span class="sd">        :param aid: Id for this sender</span>
 <span class="sd">        :param arguments: Dictionary containg at least:</span>
@@ -376,39 +406,60 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_password</span> <span class="o">=</span> <span class="n">uri</span><span class="o">.</span><span class="n">password</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_namer</span> <span class="o">=</span> <span class="n">metadata_namer</span><span class="p">(</span><span class="n">uri</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
 
-<div class="viewcode-block" id="baseuri_sender.name"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.baseuri_sender.name">[docs]</a>    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Creates a unique name from the metadatanamer created from the uri</span>
+<div class="viewcode-block" id="baseuri_sender.name">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.baseuri_sender.name">[docs]</a>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a unique name from the metadatanamer created from the uri</span>
 <span class="sd">        :param meta: Metadata to use when creating the name</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_namer</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="baseuri_sender.create_missing_directories"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.baseuri_sender.create_missing_directories">[docs]</a>    <span class="k">def</span> <span class="nf">create_missing_directories</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns if missing directories should be created or not</span>
+
+<div class="viewcode-block" id="baseuri_sender.create_missing_directories">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.baseuri_sender.create_missing_directories">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_missing_directories</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns if missing directories should be created or not</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_missing_directories</span></div>
 
-<div class="viewcode-block" id="baseuri_sender.hostname"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.baseuri_sender.hostname">[docs]</a>    <span class="k">def</span> <span class="nf">hostname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the hostname extracted from the uri</span>
+
+<div class="viewcode-block" id="baseuri_sender.hostname">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.baseuri_sender.hostname">[docs]</a>
+    <span class="k">def</span> <span class="nf">hostname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the hostname extracted from the uri</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hostname</span></div>
 
-<div class="viewcode-block" id="baseuri_sender.port"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.baseuri_sender.port">[docs]</a>    <span class="k">def</span> <span class="nf">port</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the port number extracted from the uri.</span>
+
+<div class="viewcode-block" id="baseuri_sender.port">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.baseuri_sender.port">[docs]</a>
+    <span class="k">def</span> <span class="nf">port</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the port number extracted from the uri.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_port</span></div>
+
     
-<div class="viewcode-block" id="baseuri_sender.username"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.baseuri_sender.username">[docs]</a>    <span class="k">def</span> <span class="nf">username</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="baseuri_sender.username">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.baseuri_sender.username">[docs]</a>
+    <span class="k">def</span> <span class="nf">username</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_username</span></div>
+
     
-<div class="viewcode-block" id="baseuri_sender.password"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.baseuri_sender.password">[docs]</a>    <span class="k">def</span> <span class="nf">password</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_password</span></div></div>
+<div class="viewcode-block" id="baseuri_sender.password">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.baseuri_sender.password">[docs]</a>
+    <span class="k">def</span> <span class="nf">password</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_password</span></div>
+</div>
 
 
-<div class="viewcode-block" id="sftp_sender"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.sftp_sender">[docs]</a><span class="k">class</span> <span class="nc">sftp_sender</span><span class="p">(</span><span class="n">baseuri_sender</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Sends files over sftp</span>
+
+<div class="viewcode-block" id="sftp_sender">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.sftp_sender">[docs]</a>
+<span class="k">class</span> <span class="nc">sftp_sender</span><span class="p">(</span><span class="n">baseuri_sender</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sends files over sftp</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        :param backend: The backend</span>
 <span class="sd">        :param aid: Id for this sender</span>
 <span class="sd">        :param arguments: Dictionary containg at least:</span>
@@ -419,8 +470,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">sftp_sender</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">,</span> <span class="n">arguments</span><span class="p">)</span>
 
-<div class="viewcode-block" id="sftp_sender.send"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.sftp_sender.send">[docs]</a>    <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Sends the file using sftp.</span>
+<div class="viewcode-block" id="sftp_sender.send">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.sftp_sender.send">[docs]</a>
+    <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sends the file using sftp.</span>
 <span class="sd">        :param file: path to file that should be sent</span>
 <span class="sd">        :param meta: the meta object for all metadata of file</span>
 <span class="sd">        &quot;&quot;&quot;</span>        
@@ -434,13 +487,17 @@
                 <span class="n">c</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">bdir</span><span class="p">)</span>
             <span class="n">c</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">bdir</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;sftp_sender: address:</span><span class="si">%s</span><span class="s2">, basename:</span><span class="si">%s</span><span class="s2"> uploaded ID:&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">(),</span> <span class="n">fname</span><span class="p">,</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)))</span>
-            <span class="n">c</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span></div></div>
+            <span class="n">c</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span></div>
+</div>
 
-<div class="viewcode-block" id="scp_sender"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.scp_sender">[docs]</a><span class="k">class</span> <span class="nc">scp_sender</span><span class="p">(</span><span class="n">baseuri_sender</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Publishes files over scp</span>
+
+<div class="viewcode-block" id="scp_sender">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.scp_sender">[docs]</a>
+<span class="k">class</span> <span class="nc">scp_sender</span><span class="p">(</span><span class="n">baseuri_sender</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Publishes files over scp</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        :param backend: The backend</span>
 <span class="sd">        :param aid: Id for this sender</span>
 <span class="sd">        :param arguments: Dictionary containg at least:</span>
@@ -451,8 +508,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">scp_sender</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">,</span> <span class="n">arguments</span><span class="p">)</span>
         
-<div class="viewcode-block" id="scp_sender.send"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.scp_sender.send">[docs]</a>    <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Sends the file using scp.</span>
+<div class="viewcode-block" id="scp_sender.send">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.scp_sender.send">[docs]</a>
+    <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sends the file using scp.</span>
 <span class="sd">        :param file: path to file that should be sent</span>
 <span class="sd">        :param meta: the meta object for all metadata of file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -475,13 +534,17 @@
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">scp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
                 <span class="k">except</span><span class="p">:</span>
-                    <span class="k">pass</span></div></div>
+                    <span class="k">pass</span></div>
+</div>
 
-<div class="viewcode-block" id="ftp_sender"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.ftp_sender">[docs]</a><span class="k">class</span> <span class="nc">ftp_sender</span><span class="p">(</span><span class="n">baseuri_sender</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Publishes files over ftp</span>
+
+<div class="viewcode-block" id="ftp_sender">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.ftp_sender">[docs]</a>
+<span class="k">class</span> <span class="nc">ftp_sender</span><span class="p">(</span><span class="n">baseuri_sender</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Publishes files over ftp</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        :param backend: The backend</span>
 <span class="sd">        :param aid: Id for this sender</span>
 <span class="sd">        :param arguments: Dictionary containg at least:</span>
@@ -496,8 +559,10 @@
             <span class="k">if</span> <span class="ow">not</span> <span class="n">uri</span><span class="o">.</span><span class="n">port</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_port</span> <span class="o">=</span> <span class="mi">21</span>
         
-<div class="viewcode-block" id="ftp_sender.send"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.ftp_sender.send">[docs]</a>    <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Sends the file using ftp.</span>
+<div class="viewcode-block" id="ftp_sender.send">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.ftp_sender.send">[docs]</a>
+    <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sends the file using ftp.</span>
 <span class="sd">        :param file: path to file that should be published</span>
 <span class="sd">        :param meta: the meta object for all metadata of file</span>
 <span class="sd">        &quot;&quot;&quot;</span>        
@@ -524,8 +589,11 @@
         <span class="k">finally</span><span class="p">:</span>
             <span class="n">ftp</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="ftp_sender.does_dir_exist"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.ftp_sender.does_dir_exist">[docs]</a>    <span class="k">def</span> <span class="nf">does_dir_exist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ftp</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Tests if the specified directory exist using the provided ftp-connection</span>
+
+<div class="viewcode-block" id="ftp_sender.does_dir_exist">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.ftp_sender.does_dir_exist">[docs]</a>
+    <span class="k">def</span> <span class="nf">does_dir_exist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ftp</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests if the specified directory exist using the provided ftp-connection</span>
 <span class="sd">        :param ftp: the ftp connection</span>
 <span class="sd">        :param path: the path to test</span>
 <span class="sd">        :return: True or False</span>
@@ -539,8 +607,11 @@
                 <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
-<div class="viewcode-block" id="ftp_sender.change_and_create_dir"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.ftp_sender.change_and_create_dir">[docs]</a>    <span class="k">def</span> <span class="nf">change_and_create_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ftp</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Changes directory and creates specified directory.</span>
+
+<div class="viewcode-block" id="ftp_sender.change_and_create_dir">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.ftp_sender.change_and_create_dir">[docs]</a>
+    <span class="k">def</span> <span class="nf">change_and_create_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ftp</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Changes directory and creates specified directory.</span>
 <span class="sd">        :param ftp: The ftp connection</span>
 <span class="sd">        :param path: The path to create&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">does_dir_exist</span><span class="p">(</span><span class="n">ftp</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
@@ -556,23 +627,30 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Current working directory: </span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">nextpath</span><span class="p">,</span> <span class="n">createdir</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">ftp</span><span class="o">.</span><span class="n">cwd</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
+
         
     <span class="c1">##</span>
     <span class="c1"># Connects to remote server</span>
-<div class="viewcode-block" id="ftp_sender.connect"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.ftp_sender.connect">[docs]</a>    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Connects to the host specified by host  / port.</span>
+<div class="viewcode-block" id="ftp_sender.connect">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.ftp_sender.connect">[docs]</a>
+    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Connects to the host specified by host  / port.</span>
 <span class="sd">        :return: the ftp connection</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ftp</span> <span class="o">=</span> <span class="n">ftplib</span><span class="o">.</span><span class="n">FTP</span><span class="p">()</span>
         <span class="n">ftp</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">())</span>
         <span class="n">ftp</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">())</span>
-        <span class="k">return</span> <span class="n">ftp</span></div></div>
+        <span class="k">return</span> <span class="n">ftp</span></div>
+</div>
 
-<div class="viewcode-block" id="copy_sender"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.copy_sender">[docs]</a><span class="k">class</span> <span class="nc">copy_sender</span><span class="p">(</span><span class="n">sender</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Sends files by copying them</span>
+
+<div class="viewcode-block" id="copy_sender">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.copy_sender">[docs]</a>
+<span class="k">class</span> <span class="nc">copy_sender</span><span class="p">(</span><span class="n">sender</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sends files by copying them</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        :param backend: The backend</span>
 <span class="sd">        :param aid: Id for this sender</span>
 <span class="sd">        :param arguments: Dictionary containg at least:</span>
@@ -588,21 +666,29 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_create_missing_directories</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;create_missing_directories&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_namer</span> <span class="o">=</span> <span class="n">metadata_namer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">)</span>
 
-<div class="viewcode-block" id="copy_sender.name"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.copy_sender.name">[docs]</a>    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Creates the name to use when copying the file from the metadata</span>
+<div class="viewcode-block" id="copy_sender.name">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.copy_sender.name">[docs]</a>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates the name to use when copying the file from the metadata</span>
 <span class="sd">        :param meta: The metadata</span>
 <span class="sd">        :return: the name to use for destination</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_namer</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span></div>
+
     
-<div class="viewcode-block" id="copy_sender.create_missing_directories"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.copy_sender.create_missing_directories">[docs]</a>    <span class="k">def</span> <span class="nf">create_missing_directories</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="copy_sender.create_missing_directories">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.copy_sender.create_missing_directories">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_missing_directories</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: if missing directories should be created or not</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_missing_directories</span></div>
+
     
-<div class="viewcode-block" id="copy_sender.send"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.copy_sender.send">[docs]</a>    <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Sends the file using copy.</span>
+<div class="viewcode-block" id="copy_sender.send">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.copy_sender.send">[docs]</a>
+    <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sends the file using copy.</span>
 <span class="sd">        :param file: path to file that should be sent</span>
 <span class="sd">        :param meta: the meta object for all metadata of file</span>
 <span class="sd">        &quot;&quot;&quot;</span>        
@@ -616,18 +702,24 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;copy_sender: copied </span><span class="si">%s</span><span class="s2"> to </span><span class="si">%s</span><span class="s2">, ID:&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)))</span>
         <span class="k">except</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;copy_sender: failed to copy </span><span class="si">%s</span><span class="s2"> to </span><span class="si">%s</span><span class="s2">, ID:&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)))</span>
-            <span class="k">raise</span></div></div>
+            <span class="k">raise</span></div>
+</div>
 
 
-<div class="viewcode-block" id="sender_manager"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.sender_manager">[docs]</a><span class="k">class</span> <span class="nc">sender_manager</span><span class="p">:</span>
+
+<div class="viewcode-block" id="sender_manager">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.sender_manager">[docs]</a>
+<span class="k">class</span> <span class="nc">sender_manager</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span>
 
-<div class="viewcode-block" id="sender_manager.from_conf"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.sender_manager.from_conf">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="sender_manager.from_conf">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.sender_manager.from_conf">[docs]</a>
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_conf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Creates an instance of clz with specified arguments</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates an instance of clz with specified arguments</span>
 <span class="sd">        :param arguments: a list of arguments that should be used to initialize the class       </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">aid</span><span class="o">=</span><span class="kc">None</span>
@@ -648,7 +740,9 @@
 
             <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">classname</span><span class="p">)(</span><span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">,</span> <span class="n">senderargs</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Must specify class as module.class&quot;</span><span class="p">)</span></div></div>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Must specify class as module.class&quot;</span><span class="p">)</span></div>
+</div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -666,7 +760,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -686,8 +780,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Anders Henja.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

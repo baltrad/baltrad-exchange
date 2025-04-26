@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>bexchange.server.sqlbackend &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -109,7 +107,9 @@
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;bexchange.server&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="force_sqlite_foreign_keys"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.sqlbackend.force_sqlite_foreign_keys">[docs]</a><span class="k">def</span> <span class="nf">force_sqlite_foreign_keys</span><span class="p">(</span><span class="n">dbapi_con</span><span class="p">,</span> <span class="n">con_record</span><span class="p">):</span>
+<div class="viewcode-block" id="force_sqlite_foreign_keys">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.sqlbackend.force_sqlite_foreign_keys">[docs]</a>
+<span class="k">def</span> <span class="nf">force_sqlite_foreign_keys</span><span class="p">(</span><span class="n">dbapi_con</span><span class="p">,</span> <span class="n">con_record</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="kn">import</span> <span class="nn">sqlite3</span>
     <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
@@ -118,8 +118,11 @@
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dbapi_con</span><span class="p">,</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Connection</span><span class="p">):</span>
         <span class="n">dbapi_con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;pragma foreign_keys=ON&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SqlAlchemySourceManager"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.sqlbackend.SqlAlchemySourceManager">[docs]</a><span class="k">class</span> <span class="nc">SqlAlchemySourceManager</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The DB manager providing source handling</span>
+
+<div class="viewcode-block" id="SqlAlchemySourceManager">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.sqlbackend.SqlAlchemySourceManager">[docs]</a>
+<span class="k">class</span> <span class="nc">SqlAlchemySourceManager</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The DB manager providing source handling</span>
 <span class="sd">    :param uri: The uri to database where sources are stored</span>
 <span class="sd">    :param poolsize: the size of the db connection pool. In the case of sqlite, this will not be used</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -131,18 +134,23 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">driver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: database driver name</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_engine</span><span class="o">.</span><span class="n">driver</span>
     
-<div class="viewcode-block" id="SqlAlchemySourceManager.init_tables"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.sqlbackend.SqlAlchemySourceManager.init_tables">[docs]</a>    <span class="k">def</span> <span class="nf">init_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Initializes the database tables</span>
+<div class="viewcode-block" id="SqlAlchemySourceManager.init_tables">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.sqlbackend.SqlAlchemySourceManager.init_tables">[docs]</a>
+    <span class="k">def</span> <span class="nf">init_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the database tables</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">dbmeta</span><span class="o">.</span><span class="n">create_all</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_engine</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SqlAlchemySourceManager.add_sources"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.sqlbackend.SqlAlchemySourceManager.add_sources">[docs]</a>    <span class="k">def</span> <span class="nf">add_sources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">srclist</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Adds the sources to the source database</span>
+
+<div class="viewcode-block" id="SqlAlchemySourceManager.add_sources">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.sqlbackend.SqlAlchemySourceManager.add_sources">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_sources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">srclist</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds the sources to the source database</span>
 <span class="sd">        :param srclist: a list of bdbcommon.oh5.Sources</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_connection</span><span class="p">()</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
@@ -163,9 +171,12 @@
                     <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;duplicate of source.name&quot;</span><span class="p">)</span>
         
                 <span class="bp">self</span><span class="o">.</span><span class="n">insert_source_values</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">source_id</span><span class="p">,</span> <span class="n">source</span><span class="p">)</span></div>
+
     
-<div class="viewcode-block" id="SqlAlchemySourceManager.get_source"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.sqlbackend.SqlAlchemySourceManager.get_source">[docs]</a>    <span class="k">def</span> <span class="nf">get_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="SqlAlchemySourceManager.get_source">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.sqlbackend.SqlAlchemySourceManager.get_source">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param meta: The metadata containing source</span>
 <span class="sd">        :return: A complete source from the metadata source identifier</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -187,12 +198,15 @@
                 <span class="n">source</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">msources</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
         
         <span class="k">return</span> <span class="n">source</span></div>
+
     
     <span class="c1">##</span>
     <span class="c1"># Insert Key-values from a source</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="SqlAlchemySourceManager.insert_source_values"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.sqlbackend.SqlAlchemySourceManager.insert_source_values">[docs]</a>    <span class="k">def</span> <span class="nf">insert_source_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conn</span><span class="p">,</span> <span class="n">source_id</span><span class="p">,</span> <span class="n">source</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Inserts kvs values</span>
+<div class="viewcode-block" id="SqlAlchemySourceManager.insert_source_values">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.sqlbackend.SqlAlchemySourceManager.insert_source_values">[docs]</a>
+    <span class="k">def</span> <span class="nf">insert_source_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conn</span><span class="p">,</span> <span class="n">source_id</span><span class="p">,</span> <span class="n">source</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Inserts kvs values</span>
 <span class="sd">        :param conn: connection</span>
 <span class="sd">        :param source_id: the unique source id</span>
 <span class="sd">        :param source: the source</span>
@@ -209,16 +223,23 @@
              <span class="n">source_kvs</span><span class="o">.</span><span class="n">insert</span><span class="p">(),</span>
              <span class="n">kvs</span>
         <span class="p">)</span>        </div>
+
     
-<div class="viewcode-block" id="SqlAlchemySourceManager.get_connection"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.sqlbackend.SqlAlchemySourceManager.get_connection">[docs]</a>    <span class="k">def</span> <span class="nf">get_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;get a context managed connection to the database</span>
+<div class="viewcode-block" id="SqlAlchemySourceManager.get_connection">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.sqlbackend.SqlAlchemySourceManager.get_connection">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;get a context managed connection to the database</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">closing</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_engine</span><span class="o">.</span><span class="n">connect</span><span class="p">())</span></div></div>
+        <span class="k">return</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">closing</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_engine</span><span class="o">.</span><span class="n">connect</span><span class="p">())</span></div>
+</div>
+
 
 
 <span class="c1">##</span>
 <span class="c1"># Copy-pasted from baltrad-db server functionality</span>
-<div class="viewcode-block" id="get_source_id"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.sqlbackend.get_source_id">[docs]</a><span class="k">def</span> <span class="nf">get_source_id</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">source</span><span class="p">):</span>
+<div class="viewcode-block" id="get_source_id">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.sqlbackend.get_source_id">[docs]</a>
+<span class="k">def</span> <span class="nf">get_source_id</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">source</span><span class="p">):</span>
     <span class="n">where</span> <span class="o">=</span> <span class="n">sql</span><span class="o">.</span><span class="n">literal</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">keys</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
     <span class="n">ignoreORG</span><span class="o">=</span><span class="kc">False</span>
@@ -274,7 +295,10 @@
  
     <span class="k">return</span> <span class="n">best_match_id</span></div>
 
-<div class="viewcode-block" id="get_source_by_id"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.sqlbackend.get_source_by_id">[docs]</a><span class="k">def</span> <span class="nf">get_source_by_id</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">source_id</span><span class="p">):</span>
+
+<div class="viewcode-block" id="get_source_by_id">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.sqlbackend.get_source_by_id">[docs]</a>
+<span class="k">def</span> <span class="nf">get_source_by_id</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">source_id</span><span class="p">):</span>
     <span class="n">name_qry</span> <span class="o">=</span> <span class="n">sql</span><span class="o">.</span><span class="n">select</span><span class="p">(</span>
         <span class="p">[</span><span class="n">sources</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="p">],</span>
         <span class="n">sources</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">id</span><span class="o">==</span><span class="n">source_id</span>
@@ -292,6 +316,7 @@
         <span class="n">source</span><span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;key&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
 
     <span class="k">return</span> <span class="n">source</span></div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -309,7 +334,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -329,8 +354,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Anders Henja.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

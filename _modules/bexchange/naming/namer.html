@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>bexchange.naming.namer &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -79,16 +77,20 @@
 
 <span class="n">BALTRAD_DATETIMEL_PATTERN</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;^_baltrad/datetime_l:([0-9]</span><span class="si">{2}</span><span class="s2">)(:[A-Za-z0-9</span><span class="se">\\</span><span class="s2">-/: _%]+)?$&quot;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
 
-<div class="viewcode-block" id="suboperation_helper"><a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.suboperation_helper">[docs]</a><span class="k">class</span> <span class="nc">suboperation_helper</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Used to simplify suboperation execution in a name pattern. Each suboperation is implemented as a method in this function and called by eval upon execution</span>
+<div class="viewcode-block" id="suboperation_helper">
+<a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.suboperation_helper">[docs]</a>
+<span class="k">class</span> <span class="nc">suboperation_helper</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Used to simplify suboperation execution in a name pattern. Each suboperation is implemented as a method in this function and called by eval upon execution</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">suboperations</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">suboperations</span> <span class="o">=</span> <span class="n">suboperations</span>
 
-<div class="viewcode-block" id="suboperation_helper.eval"><a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.suboperation_helper.eval">[docs]</a>    <span class="k">def</span> <span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Executes the suboperation(s) on the value in from left to right</span>
+<div class="viewcode-block" id="suboperation_helper.eval">
+<a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.suboperation_helper.eval">[docs]</a>
+    <span class="k">def</span> <span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Executes the suboperation(s) on the value in from left to right</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
         <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">SUBOP_PATTERN</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">suboperations</span><span class="p">)</span>
@@ -98,9 +100,12 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="s2">&quot;self</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
             <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">SUBOP_PATTERN</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">suboperations</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span></div>
+
     
-<div class="viewcode-block" id="suboperation_helper.tolower"><a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.suboperation_helper.tolower">[docs]</a>    <span class="k">def</span> <span class="nf">tolower</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Changes to lower case between start and end position. If start and end is given, then </span>
+<div class="viewcode-block" id="suboperation_helper.tolower">
+<a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.suboperation_helper.tolower">[docs]</a>
+    <span class="k">def</span> <span class="nf">tolower</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Changes to lower case between start and end position. If start and end is given, then </span>
 <span class="sd">        a subset is changed.</span>
 <span class="sd">        :param start: Start position</span>
 <span class="sd">        :param end: End position</span>
@@ -115,8 +120,11 @@
                     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">start</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="p">[</span><span class="n">end</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="suboperation_helper.toupper"><a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.suboperation_helper.toupper">[docs]</a>    <span class="k">def</span> <span class="nf">toupper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Changes to upper case between start and end position. If start and end is given, then </span>
+
+<div class="viewcode-block" id="suboperation_helper.toupper">
+<a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.suboperation_helper.toupper">[docs]</a>
+    <span class="k">def</span> <span class="nf">toupper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Changes to upper case between start and end position. If start and end is given, then </span>
 <span class="sd">        a subset is changed.</span>
 <span class="sd">        :param start: Start position</span>
 <span class="sd">        :param end: End position</span>
@@ -131,8 +139,11 @@
                     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">start</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="p">[</span><span class="n">end</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="suboperation_helper.substring"><a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.suboperation_helper.substring">[docs]</a>    <span class="k">def</span> <span class="nf">substring</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">start</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns a substring between start &amp; end.</span>
+
+<div class="viewcode-block" id="suboperation_helper.substring">
+<a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.suboperation_helper.substring">[docs]</a>
+    <span class="k">def</span> <span class="nf">substring</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">start</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a substring between start &amp; end.</span>
 <span class="sd">        :param start: The start position</span>
 <span class="sd">        :param end: End position (if specified, otherwise rest of string)</span>
 <span class="sd">        :return the substring </span>
@@ -141,8 +152,11 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="p">[</span><span class="n">start</span><span class="p">:]</span></div>
 
-<div class="viewcode-block" id="suboperation_helper.replace"><a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.suboperation_helper.replace">[docs]</a>    <span class="k">def</span> <span class="nf">replace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Replace one string with a different one</span>
+
+<div class="viewcode-block" id="suboperation_helper.replace">
+<a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.suboperation_helper.replace">[docs]</a>
+    <span class="k">def</span> <span class="nf">replace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Replace one string with a different one</span>
 <span class="sd">        :param c1: string to replace</span>
 <span class="sd">        :param c2: string to replace with</span>
 <span class="sd">        :return the string that has been modified</span>
@@ -161,26 +175,38 @@
             <span class="n">x</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="suboperation_helper.trim"><a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.suboperation_helper.trim">[docs]</a>    <span class="k">def</span> <span class="nf">trim</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Trims both ends of the eval-value from whitespaces</span>
+
+<div class="viewcode-block" id="suboperation_helper.trim">
+<a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.suboperation_helper.trim">[docs]</a>
+    <span class="k">def</span> <span class="nf">trim</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Trims both ends of the eval-value from whitespaces</span>
 <span class="sd">        :return the trimmed string</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="suboperation_helper.rtrim"><a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.suboperation_helper.rtrim">[docs]</a>    <span class="k">def</span> <span class="nf">rtrim</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Trims right side of the eval-value from whitespaces</span>
+
+<div class="viewcode-block" id="suboperation_helper.rtrim">
+<a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.suboperation_helper.rtrim">[docs]</a>
+    <span class="k">def</span> <span class="nf">rtrim</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Trims right side of the eval-value from whitespaces</span>
 <span class="sd">        :return the trimmed string</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="suboperation_helper.ltrim"><a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.suboperation_helper.ltrim">[docs]</a>    <span class="k">def</span> <span class="nf">ltrim</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Trims left side of the eval-value from whitespaces</span>
+
+<div class="viewcode-block" id="suboperation_helper.ltrim">
+<a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.suboperation_helper.ltrim">[docs]</a>
+    <span class="k">def</span> <span class="nf">ltrim</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Trims left side of the eval-value from whitespaces</span>
 <span class="sd">        :return the trimmed string</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="suboperation_helper.interval_u"><a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.suboperation_helper.interval_u">[docs]</a>    <span class="k">def</span> <span class="nf">interval_u</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interval</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Assumes that the 2 last characters in eval value is a integer, (00, 01, 10...). Then</span>
+
+<div class="viewcode-block" id="suboperation_helper.interval_u">
+<a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.suboperation_helper.interval_u">[docs]</a>
+    <span class="k">def</span> <span class="nf">interval_u</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interval</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Assumes that the 2 last characters in eval value is a integer, (00, 01, 10...). Then</span>
 <span class="sd">        this value is modified to upper part of that interval. For example assuming that it is</span>
 <span class="sd">        minutes that are evaluated and interval = 15 and limit = 60. Then the following modification will be</span>
 <span class="sd">        performed.</span>
@@ -198,8 +224,11 @@
             <span class="n">nminute</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">%02d</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">nminute</span></div>
 
-<div class="viewcode-block" id="suboperation_helper.interval_l"><a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.suboperation_helper.interval_l">[docs]</a>    <span class="k">def</span> <span class="nf">interval_l</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interval</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Assumes that the 2 last characters in eval value is a integer, (00, 01, 10...). Then</span>
+
+<div class="viewcode-block" id="suboperation_helper.interval_l">
+<a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.suboperation_helper.interval_l">[docs]</a>
+    <span class="k">def</span> <span class="nf">interval_l</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interval</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Assumes that the 2 last characters in eval value is a integer, (00, 01, 10...). Then</span>
 <span class="sd">        this value is modified to lower part of that interval. For example assuming that it is</span>
 <span class="sd">        minutes that are evaluated and interval = 15 and limit = 60. Then the following modification will be</span>
 <span class="sd">        performed.</span>
@@ -212,20 +241,29 @@
         <span class="n">minute</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span>
         <span class="n">period</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">minute</span><span class="o">/</span><span class="n">interval</span><span class="p">)</span>
         <span class="n">nminute</span> <span class="o">=</span> <span class="n">period</span><span class="o">*</span><span class="nb">int</span><span class="p">(</span><span class="n">interval</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">%02d</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">nminute</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_value</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">%02d</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">nminute</span></div>
+</div>
+
 
 <span class="c1">##</span>
 <span class="c1"># Used to create file names from metadata associated with a ODIM h5 file.</span>
-<div class="viewcode-block" id="metadata_namer"><a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.metadata_namer">[docs]</a><span class="k">class</span> <span class="nc">metadata_namer</span><span class="p">:</span>
+<div class="viewcode-block" id="metadata_namer">
+<a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.metadata_namer">[docs]</a>
+<span class="k">class</span> <span class="nc">metadata_namer</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tmpl</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tmpl</span> <span class="o">=</span> <span class="n">tmpl</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">suboperations</span><span class="o">=</span><span class="p">{}</span>
         <span class="c1">#self.suboperations[&quot;tolower&quot;] = self.tolower</span>
     
-<div class="viewcode-block" id="metadata_namer.template"><a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.metadata_namer.template">[docs]</a>    <span class="k">def</span> <span class="nf">template</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="metadata_namer.template">
+<a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.metadata_namer.template">[docs]</a>
+    <span class="k">def</span> <span class="nf">template</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmpl</span></div>
 
-<div class="viewcode-block" id="metadata_namer.name"><a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.metadata_namer.name">[docs]</a>    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+
+<div class="viewcode-block" id="metadata_namer.name">
+<a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.metadata_namer.name">[docs]</a>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
         <span class="n">buffer</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
         
         <span class="n">parsed_tmpl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmpl</span>
@@ -301,17 +339,25 @@
             <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">PATTERN</span><span class="p">,</span> <span class="n">parsed_tmpl</span><span class="p">)</span>
         <span class="n">buffer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">parsed_tmpl</span><span class="p">)</span>   
         <span class="k">return</span> <span class="n">buffer</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span></div>
+
     
-<div class="viewcode-block" id="metadata_namer.get_attribute_value"><a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.metadata_namer.get_attribute_value">[docs]</a>    <span class="k">def</span> <span class="nf">get_attribute_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<div class="viewcode-block" id="metadata_namer.get_attribute_value">
+<a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.metadata_namer.get_attribute_value">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_attribute_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">meta</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
         <span class="k">except</span> <span class="ne">LookupError</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="metadata_namer.get_source_item"><a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.metadata_namer.get_source_item">[docs]</a>    <span class="k">def</span> <span class="nf">get_source_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">source</span><span class="p">):</span>
+
+<div class="viewcode-block" id="metadata_namer.get_source_item">
+<a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.metadata_namer.get_source_item">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_source_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">source</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">source</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">source</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-        <span class="k">return</span> <span class="s2">&quot;undefined&quot;</span></div></div>
+        <span class="k">return</span> <span class="s2">&quot;undefined&quot;</span></div>
+</div>
+
 
 <span class="k">if</span> <span class="vm">__name__</span><span class="o">==</span><span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">baltrad.bdbcommon</span> <span class="kn">import</span> <span class="n">oh5</span>
@@ -338,7 +384,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -358,8 +404,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Anders Henja.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

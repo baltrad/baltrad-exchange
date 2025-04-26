@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>bexchange.auth.tinkauth &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -79,13 +77,15 @@
 <span class="k">except</span><span class="p">:</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Tink not found. Can&#39;t enable support&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="TinkAuth"><a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.tinkauth.TinkAuth">[docs]</a><span class="k">class</span> <span class="nc">TinkAuth</span><span class="p">(</span><span class="n">coreauth</span><span class="o">.</span><span class="n">Auth</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Provide authentication through Tink</span>
+<div class="viewcode-block" id="TinkAuth">
+<a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.tinkauth.TinkAuth">[docs]</a>
+<span class="k">class</span> <span class="nc">TinkAuth</span><span class="p">(</span><span class="n">coreauth</span><span class="o">.</span><span class="n">Auth</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Provide authentication through Tink</span>
 
 <span class="sd">        registered as *tink* in *baltrad.bdbserver.web.auth* entry-point</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tink_root</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param keystore_root: default path to search keys from</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">tink_root</span><span class="p">):</span>
@@ -94,8 +94,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_private_key</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_verifiers</span> <span class="o">=</span> <span class="p">{}</span>
     
-<div class="viewcode-block" id="TinkAuth.add_key_config"><a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.tinkauth.TinkAuth.add_key_config">[docs]</a>    <span class="k">def</span> <span class="nf">add_key_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conf</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Adds a key from key config</span>
+<div class="viewcode-block" id="TinkAuth.add_key_config">
+<a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.tinkauth.TinkAuth.add_key_config">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_key_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conf</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds a key from key config</span>
 
 <span class="sd">        :param conf: The key config</span>
 <span class="sd">        :return: the node name this key should be associated with</span>
@@ -104,9 +106,12 @@
         <span class="n">verifier</span> <span class="o">=</span> <span class="n">handle</span><span class="o">.</span><span class="n">primitive</span><span class="p">(</span><span class="n">signature</span><span class="o">.</span><span class="n">PublicKeyVerify</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_verifiers</span><span class="p">[</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">verifier</span>
         <span class="k">return</span> <span class="n">conf</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span></div>
+
     
-<div class="viewcode-block" id="TinkAuth.add_key"><a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.tinkauth.TinkAuth.add_key">[docs]</a>    <span class="k">def</span> <span class="nf">add_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="TinkAuth.add_key">
+<a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.tinkauth.TinkAuth.add_key">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param name: the name to associate the key with for lookups</span>
 <span class="sd">        :param path: an absolute or relative path to the key.</span>
 
@@ -125,9 +130,12 @@
 
         <span class="n">verifier</span> <span class="o">=</span> <span class="n">handle</span><span class="o">.</span><span class="n">primitive</span><span class="p">(</span><span class="n">signature</span><span class="o">.</span><span class="n">PublicKeyVerify</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_verifiers</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">verifier</span></div>
+
     
-<div class="viewcode-block" id="TinkAuth.authenticate"><a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.tinkauth.TinkAuth.authenticate">[docs]</a>    <span class="k">def</span> <span class="nf">authenticate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">credentials</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Authenticates the request against the credentials.</span>
+<div class="viewcode-block" id="TinkAuth.authenticate">
+<a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.tinkauth.TinkAuth.authenticate">[docs]</a>
+    <span class="k">def</span> <span class="nf">authenticate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">credentials</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Authenticates the request against the credentials.</span>
 <span class="sd">        :param req: The http request</span>
 <span class="sd">        :param credentials: The credentials that should be verified against</span>
 <span class="sd">        :return: True if authenticated, False otherwise. </span>
@@ -151,8 +159,11 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;unhandled TinkError </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="fm">__str__</span><span class="p">())</span>
             <span class="k">return</span> <span class="kc">False</span></div>
 
-<div class="viewcode-block" id="TinkAuth.create_signable_string"><a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.tinkauth.TinkAuth.create_signable_string">[docs]</a>    <span class="k">def</span> <span class="nf">create_signable_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;construct a signable string from a :class:`~.util.Request`</span>
+
+<div class="viewcode-block" id="TinkAuth.create_signable_string">
+<a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.tinkauth.TinkAuth.create_signable_string">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_signable_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;construct a signable string from a :class:`~.util.Request`</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">fragments</span> <span class="o">=</span> <span class="p">[</span><span class="n">req</span><span class="o">.</span><span class="n">method</span><span class="p">,</span> <span class="n">req</span><span class="o">.</span><span class="n">path</span><span class="p">]</span>
@@ -163,9 +174,12 @@
                     <span class="n">fragments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
         <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fragments</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="TinkAuth.from_conf"><a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.tinkauth.TinkAuth.from_conf">[docs]</a>    <span class="nd">@classmethod</span>
+
+<div class="viewcode-block" id="TinkAuth.from_conf">
+<a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.tinkauth.TinkAuth.from_conf">[docs]</a>
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_conf</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">conf</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create from configuration.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create from configuration.</span>
 
 <span class="sd">        :param conf: a :class:`~.config.Properties` instance</span>
 <span class="sd">        :raise: :class:`LookupError` if a required configuration parameter</span>
@@ -187,7 +201,9 @@
             
         <span class="n">result</span><span class="o">.</span><span class="n">_private_key</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;private.key&quot;</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">result</span></div></div>
+        <span class="k">return</span> <span class="n">result</span></div>
+</div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -205,7 +221,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -225,8 +241,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Anders Henja.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

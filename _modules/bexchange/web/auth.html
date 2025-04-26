@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>bexchange.web.auth &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -73,8 +71,10 @@
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;baltard.exchange.web.auth&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="AuthMiddleware"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.auth.AuthMiddleware">[docs]</a><span class="k">class</span> <span class="nc">AuthMiddleware</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;WSGI middleware providing authentication. Actual authentication is</span>
+<div class="viewcode-block" id="AuthMiddleware">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.auth.AuthMiddleware">[docs]</a>
+<span class="k">class</span> <span class="nc">AuthMiddleware</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;WSGI middleware providing authentication. Actual authentication is</span>
 <span class="sd">    delegated to an :class:`~.coreauth.Auth` implementation registered as a *provider*</span>
 <span class="sd">    here.</span>
 <span class="sd">     </span>
@@ -88,10 +88,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">authmgr</span> <span class="o">=</span> <span class="n">authmgr</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">app</span> <span class="o">=</span> <span class="n">app</span>
     
-<div class="viewcode-block" id="AuthMiddleware.authenticate"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.auth.AuthMiddleware.authenticate">[docs]</a>    <span class="k">def</span> <span class="nf">authenticate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;authenticate a :class:`~.util.Request`</span>
+<div class="viewcode-block" id="AuthMiddleware.authenticate">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.auth.AuthMiddleware.authenticate">[docs]</a>
+    <span class="k">def</span> <span class="nf">authenticate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;authenticate a :class:`~.util.Request`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">authmgr</span><span class="o">.</span><span class="n">authenticate</span><span class="p">(</span><span class="n">req</span><span class="p">)</span></div>
+
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">start_response</span><span class="p">):</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">webutil</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
@@ -101,6 +104,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">challenge</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;exchange-&quot;</span> <span class="o">+</span> <span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">authmgr</span><span class="o">.</span><span class="n">get_providers</span><span class="p">()]</span>
             <span class="k">return</span> <span class="n">webutil</span><span class="o">.</span><span class="n">HttpUnauthorized</span><span class="p">(</span><span class="n">challenge</span><span class="p">)(</span><span class="n">env</span><span class="p">,</span> <span class="n">start_response</span><span class="p">)</span></div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -118,7 +122,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -138,8 +142,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Anders Henja.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

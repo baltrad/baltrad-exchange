@@ -1,19 +1,17 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>bexchange.net package &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
+    <script src="../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -48,20 +46,20 @@
           <div class="body" role="main">
             
   <section id="bexchange-net-package">
-<h1>bexchange.net package<a class="headerlink" href="#bexchange-net-package" title="Permalink to this headline">¶</a></h1>
+<h1>bexchange.net package<a class="headerlink" href="#bexchange-net-package" title="Link to this heading">¶</a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
 </section>
 <section id="module-bexchange.net.connections">
-<span id="bexchange-net-connections-module"></span><h2>bexchange.net.connections module<a class="headerlink" href="#module-bexchange.net.connections" title="Permalink to this headline">¶</a></h2>
+<span id="bexchange-net-connections-module"></span><h2>bexchange.net.connections module<a class="headerlink" href="#module-bexchange.net.connections" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.net.connections.backup_connection">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.connections.</span></span><span class="sig-name descname"><span class="pre">backup_connection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#backup_connection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.backup_connection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bexchange.net.connections.publisher_connection" title="bexchange.net.connections.publisher_connection"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.net.connections.publisher_connection</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.connections.</span></span><span class="sig-name descname"><span class="pre">backup_connection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#backup_connection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.backup_connection" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bexchange.net.connections.publisher_connection" title="bexchange.net.connections.publisher_connection"><code class="xref py py-class docutils literal notranslate"><span class="pre">publisher_connection</span></code></a></p>
 <p>Backup connection, expects a list of senders in arguments. Where all senders are run.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.connections.backup_connection.publish">
-<span class="sig-name descname"><span class="pre">publish</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#backup_connection.publish"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.backup_connection.publish" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">publish</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#backup_connection.publish"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.backup_connection.publish" title="Link to this definition">¶</a></dt>
 <dd><p>Publishes a file in some way using the underlying implementation
 :param path: The path to the file
 :param meta: The metadata of the file</p>
@@ -71,12 +69,12 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.net.connections.connection_manager">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.connections.</span></span><span class="sig-name descname"><span class="pre">connection_manager</span></span><a class="reference internal" href="../_modules/bexchange/net/connections.html#connection_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.connection_manager" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.connections.</span></span><span class="sig-name descname"><span class="pre">connection_manager</span></span><a class="reference internal" href="../_modules/bexchange/net/connections.html#connection_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.connection_manager" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>The connection manager is used for creating connection instances from the provided configuration</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.connections.connection_manager.from_conf">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_conf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clz</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#connection_manager.from_conf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.connection_manager.from_conf" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_conf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clz</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#connection_manager.from_conf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.connection_manager.from_conf" title="Link to this definition">¶</a></dt>
 <dd><p>Creates an instance of clz with specified arguments
 :param clz: class name specified as &lt;module&gt;.&lt;classname&gt;
 :param arguments: a list of arguments that should be used to initialize the class</p>
@@ -86,13 +84,13 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.net.connections.distributed_connection">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.connections.</span></span><span class="sig-name descname"><span class="pre">distributed_connection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#distributed_connection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.distributed_connection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bexchange.net.connections.publisher_connection" title="bexchange.net.connections.publisher_connection"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.net.connections.publisher_connection</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.connections.</span></span><span class="sig-name descname"><span class="pre">distributed_connection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#distributed_connection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.distributed_connection" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bexchange.net.connections.publisher_connection" title="bexchange.net.connections.publisher_connection"><code class="xref py py-class docutils literal notranslate"><span class="pre">publisher_connection</span></code></a></p>
 <p>Distributed connection, expects a list of senders in arguments. Where all senders are run. This is the same
 behavior as the backup connection but it’s here for readability.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.connections.distributed_connection.publish">
-<span class="sig-name descname"><span class="pre">publish</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#distributed_connection.publish"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.distributed_connection.publish" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">publish</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#distributed_connection.publish"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.distributed_connection.publish" title="Link to this definition">¶</a></dt>
 <dd><p>Publishes a file in some way using the underlying implementation
 :param path: The path to the file
 :param meta: The metadata of the file</p>
@@ -102,13 +100,13 @@ behavior as the backup connection but it’s here for readability.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.net.connections.failover_connection">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.connections.</span></span><span class="sig-name descname"><span class="pre">failover_connection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#failover_connection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.failover_connection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bexchange.net.connections.publisher_connection" title="bexchange.net.connections.publisher_connection"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.net.connections.publisher_connection</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.connections.</span></span><span class="sig-name descname"><span class="pre">failover_connection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#failover_connection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.failover_connection" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bexchange.net.connections.publisher_connection" title="bexchange.net.connections.publisher_connection"><code class="xref py py-class docutils literal notranslate"><span class="pre">publisher_connection</span></code></a></p>
 <p>Failover connection, expects a list of senders in arguments. Where they are tried in
 order until one works.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.connections.failover_connection.publish">
-<span class="sig-name descname"><span class="pre">publish</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#failover_connection.publish"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.failover_connection.publish" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">publish</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#failover_connection.publish"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.failover_connection.publish" title="Link to this definition">¶</a></dt>
 <dd><p>Publishes the file using the senders. When first successful publishing has successfully
 been transmitted, the method returns. If on the other hand no senders are successfully used
 an exception will be thrown.
@@ -120,19 +118,19 @@ an exception will be thrown.
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.net.connections.publisher_connection">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.connections.</span></span><span class="sig-name descname"><span class="pre">publisher_connection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#publisher_connection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.publisher_connection" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.connections.</span></span><span class="sig-name descname"><span class="pre">publisher_connection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#publisher_connection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.publisher_connection" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>publisher connections are used for publishing files in various ways without taking the protocol / sender into account.
 Each (or most) publisher_connection is associated with one or more senders.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.connections.publisher_connection.backend">
-<span class="sig-name descname"><span class="pre">backend</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#publisher_connection.backend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.publisher_connection.backend" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">backend</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#publisher_connection.backend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.publisher_connection.backend" title="Link to this definition">¶</a></dt>
 <dd><p>Returns the backend</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.connections.publisher_connection.publish">
-<span class="sig-name descname"><span class="pre">publish</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#publisher_connection.publish"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.publisher_connection.publish" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">publish</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#publisher_connection.publish"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.publisher_connection.publish" title="Link to this definition">¶</a></dt>
 <dd><p>Publishes a file in some way using the underlying implementation
 :param path: The path to the file
 :param meta: The metadata of the file</p>
@@ -142,12 +140,12 @@ Each (or most) publisher_connection is associated with one or more senders.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.net.connections.simple_connection">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.connections.</span></span><span class="sig-name descname"><span class="pre">simple_connection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#simple_connection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.simple_connection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bexchange.net.connections.publisher_connection" title="bexchange.net.connections.publisher_connection"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.net.connections.publisher_connection</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.connections.</span></span><span class="sig-name descname"><span class="pre">simple_connection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#simple_connection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.simple_connection" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bexchange.net.connections.publisher_connection" title="bexchange.net.connections.publisher_connection"><code class="xref py py-class docutils literal notranslate"><span class="pre">publisher_connection</span></code></a></p>
 <p>Simple connection, only parsing arguments according to. sender class + arguments.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.connections.simple_connection.publish">
-<span class="sig-name descname"><span class="pre">publish</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#simple_connection.publish"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.simple_connection.publish" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">publish</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#simple_connection.publish"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.simple_connection.publish" title="Link to this definition">¶</a></dt>
 <dd><p>Publishes the file using the sender
 :param path: The path to the file
 :param meta: The metadata of the file</p>
@@ -157,51 +155,51 @@ Each (or most) publisher_connection is associated with one or more senders.</p>
 
 </section>
 <section id="module-bexchange.net.fetchers">
-<span id="bexchange-net-fetchers-module"></span><h2>bexchange.net.fetchers module<a class="headerlink" href="#module-bexchange.net.fetchers" title="Permalink to this headline">¶</a></h2>
+<span id="bexchange-net-fetchers-module"></span><h2>bexchange.net.fetchers module<a class="headerlink" href="#module-bexchange.net.fetchers" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.net.fetchers.baseuri_fetcher">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.fetchers.</span></span><span class="sig-name descname"><span class="pre">baseuri_fetcher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#baseuri_fetcher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.baseuri_fetcher" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bexchange.net.fetchers.fetcher" title="bexchange.net.fetchers.fetcher"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.net.fetchers.fetcher</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.fetchers.</span></span><span class="sig-name descname"><span class="pre">baseuri_fetcher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#baseuri_fetcher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.baseuri_fetcher" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bexchange.net.fetchers.fetcher" title="bexchange.net.fetchers.fetcher"><code class="xref py py-class docutils literal notranslate"><span class="pre">fetcher</span></code></a></p>
 <p>Base class for fetching data using basic file transmission protocols like sftp, ftp, …</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.fetchers.baseuri_fetcher.hostname">
-<span class="sig-name descname"><span class="pre">hostname</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#baseuri_fetcher.hostname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.baseuri_fetcher.hostname" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">hostname</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#baseuri_fetcher.hostname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.baseuri_fetcher.hostname" title="Link to this definition">¶</a></dt>
 <dd><p>Returns the hostname extracted from the uri</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.fetchers.baseuri_fetcher.password">
-<span class="sig-name descname"><span class="pre">password</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#baseuri_fetcher.password"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.baseuri_fetcher.password" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">password</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#baseuri_fetcher.password"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.baseuri_fetcher.password" title="Link to this definition">¶</a></dt>
 <dd><p>:return the password</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.fetchers.baseuri_fetcher.path">
-<span class="sig-name descname"><span class="pre">path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#baseuri_fetcher.path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.baseuri_fetcher.path" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#baseuri_fetcher.path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.baseuri_fetcher.path" title="Link to this definition">¶</a></dt>
 <dd><p>:return the path</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.fetchers.baseuri_fetcher.port">
-<span class="sig-name descname"><span class="pre">port</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#baseuri_fetcher.port"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.baseuri_fetcher.port" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">port</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#baseuri_fetcher.port"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.baseuri_fetcher.port" title="Link to this definition">¶</a></dt>
 <dd><p>Returns the port number extracted from the uri.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.fetchers.baseuri_fetcher.set_port">
-<span class="sig-name descname"><span class="pre">set_port</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">portno</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#baseuri_fetcher.set_port"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.baseuri_fetcher.set_port" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_port</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">portno</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#baseuri_fetcher.set_port"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.baseuri_fetcher.set_port" title="Link to this definition">¶</a></dt>
 <dd><p>Sets the portnumber
 :param portno: The portnumber to use</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.fetchers.baseuri_fetcher.uri">
-<span class="sig-name descname"><span class="pre">uri</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#baseuri_fetcher.uri"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.baseuri_fetcher.uri" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">uri</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#baseuri_fetcher.uri"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.baseuri_fetcher.uri" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.fetchers.baseuri_fetcher.username">
-<span class="sig-name descname"><span class="pre">username</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#baseuri_fetcher.username"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.baseuri_fetcher.username" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">username</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#baseuri_fetcher.username"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.baseuri_fetcher.username" title="Link to this definition">¶</a></dt>
 <dd><p>:return the user name</p>
 </dd></dl>
 
@@ -209,25 +207,25 @@ Each (or most) publisher_connection is associated with one or more senders.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.net.fetchers.baseuri_patternmatching_fetcher">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.fetchers.</span></span><span class="sig-name descname"><span class="pre">baseuri_patternmatching_fetcher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#baseuri_patternmatching_fetcher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.baseuri_patternmatching_fetcher" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bexchange.net.fetchers.baseuri_fetcher" title="bexchange.net.fetchers.baseuri_fetcher"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.net.fetchers.baseuri_fetcher</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.fetchers.</span></span><span class="sig-name descname"><span class="pre">baseuri_patternmatching_fetcher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#baseuri_patternmatching_fetcher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.baseuri_patternmatching_fetcher" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bexchange.net.fetchers.baseuri_fetcher" title="bexchange.net.fetchers.baseuri_fetcher"><code class="xref py py-class docutils literal notranslate"><span class="pre">baseuri_fetcher</span></code></a></p>
 <p>Base class for fetching data using basic file transmission protocols like sftp, ftp, …</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.fetchers.baseuri_patternmatching_fetcher.fnpattern">
-<span class="sig-name descname"><span class="pre">fnpattern</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#baseuri_patternmatching_fetcher.fnpattern"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.baseuri_patternmatching_fetcher.fnpattern" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fnpattern</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#baseuri_patternmatching_fetcher.fnpattern"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.baseuri_patternmatching_fetcher.fnpattern" title="Link to this definition">¶</a></dt>
 <dd><p>Returns the fnpattern
 :return: the filename pattern, like *.h5</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.fetchers.baseuri_patternmatching_fetcher.pattern">
-<span class="sig-name descname"><span class="pre">pattern</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#baseuri_patternmatching_fetcher.pattern"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.baseuri_patternmatching_fetcher.pattern" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">pattern</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#baseuri_patternmatching_fetcher.pattern"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.baseuri_patternmatching_fetcher.pattern" title="Link to this definition">¶</a></dt>
 <dd><p>:return the regular expression matching pattern</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.fetchers.baseuri_patternmatching_fetcher.pattern_matcher">
-<span class="sig-name descname"><span class="pre">pattern_matcher</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#baseuri_patternmatching_fetcher.pattern_matcher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.baseuri_patternmatching_fetcher.pattern_matcher" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">pattern_matcher</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#baseuri_patternmatching_fetcher.pattern_matcher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.baseuri_patternmatching_fetcher.pattern_matcher" title="Link to this definition">¶</a></dt>
 <dd><p>:return the pattern matcher for the regular expression if there is one</p>
 </dd></dl>
 
@@ -235,12 +233,12 @@ Each (or most) publisher_connection is associated with one or more senders.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.net.fetchers.copy_fetcher">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.fetchers.</span></span><span class="sig-name descname"><span class="pre">copy_fetcher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#copy_fetcher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.copy_fetcher" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bexchange.net.fetchers.fetcher" title="bexchange.net.fetchers.fetcher"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.net.fetchers.fetcher</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.fetchers.</span></span><span class="sig-name descname"><span class="pre">copy_fetcher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#copy_fetcher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.copy_fetcher" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bexchange.net.fetchers.fetcher" title="bexchange.net.fetchers.fetcher"><code class="xref py py-class docutils literal notranslate"><span class="pre">fetcher</span></code></a></p>
 <p>Fetcher file(s) using copy</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.fetchers.copy_fetcher.fetch">
-<span class="sig-name descname"><span class="pre">fetch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#copy_fetcher.fetch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.copy_fetcher.fetch" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fetch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#copy_fetcher.fetch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.copy_fetcher.fetch" title="Link to this definition">¶</a></dt>
 <dd><p>Fetches the file(s) using copy.
 :param file: path to file that should be published
 :param meta: the meta object for all metadata of file</p>
@@ -248,7 +246,7 @@ Each (or most) publisher_connection is associated with one or more senders.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.fetchers.copy_fetcher.pattern_matcher">
-<span class="sig-name descname"><span class="pre">pattern_matcher</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#copy_fetcher.pattern_matcher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.copy_fetcher.pattern_matcher" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">pattern_matcher</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#copy_fetcher.pattern_matcher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.copy_fetcher.pattern_matcher" title="Link to this definition">¶</a></dt>
 <dd><p>:return the pattern matcher</p>
 </dd></dl>
 
@@ -256,24 +254,24 @@ Each (or most) publisher_connection is associated with one or more senders.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.net.fetchers.fetcher">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.fetchers.</span></span><span class="sig-name descname"><span class="pre">fetcher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#fetcher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.fetcher" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.fetchers.</span></span><span class="sig-name descname"><span class="pre">fetcher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#fetcher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.fetcher" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Base fetcher. All classes implementing this should provide ability to fetch files in some way.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.fetchers.fetcher.backend">
-<span class="sig-name descname"><span class="pre">backend</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#fetcher.backend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.fetcher.backend" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">backend</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#fetcher.backend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.fetcher.backend" title="Link to this definition">¶</a></dt>
 <dd><p>Returns the server backend</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.fetchers.fetcher.fetch">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#fetcher.fetch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.fetcher.fetch" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#fetcher.fetch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.fetcher.fetch" title="Link to this definition">¶</a></dt>
 <dd><p>Fetches some files</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.fetchers.fetcher.id">
-<span class="sig-name descname"><span class="pre">id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#fetcher.id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.fetcher.id" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#fetcher.id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.fetcher.id" title="Link to this definition">¶</a></dt>
 <dd><p>Returns this fetcher id</p>
 </dd></dl>
 
@@ -281,12 +279,12 @@ Each (or most) publisher_connection is associated with one or more senders.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.net.fetchers.fetcher_manager">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.fetchers.</span></span><span class="sig-name descname"><span class="pre">fetcher_manager</span></span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#fetcher_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.fetcher_manager" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.fetchers.</span></span><span class="sig-name descname"><span class="pre">fetcher_manager</span></span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#fetcher_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.fetcher_manager" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Creates fetcher instances from a configuration entry</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.fetchers.fetcher_manager.from_conf">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_conf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#fetcher_manager.from_conf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.fetcher_manager.from_conf" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_conf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#fetcher_manager.from_conf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.fetcher_manager.from_conf" title="Link to this definition">¶</a></dt>
 <dd><p>Creates an instance of clz with specified arguments
 :param arguments: a list of arguments that should be used to initialize the class</p>
 </dd></dl>
@@ -295,17 +293,17 @@ Each (or most) publisher_connection is associated with one or more senders.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.net.fetchers.ftp_fetcher">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.fetchers.</span></span><span class="sig-name descname"><span class="pre">ftp_fetcher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#ftp_fetcher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.ftp_fetcher" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bexchange.net.fetchers.baseuri_patternmatching_fetcher" title="bexchange.net.fetchers.baseuri_patternmatching_fetcher"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.net.fetchers.baseuri_patternmatching_fetcher</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.fetchers.</span></span><span class="sig-name descname"><span class="pre">ftp_fetcher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#ftp_fetcher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.ftp_fetcher" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bexchange.net.fetchers.baseuri_patternmatching_fetcher" title="bexchange.net.fetchers.baseuri_patternmatching_fetcher"><code class="xref py py-class docutils literal notranslate"><span class="pre">baseuri_patternmatching_fetcher</span></code></a></p>
 <p>Fetcher file(s) using scp</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.fetchers.ftp_fetcher.connect">
-<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#ftp_fetcher.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.ftp_fetcher.connect" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#ftp_fetcher.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.ftp_fetcher.connect" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.fetchers.ftp_fetcher.fetch">
-<span class="sig-name descname"><span class="pre">fetch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#ftp_fetcher.fetch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.ftp_fetcher.fetch" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fetch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#ftp_fetcher.fetch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.ftp_fetcher.fetch" title="Link to this definition">¶</a></dt>
 <dd><p>Fetches the file(s) using ftp.
 :param file: path to file that should be published
 :param meta: the meta object for all metadata of file</p>
@@ -315,12 +313,12 @@ Each (or most) publisher_connection is associated with one or more senders.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.net.fetchers.scp_fetcher">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.fetchers.</span></span><span class="sig-name descname"><span class="pre">scp_fetcher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#scp_fetcher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.scp_fetcher" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bexchange.net.fetchers.baseuri_patternmatching_fetcher" title="bexchange.net.fetchers.baseuri_patternmatching_fetcher"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.net.fetchers.baseuri_patternmatching_fetcher</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.fetchers.</span></span><span class="sig-name descname"><span class="pre">scp_fetcher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#scp_fetcher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.scp_fetcher" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bexchange.net.fetchers.baseuri_patternmatching_fetcher" title="bexchange.net.fetchers.baseuri_patternmatching_fetcher"><code class="xref py py-class docutils literal notranslate"><span class="pre">baseuri_patternmatching_fetcher</span></code></a></p>
 <p>Fetcher file(s) using scp</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.fetchers.scp_fetcher.fetch">
-<span class="sig-name descname"><span class="pre">fetch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#scp_fetcher.fetch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.scp_fetcher.fetch" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fetch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#scp_fetcher.fetch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.scp_fetcher.fetch" title="Link to this definition">¶</a></dt>
 <dd><p>Fetches the file(s) using scp.
 :param file: path to file that should be published
 :param meta: the meta object for all metadata of file</p>
@@ -330,12 +328,12 @@ Each (or most) publisher_connection is associated with one or more senders.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.net.fetchers.sftp_fetcher">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.fetchers.</span></span><span class="sig-name descname"><span class="pre">sftp_fetcher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#sftp_fetcher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.sftp_fetcher" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bexchange.net.fetchers.baseuri_patternmatching_fetcher" title="bexchange.net.fetchers.baseuri_patternmatching_fetcher"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.net.fetchers.baseuri_patternmatching_fetcher</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.fetchers.</span></span><span class="sig-name descname"><span class="pre">sftp_fetcher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#sftp_fetcher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.sftp_fetcher" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bexchange.net.fetchers.baseuri_patternmatching_fetcher" title="bexchange.net.fetchers.baseuri_patternmatching_fetcher"><code class="xref py py-class docutils literal notranslate"><span class="pre">baseuri_patternmatching_fetcher</span></code></a></p>
 <p>Fetcher files using sftp</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.fetchers.sftp_fetcher.fetch">
-<span class="sig-name descname"><span class="pre">fetch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#sftp_fetcher.fetch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.sftp_fetcher.fetch" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fetch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/fetchers.html#sftp_fetcher.fetch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.fetchers.sftp_fetcher.fetch" title="Link to this definition">¶</a></dt>
 <dd><p>Fetches the file using sftp.
 :param file: path to file that should be published
 :param meta: the meta object for all metadata of file</p>
@@ -345,78 +343,78 @@ Each (or most) publisher_connection is associated with one or more senders.</p>
 
 </section>
 <section id="module-bexchange.net.publishers">
-<span id="bexchange-net-publishers-module"></span><h2>bexchange.net.publishers module<a class="headerlink" href="#module-bexchange.net.publishers" title="Permalink to this headline">¶</a></h2>
+<span id="bexchange-net-publishers-module"></span><h2>bexchange.net.publishers module<a class="headerlink" href="#module-bexchange.net.publishers" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.net.publishers.publisher">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.publishers.</span></span><span class="sig-name descname"><span class="pre">publisher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifilter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connections</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decorators</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#publisher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.publisher" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.publishers.</span></span><span class="sig-name descname"><span class="pre">publisher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifilter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connections</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decorators</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#publisher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.publisher" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Base class used by all publishers</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.publishers.publisher.active">
-<span class="sig-name descname"><span class="pre">active</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#publisher.active"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.publisher.active" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">active</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#publisher.active"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.publisher.active" title="Link to this definition">¶</a></dt>
 <dd><p>Returns if this publication is active or not
 :return: if this publication is active or not</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.publishers.publisher.backend">
-<span class="sig-name descname"><span class="pre">backend</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#publisher.backend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.publisher.backend" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">backend</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#publisher.backend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.publisher.backend" title="Link to this definition">¶</a></dt>
 <dd><p>Returns the backend
 :return: the backend</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.publishers.publisher.connections">
-<span class="sig-name descname"><span class="pre">connections</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#publisher.connections"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.publisher.connections" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">connections</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#publisher.connections"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.publisher.connections" title="Link to this definition">¶</a></dt>
 <dd><p>Returns the connection(s)
 :return: the connection(s)</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.publishers.publisher.decorators">
-<span class="sig-name descname"><span class="pre">decorators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#publisher.decorators"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.publisher.decorators" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">decorators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#publisher.decorators"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.publisher.decorators" title="Link to this definition">¶</a></dt>
 <dd><p>Returns the decorator(s)
 :return: the decorator(s)</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.publishers.publisher.filter">
-<span class="sig-name descname"><span class="pre">filter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#publisher.filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.publisher.filter" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">filter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#publisher.filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.publisher.filter" title="Link to this definition">¶</a></dt>
 <dd><p>Returns the filter
 :return: the filter</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.publishers.publisher.initialize">
-<span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#publisher.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.publisher.initialize" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#publisher.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.publisher.initialize" title="Link to this definition">¶</a></dt>
 <dd><p>Initializes the publisher before it is started.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.publishers.publisher.name">
-<span class="sig-name descname"><span class="pre">name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#publisher.name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.publisher.name" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#publisher.name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.publisher.name" title="Link to this definition">¶</a></dt>
 <dd><p>Returns the name
 :return: the name</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.publishers.publisher.origin">
-<span class="sig-name descname"><span class="pre">origin</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#publisher.origin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.publisher.origin" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">origin</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#publisher.origin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.publisher.origin" title="Link to this definition">¶</a></dt>
 <dd><p>:return the list of origins that should trigger this publication</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.publishers.publisher.publish">
-<span class="sig-name descname"><span class="pre">publish</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#publisher.publish"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.publisher.publish" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">publish</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#publisher.publish"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.publisher.publish" title="Link to this definition">¶</a></dt>
 <dd><p>publishes a file</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>file</strong> – The temp file instance</p></li>
 <li><p><strong>meta</strong> – The metadata</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>metadata extracted from the file</p>
 </dd>
 </dl>
@@ -424,13 +422,13 @@ Each (or most) publisher_connection is associated with one or more senders.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.publishers.publisher.start">
-<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#publisher.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.publisher.start" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#publisher.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.publisher.start" title="Link to this definition">¶</a></dt>
 <dd><p>A publisher should most likely be managing threads and as such a start method is needed</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.publishers.publisher.stop">
-<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#publisher.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.publisher.stop" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#publisher.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.publisher.stop" title="Link to this definition">¶</a></dt>
 <dd><p>A publisher should most likely be managing threads and as such a stop method is needed joining the threads</p>
 </dd></dl>
 
@@ -438,12 +436,12 @@ Each (or most) publisher_connection is associated with one or more senders.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.net.publishers.publisher_manager">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.publishers.</span></span><span class="sig-name descname"><span class="pre">publisher_manager</span></span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#publisher_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.publisher_manager" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.publishers.</span></span><span class="sig-name descname"><span class="pre">publisher_manager</span></span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#publisher_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.publisher_manager" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>The manager used for creating publishers from configuration</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.publishers.publisher_manager.create_publisher">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_publisher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clz</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connections</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decorators</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#publisher_manager.create_publisher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.publisher_manager.create_publisher" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_publisher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clz</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connections</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decorators</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#publisher_manager.create_publisher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.publisher_manager.create_publisher" title="Link to this definition">¶</a></dt>
 <dd><p>Creates an instance of clz with specified arguments
 :param clz: class name specified as &lt;module&gt;.&lt;classname&gt;
 :param arguments: a list of arguments that should be used to initialize the class</p>
@@ -451,7 +449,7 @@ Each (or most) publisher_connection is associated with one or more senders.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.publishers.publisher_manager.from_conf">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_conf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#publisher_manager.from_conf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.publisher_manager.from_conf" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_conf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#publisher_manager.from_conf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.publisher_manager.from_conf" title="Link to this definition">¶</a></dt>
 <dd><p>Creates the publisher instance from provided configuration.
 :param config: The json config in a dict
 :param backend: The backend the publisher shall have access to
@@ -462,30 +460,30 @@ Each (or most) publisher_connection is associated with one or more senders.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.net.publishers.standard_publisher">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.publishers.</span></span><span class="sig-name descname"><span class="pre">standard_publisher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifilter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connections</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decorators</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#standard_publisher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.standard_publisher" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bexchange.net.publishers.publisher" title="bexchange.net.publishers.publisher"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.net.publishers.publisher</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.publishers.</span></span><span class="sig-name descname"><span class="pre">standard_publisher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifilter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connections</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decorators</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#standard_publisher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.standard_publisher" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bexchange.net.publishers.publisher" title="bexchange.net.publishers.publisher"><code class="xref py py-class docutils literal notranslate"><span class="pre">publisher</span></code></a></p>
 <p>Standard publisher used for most situations. Provides two arguments. One is threads. The other is queue_size.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.publishers.standard_publisher.consumer">
-<span class="sig-name descname"><span class="pre">consumer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#standard_publisher.consumer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.standard_publisher.consumer" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">consumer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#standard_publisher.consumer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.standard_publisher.consumer" title="Link to this definition">¶</a></dt>
 <dd><p>The consumer called by the individual threads. Will grab one entry from the queue and pass it on to the connections.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.publishers.standard_publisher.do_publish">
-<span class="sig-name descname"><span class="pre">do_publish</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tmpfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#standard_publisher.do_publish"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.standard_publisher.do_publish" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">do_publish</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tmpfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#standard_publisher.do_publish"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.standard_publisher.do_publish" title="Link to this definition">¶</a></dt>
 <dd><p>Passes a file to all connections</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.publishers.standard_publisher.initialize">
-<span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#standard_publisher.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.standard_publisher.initialize" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#standard_publisher.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.standard_publisher.initialize" title="Link to this definition">¶</a></dt>
 <dd><p>Initializes the publisher before it is started.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.publishers.standard_publisher.publish">
-<span class="sig-name descname"><span class="pre">publish</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#standard_publisher.publish"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.standard_publisher.publish" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">publish</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#standard_publisher.publish"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.standard_publisher.publish" title="Link to this definition">¶</a></dt>
 <dd><p>Passes on a file to the consumer queue that will be consumed and passed on to the connections.
 :param file: Actual file to be duplicated and sent.
 :param meta: The metadata to be verified by the connections</p>
@@ -493,13 +491,13 @@ Each (or most) publisher_connection is associated with one or more senders.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.publishers.standard_publisher.start">
-<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#standard_publisher.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.standard_publisher.start" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#standard_publisher.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.standard_publisher.start" title="Link to this definition">¶</a></dt>
 <dd><p>Starts all consumer threads as daemon threads</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.publishers.standard_publisher.stop">
-<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#standard_publisher.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.standard_publisher.stop" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#standard_publisher.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.standard_publisher.stop" title="Link to this definition">¶</a></dt>
 <dd><p>Joins the threads</p>
 </dd></dl>
 
@@ -507,59 +505,59 @@ Each (or most) publisher_connection is associated with one or more senders.</p>
 
 </section>
 <section id="module-bexchange.net.senders">
-<span id="bexchange-net-senders-module"></span><h2>bexchange.net.senders module<a class="headerlink" href="#module-bexchange.net.senders" title="Permalink to this headline">¶</a></h2>
+<span id="bexchange-net-senders-module"></span><h2>bexchange.net.senders module<a class="headerlink" href="#module-bexchange.net.senders" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.net.senders.baseuri_sender">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.senders.</span></span><span class="sig-name descname"><span class="pre">baseuri_sender</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#baseuri_sender"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.baseuri_sender" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bexchange.net.senders.sender" title="bexchange.net.senders.sender"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.net.senders.sender</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.senders.</span></span><span class="sig-name descname"><span class="pre">baseuri_sender</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#baseuri_sender"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.baseuri_sender" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bexchange.net.senders.sender" title="bexchange.net.senders.sender"><code class="xref py py-class docutils literal notranslate"><span class="pre">sender</span></code></a></p>
 <p>Base class for basic file transmission protocols like sftp, ftp, …</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.senders.baseuri_sender.create_missing_directories">
-<span class="sig-name descname"><span class="pre">create_missing_directories</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#baseuri_sender.create_missing_directories"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.baseuri_sender.create_missing_directories" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">create_missing_directories</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#baseuri_sender.create_missing_directories"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.baseuri_sender.create_missing_directories" title="Link to this definition">¶</a></dt>
 <dd><p>Returns if missing directories should be created or not</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.senders.baseuri_sender.hostname">
-<span class="sig-name descname"><span class="pre">hostname</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#baseuri_sender.hostname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.baseuri_sender.hostname" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">hostname</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#baseuri_sender.hostname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.baseuri_sender.hostname" title="Link to this definition">¶</a></dt>
 <dd><p>Returns the hostname extracted from the uri</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.senders.baseuri_sender.name">
-<span class="sig-name descname"><span class="pre">name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#baseuri_sender.name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.baseuri_sender.name" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#baseuri_sender.name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.baseuri_sender.name" title="Link to this definition">¶</a></dt>
 <dd><p>Creates a unique name from the metadatanamer created from the uri
 :param meta: Metadata to use when creating the name</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.senders.baseuri_sender.password">
-<span class="sig-name descname"><span class="pre">password</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#baseuri_sender.password"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.baseuri_sender.password" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">password</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#baseuri_sender.password"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.baseuri_sender.password" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.senders.baseuri_sender.port">
-<span class="sig-name descname"><span class="pre">port</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#baseuri_sender.port"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.baseuri_sender.port" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">port</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#baseuri_sender.port"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.baseuri_sender.port" title="Link to this definition">¶</a></dt>
 <dd><p>Returns the port number extracted from the uri.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.senders.baseuri_sender.username">
-<span class="sig-name descname"><span class="pre">username</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#baseuri_sender.username"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.baseuri_sender.username" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">username</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#baseuri_sender.username"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.baseuri_sender.username" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.net.senders.copy_sender">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.senders.</span></span><span class="sig-name descname"><span class="pre">copy_sender</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#copy_sender"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.copy_sender" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bexchange.net.senders.sender" title="bexchange.net.senders.sender"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.net.senders.sender</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.senders.</span></span><span class="sig-name descname"><span class="pre">copy_sender</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#copy_sender"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.copy_sender" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bexchange.net.senders.sender" title="bexchange.net.senders.sender"><code class="xref py py-class docutils literal notranslate"><span class="pre">sender</span></code></a></p>
 <p>Sends files by copying them</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.senders.copy_sender.create_missing_directories">
-<span class="sig-name descname"><span class="pre">create_missing_directories</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#copy_sender.create_missing_directories"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.copy_sender.create_missing_directories" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">create_missing_directories</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#copy_sender.create_missing_directories"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.copy_sender.create_missing_directories" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>if missing directories should be created or not</p>
 </dd>
 </dl>
@@ -567,7 +565,7 @@ Each (or most) publisher_connection is associated with one or more senders.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.senders.copy_sender.name">
-<span class="sig-name descname"><span class="pre">name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#copy_sender.name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.copy_sender.name" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#copy_sender.name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.copy_sender.name" title="Link to this definition">¶</a></dt>
 <dd><p>Creates the name to use when copying the file from the metadata
 :param meta: The metadata
 :return: the name to use for destination</p>
@@ -575,7 +573,7 @@ Each (or most) publisher_connection is associated with one or more senders.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.senders.copy_sender.send">
-<span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#copy_sender.send"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.copy_sender.send" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#copy_sender.send"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.copy_sender.send" title="Link to this definition">¶</a></dt>
 <dd><p>Sends the file using copy.
 :param file: path to file that should be sent
 :param meta: the meta object for all metadata of file</p>
@@ -585,12 +583,12 @@ Each (or most) publisher_connection is associated with one or more senders.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.net.senders.dex_sender">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.senders.</span></span><span class="sig-name descname"><span class="pre">dex_sender</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#dex_sender"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.dex_sender" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bexchange.net.senders.sender" title="bexchange.net.senders.sender"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.net.senders.sender</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.senders.</span></span><span class="sig-name descname"><span class="pre">dex_sender</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#dex_sender"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.dex_sender" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bexchange.net.senders.sender" title="bexchange.net.senders.sender"><code class="xref py py-class docutils literal notranslate"><span class="pre">sender</span></code></a></p>
 <p>Legacy DEX communication sending files to old nodes.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.senders.dex_sender.send">
-<span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#dex_sender.send"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.dex_sender.send" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#dex_sender.send"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.dex_sender.send" title="Link to this definition">¶</a></dt>
 <dd><p>Sends the file to the dex server
 :param file: path to file that should be sent
 :param meta: the meta object for all metadata of file</p>
@@ -600,12 +598,12 @@ Each (or most) publisher_connection is associated with one or more senders.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.net.senders.ftp_sender">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.senders.</span></span><span class="sig-name descname"><span class="pre">ftp_sender</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#ftp_sender"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.ftp_sender" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bexchange.net.senders.baseuri_sender" title="bexchange.net.senders.baseuri_sender"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.net.senders.baseuri_sender</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.senders.</span></span><span class="sig-name descname"><span class="pre">ftp_sender</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#ftp_sender"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.ftp_sender" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bexchange.net.senders.baseuri_sender" title="bexchange.net.senders.baseuri_sender"><code class="xref py py-class docutils literal notranslate"><span class="pre">baseuri_sender</span></code></a></p>
 <p>Publishes files over ftp</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.senders.ftp_sender.change_and_create_dir">
-<span class="sig-name descname"><span class="pre">change_and_create_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ftp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#ftp_sender.change_and_create_dir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.ftp_sender.change_and_create_dir" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">change_and_create_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ftp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#ftp_sender.change_and_create_dir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.ftp_sender.change_and_create_dir" title="Link to this definition">¶</a></dt>
 <dd><p>Changes directory and creates specified directory.
 :param ftp: The ftp connection
 :param path: The path to create</p>
@@ -613,14 +611,14 @@ Each (or most) publisher_connection is associated with one or more senders.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.senders.ftp_sender.connect">
-<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#ftp_sender.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.ftp_sender.connect" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#ftp_sender.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.ftp_sender.connect" title="Link to this definition">¶</a></dt>
 <dd><p>Connects to the host specified by host  / port.
 :return: the ftp connection</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.senders.ftp_sender.does_dir_exist">
-<span class="sig-name descname"><span class="pre">does_dir_exist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ftp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#ftp_sender.does_dir_exist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.ftp_sender.does_dir_exist" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">does_dir_exist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ftp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#ftp_sender.does_dir_exist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.ftp_sender.does_dir_exist" title="Link to this definition">¶</a></dt>
 <dd><p>Tests if the specified directory exist using the provided ftp-connection
 :param ftp: the ftp connection
 :param path: the path to test
@@ -629,7 +627,7 @@ Each (or most) publisher_connection is associated with one or more senders.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.senders.ftp_sender.send">
-<span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#ftp_sender.send"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.ftp_sender.send" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#ftp_sender.send"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.ftp_sender.send" title="Link to this definition">¶</a></dt>
 <dd><p>Sends the file using ftp.
 :param file: path to file that should be published
 :param meta: the meta object for all metadata of file</p>
@@ -639,13 +637,13 @@ Each (or most) publisher_connection is associated with one or more senders.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.net.senders.rest_sender">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.senders.</span></span><span class="sig-name descname"><span class="pre">rest_sender</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#rest_sender"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.rest_sender" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bexchange.net.senders.sender" title="bexchange.net.senders.sender"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.net.senders.sender</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.senders.</span></span><span class="sig-name descname"><span class="pre">rest_sender</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#rest_sender"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.rest_sender" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bexchange.net.senders.sender" title="bexchange.net.senders.sender"><code class="xref py py-class docutils literal notranslate"><span class="pre">sender</span></code></a></p>
 <p>Sends a file to another node that is running bexchange. The rest sender uses the internal crypto library for signing messages
 which currently supports DSA &amp; RSA keys. DSA uses DSS, RSA uses pkcs1_15.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.senders.rest_sender.send">
-<span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#rest_sender.send"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.rest_sender.send" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#rest_sender.send"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.rest_sender.send" title="Link to this definition">¶</a></dt>
 <dd><p>Sends the file to the bexchange server
 :param file: path to file that should be sent
 :param meta: the meta object for all metadata of file</p>
@@ -655,12 +653,12 @@ which currently supports DSA &amp; RSA keys. DSA uses DSS, RSA uses pkcs1_15.</p
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.net.senders.scp_sender">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.senders.</span></span><span class="sig-name descname"><span class="pre">scp_sender</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#scp_sender"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.scp_sender" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bexchange.net.senders.baseuri_sender" title="bexchange.net.senders.baseuri_sender"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.net.senders.baseuri_sender</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.senders.</span></span><span class="sig-name descname"><span class="pre">scp_sender</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#scp_sender"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.scp_sender" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bexchange.net.senders.baseuri_sender" title="bexchange.net.senders.baseuri_sender"><code class="xref py py-class docutils literal notranslate"><span class="pre">baseuri_sender</span></code></a></p>
 <p>Publishes files over scp</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.senders.scp_sender.send">
-<span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#scp_sender.send"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.scp_sender.send" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#scp_sender.send"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.scp_sender.send" title="Link to this definition">¶</a></dt>
 <dd><p>Sends the file using scp.
 :param file: path to file that should be sent
 :param meta: the meta object for all metadata of file</p>
@@ -670,24 +668,24 @@ which currently supports DSA &amp; RSA keys. DSA uses DSS, RSA uses pkcs1_15.</p
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.net.senders.sender">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.senders.</span></span><span class="sig-name descname"><span class="pre">sender</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#sender"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.sender" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.senders.</span></span><span class="sig-name descname"><span class="pre">sender</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#sender"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.sender" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Base sender. All classes implementing this should send the specified file path to a recipient over a specific protocol.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.senders.sender.backend">
-<span class="sig-name descname"><span class="pre">backend</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#sender.backend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.sender.backend" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">backend</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#sender.backend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.sender.backend" title="Link to this definition">¶</a></dt>
 <dd><p>Returns the server backend</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.senders.sender.id">
-<span class="sig-name descname"><span class="pre">id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#sender.id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.sender.id" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#sender.id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.sender.id" title="Link to this definition">¶</a></dt>
 <dd><p>Returns this uploader id</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.senders.sender.send">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#sender.send"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.sender.send" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#sender.send"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.sender.send" title="Link to this definition">¶</a></dt>
 <dd><p>Sends path with the metadata meta
 :param path: Path to file to be uploaded
 :param meta: Metadata of the uploaded file</p>
@@ -697,11 +695,11 @@ which currently supports DSA &amp; RSA keys. DSA uses DSS, RSA uses pkcs1_15.</p
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.net.senders.sender_manager">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.senders.</span></span><span class="sig-name descname"><span class="pre">sender_manager</span></span><a class="reference internal" href="../_modules/bexchange/net/senders.html#sender_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.sender_manager" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.senders.</span></span><span class="sig-name descname"><span class="pre">sender_manager</span></span><a class="reference internal" href="../_modules/bexchange/net/senders.html#sender_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.sender_manager" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.senders.sender_manager.from_conf">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_conf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#sender_manager.from_conf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.sender_manager.from_conf" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_conf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#sender_manager.from_conf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.sender_manager.from_conf" title="Link to this definition">¶</a></dt>
 <dd><p>Creates an instance of clz with specified arguments
 :param arguments: a list of arguments that should be used to initialize the class</p>
 </dd></dl>
@@ -710,12 +708,12 @@ which currently supports DSA &amp; RSA keys. DSA uses DSS, RSA uses pkcs1_15.</p
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.net.senders.sftp_sender">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.senders.</span></span><span class="sig-name descname"><span class="pre">sftp_sender</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#sftp_sender"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.sftp_sender" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bexchange.net.senders.baseuri_sender" title="bexchange.net.senders.baseuri_sender"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.net.senders.baseuri_sender</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.senders.</span></span><span class="sig-name descname"><span class="pre">sftp_sender</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#sftp_sender"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.sftp_sender" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bexchange.net.senders.baseuri_sender" title="bexchange.net.senders.baseuri_sender"><code class="xref py py-class docutils literal notranslate"><span class="pre">baseuri_sender</span></code></a></p>
 <p>Sends files over sftp</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.senders.sftp_sender.send">
-<span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#sftp_sender.send"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.sftp_sender.send" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#sftp_sender.send"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.sftp_sender.send" title="Link to this definition">¶</a></dt>
 <dd><p>Sends the file using sftp.
 :param file: path to file that should be sent
 :param meta: the meta object for all metadata of file</p>
@@ -725,12 +723,12 @@ which currently supports DSA &amp; RSA keys. DSA uses DSS, RSA uses pkcs1_15.</p
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.net.senders.storage_sender">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.senders.</span></span><span class="sig-name descname"><span class="pre">storage_sender</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#storage_sender"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.storage_sender" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bexchange.net.senders.sender" title="bexchange.net.senders.sender"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.net.senders.sender</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.senders.</span></span><span class="sig-name descname"><span class="pre">storage_sender</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#storage_sender"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.storage_sender" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bexchange.net.senders.sender" title="bexchange.net.senders.sender"><code class="xref py py-class docutils literal notranslate"><span class="pre">sender</span></code></a></p>
 <p>Sends files using a number of storages.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.senders.storage_sender.send">
-<span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#storage_sender.send"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.storage_sender.send" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#storage_sender.send"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.storage_sender.send" title="Link to this definition">¶</a></dt>
 <dd><p>Sends the file on all storages associated with self
 :param file: path to file that should be sent
 :param meta: the meta object for all metadata of file</p>
@@ -740,34 +738,34 @@ which currently supports DSA &amp; RSA keys. DSA uses DSS, RSA uses pkcs1_15.</p
 
 </section>
 <section id="module-bexchange.net.sftpclient">
-<span id="bexchange-net-sftpclient-module"></span><h2>bexchange.net.sftpclient module<a class="headerlink" href="#module-bexchange.net.sftpclient" title="Permalink to this headline">¶</a></h2>
+<span id="bexchange-net-sftpclient-module"></span><h2>bexchange.net.sftpclient module<a class="headerlink" href="#module-bexchange.net.sftpclient" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.net.sftpclient.sftpclient">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.sftpclient.</span></span><span class="sig-name descname"><span class="pre">sftpclient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">banner_timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/sftpclient.html#sftpclient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.sftpclient.sftpclient" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.sftpclient.</span></span><span class="sig-name descname"><span class="pre">sftpclient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">banner_timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/sftpclient.html#sftpclient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.sftpclient.sftpclient" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Implementation of a sftpclient using paramiko</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.sftpclient.sftpclient.chdir">
-<span class="sig-name descname"><span class="pre">chdir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dirname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/sftpclient.html#sftpclient.chdir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.sftpclient.sftpclient.chdir" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">chdir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dirname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/sftpclient.html#sftpclient.chdir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.sftpclient.sftpclient.chdir" title="Link to this definition">¶</a></dt>
 <dd><p>Changes current directory on server
 :param dirname: The directory to change to</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.sftpclient.sftpclient.connect">
-<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/sftpclient.html#sftpclient.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.sftpclient.sftpclient.connect" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/sftpclient.html#sftpclient.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.sftpclient.sftpclient.connect" title="Link to this definition">¶</a></dt>
 <dd><p>(Re)connects to the sftp server</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.sftpclient.sftpclient.disconnect">
-<span class="sig-name descname"><span class="pre">disconnect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/sftpclient.html#sftpclient.disconnect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.sftpclient.sftpclient.disconnect" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">disconnect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/sftpclient.html#sftpclient.disconnect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.sftpclient.sftpclient.disconnect" title="Link to this definition">¶</a></dt>
 <dd><p>Disconnects from the sftp server</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.sftpclient.sftpclient.get">
-<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targetname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/sftpclient.html#sftpclient.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.sftpclient.sftpclient.get" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targetname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/sftpclient.html#sftpclient.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.sftpclient.sftpclient.get" title="Link to this definition">¶</a></dt>
 <dd><p>Fetches the file (filename) from the server and saves it as targetname.
 :param filename: Source filename to download
 :param targetname: The destination name to save as</p>
@@ -775,12 +773,12 @@ which currently supports DSA &amp; RSA keys. DSA uses DSS, RSA uses pkcs1_15.</p
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.sftpclient.sftpclient.getfo">
-<span class="sig-name descname"><span class="pre">getfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">remotepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/sftpclient.html#sftpclient.getfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.sftpclient.sftpclient.getfo" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">getfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">remotepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/sftpclient.html#sftpclient.getfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.sftpclient.sftpclient.getfo" title="Link to this definition">¶</a></dt>
 <dd><p>Copies the file (remotepath) from the server and writes to an open file.
 Typically used like:
 with NamedTemporaryFile() as fp: c.getfo(”….”, fp)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>remotepath</strong> – Source filename to download</p></li>
 <li><p><strong>fl</strong> – The destination file object</p></li>
@@ -791,19 +789,19 @@ with NamedTemporaryFile() as fp: c.getfo(”….”, fp)</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.sftpclient.sftpclient.hostname">
-<span class="sig-name descname"><span class="pre">hostname</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/sftpclient.html#sftpclient.hostname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.sftpclient.sftpclient.hostname" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">hostname</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/sftpclient.html#sftpclient.hostname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.sftpclient.sftpclient.hostname" title="Link to this definition">¶</a></dt>
 <dd><p>:return the hostname</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.sftpclient.sftpclient.isdir">
-<span class="sig-name descname"><span class="pre">isdir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/sftpclient.html#sftpclient.isdir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.sftpclient.sftpclient.isdir" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">isdir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/sftpclient.html#sftpclient.isdir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.sftpclient.sftpclient.isdir" title="Link to this definition">¶</a></dt>
 <dd><p>Checks if the provided path is a directory or not</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>path</strong> – Path name to check</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>if specified path is a dir or not</p>
 </dd>
 </dl>
@@ -811,12 +809,12 @@ with NamedTemporaryFile() as fp: c.getfo(”….”, fp)</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.sftpclient.sftpclient.isfile">
-<span class="sig-name descname"><span class="pre">isfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/sftpclient.html#sftpclient.isfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.sftpclient.sftpclient.isfile" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">isfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/sftpclient.html#sftpclient.isfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.sftpclient.sftpclient.isfile" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>path</strong> – Path name to check</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>if specified path is a file or not</p>
 </dd>
 </dl>
@@ -824,7 +822,7 @@ with NamedTemporaryFile() as fp: c.getfo(”….”, fp)</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.sftpclient.sftpclient.listdir">
-<span class="sig-name descname"><span class="pre">listdir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dirname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/sftpclient.html#sftpclient.listdir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.sftpclient.sftpclient.listdir" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">listdir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dirname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/sftpclient.html#sftpclient.listdir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.sftpclient.sftpclient.listdir" title="Link to this definition">¶</a></dt>
 <dd><p>Lists files and directories in the directory
 :param dirname: The directory to list
 :return a list of names</p>
@@ -832,26 +830,26 @@ with NamedTemporaryFile() as fp: c.getfo(”….”, fp)</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.sftpclient.sftpclient.makedirs">
-<span class="sig-name descname"><span class="pre">makedirs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">targetdir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/sftpclient.html#sftpclient.makedirs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.sftpclient.sftpclient.makedirs" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">makedirs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">targetdir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/sftpclient.html#sftpclient.makedirs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.sftpclient.sftpclient.makedirs" title="Link to this definition">¶</a></dt>
 <dd><p>Creates the directories if they don’t exist
 :param targetdir: The structure to create from current wd</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.sftpclient.sftpclient.password">
-<span class="sig-name descname"><span class="pre">password</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/sftpclient.html#sftpclient.password"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.sftpclient.sftpclient.password" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">password</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/sftpclient.html#sftpclient.password"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.sftpclient.sftpclient.password" title="Link to this definition">¶</a></dt>
 <dd><p>:return the password</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.sftpclient.sftpclient.port">
-<span class="sig-name descname"><span class="pre">port</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/sftpclient.html#sftpclient.port"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.sftpclient.sftpclient.port" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">port</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/sftpclient.html#sftpclient.port"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.sftpclient.sftpclient.port" title="Link to this definition">¶</a></dt>
 <dd><p>:return the port number</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.sftpclient.sftpclient.put">
-<span class="sig-name descname"><span class="pre">put</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targetname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/sftpclient.html#sftpclient.put"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.sftpclient.sftpclient.put" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">put</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targetname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/sftpclient.html#sftpclient.put"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.sftpclient.sftpclient.put" title="Link to this definition">¶</a></dt>
 <dd><p>Uploads the file (filename) to the server named targetname.
 :param filename: Source filename to upload
 :param targetname: The destination name</p>
@@ -859,7 +857,7 @@ with NamedTemporaryFile() as fp: c.getfo(”….”, fp)</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.sftpclient.sftpclient.username">
-<span class="sig-name descname"><span class="pre">username</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/sftpclient.html#sftpclient.username"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.sftpclient.sftpclient.username" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">username</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/sftpclient.html#sftpclient.username"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.sftpclient.sftpclient.username" title="Link to this definition">¶</a></dt>
 <dd><p>:return the username</p>
 </dd></dl>
 
@@ -867,7 +865,7 @@ with NamedTemporaryFile() as fp: c.getfo(”….”, fp)</p>
 
 </section>
 <section id="module-bexchange.net">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-bexchange.net" title="Permalink to this headline">¶</a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-bexchange.net" title="Link to this heading">¶</a></h2>
 </section>
 </section>
 
@@ -878,26 +876,208 @@ with NamedTemporaryFile() as fp: c.getfo(”….”, fp)</p>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">bexchange.net package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-bexchange.net.connections">bexchange.net.connections module</a></li>
-<li><a class="reference internal" href="#module-bexchange.net.fetchers">bexchange.net.fetchers module</a></li>
-<li><a class="reference internal" href="#module-bexchange.net.publishers">bexchange.net.publishers module</a></li>
-<li><a class="reference internal" href="#module-bexchange.net.senders">bexchange.net.senders module</a></li>
-<li><a class="reference internal" href="#module-bexchange.net.sftpclient">bexchange.net.sftpclient module</a></li>
+<li><a class="reference internal" href="#module-bexchange.net.connections">bexchange.net.connections module</a><ul>
+<li><a class="reference internal" href="#bexchange.net.connections.backup_connection"><code class="docutils literal notranslate"><span class="pre">backup_connection</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.net.connections.backup_connection.publish"><code class="docutils literal notranslate"><span class="pre">backup_connection.publish()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.net.connections.connection_manager"><code class="docutils literal notranslate"><span class="pre">connection_manager</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.net.connections.connection_manager.from_conf"><code class="docutils literal notranslate"><span class="pre">connection_manager.from_conf()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.net.connections.distributed_connection"><code class="docutils literal notranslate"><span class="pre">distributed_connection</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.net.connections.distributed_connection.publish"><code class="docutils literal notranslate"><span class="pre">distributed_connection.publish()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.net.connections.failover_connection"><code class="docutils literal notranslate"><span class="pre">failover_connection</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.net.connections.failover_connection.publish"><code class="docutils literal notranslate"><span class="pre">failover_connection.publish()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.net.connections.publisher_connection"><code class="docutils literal notranslate"><span class="pre">publisher_connection</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.net.connections.publisher_connection.backend"><code class="docutils literal notranslate"><span class="pre">publisher_connection.backend()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.connections.publisher_connection.publish"><code class="docutils literal notranslate"><span class="pre">publisher_connection.publish()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.net.connections.simple_connection"><code class="docutils literal notranslate"><span class="pre">simple_connection</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.net.connections.simple_connection.publish"><code class="docutils literal notranslate"><span class="pre">simple_connection.publish()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-bexchange.net.fetchers">bexchange.net.fetchers module</a><ul>
+<li><a class="reference internal" href="#bexchange.net.fetchers.baseuri_fetcher"><code class="docutils literal notranslate"><span class="pre">baseuri_fetcher</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.net.fetchers.baseuri_fetcher.hostname"><code class="docutils literal notranslate"><span class="pre">baseuri_fetcher.hostname()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.fetchers.baseuri_fetcher.password"><code class="docutils literal notranslate"><span class="pre">baseuri_fetcher.password()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.fetchers.baseuri_fetcher.path"><code class="docutils literal notranslate"><span class="pre">baseuri_fetcher.path()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.fetchers.baseuri_fetcher.port"><code class="docutils literal notranslate"><span class="pre">baseuri_fetcher.port()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.fetchers.baseuri_fetcher.set_port"><code class="docutils literal notranslate"><span class="pre">baseuri_fetcher.set_port()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.fetchers.baseuri_fetcher.uri"><code class="docutils literal notranslate"><span class="pre">baseuri_fetcher.uri()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.fetchers.baseuri_fetcher.username"><code class="docutils literal notranslate"><span class="pre">baseuri_fetcher.username()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.net.fetchers.baseuri_patternmatching_fetcher"><code class="docutils literal notranslate"><span class="pre">baseuri_patternmatching_fetcher</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.net.fetchers.baseuri_patternmatching_fetcher.fnpattern"><code class="docutils literal notranslate"><span class="pre">baseuri_patternmatching_fetcher.fnpattern()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.fetchers.baseuri_patternmatching_fetcher.pattern"><code class="docutils literal notranslate"><span class="pre">baseuri_patternmatching_fetcher.pattern()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.fetchers.baseuri_patternmatching_fetcher.pattern_matcher"><code class="docutils literal notranslate"><span class="pre">baseuri_patternmatching_fetcher.pattern_matcher()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.net.fetchers.copy_fetcher"><code class="docutils literal notranslate"><span class="pre">copy_fetcher</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.net.fetchers.copy_fetcher.fetch"><code class="docutils literal notranslate"><span class="pre">copy_fetcher.fetch()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.fetchers.copy_fetcher.pattern_matcher"><code class="docutils literal notranslate"><span class="pre">copy_fetcher.pattern_matcher()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.net.fetchers.fetcher"><code class="docutils literal notranslate"><span class="pre">fetcher</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.net.fetchers.fetcher.backend"><code class="docutils literal notranslate"><span class="pre">fetcher.backend()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.fetchers.fetcher.fetch"><code class="docutils literal notranslate"><span class="pre">fetcher.fetch()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.fetchers.fetcher.id"><code class="docutils literal notranslate"><span class="pre">fetcher.id()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.net.fetchers.fetcher_manager"><code class="docutils literal notranslate"><span class="pre">fetcher_manager</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.net.fetchers.fetcher_manager.from_conf"><code class="docutils literal notranslate"><span class="pre">fetcher_manager.from_conf()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.net.fetchers.ftp_fetcher"><code class="docutils literal notranslate"><span class="pre">ftp_fetcher</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.net.fetchers.ftp_fetcher.connect"><code class="docutils literal notranslate"><span class="pre">ftp_fetcher.connect()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.fetchers.ftp_fetcher.fetch"><code class="docutils literal notranslate"><span class="pre">ftp_fetcher.fetch()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.net.fetchers.scp_fetcher"><code class="docutils literal notranslate"><span class="pre">scp_fetcher</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.net.fetchers.scp_fetcher.fetch"><code class="docutils literal notranslate"><span class="pre">scp_fetcher.fetch()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.net.fetchers.sftp_fetcher"><code class="docutils literal notranslate"><span class="pre">sftp_fetcher</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.net.fetchers.sftp_fetcher.fetch"><code class="docutils literal notranslate"><span class="pre">sftp_fetcher.fetch()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-bexchange.net.publishers">bexchange.net.publishers module</a><ul>
+<li><a class="reference internal" href="#bexchange.net.publishers.publisher"><code class="docutils literal notranslate"><span class="pre">publisher</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.net.publishers.publisher.active"><code class="docutils literal notranslate"><span class="pre">publisher.active()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.publishers.publisher.backend"><code class="docutils literal notranslate"><span class="pre">publisher.backend()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.publishers.publisher.connections"><code class="docutils literal notranslate"><span class="pre">publisher.connections()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.publishers.publisher.decorators"><code class="docutils literal notranslate"><span class="pre">publisher.decorators()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.publishers.publisher.filter"><code class="docutils literal notranslate"><span class="pre">publisher.filter()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.publishers.publisher.initialize"><code class="docutils literal notranslate"><span class="pre">publisher.initialize()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.publishers.publisher.name"><code class="docutils literal notranslate"><span class="pre">publisher.name()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.publishers.publisher.origin"><code class="docutils literal notranslate"><span class="pre">publisher.origin()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.publishers.publisher.publish"><code class="docutils literal notranslate"><span class="pre">publisher.publish()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.publishers.publisher.start"><code class="docutils literal notranslate"><span class="pre">publisher.start()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.publishers.publisher.stop"><code class="docutils literal notranslate"><span class="pre">publisher.stop()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.net.publishers.publisher_manager"><code class="docutils literal notranslate"><span class="pre">publisher_manager</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.net.publishers.publisher_manager.create_publisher"><code class="docutils literal notranslate"><span class="pre">publisher_manager.create_publisher()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.publishers.publisher_manager.from_conf"><code class="docutils literal notranslate"><span class="pre">publisher_manager.from_conf()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.net.publishers.standard_publisher"><code class="docutils literal notranslate"><span class="pre">standard_publisher</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.net.publishers.standard_publisher.consumer"><code class="docutils literal notranslate"><span class="pre">standard_publisher.consumer()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.publishers.standard_publisher.do_publish"><code class="docutils literal notranslate"><span class="pre">standard_publisher.do_publish()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.publishers.standard_publisher.initialize"><code class="docutils literal notranslate"><span class="pre">standard_publisher.initialize()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.publishers.standard_publisher.publish"><code class="docutils literal notranslate"><span class="pre">standard_publisher.publish()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.publishers.standard_publisher.start"><code class="docutils literal notranslate"><span class="pre">standard_publisher.start()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.publishers.standard_publisher.stop"><code class="docutils literal notranslate"><span class="pre">standard_publisher.stop()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-bexchange.net.senders">bexchange.net.senders module</a><ul>
+<li><a class="reference internal" href="#bexchange.net.senders.baseuri_sender"><code class="docutils literal notranslate"><span class="pre">baseuri_sender</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.net.senders.baseuri_sender.create_missing_directories"><code class="docutils literal notranslate"><span class="pre">baseuri_sender.create_missing_directories()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.senders.baseuri_sender.hostname"><code class="docutils literal notranslate"><span class="pre">baseuri_sender.hostname()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.senders.baseuri_sender.name"><code class="docutils literal notranslate"><span class="pre">baseuri_sender.name()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.senders.baseuri_sender.password"><code class="docutils literal notranslate"><span class="pre">baseuri_sender.password()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.senders.baseuri_sender.port"><code class="docutils literal notranslate"><span class="pre">baseuri_sender.port()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.senders.baseuri_sender.username"><code class="docutils literal notranslate"><span class="pre">baseuri_sender.username()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.net.senders.copy_sender"><code class="docutils literal notranslate"><span class="pre">copy_sender</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.net.senders.copy_sender.create_missing_directories"><code class="docutils literal notranslate"><span class="pre">copy_sender.create_missing_directories()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.senders.copy_sender.name"><code class="docutils literal notranslate"><span class="pre">copy_sender.name()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.senders.copy_sender.send"><code class="docutils literal notranslate"><span class="pre">copy_sender.send()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.net.senders.dex_sender"><code class="docutils literal notranslate"><span class="pre">dex_sender</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.net.senders.dex_sender.send"><code class="docutils literal notranslate"><span class="pre">dex_sender.send()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.net.senders.ftp_sender"><code class="docutils literal notranslate"><span class="pre">ftp_sender</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.net.senders.ftp_sender.change_and_create_dir"><code class="docutils literal notranslate"><span class="pre">ftp_sender.change_and_create_dir()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.senders.ftp_sender.connect"><code class="docutils literal notranslate"><span class="pre">ftp_sender.connect()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.senders.ftp_sender.does_dir_exist"><code class="docutils literal notranslate"><span class="pre">ftp_sender.does_dir_exist()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.senders.ftp_sender.send"><code class="docutils literal notranslate"><span class="pre">ftp_sender.send()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.net.senders.rest_sender"><code class="docutils literal notranslate"><span class="pre">rest_sender</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.net.senders.rest_sender.send"><code class="docutils literal notranslate"><span class="pre">rest_sender.send()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.net.senders.scp_sender"><code class="docutils literal notranslate"><span class="pre">scp_sender</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.net.senders.scp_sender.send"><code class="docutils literal notranslate"><span class="pre">scp_sender.send()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.net.senders.sender"><code class="docutils literal notranslate"><span class="pre">sender</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.net.senders.sender.backend"><code class="docutils literal notranslate"><span class="pre">sender.backend()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.senders.sender.id"><code class="docutils literal notranslate"><span class="pre">sender.id()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.senders.sender.send"><code class="docutils literal notranslate"><span class="pre">sender.send()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.net.senders.sender_manager"><code class="docutils literal notranslate"><span class="pre">sender_manager</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.net.senders.sender_manager.from_conf"><code class="docutils literal notranslate"><span class="pre">sender_manager.from_conf()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.net.senders.sftp_sender"><code class="docutils literal notranslate"><span class="pre">sftp_sender</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.net.senders.sftp_sender.send"><code class="docutils literal notranslate"><span class="pre">sftp_sender.send()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.net.senders.storage_sender"><code class="docutils literal notranslate"><span class="pre">storage_sender</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.net.senders.storage_sender.send"><code class="docutils literal notranslate"><span class="pre">storage_sender.send()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-bexchange.net.sftpclient">bexchange.net.sftpclient module</a><ul>
+<li><a class="reference internal" href="#bexchange.net.sftpclient.sftpclient"><code class="docutils literal notranslate"><span class="pre">sftpclient</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.net.sftpclient.sftpclient.chdir"><code class="docutils literal notranslate"><span class="pre">sftpclient.chdir()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.sftpclient.sftpclient.connect"><code class="docutils literal notranslate"><span class="pre">sftpclient.connect()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.sftpclient.sftpclient.disconnect"><code class="docutils literal notranslate"><span class="pre">sftpclient.disconnect()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.sftpclient.sftpclient.get"><code class="docutils literal notranslate"><span class="pre">sftpclient.get()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.sftpclient.sftpclient.getfo"><code class="docutils literal notranslate"><span class="pre">sftpclient.getfo()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.sftpclient.sftpclient.hostname"><code class="docutils literal notranslate"><span class="pre">sftpclient.hostname()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.sftpclient.sftpclient.isdir"><code class="docutils literal notranslate"><span class="pre">sftpclient.isdir()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.sftpclient.sftpclient.isfile"><code class="docutils literal notranslate"><span class="pre">sftpclient.isfile()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.sftpclient.sftpclient.listdir"><code class="docutils literal notranslate"><span class="pre">sftpclient.listdir()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.sftpclient.sftpclient.makedirs"><code class="docutils literal notranslate"><span class="pre">sftpclient.makedirs()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.sftpclient.sftpclient.password"><code class="docutils literal notranslate"><span class="pre">sftpclient.password()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.sftpclient.sftpclient.port"><code class="docutils literal notranslate"><span class="pre">sftpclient.port()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.sftpclient.sftpclient.put"><code class="docutils literal notranslate"><span class="pre">sftpclient.put()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.sftpclient.sftpclient.username"><code class="docutils literal notranslate"><span class="pre">sftpclient.username()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-bexchange.net">Module contents</a></li>
 </ul>
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="bexchange.naming.html"
-                        title="previous chapter">bexchange.naming package</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="bexchange.net.zmq.html"
-                        title="next chapter">bexchange.net.zmq package</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="bexchange.naming.html"
+                          title="previous chapter">bexchange.naming package</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="bexchange.net.zmq.html"
+                          title="next chapter">bexchange.net.zmq package</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -914,7 +1094,7 @@ with NamedTemporaryFile() as fp: c.getfo(”….”, fp)</p>
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -941,8 +1121,8 @@ with NamedTemporaryFile() as fp: c.getfo(”….”, fp)</p>
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Anders Henja.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

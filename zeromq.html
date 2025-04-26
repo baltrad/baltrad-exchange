@@ -1,19 +1,17 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>ZeroMQ interface &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css?v=514cf933" />
     
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
+    <script src="_static/documentation_options.js?v=2709fde1"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -46,93 +44,93 @@
           <div class="body" role="main">
             
   <section id="zeromq-interface">
-<h1>ZeroMQ interface<a class="headerlink" href="#zeromq-interface" title="Permalink to this headline">¶</a></h1>
+<h1>ZeroMQ interface<a class="headerlink" href="#zeromq-interface" title="Link to this heading">¶</a></h1>
 <section id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
 <p>The data transporter exchange mechanism that is used within the nordic radar exchange uses the ZeroMQ API for exchange and for ease of understanding is has been called zmq within
 baltrad-exchange. This allows for a different approach of distributing files that is appreciated for it’s simplicity.</p>
 <p>The zmq assumes that the subscribers have connected to the publisher and the zmq queue doesn’t monitor the transmission wether it was successful or not. This means that monitoring
 of received data has to be performed on the receiving files and there is no resend (except if the ZeroMQ queue provides it) on the publisher side.</p>
 <p>Since there is no authentication mechanisms or other features that prevents unknown subscribers the firewall has to be setup preventing this access.</p>
 <section id="publisher">
-<h3>Publisher<a class="headerlink" href="#publisher" title="Permalink to this headline">¶</a></h3>
+<h3>Publisher<a class="headerlink" href="#publisher" title="Link to this heading">¶</a></h3>
 <p>The zmq publisher is behaving differently from the standard publisher in the way that it working as a subscribtion service and provides a listener that the subscribers can connect to.
 This means that there is no connection and/or sender associated with this publication. Instead a listening address is configured. Besides this, you can configure filters, decorators
 any other feature associated with a publication, <a class="reference internal" href="userguide.html#ug-publications"><span class="std std-ref">Publications (publication)</span></a>. The class name of this publisher is <strong>bexchange.net.zmq.publisher.publisher</strong>.</p>
 <p>The data transporter protocol expects a 256 character zero-padded filename which can be defined using namers that are decided depending on what/object as can be seen in the
 below example. The filter is used if you want to distinguish what the subscribers will receive. In the below example only sehem &amp; seang PVOLs will be published.</p>
-<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
-<span class="nt">&quot;publication&quot;</span><span class="p">:{</span><span class="w"></span>
-<span class="w">   </span><span class="nt">&quot;_comment_&quot;</span><span class="p">:</span><span class="s2">&quot;ZeroMQ (datatransporter) publisher.&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">   </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;ZMQ publisher&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">   </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;bexchange.net.zmq.publisher.publisher&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">   </span><span class="nt">&quot;extra_arguments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">         </span><span class="nt">&quot;publisher_address&quot;</span><span class="p">:</span><span class="s2">&quot;tcp://*:8078&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">         </span><span class="nt">&quot;hmac&quot;</span><span class="p">:</span><span class="s2">&quot;&lt;change me&gt;&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">     </span><span class="nt">&quot;__namers_comment&quot;</span><span class="p">:</span><span class="s2">&quot;The namers are not required since default is to use below setting&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">     </span><span class="nt">&quot;namers&quot;</span><span class="p">:[</span><span class="w"></span>
-<span class="w">      </span><span class="p">{</span><span class="nt">&quot;object&quot;</span><span class="p">:</span><span class="s2">&quot;SCAN&quot;</span><span class="p">,</span><span class="nt">&quot;pattern&quot;</span><span class="p">:</span><span class="s2">&quot;${_baltrad/source_name}_scan_${/dataset1/where/elangle}.replace(&#39;.&#39;,&#39;_&#39;)_${/what/date}T${/what/time}.h5&quot;</span><span class="p">},</span><span class="w"></span>
-<span class="w">      </span><span class="p">{</span><span class="nt">&quot;object&quot;</span><span class="p">:</span><span class="s2">&quot;default&quot;</span><span class="p">,</span><span class="nt">&quot;pattern&quot;</span><span class="p">:</span><span class="s2">&quot;${_baltrad/source_name}_${/what/object}.tolower()_${/what/date}T${/what/time}.h5&quot;</span><span class="p">}</span><span class="w"></span>
-<span class="w">     </span><span class="p">]</span><span class="w"></span>
-<span class="w">   </span><span class="p">},</span><span class="w"></span>
-<span class="w">   </span><span class="nt">&quot;active&quot;</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span><span class="w"></span>
-<span class="w">   </span><span class="nt">&quot;filter&quot;</span><span class="p">:{</span><span class="w"></span>
-<span class="w">         </span><span class="nt">&quot;filter_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;and_filter&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">         </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
-<span class="w">           </span><span class="p">{</span><span class="nt">&quot;filter_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;attribute_filter&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;_bdb/source_name&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">        </span><span class="nt">&quot;operation&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;in&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">        </span><span class="nt">&quot;value_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">        </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;sehem&quot;</span><span class="p">,</span><span class="s2">&quot;seang&quot;</span><span class="p">]},</span><span class="w"></span>
-<span class="w">           </span><span class="p">{</span><span class="nt">&quot;filter_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;attribute_filter&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/what/object&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">        </span><span class="nt">&quot;operation&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;=&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">        </span><span class="nt">&quot;value_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">        </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;PVOL&quot;</span><span class="p">]}</span><span class="w"></span>
-<span class="w">     </span><span class="p">]</span><span class="w"></span>
-<span class="w">    </span><span class="p">},</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;decorators&quot;</span><span class="p">:[</span><span class="w"></span>
-<span class="w">    </span><span class="p">]</span><span class="w"></span>
-<span class="w">  </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="nt">&quot;publication&quot;</span><span class="p">:{</span>
+<span class="w">   </span><span class="nt">&quot;_comment_&quot;</span><span class="p">:</span><span class="s2">&quot;ZeroMQ (datatransporter) publisher.&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;ZMQ publisher&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;bexchange.net.zmq.publisher.publisher&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;extra_arguments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;publisher_address&quot;</span><span class="p">:</span><span class="s2">&quot;tcp://*:8078&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;hmac&quot;</span><span class="p">:</span><span class="s2">&quot;&lt;change me&gt;&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="nt">&quot;__namers_comment&quot;</span><span class="p">:</span><span class="s2">&quot;The namers are not required since default is to use below setting&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="nt">&quot;namers&quot;</span><span class="p">:[</span>
+<span class="w">      </span><span class="p">{</span><span class="nt">&quot;object&quot;</span><span class="p">:</span><span class="s2">&quot;SCAN&quot;</span><span class="p">,</span><span class="nt">&quot;pattern&quot;</span><span class="p">:</span><span class="s2">&quot;${_baltrad/source_name}_scan_${/dataset1/where/elangle}.replace(&#39;.&#39;,&#39;_&#39;)_${/what/date}T${/what/time}.h5&quot;</span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span><span class="nt">&quot;object&quot;</span><span class="p">:</span><span class="s2">&quot;default&quot;</span><span class="p">,</span><span class="nt">&quot;pattern&quot;</span><span class="p">:</span><span class="s2">&quot;${_baltrad/source_name}_${/what/object}.tolower()_${/what/date}T${/what/time}.h5&quot;</span><span class="p">}</span>
+<span class="w">     </span><span class="p">]</span>
+<span class="w">   </span><span class="p">},</span>
+<span class="w">   </span><span class="nt">&quot;active&quot;</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;filter&quot;</span><span class="p">:{</span>
+<span class="w">         </span><span class="nt">&quot;filter_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;and_filter&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">           </span><span class="p">{</span><span class="nt">&quot;filter_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;attribute_filter&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;_bdb/source_name&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;operation&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;in&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;value_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;sehem&quot;</span><span class="p">,</span><span class="s2">&quot;seang&quot;</span><span class="p">]},</span>
+<span class="w">           </span><span class="p">{</span><span class="nt">&quot;filter_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;attribute_filter&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/what/object&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;operation&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;=&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;value_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;PVOL&quot;</span><span class="p">]}</span>
+<span class="w">     </span><span class="p">]</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;decorators&quot;</span><span class="p">:[</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </section>
 <section id="dmz-publisher">
-<h3>DMZ Publisher<a class="headerlink" href="#dmz-publisher" title="Permalink to this headline">¶</a></h3>
+<h3>DMZ Publisher<a class="headerlink" href="#dmz-publisher" title="Link to this heading">¶</a></h3>
 <p>The dmz zmq publisher assumes that there is a dmz-layer that should be used as a proxy before the files are published. The configuration for this is almost the same as the one used
 for the standard zmq publisher except that the class that should be used is <strong>bexchange.net.zmq.publisher.publisher</strong> and the publisher_address should be pointing at the proxy backend
 server port instead. For example “<a class="reference external" href="tcp://dmz.server:5090">tcp://dmz.server:5090</a>”.</p>
-<div class="highlight-json notranslate"><div class="highlight"><pre><span></span>{
-&quot;publication&quot;:{
-   &quot;_comment_&quot;:&quot;ZeroMQ (datatransporter) dmz publisher.&quot;,
-   &quot;name&quot;:&quot;Remote dmz publisher&quot;,
-   &quot;class&quot;:&quot;bexchange.net.zmq.publisher.dmzpublisher&quot;,
-   &quot;extra_arguments&quot;: {
-         &quot;publisher_address&quot;:&quot;tcp://dmz.server:5090&quot;,
-         ...
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="nt">&quot;publication&quot;</span><span class="p">:{</span>
+<span class="w">   </span><span class="nt">&quot;_comment_&quot;</span><span class="p">:</span><span class="s2">&quot;ZeroMQ (datatransporter) dmz publisher.&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Remote dmz publisher&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;bexchange.net.zmq.publisher.dmzpublisher&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;extra_arguments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;publisher_address&quot;</span><span class="p">:</span><span class="s2">&quot;tcp://dmz.server:5090&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="err">...</span>
 </pre></div>
 </div>
 </section>
 <section id="subscribers">
-<h3>Subscribers<a class="headerlink" href="#subscribers" title="Permalink to this headline">¶</a></h3>
+<h3>Subscribers<a class="headerlink" href="#subscribers" title="Link to this heading">¶</a></h3>
 <p>The zmq subscriber is using the Zero MQ internals to setup a connection to a publisher and then passively waits until there is a message available. Due to this circumstance the
 zmq subscriber is defined as a runner <a class="reference internal" href="userguide.html#ug-runners"><span class="std std-ref">Runners (runner)</span></a> and is run within it’s own thread. The class to use is <strong>bexchange.net.zmq.subscriber.subscriber</strong>. In order for the
 subscription to work you will have to specify a address and the hmac-key provided by the publisher.</p>
 <p>The subscribed data will be passed on to the engine which means that you will have to take care of the data in some other component like a storage or a publication.</p>
 <p><strong>Note:</strong> One subscription runner has to be created per remote publisher.</p>
-<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
-<span class="nt">&quot;runner&quot;</span><span class="p">:{</span><span class="w"></span>
-<span class="w">  </span><span class="nt">&quot;_comment_&quot;</span><span class="p">:</span><span class="s2">&quot;ZMQ subscriber to localhost.&#39;&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="nt">&quot;active&quot;</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;bexchange.net.zmq.subscriber.subscriber&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="nt">&quot;extra_arguments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;zmq - localhost&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;hmac&quot;</span><span class="p">:</span><span class="s2">&quot;&lt;change me&gt;&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;address&quot;</span><span class="p">:</span><span class="s2">&quot;tcp://127.0.0.1:8079&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="nt">&quot;runner&quot;</span><span class="p">:{</span>
+<span class="w">  </span><span class="nt">&quot;_comment_&quot;</span><span class="p">:</span><span class="s2">&quot;ZMQ subscriber to localhost.&#39;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;active&quot;</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;bexchange.net.zmq.subscriber.subscriber&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;extra_arguments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;zmq - localhost&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;hmac&quot;</span><span class="p">:</span><span class="s2">&quot;&lt;change me&gt;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;address&quot;</span><span class="p">:</span><span class="s2">&quot;tcp://127.0.0.1:8079&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </section>
@@ -146,8 +144,9 @@ subscription to work you will have to specify a address and the hmac-key provide
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">ZeroMQ interface</a><ul>
 <li><a class="reference internal" href="#overview">Overview</a><ul>
 <li><a class="reference internal" href="#publisher">Publisher</a></li>
@@ -159,12 +158,17 @@ subscription to work you will have to specify a address and the hmac-key provide
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="rest.html"
-                        title="previous chapter">REST interface</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="api/modules.html"
-                        title="next chapter">bexchange</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="rest.html"
+                          title="previous chapter">REST interface</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="api/modules.html"
+                          title="next chapter">bexchange</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -181,7 +185,7 @@ subscription to work you will have to specify a address and the hmac-key provide
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -206,8 +210,8 @@ subscription to work you will have to specify a address and the hmac-key provide
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Anders Henja.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

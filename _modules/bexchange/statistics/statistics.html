@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>bexchange.statistics.statistics &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -68,15 +66,17 @@
 <span class="kn">from</span> <span class="nn">bexchange.db.sqldatabase</span> <span class="kn">import</span> <span class="n">statistics</span><span class="p">,</span> <span class="n">statentry</span>
 <span class="kn">from</span> <span class="nn">bexchange</span> <span class="kn">import</span> <span class="n">util</span>
 
-<span class="n">RE_DTFILTER_PATTERN</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;^\s*(datetime|entrytime|optime|delay)\s*([&lt;&gt;!=]+)\s*([0-9:\-T\.]+)\s*$&quot;</span><span class="p">)</span>
+<span class="n">RE_DTFILTER_PATTERN</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^\s*(datetime|entrytime|optime|delay)\s*([&lt;&gt;!=]+)\s*([0-9:\-T\.]+)\s*$&quot;</span><span class="p">)</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;bexchange.statistics.statistics&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="simple_stat_plugin"><a class="viewcode-back" href="../../../api/bexchange.statistics.html#bexchange.statistics.statistics.simple_stat_plugin">[docs]</a><span class="k">class</span> <span class="nc">simple_stat_plugin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Simple statistics plugin that will call the stat mgrs increment function</span>
+<div class="viewcode-block" id="simple_stat_plugin">
+<a class="viewcode-back" href="../../../api/bexchange.statistics.html#bexchange.statistics.statistics.simple_stat_plugin">[docs]</a>
+<span class="k">class</span> <span class="nc">simple_stat_plugin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Simple statistics plugin that will call the stat mgrs increment function</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spid</span><span class="p">,</span> <span class="n">sptype</span><span class="p">,</span> <span class="n">statmgr</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Constructor</span>
 <span class="sd">        :param spid: The statistics plugin id</span>
 <span class="sd">        :param sptype: The type. Either add == only add entries to statentry, count == only update count or both == do both</span>
 <span class="sd">        :param statmgr: The statistics manager keeping track of the dbinstance</span>
@@ -93,29 +93,40 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_save_post</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_increment_counter</span> <span class="o">=</span> <span class="kc">True</span>
 
-<div class="viewcode-block" id="simple_stat_plugin.increment"><a class="viewcode-back" href="../../../api/bexchange.statistics.html#bexchange.statistics.statistics.simple_stat_plugin.increment">[docs]</a>    <span class="k">def</span> <span class="nf">increment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Calls the statistics managers increment method</span>
+<div class="viewcode-block" id="simple_stat_plugin.increment">
+<a class="viewcode-back" href="../../../api/bexchange.statistics.html#bexchange.statistics.statistics.simple_stat_plugin.increment">[docs]</a>
+    <span class="k">def</span> <span class="nf">increment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Calls the statistics managers increment method</span>
 <span class="sd">        :param origin: The origin</span>
 <span class="sd">        :param meta: The metadata</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_statmgr</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_spid</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">meta</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_save_post</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_increment_counter</span><span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_statmgr</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_spid</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">meta</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_save_post</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_increment_counter</span><span class="p">)</span></div>
+</div>
 
-<div class="viewcode-block" id="statistics_manager"><a class="viewcode-back" href="../../../api/bexchange.statistics.html#bexchange.statistics.statistics.statistics_manager">[docs]</a><span class="k">class</span> <span class="nc">statistics_manager</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot; The statistics manager. Will create and register the statistics plugin</span>
+
+<div class="viewcode-block" id="statistics_manager">
+<a class="viewcode-back" href="../../../api/bexchange.statistics.html#bexchange.statistics.statistics.statistics_manager">[docs]</a>
+<span class="k">class</span> <span class="nc">statistics_manager</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; The statistics manager. Will create and register the statistics plugin</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_sqldatabase</span> <span class="o">=</span> <span class="n">db</span>
 
-<div class="viewcode-block" id="statistics_manager.sqldatabase"><a class="viewcode-back" href="../../../api/bexchange.statistics.html#bexchange.statistics.statistics.statistics_manager.sqldatabase">[docs]</a>    <span class="k">def</span> <span class="nf">sqldatabase</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="statistics_manager.sqldatabase">
+<a class="viewcode-back" href="../../../api/bexchange.statistics.html#bexchange.statistics.statistics.statistics_manager.sqldatabase">[docs]</a>
+    <span class="k">def</span> <span class="nf">sqldatabase</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return the sqlalchemy database instance used</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sqldatabase</span></div>
 
-<div class="viewcode-block" id="statistics_manager.list_statistic_ids"><a class="viewcode-back" href="../../../api/bexchange.statistics.html#bexchange.statistics.statistics.statistics_manager.list_statistic_ids">[docs]</a>    <span class="k">def</span> <span class="nf">list_statistic_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nid</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="statistics_manager.list_statistic_ids">
+<a class="viewcode-back" href="../../../api/bexchange.statistics.html#bexchange.statistics.statistics.statistics_manager.list_statistic_ids">[docs]</a>
+    <span class="k">def</span> <span class="nf">list_statistic_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nid</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :returns the list of available ids</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
@@ -130,7 +141,10 @@
 
         <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="statistics_manager.parse_filter"><a class="viewcode-back" href="../../../api/bexchange.statistics.html#bexchange.statistics.statistics.statistics_manager.parse_filter">[docs]</a>    <span class="k">def</span> <span class="nf">parse_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parsestr</span><span class="p">):</span>
+
+<div class="viewcode-block" id="statistics_manager.parse_filter">
+<a class="viewcode-back" href="../../../api/bexchange.statistics.html#bexchange.statistics.statistics.statistics_manager.parse_filter">[docs]</a>
+    <span class="k">def</span> <span class="nf">parse_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parsestr</span><span class="p">):</span>
         <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">tokens</span> <span class="o">=</span> <span class="n">parsestr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;&amp;&amp;&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">dtstr</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
@@ -156,8 +170,11 @@
                 <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Format of dtfilter must be name[OP]value where name is one of datetime, entrytime or optime&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">result</span></div>
 
-<div class="viewcode-block" id="statistics_manager.get_statistics_entries"><a class="viewcode-back" href="../../../api/bexchange.statistics.html#bexchange.statistics.statistics.statistics_manager.get_statistics_entries">[docs]</a>    <span class="k">def</span> <span class="nf">get_statistics_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nid</span><span class="p">,</span> <span class="n">querydata</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the statistic entries for the specified post, origin and source_name&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="statistics_manager.get_statistics_entries">
+<a class="viewcode-back" href="../../../api/bexchange.statistics.html#bexchange.statistics.statistics.statistics_manager.get_statistics_entries">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_statistics_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nid</span><span class="p">,</span> <span class="n">querydata</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the statistic entries for the specified post, origin and source_name&quot;&quot;&quot;</span>
         <span class="n">spid</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">origin</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">totals</span> <span class="o">=</span> <span class="kc">False</span>
@@ -207,19 +224,28 @@
         
         <span class="k">return</span> <span class="n">entries</span></div>
 
-<div class="viewcode-block" id="statistics_manager.get_statistics"><a class="viewcode-back" href="../../../api/bexchange.statistics.html#bexchange.statistics.statistics.statistics_manager.get_statistics">[docs]</a>    <span class="k">def</span> <span class="nf">get_statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nid</span><span class="p">,</span> <span class="n">querydata</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the statistics for the specified post, origin and source_name&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="statistics_manager.get_statistics">
+<a class="viewcode-back" href="../../../api/bexchange.statistics.html#bexchange.statistics.statistics.statistics_manager.get_statistics">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nid</span><span class="p">,</span> <span class="n">querydata</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the statistics for the specified post, origin and source_name&quot;&quot;&quot;</span>
         <span class="n">entries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_statistics_entries</span><span class="p">(</span><span class="n">nid</span><span class="p">,</span> <span class="n">querydata</span><span class="p">)</span>
         <span class="n">jslist</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="n">json_repr</span><span class="p">()</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">entries</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">jslist</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="statistics_manager.cleanup_statentry"><a class="viewcode-back" href="../../../api/bexchange.statistics.html#bexchange.statistics.statistics.statistics_manager.cleanup_statentry">[docs]</a>    <span class="k">def</span> <span class="nf">cleanup_statentry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">age</span><span class="p">):</span>
+
+<div class="viewcode-block" id="statistics_manager.cleanup_statentry">
+<a class="viewcode-back" href="../../../api/bexchange.statistics.html#bexchange.statistics.statistics.statistics_manager.cleanup_statentry">[docs]</a>
+    <span class="k">def</span> <span class="nf">cleanup_statentry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">age</span><span class="p">):</span>
         <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
         <span class="n">maxage</span> <span class="o">=</span> <span class="n">now</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="n">age</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_sqldatabase</span><span class="o">.</span><span class="n">cleanup_statentries</span><span class="p">(</span><span class="n">maxage</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="statistics_manager.increment"><a class="viewcode-back" href="../../../api/bexchange.statistics.html#bexchange.statistics.statistics.statistics_manager.increment">[docs]</a>    <span class="k">def</span> <span class="nf">increment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spid</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">meta</span><span class="p">,</span> <span class="n">save_post</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">increment_counter</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">optime</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">optime_info</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Increments a counter that is defined by:</span>
+
+<div class="viewcode-block" id="statistics_manager.increment">
+<a class="viewcode-back" href="../../../api/bexchange.statistics.html#bexchange.statistics.statistics.statistics_manager.increment">[docs]</a>
+    <span class="k">def</span> <span class="nf">increment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spid</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">meta</span><span class="p">,</span> <span class="n">save_post</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">increment_counter</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">optime</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">optime_info</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Increments a counter that is defined by:</span>
 <span class="sd">        :param spid: The id used to identify this statistics post</span>
 <span class="sd">        :param orgin: the origin (may be null, indicating unknown origin)</span>
 <span class="sd">        :param meta: the metadata</span>
@@ -232,7 +258,7 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;An error occured when incrementing statistics for spid:</span><span class="si">%s</span><span class="s2">, origin:</span><span class="si">%s</span><span class="s2">, ID:</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">spid</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)))</span>
 
         <span class="k">if</span> <span class="n">save_post</span><span class="p">:</span>
-            <span class="n">file_datetime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">meta</span><span class="o">.</span><span class="n">what_date</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_date</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_date</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_time</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_time</span><span class="o">.</span><span class="n">minute</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_time</span><span class="o">.</span><span class="n">second</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">file_datetime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">meta</span><span class="o">.</span><span class="n">what_date</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_date</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_date</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_time</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_time</span><span class="o">.</span><span class="n">minute</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_time</span><span class="o">.</span><span class="n">second</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
             <span class="n">file_object</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_object</span>
             <span class="n">file_elangle</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="k">if</span> <span class="n">file_object</span> <span class="o">==</span> <span class="s2">&quot;SCAN&quot;</span><span class="p">:</span>
@@ -242,17 +268,20 @@
                 <span class="k">if</span> <span class="n">mn</span><span class="p">:</span>
                     <span class="n">file_elangle</span> <span class="o">=</span> <span class="n">mn</span><span class="o">.</span><span class="n">value</span>
 
-            <span class="n">entrytime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
+            <span class="n">entrytime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
             <span class="n">delay</span> <span class="o">=</span> <span class="p">(</span><span class="n">entrytime</span> <span class="o">-</span> <span class="n">file_datetime</span><span class="p">)</span><span class="o">.</span><span class="n">seconds</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_sqldatabase</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">statentry</span><span class="p">(</span><span class="n">spid</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">bdb_metadata_hash</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">(),</span> <span class="n">optime</span><span class="p">,</span> <span class="n">optime_info</span><span class="p">,</span> <span class="n">delay</span><span class="p">,</span> <span class="n">file_datetime</span><span class="p">,</span> <span class="n">file_object</span><span class="p">,</span> <span class="n">file_elangle</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_sqldatabase</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">statentry</span><span class="p">(</span><span class="n">spid</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">bdb_metadata_hash</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">),</span> <span class="n">optime</span><span class="p">,</span> <span class="n">optime_info</span><span class="p">,</span> <span class="n">delay</span><span class="p">,</span> <span class="n">file_datetime</span><span class="p">,</span> <span class="n">file_object</span><span class="p">,</span> <span class="n">file_elangle</span><span class="p">))</span>
             <span class="k">except</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;An error occured when adding statentry for spid:</span><span class="si">%s</span><span class="s2">, origin:</span><span class="si">%s</span><span class="s2">, ID:</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">spid</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)))</span></div>
 
 
-<div class="viewcode-block" id="statistics_manager.plugin_from_conf"><a class="viewcode-back" href="../../../api/bexchange.statistics.html#bexchange.statistics.statistics.statistics_manager.plugin_from_conf">[docs]</a>    <span class="nd">@classmethod</span>
+
+<div class="viewcode-block" id="statistics_manager.plugin_from_conf">
+<a class="viewcode-back" href="../../../api/bexchange.statistics.html#bexchange.statistics.statistics.statistics_manager.plugin_from_conf">[docs]</a>
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">plugin_from_conf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conf</span><span class="p">,</span> <span class="n">statmgr</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Creates a stat plugin from the configuration</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a stat plugin from the configuration</span>
 <span class="sd">        :param conf: The config as a dictionary</span>
 <span class="sd">        :param statmgr: The statistics manager to use</span>
 <span class="sd">        :returns a stat plugin</span>
@@ -268,9 +297,12 @@
             <span class="n">sptype</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">simple_stat_plugin</span><span class="p">(</span><span class="n">spid</span><span class="p">,</span> <span class="n">sptype</span><span class="p">,</span> <span class="n">statmgr</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="statistics_manager.plugins_from_conf"><a class="viewcode-back" href="../../../api/bexchange.statistics.html#bexchange.statistics.statistics.statistics_manager.plugins_from_conf">[docs]</a>    <span class="nd">@classmethod</span>
+
+<div class="viewcode-block" id="statistics_manager.plugins_from_conf">
+<a class="viewcode-back" href="../../../api/bexchange.statistics.html#bexchange.statistics.statistics.statistics_manager.plugins_from_conf">[docs]</a>
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">plugins_from_conf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conf</span><span class="p">,</span> <span class="n">statmgr</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Creates a stat plugin from the configuration</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a stat plugin from the configuration</span>
 <span class="sd">        :param conf: The config as a dictionary</span>
 <span class="sd">        :param statmgr: The statistics manager to use</span>
 <span class="sd">        :returns a stat plugin</span>
@@ -280,7 +312,9 @@
             <span class="n">conf</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">:</span>
             <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plugin_from_conf</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">statmgr</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">result</span></div></div>
+        <span class="k">return</span> <span class="n">result</span></div>
+</div>
+
 
 </pre></div>
 
@@ -299,7 +333,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -319,8 +353,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Anders Henja.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>bexchange.exchange_optparse &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -68,7 +66,9 @@
 <span class="kn">import</span> <span class="nn">optparse</span>
 <span class="kn">import</span> <span class="nn">os</span>
 
-<div class="viewcode-block" id="check_iso8601_datetime"><a class="viewcode-back" href="../../api/bexchange.html#bexchange.exchange_optparse.check_iso8601_datetime">[docs]</a><span class="k">def</span> <span class="nf">check_iso8601_datetime</span><span class="p">(</span><span class="n">option</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="check_iso8601_datetime">
+<a class="viewcode-back" href="../../api/bexchange.html#bexchange.exchange_optparse.check_iso8601_datetime">[docs]</a>
+<span class="k">def</span> <span class="nf">check_iso8601_datetime</span><span class="p">(</span><span class="n">option</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">T%H%M%SZ&quot;</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
@@ -76,21 +76,33 @@
             <span class="s2">&quot;invalid ISO8601 datetime in </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">option</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="check_list"><a class="viewcode-back" href="../../api/bexchange.html#bexchange.exchange_optparse.check_list">[docs]</a><span class="k">def</span> <span class="nf">check_list</span><span class="p">(</span><span class="n">option</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+
+<div class="viewcode-block" id="check_list">
+<a class="viewcode-back" href="../../api/bexchange.html#bexchange.exchange_optparse.check_list">[docs]</a>
+<span class="k">def</span> <span class="nf">check_list</span><span class="p">(</span><span class="n">option</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="check_path"><a class="viewcode-back" href="../../api/bexchange.html#bexchange.exchange_optparse.check_path">[docs]</a><span class="k">def</span> <span class="nf">check_path</span><span class="p">(</span><span class="n">option</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+
+<div class="viewcode-block" id="check_path">
+<a class="viewcode-back" href="../../api/bexchange.html#bexchange.exchange_optparse.check_path">[docs]</a>
+<span class="k">def</span> <span class="nf">check_path</span><span class="p">(</span><span class="n">option</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Option"><a class="viewcode-back" href="../../api/bexchange.html#bexchange.exchange_optparse.Option">[docs]</a><span class="k">class</span> <span class="nc">Option</span><span class="p">(</span><span class="n">optparse</span><span class="o">.</span><span class="n">Option</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Option">
+<a class="viewcode-back" href="../../api/bexchange.html#bexchange.exchange_optparse.Option">[docs]</a>
+<span class="k">class</span> <span class="nc">Option</span><span class="p">(</span><span class="n">optparse</span><span class="o">.</span><span class="n">Option</span><span class="p">):</span>
     <span class="n">TYPES</span> <span class="o">=</span> <span class="n">optparse</span><span class="o">.</span><span class="n">Option</span><span class="o">.</span><span class="n">TYPES</span> <span class="o">+</span> <span class="p">(</span><span class="s2">&quot;iso8601_datetime&quot;</span><span class="p">,</span> <span class="s2">&quot;list&quot;</span><span class="p">,</span> <span class="s2">&quot;path&quot;</span><span class="p">,)</span>
     <span class="n">TYPE_CHECKER</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">optparse</span><span class="o">.</span><span class="n">Option</span><span class="o">.</span><span class="n">TYPE_CHECKER</span><span class="p">)</span>
     <span class="n">TYPE_CHECKER</span><span class="p">[</span><span class="s2">&quot;iso8601_datetime&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">check_iso8601_datetime</span>
     <span class="n">TYPE_CHECKER</span><span class="p">[</span><span class="s2">&quot;list&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">check_list</span>
     <span class="n">TYPE_CHECKER</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">check_path</span></div>
 
-<div class="viewcode-block" id="create_parser"><a class="viewcode-back" href="../../api/bexchange.html#bexchange.exchange_optparse.create_parser">[docs]</a><span class="k">def</span> <span class="nf">create_parser</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;create an option parser with a custom option class that supports</span>
+
+<div class="viewcode-block" id="create_parser">
+<a class="viewcode-back" href="../../api/bexchange.html#bexchange.exchange_optparse.create_parser">[docs]</a>
+<span class="k">def</span> <span class="nf">create_parser</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;create an option parser with a custom option class that supports</span>
 <span class="sd">    the following extra options types:</span>
 
 <span class="sd">      * iso8601_datetime - an ISO 8601 datetime</span>
@@ -99,6 +111,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;option_class&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Option</span>
     <span class="k">return</span> <span class="n">optparse</span><span class="o">.</span><span class="n">OptionParser</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span></div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -116,7 +129,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -136,8 +149,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Anders Henja.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

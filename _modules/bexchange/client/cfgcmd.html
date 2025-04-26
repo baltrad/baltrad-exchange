@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>bexchange.client.cfgcmd &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -95,10 +93,15 @@
 <span class="n">DEFAULT_TEMPLATE</span> <span class="o">=</span> <span class="s2">&quot;/etc/baltrad/exchange/etc/exchange-template.json&quot;</span>
 
 
-<div class="viewcode-block" id="ExecutionError"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.ExecutionError">[docs]</a><span class="k">class</span> <span class="nc">ExecutionError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+<div class="viewcode-block" id="ExecutionError">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.ExecutionError">[docs]</a>
+<span class="k">class</span> <span class="nc">ExecutionError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
     <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="read_config"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.read_config">[docs]</a><span class="k">def</span> <span class="nf">read_config</span><span class="p">(</span><span class="n">conffile</span><span class="p">):</span>
+
+<div class="viewcode-block" id="read_config">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.read_config">[docs]</a>
+<span class="k">def</span> <span class="nf">read_config</span><span class="p">(</span><span class="n">conffile</span><span class="p">):</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">conffile</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="s2">&quot;configuration file not specified&quot;</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
@@ -106,30 +109,41 @@
     <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="s2">&quot;failed to read configuration from &quot;</span> <span class="o">+</span> <span class="n">conffile</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Command"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.Command">[docs]</a><span class="k">class</span> <span class="nc">Command</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;command-line client command interface</span>
+
+<div class="viewcode-block" id="Command">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.Command">[docs]</a>
+<span class="k">class</span> <span class="nc">Command</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;command-line client command interface</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">ABCMeta</span>
 
-<div class="viewcode-block" id="Command.update_optionparser"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.Command.update_optionparser">[docs]</a>    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="Command.update_optionparser">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.Command.update_optionparser">[docs]</a>
+    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
     
-<div class="viewcode-block" id="Command.execute"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.Command.execute">[docs]</a>    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="Command.execute">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.Command.execute">[docs]</a>
+    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;execute this command</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;execute this command</span>
 
 <span class="sd">        :param opts: options passed from command line</span>
 <span class="sd">        :param args: arguments passed from command line</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
+
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Command.get_implementation_by_name"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.Command.get_implementation_by_name">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="Command.get_implementation_by_name">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.Command.get_implementation_by_name">[docs]</a>
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_implementation_by_name</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;get an implementing class by name</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;get an implementing class by name</span>
 
 <span class="sd">        the implementing class is looked up from &#39;bexchange.config.commands&#39;</span>
 <span class="sd">        entry point. </span>
@@ -145,12 +159,21 @@
         <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">LookupError</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Command.get_commands"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.Command.get_commands">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">get_commands</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">get_entry_map</span><span class="p">(</span><span class="s2">&quot;bexchange&quot;</span><span class="p">)[</span><span class="s2">&quot;bexchange.config.commands&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div></div>
 
-<div class="viewcode-block" id="CreateKeys"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreateKeys">[docs]</a><span class="k">class</span> <span class="nc">CreateKeys</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-<div class="viewcode-block" id="CreateKeys.update_optionparser"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreateKeys.update_optionparser">[docs]</a>    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+<div class="viewcode-block" id="Command.get_commands">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.Command.get_commands">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_commands</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">get_entry_map</span><span class="p">(</span><span class="s2">&quot;bexchange&quot;</span><span class="p">)[</span><span class="s2">&quot;bexchange.config.commands&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div>
+</div>
+
+
+<div class="viewcode-block" id="CreateKeys">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreateKeys">[docs]</a>
+<span class="k">class</span> <span class="nc">CreateKeys</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+<div class="viewcode-block" id="CreateKeys.update_optionparser">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreateKeys.update_optionparser">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
             <span class="s2">&quot;--type&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;crypto&quot;</span><span class="p">,</span>
             <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Library to use for generating key-pair to create. Default: crypto (which is the internal key handling). Other libraries can be keyczar &quot;</span><span class="p">)</span>
@@ -166,9 +189,12 @@
         <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
             <span class="s2">&quot;--nodename&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;nodename&quot;</span><span class="p">,</span>
             <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of the node for this server.&quot;</span><span class="p">)</span></div>
+
         
     
-<div class="viewcode-block" id="CreateKeys.execute"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreateKeys.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="CreateKeys.execute">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreateKeys.execute">[docs]</a>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">opts</span><span class="o">.</span><span class="n">nodename</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Must specify --nodename&quot;</span><span class="p">)</span>
         
@@ -179,7 +205,10 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Unsupported encryption library: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">opts</span><span class="o">.</span><span class="n">library</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="CreateKeys.create_crypto_key"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreateKeys.create_crypto_key">[docs]</a>    <span class="k">def</span> <span class="nf">create_crypto_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">):</span>
+
+<div class="viewcode-block" id="CreateKeys.create_crypto_key">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreateKeys.create_crypto_key">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_crypto_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">opts</span><span class="o">.</span><span class="n">encryption</span> <span class="o">!=</span> <span class="s2">&quot;dsa&quot;</span> <span class="ow">and</span> <span class="n">opts</span><span class="o">.</span><span class="n">encryption</span> <span class="o">!=</span> <span class="s2">&quot;rsa&quot;</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Only supported encryption are dsa or rsa when using internal crypto&quot;</span><span class="p">)</span>
             <span class="k">return</span>
@@ -198,13 +227,19 @@
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  Public  key: </span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">.public&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">destination</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">nodename</span><span class="p">))</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  Public json: </span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">_public.json&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">destination</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">nodename</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="CreateKeys.createdir"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreateKeys.createdir">[docs]</a>    <span class="k">def</span> <span class="nf">createdir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+
+<div class="viewcode-block" id="CreateKeys.createdir">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreateKeys.createdir">[docs]</a>
+    <span class="k">def</span> <span class="nf">createdir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
             <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> exists but is not a directory&quot;</span><span class="o">%</span><span class="n">d</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="CreateKeys.create_keyczar_keys"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreateKeys.create_keyczar_keys">[docs]</a>    <span class="k">def</span> <span class="nf">create_keyczar_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">):</span>
+
+<div class="viewcode-block" id="CreateKeys.create_keyczar_keys">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreateKeys.create_keyczar_keys">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_keyczar_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">opts</span><span class="o">.</span><span class="n">encryption</span> <span class="o">!=</span> <span class="s2">&quot;dsa&quot;</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Only supported encryption is dsa for keyczar crypto&quot;</span><span class="p">)</span>
             <span class="k">return</span>
@@ -224,10 +259,16 @@
 
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Created: &quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  Private key: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">privkeyfolder</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  Public  key: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">pubkeyfolder</span><span class="p">)</span></div></div>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  Public  key: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">pubkeyfolder</span><span class="p">)</span></div>
+</div>
 
-<div class="viewcode-block" id="TestFilter"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.TestFilter">[docs]</a><span class="k">class</span> <span class="nc">TestFilter</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-<div class="viewcode-block" id="TestFilter.update_optionparser"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.TestFilter.update_optionparser">[docs]</a>    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TestFilter">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.TestFilter">[docs]</a>
+<span class="k">class</span> <span class="nc">TestFilter</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+<div class="viewcode-block" id="TestFilter.update_optionparser">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.TestFilter.update_optionparser">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="n">usg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_usage</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
         <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -266,7 +307,10 @@
             <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path within the json entry where the filter can be found.&quot;</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="TestFilter.execute"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.TestFilter.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TestFilter.execute">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.TestFilter.execute">[docs]</a>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">odim_source</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">sources</span> <span class="o">=</span> <span class="n">oh5</span><span class="o">.</span><span class="n">Source</span><span class="o">.</span><span class="n">from_rave_xml</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
         <span class="n">source_manager</span> <span class="o">=</span> <span class="n">sqlbackend</span><span class="o">.</span><span class="n">SqlAlchemySourceManager</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">dburi</span><span class="p">)</span>
@@ -306,10 +350,16 @@
         <span class="k">if</span> <span class="n">matcher</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span> <span class="n">tfilter</span><span class="o">.</span><span class="n">to_xpr</span><span class="p">()):</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;MATCHING&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;NOT MATCHING&quot;</span><span class="p">)</span></div></div>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;NOT MATCHING&quot;</span><span class="p">)</span></div>
+</div>
 
-<div class="viewcode-block" id="CreatePublication"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreatePublication">[docs]</a><span class="k">class</span> <span class="nc">CreatePublication</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-<div class="viewcode-block" id="CreatePublication.update_optionparser"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreatePublication.update_optionparser">[docs]</a>    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+
+<div class="viewcode-block" id="CreatePublication">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreatePublication">[docs]</a>
+<span class="k">class</span> <span class="nc">CreatePublication</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+<div class="viewcode-block" id="CreatePublication.update_optionparser">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreatePublication.update_optionparser">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="n">usg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_usage</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
         <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -351,7 +401,10 @@
             <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The output file name. If not specified, output will printed on stdout&quot;</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="CreatePublication.execute"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreatePublication.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+
+<div class="viewcode-block" id="CreatePublication.execute">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreatePublication.execute">[docs]</a>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
         <span class="n">cfg</span> <span class="o">=</span> <span class="n">read_config</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">conf</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">template</span><span class="p">):</span>
@@ -428,10 +481,16 @@
                     <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
                     <span class="n">fp</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">output</span><span class="p">)</span></div></div>
+            <span class="nb">print</span><span class="p">(</span><span class="n">output</span><span class="p">)</span></div>
+</div>
 
-<div class="viewcode-block" id="CreateSubscription"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreateSubscription">[docs]</a><span class="k">class</span> <span class="nc">CreateSubscription</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-<div class="viewcode-block" id="CreateSubscription.update_optionparser"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreateSubscription.update_optionparser">[docs]</a>    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+
+<div class="viewcode-block" id="CreateSubscription">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreateSubscription">[docs]</a>
+<span class="k">class</span> <span class="nc">CreateSubscription</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+<div class="viewcode-block" id="CreateSubscription.update_optionparser">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreateSubscription.update_optionparser">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="n">usg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_usage</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
         <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -462,7 +521,10 @@
             <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The output file name. Must contain .tar och .tgz or .tar.gz suffix. Will default to &lt;nodename&gt;.tar.gz&quot;</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="CreateSubscription.execute"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreateSubscription.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+
+<div class="viewcode-block" id="CreateSubscription.execute">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreateSubscription.execute">[docs]</a>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
         <span class="n">cfg</span> <span class="o">=</span> <span class="n">read_config</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">conf</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">template</span><span class="p">):</span>
@@ -557,9 +619,12 @@
 
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Created </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">output_name</span><span class="p">)</span>           </div>
 
-<div class="viewcode-block" id="CreateSubscription.README"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreateSubscription.README">[docs]</a>    <span class="k">def</span> <span class="nf">README</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodename</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;&quot;&quot;Origin: </span><span class="si">%s</span><span class="s2"></span>
-<span class="s2">Created: </span><span class="si">%s</span><span class="s2"></span>
+
+<div class="viewcode-block" id="CreateSubscription.README">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.CreateSubscription.README">[docs]</a>
+    <span class="k">def</span> <span class="nf">README</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodename</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;&quot;Origin: </span><span class="si">%s</span>
+<span class="s2">Created: </span><span class="si">%s</span>
 
 <span class="s2">This folder contains two different files. One is a public key originating from </span><span class="si">%s</span><span class="s2"> and the</span>
 <span class="s2">other is the currently provided subscription configuration.  The public key should be placed in the public key root folder, </span>
@@ -568,10 +633,16 @@
 <span class="s2">The subscription configuration describes what the template assumes is published from the remote server. If you for example</span>
 <span class="s2">just want a subset of what is provided, please notifiy the remote server admin about this so that they can modify the </span>
 <span class="s2">outgoing publication to keep both their and your bandwidth usage limited.</span>
-<span class="s2">&quot;&quot;&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">nodename</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M&quot;</span><span class="p">),</span> <span class="n">nodename</span><span class="p">)</span></div></div>
+<span class="s2">&quot;&quot;&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">nodename</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M&quot;</span><span class="p">),</span> <span class="n">nodename</span><span class="p">)</span></div>
+</div>
 
-<div class="viewcode-block" id="SendDexKey"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.SendDexKey">[docs]</a><span class="k">class</span> <span class="nc">SendDexKey</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-<div class="viewcode-block" id="SendDexKey.update_optionparser"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.SendDexKey.update_optionparser">[docs]</a>    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SendDexKey">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.SendDexKey">[docs]</a>
+<span class="k">class</span> <span class="nc">SendDexKey</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+<div class="viewcode-block" id="SendDexKey.update_optionparser">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.SendDexKey.update_optionparser">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="n">usg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_usage</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
         <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -602,7 +673,10 @@
             <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The node-name that will be used during the validation of the signature&quot;</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="SendDexKey.execute"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.SendDexKey.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SendDexKey.execute">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.SendDexKey.execute">[docs]</a>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">pubkey</span><span class="p">):</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Must provide a valid dex public key&quot;</span><span class="p">);</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -627,10 +701,16 @@
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         
         <span class="n">du</span> <span class="o">=</span> <span class="n">dexutils</span><span class="o">.</span><span class="n">dexutils</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">nodename</span><span class="p">)</span>
-        <span class="n">du</span><span class="o">.</span><span class="n">send_key</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">pubkey</span><span class="p">)</span></div></div>
+        <span class="n">du</span><span class="o">.</span><span class="n">send_key</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">pubkey</span><span class="p">)</span></div>
+</div>
 
-<div class="viewcode-block" id="SendDexFile"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.SendDexFile">[docs]</a><span class="k">class</span> <span class="nc">SendDexFile</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-<div class="viewcode-block" id="SendDexFile.update_optionparser"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.SendDexFile.update_optionparser">[docs]</a>    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SendDexFile">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.SendDexFile">[docs]</a>
+<span class="k">class</span> <span class="nc">SendDexFile</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+<div class="viewcode-block" id="SendDexFile.update_optionparser">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.SendDexFile.update_optionparser">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="n">usg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_usage</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
 
@@ -661,7 +741,10 @@
             <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The node-name that will be used during the validation of the signature&quot;</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="SendDexFile.execute"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.SendDexFile.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SendDexFile.execute">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cfgcmd.SendDexFile.execute">[docs]</a>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">privkey</span><span class="p">):</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Must provide a valid dex private key&quot;</span><span class="p">);</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -697,7 +780,9 @@
 
         <span class="n">du</span> <span class="o">=</span> <span class="n">dexutils</span><span class="o">.</span><span class="n">dexutils</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">nodename</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span>
-            <span class="n">du</span><span class="o">.</span><span class="n">send_file</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">privkey</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span></div></div>
+            <span class="n">du</span><span class="o">.</span><span class="n">send_file</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">privkey</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span></div>
+</div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -715,7 +800,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -735,8 +820,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Anders Henja.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

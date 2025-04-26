@@ -1,19 +1,17 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>bexchange.server package &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
+    <script src="../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -48,39 +46,39 @@
           <div class="body" role="main">
             
   <section id="bexchange-server-package">
-<h1>bexchange.server package<a class="headerlink" href="#bexchange-server-package" title="Permalink to this headline">¶</a></h1>
+<h1>bexchange.server package<a class="headerlink" href="#bexchange-server-package" title="Link to this heading">¶</a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
 </section>
 <section id="module-bexchange.server.backend">
-<span id="bexchange-server-backend-module"></span><h2>bexchange.server.backend module<a class="headerlink" href="#module-bexchange.server.backend" title="Permalink to this headline">¶</a></h2>
+<span id="bexchange-server-backend-module"></span><h2>bexchange.server.backend module<a class="headerlink" href="#module-bexchange.server.backend" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.server.backend.HandledFiles">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.server.backend.</span></span><span class="sig-name descname"><span class="pre">HandledFiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#HandledFiles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.HandledFiles" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.server.backend.</span></span><span class="sig-name descname"><span class="pre">HandledFiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#HandledFiles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.HandledFiles" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Keeps track of recently handled files. Probably should be either a sqlite db or
 a dictionary variant with an aged limit.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.backend.HandledFiles.add">
-<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bdbhash</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#HandledFiles.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.HandledFiles.add" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bdbhash</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#HandledFiles.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.HandledFiles.add" title="Link to this definition">¶</a></dt>
 <dd><p>Adds the hash to internal list. Will return True if hash added otherwise
 False.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.backend.HandledFiles.handled">
-<span class="sig-name descname"><span class="pre">handled</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bdbhash</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#HandledFiles.handled"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.HandledFiles.handled" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">handled</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bdbhash</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#HandledFiles.handled"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.HandledFiles.handled" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.server.backend.SimpleBackend">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.server.backend.</span></span><span class="sig-name descname"><span class="pre">SimpleBackend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">confdirs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">authmgr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_db_uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">odim_source_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmpfolder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="bexchange.html#bexchange.backend.Backend" title="bexchange.backend.Backend"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.backend.Backend</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.server.backend.</span></span><span class="sig-name descname"><span class="pre">SimpleBackend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">confdirs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">authmgr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_db_uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">odim_source_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmpfolder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="bexchange.html#bexchange.backend.Backend" title="bexchange.backend.Backend"><code class="xref py py-class docutils literal notranslate"><span class="pre">Backend</span></code></a></p>
 <p>A backend taking care of the exchange</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>engine_or_url</strong> – an SqlAlchemy engine or a database url</p></li>
 <li><p><strong>storage</strong> – a <cite>~.storage.FileStorage</cite> instance to use.</p></li>
@@ -88,23 +86,41 @@ False.</p>
 </dd>
 </dl>
 <dl class="py method">
+<dt class="sig sig-object py" id="bexchange.server.backend.SimpleBackend.add_configuration_file">
+<span class="sig-name descname"><span class="pre">add_configuration_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runtime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.add_configuration_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.add_configuration_file" title="Link to this definition">¶</a></dt>
+<dd><p>Adds the configuration from a configuration file to the system.
+:param f: The filename containing the configuration in json format
+:param runtime: If the configuration is added at startup (False) or during operational run (True)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.server.backend.SimpleBackend.conf_file_removed">
+<span class="sig-name descname"><span class="pre">conf_file_removed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.conf_file_removed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.conf_file_removed" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.server.backend.SimpleBackend.conf_file_written">
+<span class="sig-name descname"><span class="pre">conf_file_written</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.conf_file_written"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.conf_file_written" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.backend.SimpleBackend.from_conf">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_conf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.from_conf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.from_conf" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_conf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.from_conf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.from_conf" title="Link to this definition">¶</a></dt>
 <dd><p>create an instance from configuration
 parameters are looked up under <em>‘baltrad.exchange.server’</em>.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.backend.SimpleBackend.get_auth_manager">
-<span class="sig-name descname"><span class="pre">get_auth_manager</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.get_auth_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.get_auth_manager" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_auth_manager</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.get_auth_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.get_auth_manager" title="Link to this definition">¶</a></dt>
 <dd><p>:returns the authorization manager used</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.backend.SimpleBackend.get_server_nodename">
-<span class="sig-name descname"><span class="pre">get_server_nodename</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.get_server_nodename"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.get_server_nodename" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_server_nodename</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.get_server_nodename"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.get_server_nodename" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>the nodename of this server</p>
 </dd>
 </dl>
@@ -112,9 +128,9 @@ parameters are looked up under <em>‘baltrad.exchange.server’</em>.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.backend.SimpleBackend.get_server_publickey">
-<span class="sig-name descname"><span class="pre">get_server_publickey</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.get_server_publickey"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.get_server_publickey" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_server_publickey</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.get_server_publickey"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.get_server_publickey" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>the public crypto key in PEM encoding that can be used by recipient to verify messages with</p>
 </dd>
 </dl>
@@ -122,9 +138,9 @@ parameters are looked up under <em>‘baltrad.exchange.server’</em>.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.backend.SimpleBackend.get_server_uptime">
-<span class="sig-name descname"><span class="pre">get_server_uptime</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.get_server_uptime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.get_server_uptime" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_server_uptime</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.get_server_uptime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.get_server_uptime" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>the server uptime as a tuple of (days, hours, minutes, seconds)</p>
 </dd>
 </dl>
@@ -132,33 +148,33 @@ parameters are looked up under <em>‘baltrad.exchange.server’</em>.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.backend.SimpleBackend.get_statistics_manager">
-<span class="sig-name descname"><span class="pre">get_statistics_manager</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.get_statistics_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.get_statistics_manager" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_statistics_manager</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.get_statistics_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.get_statistics_manager" title="Link to this definition">¶</a></dt>
 <dd><p>:returns the statistics manager</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.backend.SimpleBackend.get_storage_manager">
-<span class="sig-name descname"><span class="pre">get_storage_manager</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.get_storage_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.get_storage_manager" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_storage_manager</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.get_storage_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.get_storage_manager" title="Link to this definition">¶</a></dt>
 <dd><p>:returns the storage manager used</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.backend.SimpleBackend.get_tmp_folder">
-<span class="sig-name descname"><span class="pre">get_tmp_folder</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.get_tmp_folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.get_tmp_folder" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_tmp_folder</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.get_tmp_folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.get_tmp_folder" title="Link to this definition">¶</a></dt>
 <dd><p>Returns the global temporary folder name if defined
 :return the temporary folder name</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.backend.SimpleBackend.initialize_configuration">
-<span class="sig-name descname"><span class="pre">initialize_configuration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">confdirs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.initialize_configuration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.initialize_configuration" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">initialize_configuration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">confdirs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.initialize_configuration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.initialize_configuration" title="Link to this definition">¶</a></dt>
 <dd><p>Initializes the configuration from each dir
 :param confdirs: a list of directories where the configuration (.json) files can be found</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.backend.SimpleBackend.metadata_from_file">
-<span class="sig-name descname"><span class="pre">metadata_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.metadata_from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.metadata_from_file" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">metadata_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.metadata_from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.metadata_from_file" title="Link to this definition">¶</a></dt>
 <dd><p>creates metadata from the file
 :param path: full path to the file
 :returns the metadata</p>
@@ -166,7 +182,7 @@ parameters are looked up under <em>‘baltrad.exchange.server’</em>.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.backend.SimpleBackend.metadata_from_file_bdb">
-<span class="sig-name descname"><span class="pre">metadata_from_file_bdb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.metadata_from_file_bdb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.metadata_from_file_bdb" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">metadata_from_file_bdb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.metadata_from_file_bdb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.metadata_from_file_bdb" title="Link to this definition">¶</a></dt>
 <dd><p>creates metadata from the file by adding it to the bdb
 :param path: full path to the file
 :returns the metadata</p>
@@ -174,7 +190,7 @@ parameters are looked up under <em>‘baltrad.exchange.server’</em>.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.backend.SimpleBackend.metadata_from_file_internal">
-<span class="sig-name descname"><span class="pre">metadata_from_file_internal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.metadata_from_file_internal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.metadata_from_file_internal" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">metadata_from_file_internal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.metadata_from_file_internal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.metadata_from_file_internal" title="Link to this definition">¶</a></dt>
 <dd><p>creates metadata from the file
 :param path: full path to the file
 :returns the metadata</p>
@@ -182,7 +198,7 @@ parameters are looked up under <em>‘baltrad.exchange.server’</em>.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.backend.SimpleBackend.post_message">
-<span class="sig-name descname"><span class="pre">post_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.post_message"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.post_message" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">post_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.post_message"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.post_message" title="Link to this definition">¶</a></dt>
 <dd><p>ensures that a posted message arrives to interested parties
 :param json_message: The json message
 :type path: string
@@ -191,15 +207,47 @@ parameters are looked up under <em>‘baltrad.exchange.server’</em>.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.backend.SimpleBackend.process_conf_dir">
-<span class="sig-name descname"><span class="pre">process_conf_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.process_conf_dir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.process_conf_dir" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">process_conf_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.process_conf_dir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.process_conf_dir" title="Link to this definition">¶</a></dt>
 <dd><p>process one configuration dir. Will scan for all .json files in provided directory and determine
 if the files can be used for configuration or not.
 :param d: a directory containing configuration files</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="bexchange.server.backend.SimpleBackend.processor_modified">
+<span class="sig-name descname"><span class="pre">processor_modified</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.processor_modified"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.processor_modified" title="Link to this definition">¶</a></dt>
+<dd><p>Called when a processor configuration file is modified.,
+:param fname: the filename affected
+:param o: the actual processor</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.server.backend.SimpleBackend.processor_removed">
+<span class="sig-name descname"><span class="pre">processor_removed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.processor_removed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.processor_removed" title="Link to this definition">¶</a></dt>
+<dd><p>Called when removing a processor during runtime operation
+:param fname: the filename affected
+:param o: the actual processor</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.server.backend.SimpleBackend.publication_modified">
+<span class="sig-name descname"><span class="pre">publication_modified</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.publication_modified"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.publication_modified" title="Link to this definition">¶</a></dt>
+<dd><p>Called when a publication configuration file is modified.,
+:param fname: the filename affected
+:param o: the actual publication</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.server.backend.SimpleBackend.publication_removed">
+<span class="sig-name descname"><span class="pre">publication_removed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.publication_removed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.publication_removed" title="Link to this definition">¶</a></dt>
+<dd><p>Called when removing a publication during runtime operation
+:param fname: the filename affected
+:param o: the actual publication</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.backend.SimpleBackend.publish">
-<span class="sig-name descname"><span class="pre">publish</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.publish"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.publish" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">publish</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.publish"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.publish" title="Link to this definition">¶</a></dt>
 <dd><p>publishes the file on each interested publisher
 :param sid: The subscription id if any
 :param path: full path to the file to be published
@@ -208,46 +256,177 @@ if the files can be used for configuration or not.
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.backend.SimpleBackend.read_bdb_sources">
-<span class="sig-name descname"><span class="pre">read_bdb_sources</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">odim_source_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.read_bdb_sources"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.read_bdb_sources" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">read_bdb_sources</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">odim_source_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.read_bdb_sources"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.read_bdb_sources" title="Link to this definition">¶</a></dt>
 <dd><p>Reads and parses the odim sources
 :param odim_source_file: file containing the odim source definitions
 :returns a list of odim sources</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="bexchange.server.backend.SimpleBackend.runner_modified">
+<span class="sig-name descname"><span class="pre">runner_modified</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.runner_modified"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.runner_modified" title="Link to this definition">¶</a></dt>
+<dd><p>Called when a runner configuration file is modified.,
+:param fname: the filename affected
+:param o: the actual runner</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.server.backend.SimpleBackend.runner_removed">
+<span class="sig-name descname"><span class="pre">runner_removed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.runner_removed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.runner_removed" title="Link to this definition">¶</a></dt>
+<dd><p>Called when removing a runner during runtime operation
+:param fname: the filename affected
+:param o: the actual runner</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.server.backend.SimpleBackend.storage_modified">
+<span class="sig-name descname"><span class="pre">storage_modified</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.storage_modified"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.storage_modified" title="Link to this definition">¶</a></dt>
+<dd><p>Called when a storage configuration file is modified.,
+:param fname: the filename affected
+:param o: the actual storage</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.server.backend.SimpleBackend.storage_removed">
+<span class="sig-name descname"><span class="pre">storage_removed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.storage_removed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.storage_removed" title="Link to this definition">¶</a></dt>
+<dd><p>Called when removing a storage during runtime operation
+:param fname: the filename affected
+:param o: the actual storage</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.backend.SimpleBackend.store_file">
-<span class="sig-name descname"><span class="pre">store_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.store_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.store_file" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">store_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.store_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.store_file" title="Link to this definition">¶</a></dt>
 <dd><p>handles an incomming file and determines if it should be managed by the subscriptions or not.
 :param path: the full path to the file to be handled
 :param nodename: the name/id of the node that the file comes from
 :returns the metadata from the file</p>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.server.backend.SimpleBackend.subscription_modified">
+<span class="sig-name descname"><span class="pre">subscription_modified</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.subscription_modified"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.subscription_modified" title="Link to this definition">¶</a></dt>
+<dd><p>Called when a subscription configuration file is modified.,
+:param fname: the filename affected
+:param o: the actual subscription</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.server.backend.SimpleBackend.subscription_removed">
+<span class="sig-name descname"><span class="pre">subscription_removed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#SimpleBackend.subscription_removed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.SimpleBackend.subscription_removed" title="Link to this definition">¶</a></dt>
+<dd><p>Called when removing a subscription during runtime operation
+:param fname: the filename affected
+:param o: the actual subscription</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bexchange.server.backend.config_handler">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.server.backend.</span></span><span class="sig-name descname"><span class="pre">config_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">removed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modified</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#config_handler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.config_handler" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Helper class that is registered for all configuration files so that it is possible
+to handle runtime changes.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.server.backend.config_handler.modified">
+<span class="sig-name descname"><span class="pre">modified</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#config_handler.modified"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.config_handler.modified" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.server.backend.config_handler.removed">
+<span class="sig-name descname"><span class="pre">removed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#config_handler.removed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.config_handler.removed" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bexchange.server.backend.monitor_conf_dir_inotify_handler">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.server.backend.</span></span><span class="sig-name descname"><span class="pre">monitor_conf_dir_inotify_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folders</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn_file_written</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn_file_removed</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#monitor_conf_dir_inotify_handler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.monitor_conf_dir_inotify_handler" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessEvent</span></code></p>
+<p>Helper class to monitor a list of folders containing configuration files. Only will process
+files ending with .json. Both added and removed events will be forwarded.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bexchange.server.backend.monitor_conf_dir_inotify_handler.FILE_PATTERN">
+<span class="sig-name descname"><span class="pre">FILE_PATTERN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'.+.json$'</span></em><a class="headerlink" href="#bexchange.server.backend.monitor_conf_dir_inotify_handler.FILE_PATTERN" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bexchange.server.backend.monitor_conf_dir_inotify_handler.MASK">
+<span class="sig-name descname"><span class="pre">MASK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">712</span></em><a class="headerlink" href="#bexchange.server.backend.monitor_conf_dir_inotify_handler.MASK" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.server.backend.monitor_conf_dir_inotify_handler.match_file">
+<span class="sig-name descname"><span class="pre">match_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#monitor_conf_dir_inotify_handler.match_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.monitor_conf_dir_inotify_handler.match_file" title="Link to this definition">¶</a></dt>
+<dd><p>Matches the file so that it is following the wanted pattern. Typically <a href="#id1"><span class="problematic" id="id2">*</span></a>.json.
+:param filename: the filename that should be verified.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.server.backend.monitor_conf_dir_inotify_handler.process_IN_CLOSE_WRITE">
+<span class="sig-name descname"><span class="pre">process_IN_CLOSE_WRITE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#monitor_conf_dir_inotify_handler.process_IN_CLOSE_WRITE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.monitor_conf_dir_inotify_handler.process_IN_CLOSE_WRITE" title="Link to this definition">¶</a></dt>
+<dd><p>Will be called by the inotify notifier when file event occurs.
+:param event: The file event</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.server.backend.monitor_conf_dir_inotify_handler.process_IN_DELETE">
+<span class="sig-name descname"><span class="pre">process_IN_DELETE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#monitor_conf_dir_inotify_handler.process_IN_DELETE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.monitor_conf_dir_inotify_handler.process_IN_DELETE" title="Link to this definition">¶</a></dt>
+<dd><p>Will be called by the inotify notifier when file event occurs.
+:param event: The file event</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.server.backend.monitor_conf_dir_inotify_handler.process_IN_MOVED_FROM">
+<span class="sig-name descname"><span class="pre">process_IN_MOVED_FROM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#monitor_conf_dir_inotify_handler.process_IN_MOVED_FROM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.monitor_conf_dir_inotify_handler.process_IN_MOVED_FROM" title="Link to this definition">¶</a></dt>
+<dd><p>Will be called by the inotify notifier when file event occurs.
+:param event: The file event</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.server.backend.monitor_conf_dir_inotify_handler.process_IN_MOVED_TO">
+<span class="sig-name descname"><span class="pre">process_IN_MOVED_TO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#monitor_conf_dir_inotify_handler.process_IN_MOVED_TO"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.monitor_conf_dir_inotify_handler.process_IN_MOVED_TO" title="Link to this definition">¶</a></dt>
+<dd><p>Will be called by the inotify notifier when file event occurs.
+:param event: The file event</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.server.backend.monitor_conf_dir_inotify_handler.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#monitor_conf_dir_inotify_handler.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.monitor_conf_dir_inotify_handler.run" title="Link to this definition">¶</a></dt>
+<dd><p>The runner for the thread. Starts the inotify notifier loop</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.server.backend.monitor_conf_dir_inotify_handler.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/backend.html#monitor_conf_dir_inotify_handler.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.backend.monitor_conf_dir_inotify_handler.start" title="Link to this definition">¶</a></dt>
+<dd><p>Starts the configuration file monitor</p>
+</dd></dl>
+
 </dd></dl>
 
 </section>
 <section id="module-bexchange.server.sqlbackend">
-<span id="bexchange-server-sqlbackend-module"></span><h2>bexchange.server.sqlbackend module<a class="headerlink" href="#module-bexchange.server.sqlbackend" title="Permalink to this headline">¶</a></h2>
+<span id="bexchange-server-sqlbackend-module"></span><h2>bexchange.server.sqlbackend module<a class="headerlink" href="#module-bexchange.server.sqlbackend" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.server.sqlbackend.SqlAlchemySourceManager">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.server.sqlbackend.</span></span><span class="sig-name descname"><span class="pre">SqlAlchemySourceManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sqlite:///tmp/baltrad-exchange-source.db'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poolsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/sqlbackend.html#SqlAlchemySourceManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.sqlbackend.SqlAlchemySourceManager" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.server.sqlbackend.</span></span><span class="sig-name descname"><span class="pre">SqlAlchemySourceManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sqlite:///tmp/baltrad-exchange-source.db'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poolsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/sqlbackend.html#SqlAlchemySourceManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.sqlbackend.SqlAlchemySourceManager" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>The DB manager providing source handling
 :param uri: The uri to database where sources are stored
 :param poolsize: the size of the db connection pool. In the case of sqlite, this will not be used</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.sqlbackend.SqlAlchemySourceManager.add_sources">
-<span class="sig-name descname"><span class="pre">add_sources</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">srclist</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/sqlbackend.html#SqlAlchemySourceManager.add_sources"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.sqlbackend.SqlAlchemySourceManager.add_sources" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">add_sources</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">srclist</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/sqlbackend.html#SqlAlchemySourceManager.add_sources"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.sqlbackend.SqlAlchemySourceManager.add_sources" title="Link to this definition">¶</a></dt>
 <dd><p>Adds the sources to the source database
 :param srclist: a list of bdbcommon.oh5.Sources</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="bexchange.server.sqlbackend.SqlAlchemySourceManager.driver">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">driver</span></span><a class="headerlink" href="#bexchange.server.sqlbackend.SqlAlchemySourceManager.driver" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">driver</span></span><a class="headerlink" href="#bexchange.server.sqlbackend.SqlAlchemySourceManager.driver" title="Link to this definition">¶</a></dt>
 <dd><p>database driver name</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>return</p>
 </dd>
 </dl>
@@ -255,18 +434,18 @@ if the files can be used for configuration or not.
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.sqlbackend.SqlAlchemySourceManager.get_connection">
-<span class="sig-name descname"><span class="pre">get_connection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/sqlbackend.html#SqlAlchemySourceManager.get_connection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.sqlbackend.SqlAlchemySourceManager.get_connection" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_connection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/sqlbackend.html#SqlAlchemySourceManager.get_connection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.sqlbackend.SqlAlchemySourceManager.get_connection" title="Link to this definition">¶</a></dt>
 <dd><p>get a context managed connection to the database</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.sqlbackend.SqlAlchemySourceManager.get_source">
-<span class="sig-name descname"><span class="pre">get_source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/sqlbackend.html#SqlAlchemySourceManager.get_source"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.sqlbackend.SqlAlchemySourceManager.get_source" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/sqlbackend.html#SqlAlchemySourceManager.get_source"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.sqlbackend.SqlAlchemySourceManager.get_source" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>meta</strong> – The metadata containing source</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A complete source from the metadata source identifier</p>
 </dd>
 </dl>
@@ -274,13 +453,13 @@ if the files can be used for configuration or not.
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.sqlbackend.SqlAlchemySourceManager.init_tables">
-<span class="sig-name descname"><span class="pre">init_tables</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/sqlbackend.html#SqlAlchemySourceManager.init_tables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.sqlbackend.SqlAlchemySourceManager.init_tables" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">init_tables</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/sqlbackend.html#SqlAlchemySourceManager.init_tables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.sqlbackend.SqlAlchemySourceManager.init_tables" title="Link to this definition">¶</a></dt>
 <dd><p>Initializes the database tables</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.sqlbackend.SqlAlchemySourceManager.insert_source_values">
-<span class="sig-name descname"><span class="pre">insert_source_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/sqlbackend.html#SqlAlchemySourceManager.insert_source_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.sqlbackend.SqlAlchemySourceManager.insert_source_values" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">insert_source_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/sqlbackend.html#SqlAlchemySourceManager.insert_source_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.sqlbackend.SqlAlchemySourceManager.insert_source_values" title="Link to this definition">¶</a></dt>
 <dd><p>Inserts kvs values
 :param conn: connection
 :param source_id: the unique source id
@@ -291,47 +470,47 @@ if the files can be used for configuration or not.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bexchange.server.sqlbackend.force_sqlite_foreign_keys">
-<span class="sig-prename descclassname"><span class="pre">bexchange.server.sqlbackend.</span></span><span class="sig-name descname"><span class="pre">force_sqlite_foreign_keys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dbapi_con</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">con_record</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/sqlbackend.html#force_sqlite_foreign_keys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.sqlbackend.force_sqlite_foreign_keys" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">bexchange.server.sqlbackend.</span></span><span class="sig-name descname"><span class="pre">force_sqlite_foreign_keys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dbapi_con</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">con_record</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/sqlbackend.html#force_sqlite_foreign_keys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.sqlbackend.force_sqlite_foreign_keys" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bexchange.server.sqlbackend.get_source_by_id">
-<span class="sig-prename descclassname"><span class="pre">bexchange.server.sqlbackend.</span></span><span class="sig-name descname"><span class="pre">get_source_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/sqlbackend.html#get_source_by_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.sqlbackend.get_source_by_id" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">bexchange.server.sqlbackend.</span></span><span class="sig-name descname"><span class="pre">get_source_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/sqlbackend.html#get_source_by_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.sqlbackend.get_source_by_id" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bexchange.server.sqlbackend.get_source_id">
-<span class="sig-prename descclassname"><span class="pre">bexchange.server.sqlbackend.</span></span><span class="sig-name descname"><span class="pre">get_source_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/sqlbackend.html#get_source_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.sqlbackend.get_source_id" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">bexchange.server.sqlbackend.</span></span><span class="sig-name descname"><span class="pre">get_source_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/sqlbackend.html#get_source_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.sqlbackend.get_source_id" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </section>
 <section id="module-bexchange.server.subscription">
-<span id="bexchange-server-subscription-module"></span><h2>bexchange.server.subscription module<a class="headerlink" href="#module-bexchange.server.subscription" title="Permalink to this headline">¶</a></h2>
+<span id="bexchange-server-subscription-module"></span><h2>bexchange.server.subscription module<a class="headerlink" href="#module-bexchange.server.subscription" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.server.subscription.subscription">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.server.subscription.</span></span><span class="sig-name descname"><span class="pre">subscription</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storages</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subscription_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifilter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_duplicates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allowed_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#subscription"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.subscription" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.server.subscription.</span></span><span class="sig-name descname"><span class="pre">subscription</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storages</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subscription_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifilter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_duplicates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allowed_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#subscription"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.subscription" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.subscription.subscription.allow_duplicates">
-<span class="sig-name descname"><span class="pre">allow_duplicates</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#subscription.allow_duplicates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.subscription.allow_duplicates" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">allow_duplicates</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#subscription.allow_duplicates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.subscription.allow_duplicates" title="Link to this definition">¶</a></dt>
 <dd><p>:return if duplicates are handled by this subscription or not</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.subscription.subscription.allowed_ids">
-<span class="sig-name descname"><span class="pre">allowed_ids</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#subscription.allowed_ids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.subscription.allowed_ids" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">allowed_ids</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#subscription.allowed_ids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.subscription.allowed_ids" title="Link to this definition">¶</a></dt>
 <dd><p>:return the nodenames</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.subscription.subscription.filter">
-<span class="sig-name descname"><span class="pre">filter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#subscription.filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.subscription.filter" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">filter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#subscription.filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.subscription.filter" title="Link to this definition">¶</a></dt>
 <dd><p>:return the filter</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.subscription.subscription.filter_matching">
-<span class="sig-name descname"><span class="pre">filter_matching</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#subscription.filter_matching"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.subscription.filter_matching" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">filter_matching</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#subscription.filter_matching"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.subscription.filter_matching" title="Link to this definition">¶</a></dt>
 <dd><p>Matches the meta against the filter.
 :param meta: The metadata
 :return True if filter is None or if metadata matches the filter.</p>
@@ -339,37 +518,37 @@ if the files can be used for configuration or not.
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.subscription.subscription.get_statistics_plugins">
-<span class="sig-name descname"><span class="pre">get_statistics_plugins</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#subscription.get_statistics_plugins"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.subscription.get_statistics_plugins" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_statistics_plugins</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#subscription.get_statistics_plugins"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.subscription.get_statistics_plugins" title="Link to this definition">¶</a></dt>
 <dd><p>:returns the stat plugins belonging to this subscription</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.subscription.subscription.id">
-<span class="sig-name descname"><span class="pre">id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#subscription.id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.subscription.id" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#subscription.id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.subscription.id" title="Link to this definition">¶</a></dt>
 <dd><p>:return the subscription id (or None if there is none)</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.subscription.subscription.isactive">
-<span class="sig-name descname"><span class="pre">isactive</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#subscription.isactive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.subscription.isactive" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">isactive</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#subscription.isactive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.subscription.isactive" title="Link to this definition">¶</a></dt>
 <dd><p>:return if this subscription is active or not</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.subscription.subscription.set_statistics_plugins">
-<span class="sig-name descname"><span class="pre">set_statistics_plugins</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plugins</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#subscription.set_statistics_plugins"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.subscription.set_statistics_plugins" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_statistics_plugins</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plugins</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#subscription.set_statistics_plugins"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.subscription.set_statistics_plugins" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.subscription.subscription.setactive">
-<span class="sig-name descname"><span class="pre">setactive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">active</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#subscription.setactive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.subscription.setactive" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">setactive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">active</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#subscription.setactive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.subscription.setactive" title="Link to this definition">¶</a></dt>
 <dd><p>Sets this subscription active or not
 :param active: If subscription should be set to active or not</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.subscription.subscription.storages">
-<span class="sig-name descname"><span class="pre">storages</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#subscription.storages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.subscription.storages" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">storages</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#subscription.storages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.subscription.storages" title="Link to this definition">¶</a></dt>
 <dd><p>:return the storage names</p>
 </dd></dl>
 
@@ -377,11 +556,11 @@ if the files can be used for configuration or not.
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.server.subscription.subscription_manager">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.server.subscription.</span></span><span class="sig-name descname"><span class="pre">subscription_manager</span></span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#subscription_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.subscription_manager" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.server.subscription.</span></span><span class="sig-name descname"><span class="pre">subscription_manager</span></span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#subscription_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.subscription_manager" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.subscription.subscription_manager.create_subscription">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_subscription</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storages</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subscription_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifilter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_duplicates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allowed_ids</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#subscription_manager.create_subscription"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.subscription_manager.create_subscription" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_subscription</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storages</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subscription_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifilter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_duplicates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allowed_ids</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#subscription_manager.create_subscription"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.subscription_manager.create_subscription" title="Link to this definition">¶</a></dt>
 <dd><p>Creates a subscription instance
 :param storages: List of storage names
 :param subscription_id: Subscription id
@@ -393,14 +572,14 @@ if the files can be used for configuration or not.
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.subscription.subscription_manager.from_conf">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_conf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#subscription_manager.from_conf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.subscription_manager.from_conf" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_conf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#subscription_manager.from_conf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.subscription_manager.from_conf" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 </section>
 <section id="module-bexchange.server">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-bexchange.server" title="Permalink to this headline">¶</a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-bexchange.server" title="Link to this heading">¶</a></h2>
 </section>
 </section>
 
@@ -411,24 +590,121 @@ if the files can be used for configuration or not.
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">bexchange.server package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-bexchange.server.backend">bexchange.server.backend module</a></li>
-<li><a class="reference internal" href="#module-bexchange.server.sqlbackend">bexchange.server.sqlbackend module</a></li>
-<li><a class="reference internal" href="#module-bexchange.server.subscription">bexchange.server.subscription module</a></li>
+<li><a class="reference internal" href="#module-bexchange.server.backend">bexchange.server.backend module</a><ul>
+<li><a class="reference internal" href="#bexchange.server.backend.HandledFiles"><code class="docutils literal notranslate"><span class="pre">HandledFiles</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.server.backend.HandledFiles.add"><code class="docutils literal notranslate"><span class="pre">HandledFiles.add()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.HandledFiles.handled"><code class="docutils literal notranslate"><span class="pre">HandledFiles.handled()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.server.backend.SimpleBackend"><code class="docutils literal notranslate"><span class="pre">SimpleBackend</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.server.backend.SimpleBackend.add_configuration_file"><code class="docutils literal notranslate"><span class="pre">SimpleBackend.add_configuration_file()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.SimpleBackend.conf_file_removed"><code class="docutils literal notranslate"><span class="pre">SimpleBackend.conf_file_removed()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.SimpleBackend.conf_file_written"><code class="docutils literal notranslate"><span class="pre">SimpleBackend.conf_file_written()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.SimpleBackend.from_conf"><code class="docutils literal notranslate"><span class="pre">SimpleBackend.from_conf()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.SimpleBackend.get_auth_manager"><code class="docutils literal notranslate"><span class="pre">SimpleBackend.get_auth_manager()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.SimpleBackend.get_server_nodename"><code class="docutils literal notranslate"><span class="pre">SimpleBackend.get_server_nodename()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.SimpleBackend.get_server_publickey"><code class="docutils literal notranslate"><span class="pre">SimpleBackend.get_server_publickey()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.SimpleBackend.get_server_uptime"><code class="docutils literal notranslate"><span class="pre">SimpleBackend.get_server_uptime()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.SimpleBackend.get_statistics_manager"><code class="docutils literal notranslate"><span class="pre">SimpleBackend.get_statistics_manager()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.SimpleBackend.get_storage_manager"><code class="docutils literal notranslate"><span class="pre">SimpleBackend.get_storage_manager()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.SimpleBackend.get_tmp_folder"><code class="docutils literal notranslate"><span class="pre">SimpleBackend.get_tmp_folder()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.SimpleBackend.initialize_configuration"><code class="docutils literal notranslate"><span class="pre">SimpleBackend.initialize_configuration()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.SimpleBackend.metadata_from_file"><code class="docutils literal notranslate"><span class="pre">SimpleBackend.metadata_from_file()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.SimpleBackend.metadata_from_file_bdb"><code class="docutils literal notranslate"><span class="pre">SimpleBackend.metadata_from_file_bdb()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.SimpleBackend.metadata_from_file_internal"><code class="docutils literal notranslate"><span class="pre">SimpleBackend.metadata_from_file_internal()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.SimpleBackend.post_message"><code class="docutils literal notranslate"><span class="pre">SimpleBackend.post_message()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.SimpleBackend.process_conf_dir"><code class="docutils literal notranslate"><span class="pre">SimpleBackend.process_conf_dir()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.SimpleBackend.processor_modified"><code class="docutils literal notranslate"><span class="pre">SimpleBackend.processor_modified()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.SimpleBackend.processor_removed"><code class="docutils literal notranslate"><span class="pre">SimpleBackend.processor_removed()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.SimpleBackend.publication_modified"><code class="docutils literal notranslate"><span class="pre">SimpleBackend.publication_modified()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.SimpleBackend.publication_removed"><code class="docutils literal notranslate"><span class="pre">SimpleBackend.publication_removed()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.SimpleBackend.publish"><code class="docutils literal notranslate"><span class="pre">SimpleBackend.publish()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.SimpleBackend.read_bdb_sources"><code class="docutils literal notranslate"><span class="pre">SimpleBackend.read_bdb_sources()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.SimpleBackend.runner_modified"><code class="docutils literal notranslate"><span class="pre">SimpleBackend.runner_modified()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.SimpleBackend.runner_removed"><code class="docutils literal notranslate"><span class="pre">SimpleBackend.runner_removed()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.SimpleBackend.storage_modified"><code class="docutils literal notranslate"><span class="pre">SimpleBackend.storage_modified()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.SimpleBackend.storage_removed"><code class="docutils literal notranslate"><span class="pre">SimpleBackend.storage_removed()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.SimpleBackend.store_file"><code class="docutils literal notranslate"><span class="pre">SimpleBackend.store_file()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.SimpleBackend.subscription_modified"><code class="docutils literal notranslate"><span class="pre">SimpleBackend.subscription_modified()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.SimpleBackend.subscription_removed"><code class="docutils literal notranslate"><span class="pre">SimpleBackend.subscription_removed()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.server.backend.config_handler"><code class="docutils literal notranslate"><span class="pre">config_handler</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.server.backend.config_handler.modified"><code class="docutils literal notranslate"><span class="pre">config_handler.modified()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.config_handler.removed"><code class="docutils literal notranslate"><span class="pre">config_handler.removed()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.server.backend.monitor_conf_dir_inotify_handler"><code class="docutils literal notranslate"><span class="pre">monitor_conf_dir_inotify_handler</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.server.backend.monitor_conf_dir_inotify_handler.FILE_PATTERN"><code class="docutils literal notranslate"><span class="pre">monitor_conf_dir_inotify_handler.FILE_PATTERN</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.monitor_conf_dir_inotify_handler.MASK"><code class="docutils literal notranslate"><span class="pre">monitor_conf_dir_inotify_handler.MASK</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.monitor_conf_dir_inotify_handler.match_file"><code class="docutils literal notranslate"><span class="pre">monitor_conf_dir_inotify_handler.match_file()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.monitor_conf_dir_inotify_handler.process_IN_CLOSE_WRITE"><code class="docutils literal notranslate"><span class="pre">monitor_conf_dir_inotify_handler.process_IN_CLOSE_WRITE()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.monitor_conf_dir_inotify_handler.process_IN_DELETE"><code class="docutils literal notranslate"><span class="pre">monitor_conf_dir_inotify_handler.process_IN_DELETE()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.monitor_conf_dir_inotify_handler.process_IN_MOVED_FROM"><code class="docutils literal notranslate"><span class="pre">monitor_conf_dir_inotify_handler.process_IN_MOVED_FROM()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.monitor_conf_dir_inotify_handler.process_IN_MOVED_TO"><code class="docutils literal notranslate"><span class="pre">monitor_conf_dir_inotify_handler.process_IN_MOVED_TO()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.monitor_conf_dir_inotify_handler.run"><code class="docutils literal notranslate"><span class="pre">monitor_conf_dir_inotify_handler.run()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.backend.monitor_conf_dir_inotify_handler.start"><code class="docutils literal notranslate"><span class="pre">monitor_conf_dir_inotify_handler.start()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-bexchange.server.sqlbackend">bexchange.server.sqlbackend module</a><ul>
+<li><a class="reference internal" href="#bexchange.server.sqlbackend.SqlAlchemySourceManager"><code class="docutils literal notranslate"><span class="pre">SqlAlchemySourceManager</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.server.sqlbackend.SqlAlchemySourceManager.add_sources"><code class="docutils literal notranslate"><span class="pre">SqlAlchemySourceManager.add_sources()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.sqlbackend.SqlAlchemySourceManager.driver"><code class="docutils literal notranslate"><span class="pre">SqlAlchemySourceManager.driver</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.sqlbackend.SqlAlchemySourceManager.get_connection"><code class="docutils literal notranslate"><span class="pre">SqlAlchemySourceManager.get_connection()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.sqlbackend.SqlAlchemySourceManager.get_source"><code class="docutils literal notranslate"><span class="pre">SqlAlchemySourceManager.get_source()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.sqlbackend.SqlAlchemySourceManager.init_tables"><code class="docutils literal notranslate"><span class="pre">SqlAlchemySourceManager.init_tables()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.sqlbackend.SqlAlchemySourceManager.insert_source_values"><code class="docutils literal notranslate"><span class="pre">SqlAlchemySourceManager.insert_source_values()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.server.sqlbackend.force_sqlite_foreign_keys"><code class="docutils literal notranslate"><span class="pre">force_sqlite_foreign_keys()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.sqlbackend.get_source_by_id"><code class="docutils literal notranslate"><span class="pre">get_source_by_id()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.sqlbackend.get_source_id"><code class="docutils literal notranslate"><span class="pre">get_source_id()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-bexchange.server.subscription">bexchange.server.subscription module</a><ul>
+<li><a class="reference internal" href="#bexchange.server.subscription.subscription"><code class="docutils literal notranslate"><span class="pre">subscription</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.server.subscription.subscription.allow_duplicates"><code class="docutils literal notranslate"><span class="pre">subscription.allow_duplicates()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.subscription.subscription.allowed_ids"><code class="docutils literal notranslate"><span class="pre">subscription.allowed_ids()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.subscription.subscription.filter"><code class="docutils literal notranslate"><span class="pre">subscription.filter()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.subscription.subscription.filter_matching"><code class="docutils literal notranslate"><span class="pre">subscription.filter_matching()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.subscription.subscription.get_statistics_plugins"><code class="docutils literal notranslate"><span class="pre">subscription.get_statistics_plugins()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.subscription.subscription.id"><code class="docutils literal notranslate"><span class="pre">subscription.id()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.subscription.subscription.isactive"><code class="docutils literal notranslate"><span class="pre">subscription.isactive()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.subscription.subscription.set_statistics_plugins"><code class="docutils literal notranslate"><span class="pre">subscription.set_statistics_plugins()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.subscription.subscription.setactive"><code class="docutils literal notranslate"><span class="pre">subscription.setactive()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.subscription.subscription.storages"><code class="docutils literal notranslate"><span class="pre">subscription.storages()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.server.subscription.subscription_manager"><code class="docutils literal notranslate"><span class="pre">subscription_manager</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.server.subscription.subscription_manager.create_subscription"><code class="docutils literal notranslate"><span class="pre">subscription_manager.create_subscription()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.subscription.subscription_manager.from_conf"><code class="docutils literal notranslate"><span class="pre">subscription_manager.from_conf()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-bexchange.server">Module contents</a></li>
 </ul>
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="bexchange.runner.html"
-                        title="previous chapter">bexchange.runner package</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="bexchange.statistics.html"
-                        title="next chapter">bexchange.statistics package</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="bexchange.runner.html"
+                          title="previous chapter">bexchange.runner package</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="bexchange.statistics.html"
+                          title="next chapter">bexchange.statistics package</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -445,7 +721,7 @@ if the files can be used for configuration or not.
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -472,8 +748,8 @@ if the files can be used for configuration or not.
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Anders Henja.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>bexchange.server.backend &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -81,6 +79,10 @@
 <span class="kn">import</span> <span class="nn">threading</span>
 <span class="kn">import</span> <span class="nn">os</span><span class="o">,</span><span class="nn">stat</span><span class="o">,</span><span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">import</span> <span class="nn">pyinotify</span>
+<span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Thread</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
 <span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">SimpleNamespace</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">baltrad.bdbcommon</span> <span class="kn">import</span> <span class="n">oh5</span><span class="p">,</span> <span class="n">expr</span>
@@ -98,8 +100,10 @@
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;bexchange.server.backend&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="HandledFiles"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.HandledFiles">[docs]</a><span class="k">class</span> <span class="nc">HandledFiles</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Keeps track of recently handled files. Probably should be either a sqlite db or</span>
+<div class="viewcode-block" id="HandledFiles">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.HandledFiles">[docs]</a>
+<span class="k">class</span> <span class="nc">HandledFiles</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Keeps track of recently handled files. Probably should be either a sqlite db or</span>
 <span class="sd">    a dictionary variant with an aged limit.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">500</span><span class="p">):</span>
@@ -107,11 +111,16 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_handled</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
         
-<div class="viewcode-block" id="HandledFiles.handled"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.HandledFiles.handled">[docs]</a>    <span class="k">def</span> <span class="nf">handled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bdbhash</span><span class="p">):</span>
+<div class="viewcode-block" id="HandledFiles.handled">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.HandledFiles.handled">[docs]</a>
+    <span class="k">def</span> <span class="nf">handled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bdbhash</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">bdbhash</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handled</span></div>
 
-<div class="viewcode-block" id="HandledFiles.add"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.HandledFiles.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bdbhash</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Adds the hash to internal list. Will return True if hash added otherwise</span>
+
+<div class="viewcode-block" id="HandledFiles.add">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.HandledFiles.add">[docs]</a>
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bdbhash</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Adds the hash to internal list. Will return True if hash added otherwise</span>
 <span class="sd">        False.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
@@ -120,16 +129,145 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_handled</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">bdbhash</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handled</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">limit</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_handled</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-        <span class="k">return</span> <span class="kc">True</span></div></div>
+        <span class="k">return</span> <span class="kc">True</span></div>
+</div>
 
-<div class="viewcode-block" id="SimpleBackend"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend">[docs]</a><span class="k">class</span> <span class="nc">SimpleBackend</span><span class="p">(</span><span class="n">backend</span><span class="o">.</span><span class="n">Backend</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A backend taking care of the exchange</span>
+
+<div class="viewcode-block" id="monitor_conf_dir_inotify_handler">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.monitor_conf_dir_inotify_handler">[docs]</a>
+<span class="k">class</span> <span class="nc">monitor_conf_dir_inotify_handler</span><span class="p">(</span><span class="n">pyinotify</span><span class="o">.</span><span class="n">ProcessEvent</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper class to monitor a list of folders containing configuration files. Only will process</span>
+<span class="sd">    files ending with .json. Both added and removed events will be forwarded.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">FILE_PATTERN</span><span class="o">=</span><span class="s2">&quot;.+.json$&quot;</span>
+    <span class="n">MASK</span><span class="o">=</span><span class="n">pyinotify</span><span class="o">.</span><span class="n">IN_CLOSE_WRITE</span> <span class="o">|</span> <span class="n">pyinotify</span><span class="o">.</span><span class="n">IN_MOVED_TO</span> <span class="o">|</span> <span class="n">pyinotify</span><span class="o">.</span><span class="n">IN_DELETE</span> <span class="o">|</span> <span class="n">pyinotify</span><span class="o">.</span><span class="n">IN_MOVED_FROM</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">folders</span><span class="p">,</span> <span class="n">fn_file_written</span><span class="p">,</span> <span class="n">fn_file_removed</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_folders</span> <span class="o">=</span> <span class="n">folders</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fn_file_written</span> <span class="o">=</span> <span class="n">fn_file_written</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fn_file_removed</span> <span class="o">=</span> <span class="n">fn_file_removed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wm</span> <span class="o">=</span> <span class="n">pyinotify</span><span class="o">.</span><span class="n">WatchManager</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_notifier</span> <span class="o">=</span> <span class="n">pyinotify</span><span class="o">.</span><span class="n">Notifier</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_wm</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+<div class="viewcode-block" id="monitor_conf_dir_inotify_handler.run">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.monitor_conf_dir_inotify_handler.run">[docs]</a>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The runner for the thread. Starts the inotify notifier loop</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_notifier</span><span class="o">.</span><span class="n">loop</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="monitor_conf_dir_inotify_handler.match_file">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.monitor_conf_dir_inotify_handler.match_file">[docs]</a>
+    <span class="k">def</span> <span class="nf">match_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Matches the file so that it is following the wanted pattern. Typically *.json.</span>
+<span class="sd">        :param filename: the filename that should be verified.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">bname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">FILE_PATTERN</span><span class="p">,</span> <span class="n">bname</span><span class="p">)</span> <span class="o">!=</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="monitor_conf_dir_inotify_handler.process_IN_CLOSE_WRITE">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.monitor_conf_dir_inotify_handler.process_IN_CLOSE_WRITE">[docs]</a>
+    <span class="k">def</span> <span class="nf">process_IN_CLOSE_WRITE</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Will be called by the inotify notifier when file event occurs.</span>
+<span class="sd">        :param event: The file event</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;IN_CLOSE_WRITE: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">match_file</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">):</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fn_file_written</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fn_file_written</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="monitor_conf_dir_inotify_handler.process_IN_MOVED_TO">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.monitor_conf_dir_inotify_handler.process_IN_MOVED_TO">[docs]</a>
+    <span class="k">def</span> <span class="nf">process_IN_MOVED_TO</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Will be called by the inotify notifier when file event occurs.</span>
+<span class="sd">        :param event: The file event</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;IN_MOVED_TO: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">match_file</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">):</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fn_file_written</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fn_file_written</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="monitor_conf_dir_inotify_handler.process_IN_MOVED_FROM">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.monitor_conf_dir_inotify_handler.process_IN_MOVED_FROM">[docs]</a>
+    <span class="k">def</span> <span class="nf">process_IN_MOVED_FROM</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Will be called by the inotify notifier when file event occurs.</span>
+<span class="sd">        :param event: The file event</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;IN_MOVED_FROM: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">match_file</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">):</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fn_file_removed</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fn_file_removed</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="monitor_conf_dir_inotify_handler.process_IN_DELETE">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.monitor_conf_dir_inotify_handler.process_IN_DELETE">[docs]</a>
+    <span class="k">def</span> <span class="nf">process_IN_DELETE</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Will be called by the inotify notifier when file event occurs.</span>
+<span class="sd">        :param event: The file event</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;IN_DELETE: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">match_file</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">):</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fn_file_removed</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fn_file_removed</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="monitor_conf_dir_inotify_handler.start">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.monitor_conf_dir_inotify_handler.start">[docs]</a>
+    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Starts the configuration file monitor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">folder</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_folders</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;monitor_conf_dir_inotify_handler watching &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">folder</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_wm</span><span class="o">.</span><span class="n">add_watch</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">MASK</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
+</div>
+
+
+<div class="viewcode-block" id="config_handler">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.config_handler">[docs]</a>
+<span class="k">class</span> <span class="nc">config_handler</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper class that is registered for all configuration files so that it is possible</span>
+<span class="sd">    to handle runtime changes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">removed</span><span class="p">,</span> <span class="n">modified</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_removed</span> <span class="o">=</span> <span class="n">removed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_modified</span> <span class="o">=</span> <span class="n">modified</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_object</span> <span class="o">=</span> <span class="n">o</span>
+    
+<div class="viewcode-block" id="config_handler.removed">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.config_handler.removed">[docs]</a>
+    <span class="k">def</span> <span class="nf">removed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_removed</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_object</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="config_handler.modified">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.config_handler.modified">[docs]</a>
+    <span class="k">def</span> <span class="nf">modified</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_modified</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_object</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="SimpleBackend">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend">[docs]</a>
+<span class="k">class</span> <span class="nc">SimpleBackend</span><span class="p">(</span><span class="n">backend</span><span class="o">.</span><span class="n">Backend</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A backend taking care of the exchange</span>
 
 <span class="sd">    :param engine_or_url: an SqlAlchemy engine or a database url</span>
 <span class="sd">    :param storage: a `~.storage.FileStorage` instance to use.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">confdirs</span><span class="p">,</span> <span class="n">nodename</span><span class="p">,</span> <span class="n">authmgr</span><span class="p">,</span> <span class="n">db_uri</span><span class="p">,</span> <span class="n">source_db_uri</span><span class="p">,</span> <span class="n">odim_source_file</span><span class="p">,</span> <span class="n">tmpfolder</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        :param confdirs: a list of directories where the configuration (.json) files can be found</span>
 <span class="sd">        :param nodename: name of this node</span>
 <span class="sd">        :param authmgr: the authorization manager for registering keys</span>
@@ -168,34 +306,78 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_starttime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_configuration_files</span> <span class="o">=</span> <span class="p">{}</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">initialize_configuration</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">confdirs</span><span class="p">)</span>
-    
-<div class="viewcode-block" id="SimpleBackend.get_storage_manager"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.get_storage_manager">[docs]</a>    <span class="k">def</span> <span class="nf">get_storage_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting configuration file monitoring&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">conf_monitor</span> <span class="o">=</span> <span class="n">monitor_conf_dir_inotify_handler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">confdirs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">conf_file_written</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">conf_file_removed</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">conf_monitor</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;System initialized&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SimpleBackend.conf_file_written">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.conf_file_written">[docs]</a>
+    <span class="k">def</span> <span class="nf">conf_file_written</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;File written: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">filename</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_configuration_files</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_configuration_files</span><span class="p">[</span><span class="n">filename</span><span class="p">]</span><span class="o">.</span><span class="n">modified</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_configuration_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SimpleBackend.conf_file_removed">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.conf_file_removed">[docs]</a>
+    <span class="k">def</span> <span class="nf">conf_file_removed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Filed removed: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">filename</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_configuration_files</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_configuration_files</span><span class="p">[</span><span class="n">filename</span><span class="p">]</span><span class="o">.</span><span class="n">removed</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2"> not registered in monitored directory but still triggering event.. !?&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SimpleBackend.get_storage_manager">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.get_storage_manager">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_storage_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :returns the storage manager used</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_manager</span>    </div>
 
-<div class="viewcode-block" id="SimpleBackend.get_auth_manager"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.get_auth_manager">[docs]</a>    <span class="k">def</span> <span class="nf">get_auth_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SimpleBackend.get_auth_manager">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.get_auth_manager">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_auth_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :returns the authorization manager used</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">authmgr</span></div>
 
-<div class="viewcode-block" id="SimpleBackend.get_tmp_folder"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.get_tmp_folder">[docs]</a>    <span class="k">def</span> <span class="nf">get_tmp_folder</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the global temporary folder name if defined</span>
+
+<div class="viewcode-block" id="SimpleBackend.get_tmp_folder">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.get_tmp_folder">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_tmp_folder</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the global temporary folder name if defined</span>
 <span class="sd">        :return the temporary folder name</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmpfolder</span></div>
 
-<div class="viewcode-block" id="SimpleBackend.get_statistics_manager"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.get_statistics_manager">[docs]</a>    <span class="k">def</span> <span class="nf">get_statistics_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SimpleBackend.get_statistics_manager">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.get_statistics_manager">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_statistics_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :returns the statistics manager</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">statistics_manager</span></div>
 
-<div class="viewcode-block" id="SimpleBackend.initialize_configuration"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.initialize_configuration">[docs]</a>    <span class="k">def</span> <span class="nf">initialize_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">confdirs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Initializes the configuration from each dir</span>
+
+<div class="viewcode-block" id="SimpleBackend.initialize_configuration">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.initialize_configuration">[docs]</a>
+    <span class="k">def</span> <span class="nf">initialize_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">confdirs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the configuration from each dir</span>
 <span class="sd">        :param confdirs: a list of directories where the configuration (.json) files can be found</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">confdirs</span><span class="p">:</span>
@@ -203,64 +385,235 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">process_conf_dir</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting runners&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">runner_manager</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">runner_manager</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;System initialized&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SimpleBackend.read_bdb_sources"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.read_bdb_sources">[docs]</a>    <span class="k">def</span> <span class="nf">read_bdb_sources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">odim_source_file</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Reads and parses the odim sources</span>
+<div class="viewcode-block" id="SimpleBackend.read_bdb_sources">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.read_bdb_sources">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_bdb_sources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">odim_source_file</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reads and parses the odim sources</span>
 <span class="sd">        :param odim_source_file: file containing the odim source definitions</span>
 <span class="sd">        :returns a list of odim sources</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">odim_source_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">oh5</span><span class="o">.</span><span class="n">Source</span><span class="o">.</span><span class="n">from_rave_xml</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span></div>
+
     
-<div class="viewcode-block" id="SimpleBackend.process_conf_dir"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.process_conf_dir">[docs]</a>    <span class="k">def</span> <span class="nf">process_conf_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;process one configuration dir. Will scan for all .json files in provided directory and determine</span>
+<div class="viewcode-block" id="SimpleBackend.process_conf_dir">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.process_conf_dir">[docs]</a>
+    <span class="k">def</span> <span class="nf">process_conf_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;process one configuration dir. Will scan for all .json files in provided directory and determine</span>
 <span class="sd">        if the files can be used for configuration or not.</span>
 <span class="sd">        :param d: a directory containing configuration files</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/*.json&quot;</span><span class="o">%</span><span class="n">d</span><span class="p">)</span>
         
         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Processing configuration file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">f</span><span class="p">)</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
-                <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
-                <span class="k">if</span> <span class="s2">&quot;publication&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
-                    <span class="n">p</span> <span class="o">=</span> <span class="n">publisher_manager</span><span class="o">.</span><span class="n">from_conf</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;publication&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="n">p</span><span class="p">:</span>
-                        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Adding publication from configuration file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">publications</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
-
-                <span class="k">elif</span> <span class="s2">&quot;subscription&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
-                    <span class="n">subs</span> <span class="o">=</span> <span class="n">subscription_manager</span><span class="o">.</span><span class="n">from_conf</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;subscription&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="n">subs</span><span class="p">:</span>
-                        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Adding subscription from configuration file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">subscriptions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subs</span><span class="p">)</span>
-                
-                <span class="k">elif</span> <span class="s2">&quot;storage&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
-                    <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_manager</span><span class="o">.</span><span class="n">from_conf</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;storage&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="p">)</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Adding storage from configuration file </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">storage_manager</span><span class="o">.</span><span class="n">add_storage</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-                
-                <span class="k">elif</span> <span class="s2">&quot;runner&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
-                    <span class="n">runner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_manager</span><span class="o">.</span><span class="n">from_conf</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;runner&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="n">runner</span><span class="p">:</span>
-                        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Adding runner from configuration file </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">runner_manager</span><span class="o">.</span><span class="n">add_runner</span><span class="p">(</span><span class="n">runner</span><span class="p">)</span>
-                
-                <span class="k">elif</span> <span class="s2">&quot;processor&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
-                    <span class="n">p</span> <span class="o">=</span> <span class="n">processors</span><span class="o">.</span><span class="n">processor_manager</span><span class="o">.</span><span class="n">from_conf</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;processor&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="n">p</span><span class="p">:</span>
-                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Adding processor from configuration file </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">processor_manager</span><span class="o">.</span><span class="n">add_processor</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Could not identify content of configuration file </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">f</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_configuration_file</span><span class="p">(</span><span class="n">f</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="SimpleBackend.from_conf"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.from_conf">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="SimpleBackend.add_configuration_file">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.add_configuration_file">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_configuration_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">runtime</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds the configuration from a configuration file to the system.</span>
+<span class="sd">        :param f: The filename containing the configuration in json format</span>
+<span class="sd">        :param runtime: If the configuration is added at startup (False) or during operational run (True)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Processing configuration file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">f</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;publication&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="n">publisher_manager</span><span class="o">.</span><span class="n">from_conf</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;publication&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">p</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Adding publication from configuration file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">publications</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_current_configuration_files</span><span class="p">[</span><span class="n">f</span><span class="p">]</span> <span class="o">=</span> <span class="n">config_handler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">publication_removed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">publication_modified</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="s2">&quot;subscription&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+                <span class="n">subs</span> <span class="o">=</span> <span class="n">subscription_manager</span><span class="o">.</span><span class="n">from_conf</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;subscription&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">subs</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Adding subscription from configuration file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">subscriptions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subs</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_current_configuration_files</span><span class="p">[</span><span class="n">f</span><span class="p">]</span> <span class="o">=</span> <span class="n">config_handler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subscription_removed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">subscription_modified</span><span class="p">,</span> <span class="n">subs</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="s2">&quot;storage&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_manager</span><span class="o">.</span><span class="n">from_conf</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;storage&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Adding storage from configuration file </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">storage_manager</span><span class="o">.</span><span class="n">add_storage</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">_current_configuration_files</span><span class="p">[</span><span class="n">f</span><span class="p">]</span> <span class="o">=</span> <span class="n">config_handler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">storage_removed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_modified</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="s2">&quot;runner&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+                <span class="n">runner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_manager</span><span class="o">.</span><span class="n">from_conf</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;runner&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">runner</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Adding runner from configuration file </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">runner_manager</span><span class="o">.</span><span class="n">add_runner</span><span class="p">(</span><span class="n">runner</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_current_configuration_files</span><span class="p">[</span><span class="n">f</span><span class="p">]</span> <span class="o">=</span> <span class="n">config_handler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_removed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_modified</span><span class="p">,</span> <span class="n">runner</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">runtime</span><span class="p">:</span>
+                        <span class="n">runner</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Runner started&quot;</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="s2">&quot;processor&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="n">processors</span><span class="o">.</span><span class="n">processor_manager</span><span class="o">.</span><span class="n">from_conf</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;processor&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">p</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Adding processor from configuration file </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">processor_manager</span><span class="o">.</span><span class="n">add_processor</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_current_configuration_files</span><span class="p">[</span><span class="n">f</span><span class="p">]</span> <span class="o">=</span> <span class="n">config_handler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">processor_removed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">processor_modified</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Could not identify content of configuration file </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">f</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SimpleBackend.processor_modified">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.processor_modified">[docs]</a>
+    <span class="k">def</span> <span class="nf">processor_modified</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Called when a processor configuration file is modified.,</span>
+<span class="sd">        :param fname: the filename affected</span>
+<span class="sd">        :param o: the actual processor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">processor_removed</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_configuration_file</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SimpleBackend.processor_removed">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.processor_removed">[docs]</a>
+    <span class="k">def</span> <span class="nf">processor_removed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Called when removing a processor during runtime operation</span>
+<span class="sd">        :param fname: the filename affected</span>
+<span class="sd">        :param o: the actual processor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">fname</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_configuration_files</span><span class="p">:</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_configuration_files</span><span class="p">[</span><span class="n">fname</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">processor_manager</span><span class="o">.</span><span class="n">remove_processor</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="p">())</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Processor removed: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">fname</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SimpleBackend.storage_modified">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.storage_modified">[docs]</a>
+    <span class="k">def</span> <span class="nf">storage_modified</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Called when a storage configuration file is modified.,</span>
+<span class="sd">        :param fname: the filename affected</span>
+<span class="sd">        :param o: the actual storage</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">storage_removed</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_configuration_file</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SimpleBackend.storage_removed">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.storage_removed">[docs]</a>
+    <span class="k">def</span> <span class="nf">storage_removed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Called when removing a storage during runtime operation</span>
+<span class="sd">        :param fname: the filename affected</span>
+<span class="sd">        :param o: the actual storage</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">fname</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_configuration_files</span><span class="p">:</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_configuration_files</span><span class="p">[</span><span class="n">fname</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">storage_manager</span><span class="o">.</span><span class="n">remove_storage</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="p">())</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Storage removed: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">fname</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SimpleBackend.subscription_modified">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.subscription_modified">[docs]</a>
+    <span class="k">def</span> <span class="nf">subscription_modified</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Called when a subscription configuration file is modified.,</span>
+<span class="sd">        :param fname: the filename affected</span>
+<span class="sd">        :param o: the actual subscription</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subscription_removed</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_configuration_file</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SimpleBackend.subscription_removed">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.subscription_removed">[docs]</a>
+    <span class="k">def</span> <span class="nf">subscription_removed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Called when removing a subscription during runtime operation</span>
+<span class="sd">        :param fname: the filename affected</span>
+<span class="sd">        :param o: the actual subscription</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">fname</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_configuration_files</span><span class="p">:</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_configuration_files</span><span class="p">[</span><span class="n">fname</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">subscriptions</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Subscription removed: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">fname</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="nf">publication_modified</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Called when a publication configuration file is modified.,</span>
+<span class="sd">        :param fname: the filename affected</span>
+<span class="sd">        :param o: the actual publication</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">publication_removed</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_configuration_file</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="SimpleBackend.publication_removed">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.publication_removed">[docs]</a>
+    <span class="k">def</span> <span class="nf">publication_removed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Called when removing a publication during runtime operation</span>
+<span class="sd">        :param fname: the filename affected</span>
+<span class="sd">        :param o: the actual publication</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">fname</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_configuration_files</span><span class="p">:</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_configuration_files</span><span class="p">[</span><span class="n">fname</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">o</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">publications</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">o</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Failed to stop publication&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">publications</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Publication removed: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">fname</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SimpleBackend.publication_modified">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.publication_modified">[docs]</a>
+    <span class="k">def</span> <span class="nf">publication_modified</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Called when a publication configuration file is modified.,</span>
+<span class="sd">        :param fname: the filename affected</span>
+<span class="sd">        :param o: the actual publication</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">publication_removed</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_configuration_file</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SimpleBackend.runner_removed">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.runner_removed">[docs]</a>
+    <span class="k">def</span> <span class="nf">runner_removed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Called when removing a runner during runtime operation</span>
+<span class="sd">        :param fname: the filename affected</span>
+<span class="sd">        :param o: the actual runner</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">fname</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_configuration_files</span><span class="p">:</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_configuration_files</span><span class="p">[</span><span class="n">fname</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">runner_manager</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Runner removed: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">fname</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SimpleBackend.runner_modified">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.runner_modified">[docs]</a>
+    <span class="k">def</span> <span class="nf">runner_modified</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Called when a runner configuration file is modified.,</span>
+<span class="sd">        :param fname: the filename affected</span>
+<span class="sd">        :param o: the actual runner</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">runner_removed</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_configuration_file</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SimpleBackend.from_conf">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.from_conf">[docs]</a>
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_conf</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">conf</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;create an instance from configuration</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;create an instance from configuration</span>
 <span class="sd">        parameters are looked up under *&#39;baltrad.exchange.server&#39;*.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">nodename</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;baltrad.exchange.node.name&quot;</span><span class="p">)</span>
@@ -310,8 +663,11 @@
 
         <span class="k">return</span> <span class="n">backend</span></div>
 
-<div class="viewcode-block" id="SimpleBackend.store_file"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.store_file">[docs]</a>    <span class="k">def</span> <span class="nf">store_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">nid</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;handles an incomming file and determines if it should be managed by the subscriptions or not.</span>
+
+<div class="viewcode-block" id="SimpleBackend.store_file">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.store_file">[docs]</a>
+    <span class="k">def</span> <span class="nf">store_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">nid</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;handles an incomming file and determines if it should be managed by the subscriptions or not.</span>
 <span class="sd">        :param path: the full path to the file to be handled</span>
 <span class="sd">        :param nodename: the name/id of the node that the file comes from</span>
 <span class="sd">        :returns the metadata from the file</span>
@@ -375,8 +731,11 @@
 
         <span class="k">return</span> <span class="n">meta</span></div>
 
-<div class="viewcode-block" id="SimpleBackend.post_message"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.post_message">[docs]</a>    <span class="k">def</span> <span class="nf">post_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_message</span><span class="p">,</span> <span class="n">nodename</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;ensures that a posted message arrives to interested parties</span>
+
+<div class="viewcode-block" id="SimpleBackend.post_message">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.post_message">[docs]</a>
+    <span class="k">def</span> <span class="nf">post_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_message</span><span class="p">,</span> <span class="n">nodename</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;ensures that a posted message arrives to interested parties</span>
 <span class="sd">        :param json_message: The json message</span>
 <span class="sd">        :type path: string</span>
 <span class="sd">        :param nodename: The origin that sent the message</span>
@@ -385,8 +744,11 @@
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">message_aware</span><span class="p">):</span>
                 <span class="n">r</span><span class="o">.</span><span class="n">handle_message</span><span class="p">(</span><span class="n">json_message</span><span class="p">,</span> <span class="n">nodename</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SimpleBackend.publish"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.publish">[docs]</a>    <span class="k">def</span> <span class="nf">publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sid</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;publishes the file on each interested publisher</span>
+
+<div class="viewcode-block" id="SimpleBackend.publish">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.publish">[docs]</a>
+    <span class="k">def</span> <span class="nf">publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sid</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;publishes the file on each interested publisher</span>
 <span class="sd">        :param sid: The subscription id if any</span>
 <span class="sd">        :param path: full path to the file to be published</span>
 <span class="sd">        :param meta: meta of file to be published</span>
@@ -398,30 +760,42 @@
                 <span class="k">if</span> <span class="n">publication</span><span class="o">.</span><span class="n">active</span><span class="p">()</span> <span class="ow">and</span> <span class="n">matcher</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span> <span class="n">publication</span><span class="o">.</span><span class="n">filter</span><span class="p">()</span><span class="o">.</span><span class="n">to_xpr</span><span class="p">()):</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;publish: publishing file using: </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">publication</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="n">publication</span><span class="p">))</span>
                     <span class="n">publication</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span></div>
+
     
-<div class="viewcode-block" id="SimpleBackend.metadata_from_file"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.metadata_from_file">[docs]</a>    <span class="k">def</span> <span class="nf">metadata_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;creates metadata from the file</span>
+<div class="viewcode-block" id="SimpleBackend.metadata_from_file">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.metadata_from_file">[docs]</a>
+    <span class="k">def</span> <span class="nf">metadata_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;creates metadata from the file</span>
 <span class="sd">        :param path: full path to the file</span>
 <span class="sd">        :returns the metadata</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata_from_file_internal</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
+
     
-<div class="viewcode-block" id="SimpleBackend.metadata_from_file_bdb"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.metadata_from_file_bdb">[docs]</a>    <span class="k">def</span> <span class="nf">metadata_from_file_bdb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;creates metadata from the file by adding it to the bdb</span>
+<div class="viewcode-block" id="SimpleBackend.metadata_from_file_bdb">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.metadata_from_file_bdb">[docs]</a>
+    <span class="k">def</span> <span class="nf">metadata_from_file_bdb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;creates metadata from the file by adding it to the bdb</span>
 <span class="sd">        :param path: full path to the file</span>
 <span class="sd">        :returns the metadata</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
+
     
-<div class="viewcode-block" id="SimpleBackend.metadata_from_file_internal"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.metadata_from_file_internal">[docs]</a>    <span class="k">def</span> <span class="nf">metadata_from_file_internal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;creates metadata from the file</span>
+<div class="viewcode-block" id="SimpleBackend.metadata_from_file_internal">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.metadata_from_file_internal">[docs]</a>
+    <span class="k">def</span> <span class="nf">metadata_from_file_internal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;creates metadata from the file</span>
 <span class="sd">        :param path: full path to the file</span>
 <span class="sd">        :returns the metadata</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">metadata_helper</span><span class="o">.</span><span class="n">metadata_from_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">source_manager</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hasher</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span></div>
+
             
-<div class="viewcode-block" id="SimpleBackend.get_server_uptime"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.get_server_uptime">[docs]</a>    <span class="k">def</span> <span class="nf">get_server_uptime</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="SimpleBackend.get_server_uptime">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.get_server_uptime">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_server_uptime</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: the server uptime as a tuple of (days, hours, minutes, seconds)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">td</span> <span class="o">=</span> <span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_starttime</span><span class="p">)</span>
@@ -431,19 +805,27 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">td</span><span class="o">.</span><span class="n">days</span><span class="p">,</span> <span class="n">hours</span><span class="p">,</span> <span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="SimpleBackend.get_server_nodename"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.get_server_nodename">[docs]</a>    <span class="k">def</span> <span class="nf">get_server_nodename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SimpleBackend.get_server_nodename">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.get_server_nodename">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_server_nodename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: the nodename of this server</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodename</span></div>
 
-<div class="viewcode-block" id="SimpleBackend.get_server_publickey"><a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.get_server_publickey">[docs]</a>    <span class="k">def</span> <span class="nf">get_server_publickey</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SimpleBackend.get_server_publickey">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.get_server_publickey">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_server_publickey</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: the public crypto key in PEM encoding that can be used by recipient to verify messages with</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">provider</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">authmgr</span><span class="o">.</span><span class="n">get_provider</span><span class="p">(</span><span class="s2">&quot;crypto&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">provider</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">provider</span><span class="o">.</span><span class="n">getPublicKey</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodename</span><span class="p">)</span><span class="o">.</span><span class="n">PEM</span><span class="p">()</span></div></div>
+            <span class="k">return</span> <span class="n">provider</span><span class="o">.</span><span class="n">getPublicKey</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodename</span><span class="p">)</span><span class="o">.</span><span class="n">PEM</span><span class="p">()</span></div>
+</div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -461,7 +843,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -481,8 +863,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Anders Henja.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>bexchange.odimutil &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -58,8 +56,12 @@
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;bexchange.odimutil&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="metadata_helper"><a class="viewcode-back" href="../../api/bexchange.html#bexchange.odimutil.metadata_helper">[docs]</a><span class="k">class</span> <span class="nc">metadata_helper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<div class="viewcode-block" id="metadata_helper.is_hdf5_file"><a class="viewcode-back" href="../../api/bexchange.html#bexchange.odimutil.metadata_helper.is_hdf5_file">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="metadata_helper">
+<a class="viewcode-back" href="../../api/bexchange.html#bexchange.odimutil.metadata_helper">[docs]</a>
+<span class="k">class</span> <span class="nc">metadata_helper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="metadata_helper.is_hdf5_file">
+<a class="viewcode-back" href="../../api/bexchange.html#bexchange.odimutil.metadata_helper.is_hdf5_file">[docs]</a>
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">is_hdf5_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">_pyhl</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">_pyhl</span><span class="o">.</span><span class="n">is_file_hdf5</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
@@ -67,9 +69,12 @@
             <span class="k">return</span> <span class="n">h5py</span><span class="o">.</span><span class="n">is_hdf5</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
-<div class="viewcode-block" id="metadata_helper.metadata_from_file"><a class="viewcode-back" href="../../api/bexchange.html#bexchange.odimutil.metadata_helper.metadata_from_file">[docs]</a>    <span class="nd">@classmethod</span>
+
+<div class="viewcode-block" id="metadata_helper.metadata_from_file">
+<a class="viewcode-back" href="../../api/bexchange.html#bexchange.odimutil.metadata_helper.metadata_from_file">[docs]</a>
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">metadata_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_manager</span><span class="p">,</span> <span class="n">hasher</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;creates metadata from the file</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;creates metadata from the file</span>
 <span class="sd">        :param path: full path to the file</span>
 <span class="sd">        :returns the metadata</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -94,7 +99,9 @@
         <span class="n">meta</span><span class="o">.</span><span class="n">bdb_stored_date</span> <span class="o">=</span> <span class="n">stored_timestamp</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
         <span class="n">meta</span><span class="o">.</span><span class="n">bdb_stored_time</span> <span class="o">=</span> <span class="n">stored_timestamp</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 
-        <span class="k">return</span> <span class="n">meta</span>  </div></div>
+        <span class="k">return</span> <span class="n">meta</span>  </div>
+</div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -112,7 +119,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -132,8 +139,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Anders Henja.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

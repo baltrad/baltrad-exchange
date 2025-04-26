@@ -1,19 +1,17 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>bexchange.matching package &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
+    <script src="../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -48,26 +46,26 @@
           <div class="body" role="main">
             
   <section id="bexchange-matching-package">
-<h1>bexchange.matching package<a class="headerlink" href="#bexchange-matching-package" title="Permalink to this headline">¶</a></h1>
+<h1>bexchange.matching package<a class="headerlink" href="#bexchange-matching-package" title="Link to this heading">¶</a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
 </section>
 <section id="module-bexchange.matching.filters">
-<span id="bexchange-matching-filters-module"></span><h2>bexchange.matching.filters module<a class="headerlink" href="#module-bexchange.matching.filters" title="Permalink to this headline">¶</a></h2>
+<span id="bexchange-matching-filters-module"></span><h2>bexchange.matching.filters module<a class="headerlink" href="#module-bexchange.matching.filters" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.matching.filters.always_filter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.matching.filters.</span></span><span class="sig-name descname"><span class="pre">always_filter</span></span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#always_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.always_filter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bexchange.matching.filters.node_filter" title="bexchange.matching.filters.node_filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.matching.filters.node_filter</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.matching.filters.</span></span><span class="sig-name descname"><span class="pre">always_filter</span></span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#always_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.always_filter" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bexchange.matching.filters.node_filter" title="bexchange.matching.filters.node_filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">node_filter</span></code></a></p>
 <p>always filter for returning true</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.matching.filters.always_filter.from_value">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">manager</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#always_filter.from_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.always_filter.from_value" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">manager</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#always_filter.from_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.always_filter.from_value" title="Link to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Used to create a not filter from a dictionary containing the information about this not filter. Format is:</dt><dd><p>{“filter_type”: “always_filter”}</p>
 </dd>
 </dl>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>value</strong> – The dictionary</p></li>
 <li><p><strong>manager</strong> – The manager used to instantiate objects</p></li>
@@ -78,14 +76,14 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.matching.filters.always_filter.name_repr">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name_repr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#always_filter.name_repr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.always_filter.name_repr" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name_repr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#always_filter.name_repr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.always_filter.name_repr" title="Link to this definition">¶</a></dt>
 <dd><p>Returns the name of this filter
 :return: name of this filter</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.matching.filters.always_filter.to_xpr">
-<span class="sig-name descname"><span class="pre">to_xpr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#always_filter.to_xpr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.always_filter.to_xpr" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">to_xpr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#always_filter.to_xpr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.always_filter.to_xpr" title="Link to this definition">¶</a></dt>
 <dd><p>Creates an expression to be used when matching against metadata.
 :return: The expression</p>
 </dd></dl>
@@ -94,12 +92,12 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.matching.filters.and_filter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.matching.filters.</span></span><span class="sig-name descname"><span class="pre">and_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">childs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#and_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.and_filter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bexchange.matching.filters.node_filter" title="bexchange.matching.filters.node_filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.matching.filters.node_filter</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.matching.filters.</span></span><span class="sig-name descname"><span class="pre">and_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">childs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#and_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.and_filter" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bexchange.matching.filters.node_filter" title="bexchange.matching.filters.node_filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">node_filter</span></code></a></p>
 <p>and filter for combining several different expressions</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.matching.filters.and_filter.from_value">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">manager</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#and_filter.from_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.and_filter.from_value" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">manager</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#and_filter.from_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.and_filter.from_value" title="Link to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Used to create an and filter from a dictionary containing the information about this and filter. Format is:</dt><dd><dl class="simple">
 <dt>{“filter_type”: “and_filter”,</dt><dd><p>“value”: []}</p>
@@ -108,7 +106,7 @@
 </dd>
 </dl>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>value</strong> – The dictionary</p></li>
 <li><p><strong>manager</strong> – The manager used to instantiate objects</p></li>
@@ -119,14 +117,14 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.matching.filters.and_filter.name_repr">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name_repr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#and_filter.name_repr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.and_filter.name_repr" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name_repr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#and_filter.name_repr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.and_filter.name_repr" title="Link to this definition">¶</a></dt>
 <dd><p>Returns the name of this filter
 :return: name of this filter</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.matching.filters.and_filter.to_xpr">
-<span class="sig-name descname"><span class="pre">to_xpr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#and_filter.to_xpr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.and_filter.to_xpr" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">to_xpr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#and_filter.to_xpr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.and_filter.to_xpr" title="Link to this definition">¶</a></dt>
 <dd><p>Creates an expression to be used when matching against metadata.
 :return: The expression</p>
 </dd></dl>
@@ -135,12 +133,12 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.matching.filters.attribute_filter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.matching.filters.</span></span><span class="sig-name descname"><span class="pre">attribute_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">op</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#attribute_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.attribute_filter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bexchange.matching.filters.node_filter" title="bexchange.matching.filters.node_filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.matching.filters.node_filter</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.matching.filters.</span></span><span class="sig-name descname"><span class="pre">attribute_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">op</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#attribute_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.attribute_filter" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bexchange.matching.filters.node_filter" title="bexchange.matching.filters.node_filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">node_filter</span></code></a></p>
 <p>an attribute filter that is used to match a specific attribute against a value.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.matching.filters.attribute_filter.from_value">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">manager</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#attribute_filter.from_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.attribute_filter.from_value" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">manager</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#attribute_filter.from_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.attribute_filter.from_value" title="Link to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Used to create an attribute filter from a dictionary containing the information about this attribute filter. Format is:</dt><dd><dl class="simple">
 <dt>{“filter_type”: “attribute_filter”,</dt><dd><p>“name”: “_bdb/source_name”,
@@ -152,7 +150,7 @@
 </dd>
 </dl>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>v</strong> – The dictionary</p></li>
 <li><p><strong>manager</strong> – The manager used to instantiate objects</p></li>
@@ -163,13 +161,13 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.matching.filters.attribute_filter.name_repr">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name_repr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#attribute_filter.name_repr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.attribute_filter.name_repr" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name_repr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#attribute_filter.name_repr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.attribute_filter.name_repr" title="Link to this definition">¶</a></dt>
 <dd><p>Name of this class</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.matching.filters.attribute_filter.to_xpr">
-<span class="sig-name descname"><span class="pre">to_xpr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#attribute_filter.to_xpr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.attribute_filter.to_xpr" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">to_xpr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#attribute_filter.to_xpr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.attribute_filter.to_xpr" title="Link to this definition">¶</a></dt>
 <dd><p>Creates an expression to be used when matching against metadata.
 :return: The expression</p>
 </dd></dl>
@@ -178,12 +176,12 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.matching.filters.filter_manager">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.matching.filters.</span></span><span class="sig-name descname"><span class="pre">filter_manager</span></span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#filter_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.filter_manager" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.matching.filters.</span></span><span class="sig-name descname"><span class="pre">filter_manager</span></span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#filter_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.filter_manager" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>The filter manager is used to create a filter from a dictionary or json entry</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.matching.filters.filter_manager.from_json">
-<span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#filter_manager.from_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.filter_manager.from_json" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#filter_manager.from_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.filter_manager.from_json" title="Link to this definition">¶</a></dt>
 <dd><p>Creates a object from a json entry if it can be parsed
 :param value: The json entry. If json entry (dictionary) contains “filter_type” and “value”, an atempt will be made to create the filter”
 :return: A filter object on success
@@ -192,7 +190,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.matching.filters.filter_manager.from_value">
-<span class="sig-name descname"><span class="pre">from_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#filter_manager.from_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.filter_manager.from_value" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">from_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#filter_manager.from_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.filter_manager.from_value" title="Link to this definition">¶</a></dt>
 <dd><p>Creates a object from a dictionary if it can be parsed
 :param value: The dictionary. If dictionary contains “filter_type” and “value”, an atempt will be made to create the filter”
 :return: A filter object on success
@@ -201,7 +199,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.matching.filters.filter_manager.to_json">
-<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifilter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#filter_manager.to_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.filter_manager.to_json" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifilter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#filter_manager.to_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.filter_manager.to_json" title="Link to this definition">¶</a></dt>
 <dd><p>Creates a json entry from a filter
 :param ifilter: The filter to be jsonifyed…
 :return: a filter as a json string</p>
@@ -209,7 +207,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.matching.filters.filter_manager.to_xpr">
-<span class="sig-name descname"><span class="pre">to_xpr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifilter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#filter_manager.to_xpr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.filter_manager.to_xpr" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">to_xpr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifilter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#filter_manager.to_xpr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.filter_manager.to_xpr" title="Link to this definition">¶</a></dt>
 <dd><p>Creates an expression to be used when matching against metadata.
 :return: The expression</p>
 </dd></dl>
@@ -218,11 +216,11 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.matching.filters.node_filter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.matching.filters.</span></span><span class="sig-name descname"><span class="pre">node_filter</span></span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#node_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.node_filter" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.matching.filters.</span></span><span class="sig-name descname"><span class="pre">node_filter</span></span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#node_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.node_filter" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.matching.filters.node_filter.to_xpr">
-<span class="sig-name descname"><span class="pre">to_xpr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#node_filter.to_xpr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.node_filter.to_xpr" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">to_xpr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#node_filter.to_xpr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.node_filter.to_xpr" title="Link to this definition">¶</a></dt>
 <dd><p>Translates a filter object to a list of expression symbols
 :return: a list of symbols</p>
 </dd></dl>
@@ -231,12 +229,12 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.matching.filters.not_filter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.matching.filters.</span></span><span class="sig-name descname"><span class="pre">not_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">child</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#not_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.not_filter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bexchange.matching.filters.node_filter" title="bexchange.matching.filters.node_filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.matching.filters.node_filter</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.matching.filters.</span></span><span class="sig-name descname"><span class="pre">not_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">child</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#not_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.not_filter" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bexchange.matching.filters.node_filter" title="bexchange.matching.filters.node_filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">node_filter</span></code></a></p>
 <p>not filter for negating an expression</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.matching.filters.not_filter.from_value">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">manager</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#not_filter.from_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.not_filter.from_value" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">manager</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#not_filter.from_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.not_filter.from_value" title="Link to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Used to create a not filter from a dictionary containing the information about this not filter. Format is:</dt><dd><dl class="simple">
 <dt>{“filter_type”: “not_filter”,</dt><dd><p>“value”: …}</p>
@@ -245,7 +243,7 @@
 </dd>
 </dl>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>value</strong> – The dictionary</p></li>
 <li><p><strong>manager</strong> – The manager used to instantiate objects</p></li>
@@ -256,14 +254,14 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.matching.filters.not_filter.name_repr">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name_repr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#not_filter.name_repr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.not_filter.name_repr" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name_repr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#not_filter.name_repr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.not_filter.name_repr" title="Link to this definition">¶</a></dt>
 <dd><p>Returns the name of this filter
 :return: name of this filter</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.matching.filters.not_filter.to_xpr">
-<span class="sig-name descname"><span class="pre">to_xpr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#not_filter.to_xpr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.not_filter.to_xpr" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">to_xpr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#not_filter.to_xpr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.not_filter.to_xpr" title="Link to this definition">¶</a></dt>
 <dd><p>Creates an expression to be used when matching against metadata.
 :return: The expression</p>
 </dd></dl>
@@ -272,12 +270,12 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.matching.filters.or_filter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.matching.filters.</span></span><span class="sig-name descname"><span class="pre">or_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">childs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#or_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.or_filter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bexchange.matching.filters.node_filter" title="bexchange.matching.filters.node_filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">bexchange.matching.filters.node_filter</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.matching.filters.</span></span><span class="sig-name descname"><span class="pre">or_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">childs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#or_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.or_filter" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bexchange.matching.filters.node_filter" title="bexchange.matching.filters.node_filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">node_filter</span></code></a></p>
 <p>or filter for combining several different expressions</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.matching.filters.or_filter.from_value">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">manager</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#or_filter.from_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.or_filter.from_value" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">manager</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#or_filter.from_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.or_filter.from_value" title="Link to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Used to create an or filter from a dictionary containing the information about this or filter. Format is:</dt><dd><dl class="simple">
 <dt>{“filter_type”: “or_filter”,</dt><dd><p>“value”: [….]}</p>
@@ -286,7 +284,7 @@
 </dd>
 </dl>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>value</strong> – The dictionary</p></li>
 <li><p><strong>manager</strong> – The manager used to instantiate objects</p></li>
@@ -297,14 +295,14 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.matching.filters.or_filter.name_repr">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name_repr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#or_filter.name_repr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.or_filter.name_repr" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name_repr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#or_filter.name_repr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.or_filter.name_repr" title="Link to this definition">¶</a></dt>
 <dd><p>Returns the name of this filter
 :return: name of this filter</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.matching.filters.or_filter.to_xpr">
-<span class="sig-name descname"><span class="pre">to_xpr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#or_filter.to_xpr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.or_filter.to_xpr" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">to_xpr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/filters.html#or_filter.to_xpr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.filters.or_filter.to_xpr" title="Link to this definition">¶</a></dt>
 <dd><p>Creates an expression to be used when matching against metadata.
 :return: The expression</p>
 </dd></dl>
@@ -313,15 +311,15 @@
 
 </section>
 <section id="module-bexchange.matching.metadata_matcher">
-<span id="bexchange-matching-metadata-matcher-module"></span><h2>bexchange.matching.metadata_matcher module<a class="headerlink" href="#module-bexchange.matching.metadata_matcher" title="Permalink to this headline">¶</a></h2>
+<span id="bexchange-matching-metadata-matcher-module"></span><h2>bexchange.matching.metadata_matcher module<a class="headerlink" href="#module-bexchange.matching.metadata_matcher" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.matching.metadata_matcher.metadata_matcher">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.matching.metadata_matcher.</span></span><span class="sig-name descname"><span class="pre">metadata_matcher</span></span><a class="reference internal" href="../_modules/bexchange/matching/metadata_matcher.html#metadata_matcher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.metadata_matcher.metadata_matcher" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.matching.metadata_matcher.</span></span><span class="sig-name descname"><span class="pre">metadata_matcher</span></span><a class="reference internal" href="../_modules/bexchange/matching/metadata_matcher.html#metadata_matcher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.metadata_matcher.metadata_matcher" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Used for matching metadata against an expression</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.matching.metadata_matcher.metadata_matcher.find_plain">
-<span class="sig-name descname"><span class="pre">find_plain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttype</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/metadata_matcher.html#metadata_matcher.find_plain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.metadata_matcher.metadata_matcher.find_plain" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">find_plain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttype</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/metadata_matcher.html#metadata_matcher.find_plain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.metadata_matcher.metadata_matcher.find_plain" title="Link to this definition">¶</a></dt>
 <dd><p>Finds any name within the metadata.
 :param name: The name of the attribute
 :param ttype: Not used
@@ -330,7 +328,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.matching.metadata_matcher.metadata_matcher.find_source">
-<span class="sig-name descname"><span class="pre">find_source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/metadata_matcher.html#metadata_matcher.find_source"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.metadata_matcher.metadata_matcher.find_source" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">find_source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/metadata_matcher.html#metadata_matcher.find_source"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.metadata_matcher.metadata_matcher.find_source" title="Link to this definition">¶</a></dt>
 <dd><p>Finds a source identifier within the source.
 :param name: The source identifier
 :param source: The data source
@@ -339,7 +337,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.matching.metadata_matcher.metadata_matcher.find_value">
-<span class="sig-name descname"><span class="pre">find_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttype</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/metadata_matcher.html#metadata_matcher.find_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.metadata_matcher.metadata_matcher.find_value" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">find_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttype</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/metadata_matcher.html#metadata_matcher.find_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.metadata_matcher.metadata_matcher.find_value" title="Link to this definition">¶</a></dt>
 <dd><p>Finds a value within the metadata with specified name
 :param name: The name that is requested
 :param ttype: The type we are looking for
@@ -348,7 +346,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.matching.metadata_matcher.metadata_matcher.in_">
-<span class="sig-name descname"><span class="pre">in_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lhs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rhs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/metadata_matcher.html#metadata_matcher.in_"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.metadata_matcher.metadata_matcher.in_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">in_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lhs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rhs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/metadata_matcher.html#metadata_matcher.in_"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.metadata_matcher.metadata_matcher.in_" title="Link to this definition">¶</a></dt>
 <dd><p>Matches if items in lhs exists in the rhs.
 :param lhs: Left hand side which is a list of values
 :param rhs: Right hand side which is matched against
@@ -357,13 +355,13 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.matching.metadata_matcher.metadata_matcher.init_evaluator">
-<span class="sig-name descname"><span class="pre">init_evaluator</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/metadata_matcher.html#metadata_matcher.init_evaluator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.metadata_matcher.metadata_matcher.init_evaluator" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">init_evaluator</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/metadata_matcher.html#metadata_matcher.init_evaluator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.metadata_matcher.metadata_matcher.init_evaluator" title="Link to this definition">¶</a></dt>
 <dd><p>Sets up all operations available for the filter</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.matching.metadata_matcher.metadata_matcher.like">
-<span class="sig-name descname"><span class="pre">like</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lhs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rhs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/metadata_matcher.html#metadata_matcher.like"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.metadata_matcher.metadata_matcher.like" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">like</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lhs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rhs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/metadata_matcher.html#metadata_matcher.like"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.metadata_matcher.metadata_matcher.like" title="Link to this definition">¶</a></dt>
 <dd><p>Matches against a *-pattern.
 :param lhs: Left hand side which is a list of value
 :param rhs: Right hand side which is pattern
@@ -372,7 +370,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.matching.metadata_matcher.metadata_matcher.match">
-<span class="sig-name descname"><span class="pre">match</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xpr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/metadata_matcher.html#metadata_matcher.match"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.metadata_matcher.metadata_matcher.match" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">match</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xpr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/metadata_matcher.html#metadata_matcher.match"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.metadata_matcher.metadata_matcher.match" title="Link to this definition">¶</a></dt>
 <dd><p>Matches the metadata against the expression. Synchronized.
 :param metadata: The metadata to be matched against
 :param xpr: The expression matched against
@@ -381,7 +379,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.matching.metadata_matcher.metadata_matcher.match_path">
-<span class="sig-name descname"><span class="pre">match_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">split_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/metadata_matcher.html#metadata_matcher.match_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.metadata_matcher.metadata_matcher.match_path" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">match_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">split_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/matching/metadata_matcher.html#metadata_matcher.match_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.matching.metadata_matcher.metadata_matcher.match_path" title="Link to this definition">¶</a></dt>
 <dd><p>Matches the paths</p>
 </dd></dl>
 
@@ -389,7 +387,7 @@
 
 </section>
 <section id="module-bexchange.matching">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-bexchange.matching" title="Permalink to this headline">¶</a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-bexchange.matching" title="Link to this heading">¶</a></h2>
 </section>
 </section>
 
@@ -400,23 +398,85 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">bexchange.matching package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-bexchange.matching.filters">bexchange.matching.filters module</a></li>
-<li><a class="reference internal" href="#module-bexchange.matching.metadata_matcher">bexchange.matching.metadata_matcher module</a></li>
+<li><a class="reference internal" href="#module-bexchange.matching.filters">bexchange.matching.filters module</a><ul>
+<li><a class="reference internal" href="#bexchange.matching.filters.always_filter"><code class="docutils literal notranslate"><span class="pre">always_filter</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.matching.filters.always_filter.from_value"><code class="docutils literal notranslate"><span class="pre">always_filter.from_value()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.matching.filters.always_filter.name_repr"><code class="docutils literal notranslate"><span class="pre">always_filter.name_repr()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.matching.filters.always_filter.to_xpr"><code class="docutils literal notranslate"><span class="pre">always_filter.to_xpr()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.matching.filters.and_filter"><code class="docutils literal notranslate"><span class="pre">and_filter</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.matching.filters.and_filter.from_value"><code class="docutils literal notranslate"><span class="pre">and_filter.from_value()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.matching.filters.and_filter.name_repr"><code class="docutils literal notranslate"><span class="pre">and_filter.name_repr()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.matching.filters.and_filter.to_xpr"><code class="docutils literal notranslate"><span class="pre">and_filter.to_xpr()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.matching.filters.attribute_filter"><code class="docutils literal notranslate"><span class="pre">attribute_filter</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.matching.filters.attribute_filter.from_value"><code class="docutils literal notranslate"><span class="pre">attribute_filter.from_value()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.matching.filters.attribute_filter.name_repr"><code class="docutils literal notranslate"><span class="pre">attribute_filter.name_repr()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.matching.filters.attribute_filter.to_xpr"><code class="docutils literal notranslate"><span class="pre">attribute_filter.to_xpr()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.matching.filters.filter_manager"><code class="docutils literal notranslate"><span class="pre">filter_manager</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.matching.filters.filter_manager.from_json"><code class="docutils literal notranslate"><span class="pre">filter_manager.from_json()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.matching.filters.filter_manager.from_value"><code class="docutils literal notranslate"><span class="pre">filter_manager.from_value()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.matching.filters.filter_manager.to_json"><code class="docutils literal notranslate"><span class="pre">filter_manager.to_json()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.matching.filters.filter_manager.to_xpr"><code class="docutils literal notranslate"><span class="pre">filter_manager.to_xpr()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.matching.filters.node_filter"><code class="docutils literal notranslate"><span class="pre">node_filter</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.matching.filters.node_filter.to_xpr"><code class="docutils literal notranslate"><span class="pre">node_filter.to_xpr()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.matching.filters.not_filter"><code class="docutils literal notranslate"><span class="pre">not_filter</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.matching.filters.not_filter.from_value"><code class="docutils literal notranslate"><span class="pre">not_filter.from_value()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.matching.filters.not_filter.name_repr"><code class="docutils literal notranslate"><span class="pre">not_filter.name_repr()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.matching.filters.not_filter.to_xpr"><code class="docutils literal notranslate"><span class="pre">not_filter.to_xpr()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.matching.filters.or_filter"><code class="docutils literal notranslate"><span class="pre">or_filter</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.matching.filters.or_filter.from_value"><code class="docutils literal notranslate"><span class="pre">or_filter.from_value()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.matching.filters.or_filter.name_repr"><code class="docutils literal notranslate"><span class="pre">or_filter.name_repr()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.matching.filters.or_filter.to_xpr"><code class="docutils literal notranslate"><span class="pre">or_filter.to_xpr()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-bexchange.matching.metadata_matcher">bexchange.matching.metadata_matcher module</a><ul>
+<li><a class="reference internal" href="#bexchange.matching.metadata_matcher.metadata_matcher"><code class="docutils literal notranslate"><span class="pre">metadata_matcher</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.matching.metadata_matcher.metadata_matcher.find_plain"><code class="docutils literal notranslate"><span class="pre">metadata_matcher.find_plain()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.matching.metadata_matcher.metadata_matcher.find_source"><code class="docutils literal notranslate"><span class="pre">metadata_matcher.find_source()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.matching.metadata_matcher.metadata_matcher.find_value"><code class="docutils literal notranslate"><span class="pre">metadata_matcher.find_value()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.matching.metadata_matcher.metadata_matcher.in_"><code class="docutils literal notranslate"><span class="pre">metadata_matcher.in_()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.matching.metadata_matcher.metadata_matcher.init_evaluator"><code class="docutils literal notranslate"><span class="pre">metadata_matcher.init_evaluator()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.matching.metadata_matcher.metadata_matcher.like"><code class="docutils literal notranslate"><span class="pre">metadata_matcher.like()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.matching.metadata_matcher.metadata_matcher.match"><code class="docutils literal notranslate"><span class="pre">metadata_matcher.match()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.matching.metadata_matcher.metadata_matcher.match_path"><code class="docutils literal notranslate"><span class="pre">metadata_matcher.match_path()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-bexchange.matching">Module contents</a></li>
 </ul>
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="bexchange.decorators.html"
-                        title="previous chapter">bexchange.decorators package</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="bexchange.naming.html"
-                        title="next chapter">bexchange.naming package</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="bexchange.decorators.html"
+                          title="previous chapter">bexchange.decorators package</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="bexchange.naming.html"
+                          title="next chapter">bexchange.naming package</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -433,7 +493,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -460,8 +520,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Anders Henja.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

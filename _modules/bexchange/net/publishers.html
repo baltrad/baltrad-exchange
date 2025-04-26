@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>bexchange.net.publishers &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -64,7 +62,7 @@
 <span class="kn">import</span> <span class="nn">os</span>
 
 <span class="kn">from</span> <span class="nn">bexchange.client</span> <span class="kn">import</span> <span class="n">rest</span>
-<span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Thread</span>
+<span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Thread</span><span class="p">,</span> <span class="n">Event</span>
 <span class="kn">from</span> <span class="nn">queue</span> <span class="kn">import</span> <span class="n">Queue</span><span class="p">,</span> <span class="n">Full</span>
 <span class="kn">import</span> <span class="nn">http.client</span> <span class="k">as</span> <span class="nn">httplib</span>
 <span class="kn">import</span> <span class="nn">ftplib</span>
@@ -88,11 +86,13 @@
 <span class="c1">##</span>
 <span class="c1"># Base class used by all publishers</span>
 <span class="c1">#</span>
-<div class="viewcode-block" id="publisher"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.publisher">[docs]</a><span class="k">class</span> <span class="nc">publisher</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Base class used by all publishers</span>
+<div class="viewcode-block" id="publisher">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.publisher">[docs]</a>
+<span class="k">class</span> <span class="nc">publisher</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class used by all publishers</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">active</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">ifilter</span><span class="p">,</span> <span class="n">connections</span><span class="p">,</span> <span class="n">decorators</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;constructor</span>
 
 <span class="sd">        :param backend: The backend implementation</span>
 <span class="sd">        :param name: The name identifying this publication</span>
@@ -110,77 +110,113 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_connections</span> <span class="o">=</span> <span class="n">connections</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_decorators</span> <span class="o">=</span> <span class="n">decorators</span>
     
-<div class="viewcode-block" id="publisher.publish"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.publisher.publish">[docs]</a>    <span class="k">def</span> <span class="nf">publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;publishes a file</span>
+<div class="viewcode-block" id="publisher.publish">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.publisher.publish">[docs]</a>
+    <span class="k">def</span> <span class="nf">publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;publishes a file</span>
 
 <span class="sd">        :param file: The temp file instance</span>
 <span class="sd">        :param meta: The metadata</span>
 <span class="sd">        :return: metadata extracted from the file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Not implemented&quot;</span><span class="p">)</span></div>
+
     
-<div class="viewcode-block" id="publisher.backend"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.publisher.backend">[docs]</a>    <span class="k">def</span> <span class="nf">backend</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the backend</span>
+<div class="viewcode-block" id="publisher.backend">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.publisher.backend">[docs]</a>
+    <span class="k">def</span> <span class="nf">backend</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the backend</span>
 <span class="sd">        :return: the backend</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span></div>
+
     
-<div class="viewcode-block" id="publisher.name"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.publisher.name">[docs]</a>    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the name</span>
+<div class="viewcode-block" id="publisher.name">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.publisher.name">[docs]</a>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the name</span>
 <span class="sd">        :return: the name</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span></div>
+
     
-<div class="viewcode-block" id="publisher.active"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.publisher.active">[docs]</a>    <span class="k">def</span> <span class="nf">active</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns if this publication is active or not</span>
+<div class="viewcode-block" id="publisher.active">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.publisher.active">[docs]</a>
+    <span class="k">def</span> <span class="nf">active</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns if this publication is active or not</span>
 <span class="sd">        :return: if this publication is active or not</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_active</span></div>
+
     
-<div class="viewcode-block" id="publisher.origin"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.publisher.origin">[docs]</a>    <span class="k">def</span> <span class="nf">origin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="publisher.origin">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.publisher.origin">[docs]</a>
+    <span class="k">def</span> <span class="nf">origin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return the list of origins that should trigger this publication</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_origin</span></div>
 
-<div class="viewcode-block" id="publisher.filter"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.publisher.filter">[docs]</a>    <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the filter</span>
+
+<div class="viewcode-block" id="publisher.filter">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.publisher.filter">[docs]</a>
+    <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the filter</span>
 <span class="sd">        :return: the filter</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter</span></div>
+
     
-<div class="viewcode-block" id="publisher.connections"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.publisher.connections">[docs]</a>    <span class="k">def</span> <span class="nf">connections</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the connection(s)</span>
+<div class="viewcode-block" id="publisher.connections">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.publisher.connections">[docs]</a>
+    <span class="k">def</span> <span class="nf">connections</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the connection(s)</span>
 <span class="sd">        :return: the connection(s)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connections</span></div>
+
     
-<div class="viewcode-block" id="publisher.decorators"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.publisher.decorators">[docs]</a>    <span class="k">def</span> <span class="nf">decorators</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the decorator(s)</span>
+<div class="viewcode-block" id="publisher.decorators">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.publisher.decorators">[docs]</a>
+    <span class="k">def</span> <span class="nf">decorators</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the decorator(s)</span>
 <span class="sd">        :return: the decorator(s)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decorators</span></div>
 
-<div class="viewcode-block" id="publisher.initialize"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.publisher.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Initializes the publisher before it is started.</span>
+
+<div class="viewcode-block" id="publisher.initialize">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.publisher.initialize">[docs]</a>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the publisher before it is started.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="publisher.start"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.publisher.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;A publisher should most likely be managing threads and as such a start method is needed</span>
+
+<div class="viewcode-block" id="publisher.start">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.publisher.start">[docs]</a>
+    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A publisher should most likely be managing threads and as such a start method is needed</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Not implemented&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="publisher.stop"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.publisher.stop">[docs]</a>    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;A publisher should most likely be managing threads and as such a stop method is needed joining the threads</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Not implemented&quot;</span><span class="p">)</span></div></div>
 
-<div class="viewcode-block" id="standard_publisher"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.standard_publisher">[docs]</a><span class="k">class</span> <span class="nc">standard_publisher</span><span class="p">(</span><span class="n">publisher</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Standard publisher used for most situations. Provides two arguments. One is threads. The other is queue_size.</span>
+<div class="viewcode-block" id="publisher.stop">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.publisher.stop">[docs]</a>
+    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A publisher should most likely be managing threads and as such a stop method is needed joining the threads</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Not implemented&quot;</span><span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="standard_publisher">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.standard_publisher">[docs]</a>
+<span class="k">class</span> <span class="nc">standard_publisher</span><span class="p">(</span><span class="n">publisher</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Standard publisher used for most situations. Provides two arguments. One is threads. The other is queue_size.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">active</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">ifilter</span><span class="p">,</span> <span class="n">connections</span><span class="p">,</span> <span class="n">decorators</span><span class="p">,</span> <span class="n">extra_arguments</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;constructor</span>
 
 <span class="sd">        :param backend: The backend implementation</span>
 <span class="sd">        :param name: The name identifying this publication</span>
@@ -206,6 +242,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_queue_size</span> <span class="o">=</span> <span class="n">queue_size</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_threads</span><span class="o">=</span><span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_queue_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_event</span> <span class="o">=</span> <span class="n">Event</span><span class="p">()</span>    <span class="c1"># We need an event since Queue doesn&#39;t seem to be able to be able to handle a proper shutdown until 3.13</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_statistics_ok_plugin</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_statistics_error_plugin</span> <span class="o">=</span> <span class="kc">None</span>
@@ -215,11 +253,17 @@
         <span class="k">if</span> <span class="s2">&quot;statistics_error&quot;</span> <span class="ow">in</span> <span class="n">extra_arguments</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_statistics_error_plugin</span> <span class="o">=</span> <span class="n">statistics_manager</span><span class="o">.</span><span class="n">plugin_from_conf</span><span class="p">(</span><span class="n">extra_arguments</span><span class="p">[</span><span class="s2">&quot;statistics_error&quot;</span><span class="p">],</span> <span class="n">backend</span><span class="o">.</span><span class="n">get_statistics_manager</span><span class="p">())</span>
 
-<div class="viewcode-block" id="standard_publisher.publish"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.standard_publisher.publish">[docs]</a>    <span class="k">def</span> <span class="nf">publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Passes on a file to the consumer queue that will be consumed and passed on to the connections.</span>
+<div class="viewcode-block" id="standard_publisher.publish">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.standard_publisher.publish">[docs]</a>
+    <span class="k">def</span> <span class="nf">publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Passes on a file to the consumer queue that will be consumed and passed on to the connections.</span>
 <span class="sd">        :param file: Actual file to be duplicated and sent.</span>
 <span class="sd">        :param meta: The metadata to be verified by the connections</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Publisher is going down, will not handle more files&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
         <span class="n">tmpfile</span> <span class="o">=</span> <span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="p">()</span><span class="o">.</span><span class="n">get_tmp_folder</span><span class="p">())</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
             <span class="n">shutil</span><span class="o">.</span><span class="n">copyfileobj</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">tmpfile</span><span class="p">)</span>
@@ -235,6 +279,7 @@
         
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="n">tmpfile</span><span class="p">,</span> <span class="n">meta</span><span class="p">),</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_event</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
         <span class="k">except</span> <span class="n">Full</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Queue for publisher &#39;</span><span class="si">%s</span><span class="s2">&#39; is full, dropping message with ID:&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)))</span>
             <span class="k">try</span><span class="p">:</span>
@@ -245,18 +290,35 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_statistics_error_plugin</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_statistics_error_plugin</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="n">meta</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="standard_publisher.do_publish"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.standard_publisher.do_publish">[docs]</a>    <span class="k">def</span> <span class="nf">do_publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tmpfile</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Passes a file to all connections</span>
+
+<div class="viewcode-block" id="standard_publisher.do_publish">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.standard_publisher.do_publish">[docs]</a>
+    <span class="k">def</span> <span class="nf">do_publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tmpfile</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Passes a file to all connections</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connections</span><span class="p">:</span>
             <span class="n">c</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">tmpfile</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>
         <span class="n">tmpfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="standard_publisher.consumer"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.standard_publisher.consumer">[docs]</a>    <span class="k">def</span> <span class="nf">consumer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; The consumer called by the individual threads. Will grab one entry from the queue and pass it on to the connections.</span>
+
+<div class="viewcode-block" id="standard_publisher.consumer">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.standard_publisher.consumer">[docs]</a>
+    <span class="k">def</span> <span class="nf">consumer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; The consumer called by the individual threads. Will grab one entry from the queue and pass it on to the connections.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">tmpfile</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running</span><span class="p">:</span>
+            <span class="n">tmpfile</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_event</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">tmpfile</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">get_nowait</span><span class="p">()</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+            <span class="k">if</span> <span class="n">tmpfile</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="c1"># In 3.13 there will be support for shutdown. For now, just except that we might get None..</span>
+                <span class="k">continue</span>
+
             <span class="k">try</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">do_publish</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_statistics_ok_plugin</span><span class="p">:</span>
@@ -268,37 +330,58 @@
             <span class="k">finally</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">task_done</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="standard_publisher.initialize"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.standard_publisher.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Initializes the publisher before it is started.</span>
+
+<div class="viewcode-block" id="standard_publisher.initialize">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.standard_publisher.initialize">[docs]</a>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the publisher before it is started.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">standard_publisher</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="standard_publisher.start"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.standard_publisher.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Starts all consumer threads as daemon threads</span>
+
+<div class="viewcode-block" id="standard_publisher.start">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.standard_publisher.start">[docs]</a>
+    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Starts all consumer threads as daemon threads</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="kc">True</span>        
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nrthreads</span><span class="p">):</span>
             <span class="n">t</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">consumer</span><span class="p">)</span>
             <span class="n">t</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_threads</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
             <span class="n">t</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> </div>
 
-<div class="viewcode-block" id="standard_publisher.stop"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.standard_publisher.stop">[docs]</a>    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Joins the threads</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_threads</span><span class="p">:</span>
-            <span class="n">t</span><span class="o">.</span><span class="n">join</span><span class="p">()</span></div></div>
 
-<div class="viewcode-block" id="publisher_manager"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.publisher_manager">[docs]</a><span class="k">class</span> <span class="nc">publisher_manager</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;The manager used for creating publishers from configuration</span>
+<div class="viewcode-block" id="standard_publisher.stop">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.standard_publisher.stop">[docs]</a>
+    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Joins the threads</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Stopping publisher&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_event</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_threads</span><span class="p">:</span>
+            <span class="n">t</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Publisher stopped&quot;</span><span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="publisher_manager">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.publisher_manager">[docs]</a>
+<span class="k">class</span> <span class="nc">publisher_manager</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The manager used for creating publishers from configuration</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span>
 
-<div class="viewcode-block" id="publisher_manager.create_publisher"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.publisher_manager.create_publisher">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="publisher_manager.create_publisher">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.publisher_manager.create_publisher">[docs]</a>
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">create_publisher</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">clz</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">active</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="nb">filter</span><span class="p">,</span> <span class="n">connections</span><span class="p">,</span> <span class="n">decorators</span><span class="p">,</span> <span class="n">extra_arguments</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Creates an instance of clz with specified arguments</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates an instance of clz with specified arguments</span>
 <span class="sd">        :param clz: class name specified as &lt;module&gt;.&lt;classname&gt;</span>
 <span class="sd">        :param arguments: a list of arguments that should be used to initialize the class       </span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -310,10 +393,13 @@
             <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">classname</span><span class="p">)(</span><span class="n">backend</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">active</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="nb">filter</span><span class="p">,</span> <span class="n">connections</span><span class="p">,</span> <span class="n">decorators</span><span class="p">,</span> <span class="n">extra_arguments</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Must specify class as module.class&quot;</span><span class="p">)</span></div>
+
     
-<div class="viewcode-block" id="publisher_manager.from_conf"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.publisher_manager.from_conf">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="publisher_manager.from_conf">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.publisher_manager.from_conf">[docs]</a>
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_conf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">backend</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Creates the publisher instance from provided configuration.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates the publisher instance from provided configuration.</span>
 <span class="sd">        :param config: The json config in a dict</span>
 <span class="sd">        :param backend: The backend the publisher shall have access to</span>
 <span class="sd">        :return: the created publisher</span>
@@ -374,7 +460,9 @@
 
         <span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
 
-        <span class="k">return</span> <span class="n">p</span></div></div>
+        <span class="k">return</span> <span class="n">p</span></div>
+</div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -392,7 +480,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -412,8 +500,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Anders Henja.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>bexchange.web.routing &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -67,30 +65,48 @@
 <span class="kn">from</span> <span class="nn">werkzeug.utils</span> <span class="kn">import</span> <span class="n">import_string</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
 
-<div class="viewcode-block" id="UuidConverter"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.routing.UuidConverter">[docs]</a><span class="k">class</span> <span class="nc">UuidConverter</span><span class="p">(</span><span class="n">BaseConverter</span><span class="p">):</span>
+<div class="viewcode-block" id="UuidConverter">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.routing.UuidConverter">[docs]</a>
+<span class="k">class</span> <span class="nc">UuidConverter</span><span class="p">(</span><span class="n">BaseConverter</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url_map</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">UuidConverter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">url_map</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">url_map</span> <span class="o">=</span> <span class="n">url_map</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">regex</span> <span class="o">=</span> <span class="s2">&quot;[0-9a-fA-F]{8,8}-([0-9a-fA-F]{4,4}-){3,3}[0-9a-fA-F]{12,12}&quot;</span>
     
-<div class="viewcode-block" id="UuidConverter.to_python"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.routing.UuidConverter.to_python">[docs]</a>    <span class="k">def</span> <span class="nf">to_python</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="UuidConverter.to_python">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.routing.UuidConverter.to_python">[docs]</a>
+    <span class="k">def</span> <span class="nf">to_python</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
-    
-<div class="viewcode-block" id="UuidConverter.from_python"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.routing.UuidConverter.from_python">[docs]</a>    <span class="k">def</span> <span class="nf">from_python</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">get_hex</span><span class="p">()</span></div></div>
 
-<div class="viewcode-block" id="DatetimeConverter"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.routing.DatetimeConverter">[docs]</a><span class="k">class</span> <span class="nc">DatetimeConverter</span><span class="p">(</span><span class="n">BaseConverter</span><span class="p">):</span>
+    
+<div class="viewcode-block" id="UuidConverter.from_python">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.routing.UuidConverter.from_python">[docs]</a>
+    <span class="k">def</span> <span class="nf">from_python</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">get_hex</span><span class="p">()</span></div>
+</div>
+
+
+<div class="viewcode-block" id="DatetimeConverter">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.routing.DatetimeConverter">[docs]</a>
+<span class="k">class</span> <span class="nc">DatetimeConverter</span><span class="p">(</span><span class="n">BaseConverter</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url_map</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">DatetimeConverter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">url_map</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">url_map</span> <span class="o">=</span> <span class="n">url_map</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">regex</span> <span class="o">=</span> <span class="s2">&quot;[0-9]{14,14}&quot;</span>
     
-<div class="viewcode-block" id="DatetimeConverter.to_python"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.routing.DatetimeConverter.to_python">[docs]</a>    <span class="k">def</span> <span class="nf">to_python</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="DatetimeConverter.to_python">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.routing.DatetimeConverter.to_python">[docs]</a>
+    <span class="k">def</span> <span class="nf">to_python</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="n">a</span> <span class="o">=</span> <span class="n">value</span>
         <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">a</span><span class="p">[:</span><span class="mi">4</span><span class="p">]),</span><span class="nb">int</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">6</span><span class="p">]),</span><span class="nb">int</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">6</span><span class="p">:</span><span class="mi">8</span><span class="p">]),</span><span class="nb">int</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">8</span><span class="p">:</span><span class="mi">10</span><span class="p">]),</span><span class="nb">int</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">10</span><span class="p">:</span><span class="mi">12</span><span class="p">]),</span><span class="nb">int</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">12</span><span class="p">:]))</span> </div>
+
     
-<div class="viewcode-block" id="DatetimeConverter.from_python"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.routing.DatetimeConverter.from_python">[docs]</a>    <span class="k">def</span> <span class="nf">from_python</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">%H%M%S&quot;</span><span class="p">)</span></div></div>
+<div class="viewcode-block" id="DatetimeConverter.from_python">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.routing.DatetimeConverter.from_python">[docs]</a>
+    <span class="k">def</span> <span class="nf">from_python</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">%H%M%S&quot;</span><span class="p">)</span></div>
+</div>
+
     
 <span class="n">URL_MAP</span> <span class="o">=</span> <span class="n">Map</span><span class="p">(</span>
     <span class="n">rules</span><span class="o">=</span><span class="p">[</span>
@@ -233,8 +249,11 @@
 <span class="c1">#     }</span>
 <span class="c1"># )</span>
 
-<div class="viewcode-block" id="get_handler"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.routing.get_handler">[docs]</a><span class="k">def</span> <span class="nf">get_handler</span><span class="p">(</span><span class="n">handler_str</span><span class="p">):</span>
+<div class="viewcode-block" id="get_handler">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.routing.get_handler">[docs]</a>
+<span class="k">def</span> <span class="nf">get_handler</span><span class="p">(</span><span class="n">handler_str</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">import_string</span><span class="p">(</span><span class="s2">&quot;bexchange.web.&quot;</span> <span class="o">+</span> <span class="n">handler_str</span><span class="p">)</span></div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -252,7 +271,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -272,8 +291,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Anders Henja.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

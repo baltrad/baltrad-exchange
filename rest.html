@@ -1,19 +1,17 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>REST interface &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css?v=514cf933" />
     
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
+    <script src="_static/documentation_options.js?v=2709fde1"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -46,9 +44,9 @@
           <div class="body" role="main">
             
   <section id="rest-interface">
-<h1>REST interface<a class="headerlink" href="#rest-interface" title="Permalink to this headline">¶</a></h1>
+<h1>REST interface<a class="headerlink" href="#rest-interface" title="Link to this heading">¶</a></h1>
 <section id="authentication">
-<h2>Authentication<a class="headerlink" href="#authentication" title="Permalink to this headline">¶</a></h2>
+<h2>Authentication<a class="headerlink" href="#authentication" title="Link to this heading">¶</a></h2>
 <p>Authentication is done through standard HTTP <em>Authorization</em> header containing
 a provider name and provider-specific credentials.</p>
 <p>Generic format of the exchange authorization header is:</p>
@@ -58,7 +56,7 @@ a provider name and provider-specific credentials.</p>
 <p>Provider <em>noauth</em> can be used to specify that no authentication is to be done
 and is equivalent to omitting the <em>Authorization</em> header.</p>
 <section id="crypto-authentication-provider">
-<span id="doc-rest-crypto-authentication"></span><h3>Crypto authentication provider<a class="headerlink" href="#crypto-authentication-provider" title="Permalink to this headline">¶</a></h3>
+<span id="doc-rest-crypto-authentication"></span><h3>Crypto authentication provider<a class="headerlink" href="#crypto-authentication-provider" title="Link to this heading">¶</a></h3>
 <p><strong>crypto</strong> provider can be used to sign and verify HTTP messages using the stock/default
 crypto library provided by for example Cryptodome or any other DSA/RSA-compatible API.</p>
 <p>To sign a message using this method, first a signable string is created
@@ -103,7 +101,7 @@ provider per header:</p>
 </section>
 </section>
 <section id="creating-signatures">
-<h2>Creating signatures<a class="headerlink" href="#creating-signatures" title="Permalink to this headline">¶</a></h2>
+<h2>Creating signatures<a class="headerlink" href="#creating-signatures" title="Link to this heading">¶</a></h2>
 <p>If you are using a different language than python and want to create messages then you will have to implement your own signature handling.
 The implementation in baltrad-exchange are using PyCryptodome and is straight forward without any extra meta-information in the data to be signed
 and should be quite easy to implement in a different language.</p>
@@ -128,7 +126,7 @@ and should be quite easy to implement in a different language.</p>
 </pre></div>
 </div>
 <section id="keyczar-authentication-provider-legacy">
-<span id="doc-rest-keyczar-authentication"></span><h3>Keyczar authentication provider (<em>Legacy</em>)<a class="headerlink" href="#keyczar-authentication-provider-legacy" title="Permalink to this headline">¶</a></h3>
+<span id="doc-rest-keyczar-authentication"></span><h3>Keyczar authentication provider (<em>Legacy</em>)<a class="headerlink" href="#keyczar-authentication-provider-legacy" title="Link to this heading">¶</a></h3>
 <p><strong>keyczar</strong> provider can be used to sign and verify HTTP messages using
 <a class="reference external" href="https://github.com/google/keyczar/">Keyczar</a>. Keyczar has been deprecated and is
 no longer supported. Since baltrad-dex and baltrad-db is still using it
@@ -182,18 +180,18 @@ provider per header:</p>
 </section>
 </section>
 <section id="operations">
-<h2>Operations<a class="headerlink" href="#operations" title="Permalink to this headline">¶</a></h2>
+<h2>Operations<a class="headerlink" href="#operations" title="Link to this heading">¶</a></h2>
 <section id="post-file">
-<span id="doc-rest-post-file"></span><h3>Post file<a class="headerlink" href="#post-file" title="Permalink to this headline">¶</a></h3>
+<span id="doc-rest-post-file"></span><h3>Post file<a class="headerlink" href="#post-file" title="Link to this heading">¶</a></h3>
 <dl>
 <dt><strong>Request</strong></dt><dd><dl class="field-list simple">
-<dt class="field-odd">Synopsis</dt>
+<dt class="field-odd">Synopsis<span class="colon">:</span></dt>
 <dd class="field-odd"><p>POST /file/</p>
 </dd>
-<dt class="field-even">Headers</dt>
+<dt class="field-even">Headers<span class="colon">:</span></dt>
 <dd class="field-even"><p>Content-Length, Content-Type, Date, Message-Id</p>
 </dd>
-<dt class="field-odd">Body</dt>
+<dt class="field-odd">Body<span class="colon">:</span></dt>
 <dd class="field-odd"><p>file content</p>
 </dd>
 </dl>
@@ -209,10 +207,10 @@ provider per header:</p>
 </div>
 </dd>
 <dt><strong>Response</strong></dt><dd><dl class="field-list simple">
-<dt class="field-odd">Headers</dt>
+<dt class="field-odd">Headers<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Content-Length, Content-Type, Location</p>
 </dd>
-<dt class="field-even">Status</dt>
+<dt class="field-even">Status<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>200 OK</strong> - file has been handled</p>
 </dd>
 </dl>
@@ -232,8 +230,9 @@ provider per header:</p>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">REST interface</a><ul>
 <li><a class="reference internal" href="#authentication">Authentication</a><ul>
 <li><a class="reference internal" href="#crypto-authentication-provider">Crypto authentication provider</a></li>
@@ -251,12 +250,17 @@ provider per header:</p>
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="commandline.html"
-                        title="previous chapter">Command line tools</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="zeromq.html"
-                        title="next chapter">ZeroMQ interface</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="commandline.html"
+                          title="previous chapter">Command line tools</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="zeromq.html"
+                          title="next chapter">ZeroMQ interface</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -273,7 +277,7 @@ provider per header:</p>
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -298,8 +302,8 @@ provider per header:</p>
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Anders Henja.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>bexchange.auth.coreauth &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -73,19 +71,26 @@
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;bexchange.auth&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="AuthError"><a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.AuthError">[docs]</a><span class="k">class</span> <span class="nc">AuthError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;expected authentication errors</span>
+<div class="viewcode-block" id="AuthError">
+<a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.AuthError">[docs]</a>
+<span class="k">class</span> <span class="nc">AuthError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;expected authentication errors</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="auth_manager"><a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.auth_manager">[docs]</a><span class="k">class</span> <span class="nc">auth_manager</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+<div class="viewcode-block" id="auth_manager">
+<a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.auth_manager">[docs]</a>
+<span class="k">class</span> <span class="nc">auth_manager</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_providers</span> <span class="o">=</span> <span class="p">{}</span>
 
-<div class="viewcode-block" id="auth_manager.authenticate"><a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.auth_manager.authenticate">[docs]</a>    <span class="k">def</span> <span class="nf">authenticate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;authenticate a :class:`~.util.Request`</span>
+<div class="viewcode-block" id="auth_manager.authenticate">
+<a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.auth_manager.authenticate">[docs]</a>
+    <span class="k">def</span> <span class="nf">authenticate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;authenticate a :class:`~.util.Request`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">provider_key</span><span class="p">,</span> <span class="n">credentials</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_credentials</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
@@ -108,9 +113,12 @@
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;unhandled error while authenticating </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">None</span></div>
+
     
-<div class="viewcode-block" id="auth_manager.get_credentials"><a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.auth_manager.get_credentials">[docs]</a>    <span class="k">def</span> <span class="nf">get_credentials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;get authorization credentials from a :class:`~.util.Request`</span>
+<div class="viewcode-block" id="auth_manager.get_credentials">
+<a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.auth_manager.get_credentials">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_credentials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;get authorization credentials from a :class:`~.util.Request`</span>
 
 <span class="sd">        :raise: :class:`~.AuthError` if the authorization header is illegally</span>
 <span class="sd">                formed (for the purposes of Baltrad-BDB)</span>
@@ -143,9 +151,12 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">provider</span> <span class="o">=</span> <span class="n">provider</span><span class="p">[</span><span class="mi">9</span><span class="p">:]</span>
         <span class="k">return</span> <span class="n">provider</span><span class="p">,</span> <span class="n">credentials</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span></div>
+
     
-<div class="viewcode-block" id="auth_manager.get_nodename"><a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.auth_manager.get_nodename">[docs]</a>    <span class="k">def</span> <span class="nf">get_nodename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the node name from the credentials / request</span>
+<div class="viewcode-block" id="auth_manager.get_nodename">
+<a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.auth_manager.get_nodename">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_nodename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the node name from the credentials / request</span>
 <span class="sd">        :param req: The request</span>
 <span class="sd">        :return the nodename if found, otherwise None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -154,10 +165,13 @@
         <span class="k">if</span> <span class="n">credentials</span> <span class="ow">and</span> <span class="n">credentials</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">credentials</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">return</span> <span class="kc">None</span></div>
+
         
-<div class="viewcode-block" id="auth_manager.from_conf"><a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.auth_manager.from_conf">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="auth_manager.from_conf">
+<a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.auth_manager.from_conf">[docs]</a>
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_conf</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">conf</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param app: the WSGI application receiving the request if</span>
 <span class="sd">                    authenication is successful.</span>
 <span class="sd">        :param conf: a :class:`~.config.Properties` instance to configure</span>
@@ -179,8 +193,11 @@
 
         <span class="k">return</span> <span class="n">result</span>    </div>
 
-<div class="viewcode-block" id="auth_manager.add_provider_from_conf"><a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.auth_manager.add_provider_from_conf">[docs]</a>    <span class="k">def</span> <span class="nf">add_provider_from_conf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">conf</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;load an :class:`Auth` implementation and add it as a provider</span>
+
+<div class="viewcode-block" id="auth_manager.add_provider_from_conf">
+<a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.auth_manager.add_provider_from_conf">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_provider_from_conf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">conf</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;load an :class:`Auth` implementation and add it as a provider</span>
 
 <span class="sd">        :param name: the name of the :class:`Auth` implementation to load</span>
 <span class="sd">        :param conf: a :class:`~.config.Properties` instance to configure</span>
@@ -193,8 +210,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_providers</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">provider</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Added provider: </span><span class="si">%s</span><span class="s2"> as </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">provider</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="auth_manager.add_key_config"><a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.auth_manager.add_key_config">[docs]</a>    <span class="k">def</span> <span class="nf">add_key_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conf</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Adds a key from key config</span>
+
+<div class="viewcode-block" id="auth_manager.add_key_config">
+<a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.auth_manager.add_key_config">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_key_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conf</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds a key from key config</span>
 
 <span class="sd">        :param conf: The key config</span>
 <span class="sd">        :return: the node name this key should be associated with</span>
@@ -203,36 +223,51 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_provider</span><span class="p">(</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;auth&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">add_key_config</span><span class="p">(</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;conf&quot;</span><span class="p">])</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="auth_manager.get_provider"><a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.auth_manager.get_provider">[docs]</a>    <span class="k">def</span> <span class="nf">get_provider</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the specified provider</span>
+
+<div class="viewcode-block" id="auth_manager.get_provider">
+<a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.auth_manager.get_provider">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_provider</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the specified provider</span>
 
 <span class="sd">        :param name: The name of the provider</span>
 <span class="sd">        :return: the provider for specified name</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_providers</span><span class="p">[</span><span class="n">name</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="auth_manager.get_private_key"><a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.auth_manager.get_private_key">[docs]</a>    <span class="k">def</span> <span class="nf">get_private_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_type</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the private key for the provided type</span>
+
+<div class="viewcode-block" id="auth_manager.get_private_key">
+<a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.auth_manager.get_private_key">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_private_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_type</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the private key for the provided type</span>
 
 <span class="sd">        :param _type: The encryption type</span>
 <span class="sd">        :return: the private key</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_privatekeys</span><span class="p">[</span><span class="n">_type</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="auth_manager.get_providers"><a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.auth_manager.get_providers">[docs]</a>    <span class="k">def</span> <span class="nf">get_providers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="auth_manager.get_providers">
+<a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.auth_manager.get_providers">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_providers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: all providers</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_providers</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_providers</span></div>
+</div>
 
-<div class="viewcode-block" id="Auth"><a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.Auth">[docs]</a><span class="k">class</span> <span class="nc">Auth</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;interface for authentication providers</span>
+
+<div class="viewcode-block" id="Auth">
+<a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.Auth">[docs]</a>
+<span class="k">class</span> <span class="nc">Auth</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;interface for authentication providers</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span>
 
-<div class="viewcode-block" id="Auth.authenticate"><a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.Auth.authenticate">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+<div class="viewcode-block" id="Auth.authenticate">
+<a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.Auth.authenticate">[docs]</a>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">authenticate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">credentials</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;authenticate the request with provided crendentials</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;authenticate the request with provided crendentials</span>
 
 <span class="sd">        :param req: the request to authenticate</span>
 <span class="sd">        :type req: :class:`~.util.Request`</span>
@@ -241,25 +276,34 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Auth.add_key_config"><a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.Auth.add_key_config">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+
+<div class="viewcode-block" id="Auth.add_key_config">
+<a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.Auth.add_key_config">[docs]</a>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">add_key_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">jsonstr</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Adds a key config to this provider</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds a key config to this provider</span>
 <span class="sd">        :param jsonstr: THe key config</span>
 <span class="sd">        :return the nodename this key should be associated with</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Auth.from_conf"><a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.Auth.from_conf">[docs]</a>    <span class="nd">@util</span><span class="o">.</span><span class="n">abstractclassmethod</span>
+
+<div class="viewcode-block" id="Auth.from_conf">
+<a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.Auth.from_conf">[docs]</a>
+    <span class="nd">@util</span><span class="o">.</span><span class="n">abstractclassmethod</span>
     <span class="k">def</span> <span class="nf">from_conf</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">conf</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;construct an instance from configuration</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;construct an instance from configuration</span>
 
 <span class="sd">        :param conf: a :class:`~.config.Properties` instance</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
     
-<div class="viewcode-block" id="Auth.get_impl"><a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.Auth.get_impl">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="Auth.get_impl">
+<a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.Auth.get_impl">[docs]</a>
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_impl</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param name: The name of the entrypoint as defined in setup.py, e.g. crypto, keyczar...</span>
 <span class="sd">        :return: the class represented by name. Used to create an instance of correct type </span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -267,14 +311,20 @@
             <span class="s2">&quot;bexchange&quot;</span><span class="p">,</span>
             <span class="s2">&quot;bexchange.auth&quot;</span><span class="p">,</span>
             <span class="n">name</span>
-        <span class="p">)</span></div></div>
+        <span class="p">)</span></div>
+</div>
+
     
-<div class="viewcode-block" id="NoAuth"><a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.NoAuth">[docs]</a><span class="k">class</span> <span class="nc">NoAuth</span><span class="p">(</span><span class="n">Auth</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;No authentication, allow everyone</span>
+<div class="viewcode-block" id="NoAuth">
+<a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.NoAuth">[docs]</a>
+<span class="k">class</span> <span class="nc">NoAuth</span><span class="p">(</span><span class="n">Auth</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;No authentication, allow everyone</span>
 <span class="sd">    registered as *noauth* in *baltrad.bdbserver.web.auth* entry-point</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="NoAuth.authenticate"><a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.NoAuth.authenticate">[docs]</a>    <span class="k">def</span> <span class="nf">authenticate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">credentials</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Validates the content in the request against the credentials.</span>
+<div class="viewcode-block" id="NoAuth.authenticate">
+<a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.NoAuth.authenticate">[docs]</a>
+    <span class="k">def</span> <span class="nf">authenticate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">credentials</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validates the content in the request against the credentials.</span>
 
 <span class="sd">        :param req: the request to authenticate</span>
 <span class="sd">        :type req: :class:`~.util.Request`</span>
@@ -282,22 +332,29 @@
 <span class="sd">        :return: always True</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="kc">True</span></div>
+
     
-<div class="viewcode-block" id="NoAuth.from_conf"><a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.NoAuth.from_conf">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="NoAuth.from_conf">
+<a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.NoAuth.from_conf">[docs]</a>
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_conf</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">conf</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Creates a NoAuth instance from configuration.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a NoAuth instance from configuration.</span>
 
 <span class="sd">        :param conf: the configuration entry</span>
 <span class="sd">        :return: a NoAuth instance.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">NoAuth</span><span class="p">()</span></div></div>
+        <span class="k">return</span> <span class="n">NoAuth</span><span class="p">()</span></div>
+</div>
 
-<div class="viewcode-block" id="CryptoAuth"><a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.CryptoAuth">[docs]</a><span class="k">class</span> <span class="nc">CryptoAuth</span><span class="p">(</span><span class="n">Auth</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Provide authentication through the internal crypto</span>
+
+<div class="viewcode-block" id="CryptoAuth">
+<a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.CryptoAuth">[docs]</a>
+<span class="k">class</span> <span class="nc">CryptoAuth</span><span class="p">(</span><span class="n">Auth</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Provide authentication through the internal crypto</span>
 <span class="sd">        registered as *exchange-crypto* in *baltrad.bdbserver.web.auth* entry-point</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key_root</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param key_root: default path to search keys from</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">key_root</span><span class="p">):</span>
@@ -306,8 +363,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_private_key</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_verifiers</span> <span class="o">=</span> <span class="p">{}</span>
     
-<div class="viewcode-block" id="CryptoAuth.setPrivateKey"><a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.CryptoAuth.setPrivateKey">[docs]</a>    <span class="k">def</span> <span class="nf">setPrivateKey</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">privkey</span><span class="p">,</span> <span class="n">nodename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Sets the private key (and associates it with a nodename) so that</span>
+<div class="viewcode-block" id="CryptoAuth.setPrivateKey">
+<a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.CryptoAuth.setPrivateKey">[docs]</a>
+    <span class="k">def</span> <span class="nf">setPrivateKey</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">privkey</span><span class="p">,</span> <span class="n">nodename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the private key (and associates it with a nodename) so that</span>
 <span class="sd">        it is possible to setup the private key from the properties-file.</span>
 
 <span class="sd">        :param privkey: Path to the private key</span>
@@ -322,16 +381,22 @@
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;adding public key from private for </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">nodename</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_verifiers</span><span class="p">[</span><span class="n">nodename</span><span class="p">]</span> <span class="o">=</span> <span class="n">privkey</span><span class="o">.</span><span class="n">publickey</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="CryptoAuth.getPublicKey"><a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.CryptoAuth.getPublicKey">[docs]</a>    <span class="k">def</span> <span class="nf">getPublicKey</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodename</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the public key associated with the nodename</span>
+
+<div class="viewcode-block" id="CryptoAuth.getPublicKey">
+<a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.CryptoAuth.getPublicKey">[docs]</a>
+    <span class="k">def</span> <span class="nf">getPublicKey</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodename</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the public key associated with the nodename</span>
 <span class="sd">        </span>
 <span class="sd">        :param nodename: Node name</span>
 <span class="sd">        :return: the public key</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_verifiers</span><span class="p">[</span><span class="n">nodename</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="CryptoAuth.add_key_config"><a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.CryptoAuth.add_key_config">[docs]</a>    <span class="k">def</span> <span class="nf">add_key_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conf</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Adding key from a json-conf. Will ensure that creator is baltradcrypto.crypto.</span>
+
+<div class="viewcode-block" id="CryptoAuth.add_key_config">
+<a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.CryptoAuth.add_key_config">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_key_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conf</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adding key from a json-conf. Will ensure that creator is baltradcrypto.crypto.</span>
 <span class="sd">        :param conf: The json configuration</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="s2">&quot;creator&quot;</span> <span class="ow">in</span> <span class="n">conf</span> <span class="ow">and</span> <span class="n">conf</span><span class="p">[</span><span class="s2">&quot;creator&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;baltradcrypto.crypto&quot;</span><span class="p">:</span>
@@ -353,9 +418,12 @@
                 <span class="k">raise</span> <span class="n">AuthError</span><span class="p">(</span><span class="s2">&quot;Exchange auth expects public keys&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">AuthError</span><span class="p">(</span><span class="s2">&quot;Could not handle config&quot;</span><span class="p">)</span></div>
+
     
-<div class="viewcode-block" id="CryptoAuth.add_key"><a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.CryptoAuth.add_key">[docs]</a>    <span class="k">def</span> <span class="nf">add_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="CryptoAuth.add_key">
+<a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.CryptoAuth.add_key">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param name: the name to associate the key with for lookups</span>
 <span class="sd">        :param path: an absolute or relative path to the key.</span>
 
@@ -373,9 +441,12 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">crypto</span><span class="o">.</span><span class="n">public_key</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">AuthError</span><span class="p">(</span><span class="s2">&quot;Exchange auth expects public keys&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_verifiers</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">key</span></div>
+
     
-<div class="viewcode-block" id="CryptoAuth.authenticate"><a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.CryptoAuth.authenticate">[docs]</a>    <span class="k">def</span> <span class="nf">authenticate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">credentials</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Authenticates the request against the credentials.</span>
+<div class="viewcode-block" id="CryptoAuth.authenticate">
+<a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.CryptoAuth.authenticate">[docs]</a>
+    <span class="k">def</span> <span class="nf">authenticate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">credentials</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Authenticates the request against the credentials.</span>
 <span class="sd">        :param req: The http request</span>
 <span class="sd">        :param credentials: The credentials that should be verified against</span>
 <span class="sd">        :return: True if authenticated, False otherwise. </span>
@@ -399,8 +470,11 @@
 
         <span class="k">return</span> <span class="kc">False</span></div>
 
-<div class="viewcode-block" id="CryptoAuth.create_signable_string"><a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.CryptoAuth.create_signable_string">[docs]</a>    <span class="k">def</span> <span class="nf">create_signable_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;construct a signable string from a :class:`~.util.Request`</span>
+
+<div class="viewcode-block" id="CryptoAuth.create_signable_string">
+<a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.CryptoAuth.create_signable_string">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_signable_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;construct a signable string from a :class:`~.util.Request`</span>
 
 <span class="sd">        See :ref:`doc-rest-crypto-authentication` for details.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -412,9 +486,12 @@
                     <span class="n">fragments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
         <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fragments</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="CryptoAuth.from_conf"><a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.CryptoAuth.from_conf">[docs]</a>    <span class="nd">@classmethod</span>
+
+<div class="viewcode-block" id="CryptoAuth.from_conf">
+<a class="viewcode-back" href="../../../api/bexchange.auth.html#bexchange.auth.coreauth.CryptoAuth.from_conf">[docs]</a>
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_conf</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">conf</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create from configuration.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create from configuration.</span>
 
 <span class="sd">        :param conf: a :class:`~.config.Properties` instance</span>
 <span class="sd">        :raise: :class:`LookupError` if a required configuration parameter</span>
@@ -435,7 +512,9 @@
         
         <span class="n">result</span><span class="o">.</span><span class="n">setPrivateKey</span><span class="p">(</span><span class="n">cconf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;private.key&quot;</span><span class="p">),</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;baltrad.exchange.node.name&quot;</span><span class="p">))</span>
 
-        <span class="k">return</span> <span class="n">result</span></div></div>
+        <span class="k">return</span> <span class="n">result</span></div>
+</div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -453,7 +532,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -473,8 +552,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Anders Henja.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

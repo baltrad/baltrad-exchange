@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>bexchange.client.cmd &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -81,21 +79,31 @@
 <span class="kn">from</span> <span class="nn">baltradcrypto</span> <span class="kn">import</span> <span class="n">crypto</span>
 <span class="kn">from</span> <span class="nn">baltradcrypto.crypto</span> <span class="kn">import</span> <span class="n">keyczarcrypto</span>
 
-<div class="viewcode-block" id="ExecutionError"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.ExecutionError">[docs]</a><span class="k">class</span> <span class="nc">ExecutionError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+<div class="viewcode-block" id="ExecutionError">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.ExecutionError">[docs]</a>
+<span class="k">class</span> <span class="nc">ExecutionError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
     <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="Command"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.Command">[docs]</a><span class="k">class</span> <span class="nc">Command</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;command-line client command interface</span>
+
+<div class="viewcode-block" id="Command">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.Command">[docs]</a>
+<span class="k">class</span> <span class="nc">Command</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;command-line client command interface</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">ABCMeta</span>
 
-<div class="viewcode-block" id="Command.update_optionparser"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.Command.update_optionparser">[docs]</a>    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="Command.update_optionparser">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.Command.update_optionparser">[docs]</a>
+    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
     
-<div class="viewcode-block" id="Command.execute"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.Command.execute">[docs]</a>    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="Command.execute">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.Command.execute">[docs]</a>
+    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;execute this command</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;execute this command</span>
 
 <span class="sd">        :param database: a database instance to operate on</span>
 <span class="sd">        :param opts: options passed from command line</span>
@@ -103,12 +111,15 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
+
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Command.get_implementation_by_name"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.Command.get_implementation_by_name">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="Command.get_implementation_by_name">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.Command.get_implementation_by_name">[docs]</a>
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_implementation_by_name</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;get an implementing class by name</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;get an implementing class by name</span>
 
 <span class="sd">        the implementing class is looked up from &#39;baltrad.bdbclient.commands&#39;</span>
 <span class="sd">        entry point. </span>
@@ -124,12 +135,21 @@
         <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">LookupError</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Command.get_commands"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.Command.get_commands">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">get_commands</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">get_entry_map</span><span class="p">(</span><span class="s2">&quot;bexchange&quot;</span><span class="p">)[</span><span class="s2">&quot;bexchange.client.commands&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div></div>
 
-<div class="viewcode-block" id="StoreFile"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.StoreFile">[docs]</a><span class="k">class</span> <span class="nc">StoreFile</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-<div class="viewcode-block" id="StoreFile.update_optionparser"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.StoreFile.update_optionparser">[docs]</a>    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+<div class="viewcode-block" id="Command.get_commands">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.Command.get_commands">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_commands</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">get_entry_map</span><span class="p">(</span><span class="s2">&quot;bexchange&quot;</span><span class="p">)[</span><span class="s2">&quot;bexchange.client.commands&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div>
+</div>
+
+
+<div class="viewcode-block" id="StoreFile">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.StoreFile">[docs]</a>
+<span class="k">class</span> <span class="nc">StoreFile</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+<div class="viewcode-block" id="StoreFile.update_optionparser">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.StoreFile.update_optionparser">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="n">usg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_usage</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
         <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -141,16 +161,23 @@
 
         <span class="n">parser</span><span class="o">.</span><span class="n">set_usage</span><span class="p">(</span><span class="n">usage</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="StoreFile.execute"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.StoreFile.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+
+<div class="viewcode-block" id="StoreFile.execute">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.StoreFile.execute">[docs]</a>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span> 
             <span class="k">try</span><span class="p">:</span>
                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">data</span><span class="p">:</span>
                     <span class="n">entry</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> stored&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error occured when storing &#39;</span><span class="si">%s</span><span class="s2">&#39;: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()))</span></div></div>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error occured when storing &#39;</span><span class="si">%s</span><span class="s2">&#39;: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()))</span></div>
+</div>
 
-<div class="viewcode-block" id="BatchTest"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.BatchTest">[docs]</a><span class="k">class</span> <span class="nc">BatchTest</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BatchTest">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.BatchTest">[docs]</a>
+<span class="k">class</span> <span class="nc">BatchTest</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
     <span class="n">SRC_MAPPING</span><span class="o">=</span><span class="p">{</span>
         <span class="s2">&quot;sekrn&quot;</span><span class="p">:</span><span class="s2">&quot;WMO:02032,RAD:SE40,PLC:Kiruna,CMT:sekrn,NOD:sekrn&quot;</span><span class="p">,</span>
         <span class="s2">&quot;sella&quot;</span><span class="p">:</span><span class="s2">&quot;WMO:02092,RAD:SE41,PLC:Luleå,CMT:sella,NOD:sella&quot;</span><span class="p">,</span>
@@ -166,7 +193,9 @@
         <span class="s2">&quot;sebaa&quot;</span><span class="p">:</span><span class="s2">&quot;WMO:00000,RAD:SE52,PLC:Bålsta,CMT:sebaa,NOD:sebaa&quot;</span><span class="p">,</span>
         <span class="p">}</span>
 
-<div class="viewcode-block" id="BatchTest.update_optionparser"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.BatchTest.update_optionparser">[docs]</a>    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+<div class="viewcode-block" id="BatchTest.update_optionparser">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.BatchTest.update_optionparser">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="n">usg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_usage</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
         <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -211,7 +240,10 @@
             <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Comma separated list of elevation angles (only actual for scans)&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="BatchTest.execute"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.BatchTest.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BatchTest.execute">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.BatchTest.execute">[docs]</a>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
         <span class="kn">import</span> <span class="nn">_raveio</span><span class="o">,</span> <span class="nn">_polarvolume</span><span class="o">,</span> <span class="nn">_polarscan</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">opts</span><span class="o">.</span><span class="n">basefile</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No basefile provided</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -259,22 +291,34 @@
                         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">data</span><span class="p">:</span>
                             <span class="n">entry</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>                    </div>
 
-<div class="viewcode-block" id="BatchTest.get_closest_time"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.BatchTest.get_closest_time">[docs]</a>    <span class="k">def</span> <span class="nf">get_closest_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interval</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BatchTest.get_closest_time">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.BatchTest.get_closest_time">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_closest_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interval</span><span class="p">):</span>
         <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span>
         <span class="n">oz</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">tm_min</span><span class="o">%</span><span class="n">interval</span>
         <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">tm_year</span><span class="p">,</span><span class="n">t</span><span class="o">.</span><span class="n">tm_mon</span><span class="p">,</span><span class="n">t</span><span class="o">.</span><span class="n">tm_mday</span><span class="p">,</span><span class="n">t</span><span class="o">.</span><span class="n">tm_hour</span><span class="p">,</span><span class="n">t</span><span class="o">.</span><span class="n">tm_min</span><span class="o">-</span><span class="n">oz</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="BatchTest.parse_datetime_str"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.BatchTest.parse_datetime_str">[docs]</a>    <span class="k">def</span> <span class="nf">parse_datetime_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dtstr</span><span class="p">,</span> <span class="n">interval</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BatchTest.parse_datetime_str">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.BatchTest.parse_datetime_str">[docs]</a>
+    <span class="k">def</span> <span class="nf">parse_datetime_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dtstr</span><span class="p">,</span> <span class="n">interval</span><span class="p">):</span>
         <span class="n">year</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">dtstr</span><span class="p">[:</span><span class="mi">4</span><span class="p">])</span>
         <span class="n">month</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">dtstr</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">6</span><span class="p">])</span>
         <span class="n">mday</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">dtstr</span><span class="p">[</span><span class="mi">6</span><span class="p">:</span><span class="mi">8</span><span class="p">])</span>
         <span class="n">hour</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">dtstr</span><span class="p">[</span><span class="mi">8</span><span class="p">:</span><span class="mi">10</span><span class="p">])</span>
         <span class="n">minute</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">dtstr</span><span class="p">[</span><span class="mi">10</span><span class="p">:</span><span class="mi">12</span><span class="p">])</span>
         <span class="n">minute</span> <span class="o">=</span> <span class="n">minute</span> <span class="o">-</span> <span class="n">minute</span><span class="o">%</span><span class="n">interval</span>
-        <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">year</span><span class="p">,</span><span class="n">month</span><span class="p">,</span><span class="n">mday</span><span class="p">,</span><span class="n">hour</span><span class="p">,</span><span class="n">minute</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">year</span><span class="p">,</span><span class="n">month</span><span class="p">,</span><span class="n">mday</span><span class="p">,</span><span class="n">hour</span><span class="p">,</span><span class="n">minute</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span></div>
+</div>
 
-<div class="viewcode-block" id="PostJsonMessage"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.PostJsonMessage">[docs]</a><span class="k">class</span> <span class="nc">PostJsonMessage</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-<div class="viewcode-block" id="PostJsonMessage.update_optionparser"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.PostJsonMessage.update_optionparser">[docs]</a>    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+
+<div class="viewcode-block" id="PostJsonMessage">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.PostJsonMessage">[docs]</a>
+<span class="k">class</span> <span class="nc">PostJsonMessage</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+<div class="viewcode-block" id="PostJsonMessage.update_optionparser">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.PostJsonMessage.update_optionparser">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="n">usg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_usage</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
         <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -288,11 +332,20 @@
 
         <span class="n">parser</span><span class="o">.</span><span class="n">set_usage</span><span class="p">(</span><span class="n">usage</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="PostJsonMessage.execute"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.PostJsonMessage.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
-        <span class="n">entry</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">post_json_message</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div></div>
 
-<div class="viewcode-block" id="GetStatistics"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.GetStatistics">[docs]</a><span class="k">class</span> <span class="nc">GetStatistics</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-<div class="viewcode-block" id="GetStatistics.update_optionparser"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.GetStatistics.update_optionparser">[docs]</a>    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+<div class="viewcode-block" id="PostJsonMessage.execute">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.PostJsonMessage.execute">[docs]</a>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="n">entry</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">post_json_message</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
+</div>
+
+
+<div class="viewcode-block" id="GetStatistics">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.GetStatistics">[docs]</a>
+<span class="k">class</span> <span class="nc">GetStatistics</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+<div class="viewcode-block" id="GetStatistics.update_optionparser">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.GetStatistics.update_optionparser">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="n">usg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_usage</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
         <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -341,7 +394,10 @@
         <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="GetStatistics.execute"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.GetStatistics.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+
+<div class="viewcode-block" id="GetStatistics.execute">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.GetStatistics.execute">[docs]</a>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">get_statistics</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">spid</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">sources</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">totals</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">method</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">filter</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">object_type</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">origins</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">httplibclient</span><span class="o">.</span><span class="n">OK</span><span class="p">:</span>
             <span class="n">ldata</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
@@ -349,10 +405,16 @@
                 <span class="nb">print</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
             <span class="c1">#print(ldata)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Unhandled response code: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">)</span></div></div>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Unhandled response code: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">)</span></div>
+</div>
 
-<div class="viewcode-block" id="ListStatisticIds"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.ListStatisticIds">[docs]</a><span class="k">class</span> <span class="nc">ListStatisticIds</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-<div class="viewcode-block" id="ListStatisticIds.update_optionparser"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.ListStatisticIds.update_optionparser">[docs]</a>    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ListStatisticIds">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.ListStatisticIds">[docs]</a>
+<span class="k">class</span> <span class="nc">ListStatisticIds</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+<div class="viewcode-block" id="ListStatisticIds.update_optionparser">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.ListStatisticIds.update_optionparser">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="n">usg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_usage</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
         <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -366,17 +428,26 @@
 
         <span class="n">parser</span><span class="o">.</span><span class="n">set_usage</span><span class="p">(</span><span class="n">usage</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ListStatisticIds.execute"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.ListStatisticIds.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ListStatisticIds.execute">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.ListStatisticIds.execute">[docs]</a>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">list_statistics</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">httplibclient</span><span class="o">.</span><span class="n">OK</span><span class="p">:</span>
             <span class="n">ldata</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
             <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">ldata</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Unhandled response code: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">)</span></div></div>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Unhandled response code: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">)</span></div>
+</div>
 
-<div class="viewcode-block" id="ServerInfo"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.ServerInfo">[docs]</a><span class="k">class</span> <span class="nc">ServerInfo</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-<div class="viewcode-block" id="ServerInfo.update_optionparser"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.ServerInfo.update_optionparser">[docs]</a>    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ServerInfo">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.ServerInfo">[docs]</a>
+<span class="k">class</span> <span class="nc">ServerInfo</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+<div class="viewcode-block" id="ServerInfo.update_optionparser">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.ServerInfo.update_optionparser">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="n">usg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_usage</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
         <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -395,7 +466,10 @@
 
         <span class="n">parser</span><span class="o">.</span><span class="n">set_usage</span><span class="p">(</span><span class="n">usage</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ServerInfo.execute"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.ServerInfo.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ServerInfo.execute">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.ServerInfo.execute">[docs]</a>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;uptime&quot;</span> <span class="ow">or</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;nodename&quot;</span> <span class="ow">or</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;publickey&quot;</span><span class="p">:</span>
                 <span class="n">response</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">get_server_info</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -409,10 +483,16 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Unhandled response code: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Only valid subcommands are uptime and nodename&quot;</span><span class="p">)</span></div></div>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Only valid subcommands are uptime and nodename&quot;</span><span class="p">)</span></div>
+</div>
 
-<div class="viewcode-block" id="FileArrival"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.FileArrival">[docs]</a><span class="k">class</span> <span class="nc">FileArrival</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-<div class="viewcode-block" id="FileArrival.update_optionparser"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.FileArrival.update_optionparser">[docs]</a>    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+
+<div class="viewcode-block" id="FileArrival">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.FileArrival">[docs]</a>
+<span class="k">class</span> <span class="nc">FileArrival</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+<div class="viewcode-block" id="FileArrival.update_optionparser">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.FileArrival.update_optionparser">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="n">usg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_usage</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
         <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -443,17 +523,26 @@
             <span class="n">help</span><span class="o">=</span><span class="s2">&quot;How many minutes back that should be taken into account. Default is 300 seconds.&quot;</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="FileArrival.execute"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.FileArrival.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+
+<div class="viewcode-block" id="FileArrival.execute">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.FileArrival.execute">[docs]</a>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">file_arrival</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">object_type</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">limit</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">httplibclient</span><span class="o">.</span><span class="n">OK</span><span class="p">:</span>
             <span class="n">ldata</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">ldata</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">ldata</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s1">&#39;{&quot;status&quot;:&quot;ERROR&quot;}&#39;</span></div></div>
+            <span class="k">return</span> <span class="s1">&#39;{&quot;status&quot;:&quot;ERROR&quot;}&#39;</span></div>
+</div>
 
-<div class="viewcode-block" id="Supervise"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.Supervise">[docs]</a><span class="k">class</span> <span class="nc">Supervise</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-<div class="viewcode-block" id="Supervise.update_optionparser"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.Supervise.update_optionparser">[docs]</a>    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Supervise">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.Supervise">[docs]</a>
+<span class="k">class</span> <span class="nc">Supervise</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+<div class="viewcode-block" id="Supervise.update_optionparser">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.Supervise.update_optionparser">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_optionparser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="n">usg</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_usage</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
         <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -506,13 +595,18 @@
             <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Counts matches and validates that there are at least count number of occurances.&quot;</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="Supervise.execute"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.Supervise.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Supervise.execute">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.cmd.Supervise.execute">[docs]</a>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">supervise</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">infotype</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">origins</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">object_type</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">limit</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">entrylimit</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">delay</span><span class="p">,</span> <span class="n">opts</span><span class="o">.</span><span class="n">count</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">httplibclient</span><span class="o">.</span><span class="n">OK</span><span class="p">:</span>
             <span class="n">ldata</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
             <span class="k">return</span> <span class="n">ldata</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s1">&#39;{&quot;status&quot;:&quot;ERROR&quot;}&#39;</span></div></div>
+            <span class="k">return</span> <span class="s1">&#39;{&quot;status&quot;:&quot;ERROR&quot;}&#39;</span></div>
+</div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -530,7 +624,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -550,8 +644,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Anders Henja.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

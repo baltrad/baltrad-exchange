@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>bexchange.net.connections &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -68,33 +66,44 @@
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;bexchange.net.connections&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="publisher_connection"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.publisher_connection">[docs]</a><span class="k">class</span> <span class="nc">publisher_connection</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;publisher connections are used for publishing files in various ways without taking the protocol / sender into account.</span>
+<div class="viewcode-block" id="publisher_connection">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.publisher_connection">[docs]</a>
+<span class="k">class</span> <span class="nc">publisher_connection</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;publisher connections are used for publishing files in various ways without taking the protocol / sender into account.</span>
 <span class="sd">    Each (or most) publisher_connection is associated with one or more senders.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        :param backend: The backend</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span> <span class="o">=</span> <span class="n">backend</span>
     
-<div class="viewcode-block" id="publisher_connection.publish"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.publisher_connection.publish">[docs]</a>    <span class="k">def</span> <span class="nf">publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Publishes a file in some way using the underlying implementation</span>
+<div class="viewcode-block" id="publisher_connection.publish">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.publisher_connection.publish">[docs]</a>
+    <span class="k">def</span> <span class="nf">publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Publishes a file in some way using the underlying implementation</span>
 <span class="sd">        :param path: The path to the file</span>
 <span class="sd">        :param meta: The metadata of the file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Not implemented&quot;</span><span class="p">)</span></div>
-    
-<div class="viewcode-block" id="publisher_connection.backend"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.publisher_connection.backend">[docs]</a>    <span class="k">def</span> <span class="nf">backend</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the backend</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span></div></div>
 
-<div class="viewcode-block" id="simple_connection"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.simple_connection">[docs]</a><span class="k">class</span> <span class="nc">simple_connection</span><span class="p">(</span><span class="n">publisher_connection</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Simple connection, only parsing arguments according to. sender class + arguments. </span>
+    
+<div class="viewcode-block" id="publisher_connection.backend">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.publisher_connection.backend">[docs]</a>
+    <span class="k">def</span> <span class="nf">backend</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the backend</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span></div>
+</div>
+
+
+<div class="viewcode-block" id="simple_connection">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.simple_connection">[docs]</a>
+<span class="k">class</span> <span class="nc">simple_connection</span><span class="p">(</span><span class="n">publisher_connection</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simple connection, only parsing arguments according to. sender class + arguments. </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        :param backend: The backend</span>
 <span class="sd">        :param arguments: A dictionary with relevant arguments. At least</span>
 <span class="sd">        {&quot;sender&quot;:...}</span>
@@ -105,19 +114,25 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Requires &#39;sender&#39; in arguments&quot;</span><span class="p">)</span>
     
-<div class="viewcode-block" id="simple_connection.publish"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.simple_connection.publish">[docs]</a>    <span class="k">def</span> <span class="nf">publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Publishes the file using the sender</span>
+<div class="viewcode-block" id="simple_connection.publish">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.simple_connection.publish">[docs]</a>
+    <span class="k">def</span> <span class="nf">publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Publishes the file using the sender</span>
 <span class="sd">        :param path: The path to the file</span>
 <span class="sd">        :param meta: The metadata of the file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_sender</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sender</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span></div>
+</div>
 
-<div class="viewcode-block" id="failover_connection"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.failover_connection">[docs]</a><span class="k">class</span> <span class="nc">failover_connection</span><span class="p">(</span><span class="n">publisher_connection</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Failover connection, expects a list of senders in arguments. Where they are tried in </span>
+
+<div class="viewcode-block" id="failover_connection">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.failover_connection">[docs]</a>
+<span class="k">class</span> <span class="nc">failover_connection</span><span class="p">(</span><span class="n">publisher_connection</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Failover connection, expects a list of senders in arguments. Where they are tried in </span>
 <span class="sd">    order until one works. </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        :param backend: The backend</span>
 <span class="sd">        :param arguments: A dictionary with relevant arguments. At least</span>
 <span class="sd">        {&quot;senders&quot;:[...]}</span>
@@ -130,8 +145,10 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Requires &#39;senders&#39; in arguments&quot;</span><span class="p">)</span>
         
-<div class="viewcode-block" id="failover_connection.publish"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.failover_connection.publish">[docs]</a>    <span class="k">def</span> <span class="nf">publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Publishes the file using the senders. When first successful publishing has successfully</span>
+<div class="viewcode-block" id="failover_connection.publish">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.failover_connection.publish">[docs]</a>
+    <span class="k">def</span> <span class="nf">publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Publishes the file using the senders. When first successful publishing has successfully</span>
 <span class="sd">        been transmitted, the method returns. If on the other hand no senders are successfully used</span>
 <span class="sd">        an exception will be thrown.</span>
 <span class="sd">        :param path: The path to the file</span>
@@ -147,10 +164,14 @@
             <span class="k">except</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;failover_connection: Failed to send file to </span><span class="si">%s</span><span class="s2">, ID:&#39;</span><span class="si">%s</span><span class="s2">&#39;, trying next in list&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">sender</span><span class="o">.</span><span class="n">id</span><span class="p">(),</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)))</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">successful</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Failed to publish using the failover connection&quot;</span><span class="p">)</span></div></div>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Failed to publish using the failover connection&quot;</span><span class="p">)</span></div>
+</div>
 
-<div class="viewcode-block" id="backup_connection"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.backup_connection">[docs]</a><span class="k">class</span> <span class="nc">backup_connection</span><span class="p">(</span><span class="n">publisher_connection</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Backup connection, expects a list of senders in arguments. Where all senders are run. </span>
+
+<div class="viewcode-block" id="backup_connection">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.backup_connection">[docs]</a>
+<span class="k">class</span> <span class="nc">backup_connection</span><span class="p">(</span><span class="n">publisher_connection</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Backup connection, expects a list of senders in arguments. Where all senders are run. </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">backup_connection</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">backend</span><span class="p">)</span>
@@ -161,16 +182,22 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Requires &#39;senders&#39; in arguments&quot;</span><span class="p">)</span>
         
-<div class="viewcode-block" id="backup_connection.publish"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.backup_connection.publish">[docs]</a>    <span class="k">def</span> <span class="nf">publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<div class="viewcode-block" id="backup_connection.publish">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.backup_connection.publish">[docs]</a>
+    <span class="k">def</span> <span class="nf">publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">sender</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_senders</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">sender</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Successfully sent file to </span><span class="si">%s</span><span class="s2">, ID:&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">sender</span><span class="o">.</span><span class="n">id</span><span class="p">(),</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)))</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Failed to send file to </span><span class="si">%s</span><span class="s2">, ID:&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">sender</span><span class="o">.</span><span class="n">id</span><span class="p">(),</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)))</span></div></div>
+                <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Failed to send file to </span><span class="si">%s</span><span class="s2">, ID:&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">sender</span><span class="o">.</span><span class="n">id</span><span class="p">(),</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)))</span></div>
+</div>
 
-<div class="viewcode-block" id="distributed_connection"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.distributed_connection">[docs]</a><span class="k">class</span> <span class="nc">distributed_connection</span><span class="p">(</span><span class="n">publisher_connection</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Distributed connection, expects a list of senders in arguments. Where all senders are run. This is the same</span>
+
+<div class="viewcode-block" id="distributed_connection">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.distributed_connection">[docs]</a>
+<span class="k">class</span> <span class="nc">distributed_connection</span><span class="p">(</span><span class="n">publisher_connection</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Distributed connection, expects a list of senders in arguments. Where all senders are run. This is the same</span>
 <span class="sd">    behavior as the backup connection but it&#39;s here for readability.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
@@ -182,25 +209,33 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Requires &#39;senders&#39; in arguments&quot;</span><span class="p">)</span>
         
-<div class="viewcode-block" id="distributed_connection.publish"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.distributed_connection.publish">[docs]</a>    <span class="k">def</span> <span class="nf">publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<div class="viewcode-block" id="distributed_connection.publish">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.distributed_connection.publish">[docs]</a>
+    <span class="k">def</span> <span class="nf">publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">sender</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_senders</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">sender</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Successfully sent file to </span><span class="si">%s</span><span class="s2">, ID:&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">sender</span><span class="o">.</span><span class="n">id</span><span class="p">(),</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)))</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Failed to send file to </span><span class="si">%s</span><span class="s2">, ID:&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">sender</span><span class="o">.</span><span class="n">id</span><span class="p">(),</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)))</span></div></div>
+                <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Failed to send file to </span><span class="si">%s</span><span class="s2">, ID:&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">sender</span><span class="o">.</span><span class="n">id</span><span class="p">(),</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)))</span></div>
+</div>
 
-<div class="viewcode-block" id="connection_manager"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.connection_manager">[docs]</a><span class="k">class</span> <span class="nc">connection_manager</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The connection manager is used for creating connection instances from the provided configuration</span>
+
+<div class="viewcode-block" id="connection_manager">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.connection_manager">[docs]</a>
+<span class="k">class</span> <span class="nc">connection_manager</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The connection manager is used for creating connection instances from the provided configuration</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span>
     
-<div class="viewcode-block" id="connection_manager.from_conf"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.connection_manager.from_conf">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="connection_manager.from_conf">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.connection_manager.from_conf">[docs]</a>
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_conf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">clz</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Creates an instance of clz with specified arguments</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates an instance of clz with specified arguments</span>
 <span class="sd">        :param clz: class name specified as &lt;module&gt;.&lt;classname&gt;</span>
 <span class="sd">        :param arguments: a list of arguments that should be used to initialize the class       </span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -211,7 +246,9 @@
             <span class="n">classname</span> <span class="o">=</span> <span class="n">clz</span><span class="p">[</span><span class="n">lastdot</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
             <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">classname</span><span class="p">)(</span><span class="n">backend</span><span class="p">,</span> <span class="n">arguments</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Must specify class as module.class&quot;</span><span class="p">)</span></div></div>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Must specify class as module.class&quot;</span><span class="p">)</span></div>
+</div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -229,7 +266,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -249,8 +286,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Anders Henja.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

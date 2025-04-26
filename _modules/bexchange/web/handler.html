@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>bexchange.web.handler &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -86,8 +84,10 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;bexchange.handler&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="post_file"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.handler.post_file">[docs]</a><span class="k">def</span> <span class="nf">post_file</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Receive a file from some party</span>
+<div class="viewcode-block" id="post_file">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.handler.post_file">[docs]</a>
+<span class="k">def</span> <span class="nf">post_file</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Receive a file from some party</span>
 
 <span class="sd">    :param ctx: the request context</span>
 <span class="sd">    :type ctx: :class:`~.util.RequestContext`</span>
@@ -113,7 +113,10 @@
 
     <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">httplibclient</span><span class="o">.</span><span class="n">OK</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="post_dex_file"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.handler.post_dex_file">[docs]</a><span class="k">def</span> <span class="nf">post_dex_file</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
+
+<div class="viewcode-block" id="post_dex_file">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.handler.post_dex_file">[docs]</a>
+<span class="k">def</span> <span class="nf">post_dex_file</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;bexchange.handler.post_dex_file(ctx)&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">is_anonymous</span><span class="p">():</span> <span class="c1"># We don&#39;t want unauthorized messages in here unless it has been explicitly allowed</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;post_dex_file: anonymous calls are not allowed&quot;</span><span class="p">)</span>
@@ -131,8 +134,11 @@
 
     <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">httplibclient</span><span class="o">.</span><span class="n">OK</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="post_json_message"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.handler.post_json_message">[docs]</a><span class="k">def</span> <span class="nf">post_json_message</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A trigger message used to trigger different jobs from the outside</span>
+
+<div class="viewcode-block" id="post_json_message">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.handler.post_json_message">[docs]</a>
+<span class="k">def</span> <span class="nf">post_json_message</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A trigger message used to trigger different jobs from the outside</span>
 
 <span class="sd">    :param ctx: the request context</span>
 <span class="sd">    :type ctx: :class:`~.util.RequestContext`</span>
@@ -151,8 +157,11 @@
     <span class="n">ctx</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">post_message</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">get_auth_manager</span><span class="p">()</span><span class="o">.</span><span class="n">get_nodename</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">request</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">httplibclient</span><span class="o">.</span><span class="n">OK</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="get_statistics"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.handler.get_statistics">[docs]</a><span class="k">def</span> <span class="nf">get_statistics</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Returns the statistics for modules / sources</span>
+
+<div class="viewcode-block" id="get_statistics">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.handler.get_statistics">[docs]</a>
+<span class="k">def</span> <span class="nf">get_statistics</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the statistics for modules / sources</span>
 
 <span class="sd">    :param ctx: the request context</span>
 <span class="sd">    :type ctx: :class:`~.util.RequestContext`</span>
@@ -169,8 +178,11 @@
     <span class="n">stats</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">get_statistics_manager</span><span class="p">()</span><span class="o">.</span><span class="n">get_statistics</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">get_auth_manager</span><span class="p">()</span><span class="o">.</span><span class="n">get_nodename</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">request</span><span class="p">),</span> <span class="n">data</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">stats</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">httplibclient</span><span class="o">.</span><span class="n">OK</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="list_statistic_ids"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.handler.list_statistic_ids">[docs]</a><span class="k">def</span> <span class="nf">list_statistic_ids</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Returns the statistic ids</span>
+
+<div class="viewcode-block" id="list_statistic_ids">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.handler.list_statistic_ids">[docs]</a>
+<span class="k">def</span> <span class="nf">list_statistic_ids</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the statistic ids</span>
 
 <span class="sd">    :param ctx: the request context</span>
 <span class="sd">    :type ctx: :class:`~.util.RequestContext`</span>
@@ -187,8 +199,11 @@
     <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">stats</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">httplibclient</span><span class="o">.</span><span class="n">OK</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_server_uptime"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.handler.get_server_uptime">[docs]</a><span class="k">def</span> <span class="nf">get_server_uptime</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="get_server_uptime">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.handler.get_server_uptime">[docs]</a>
+<span class="k">def</span> <span class="nf">get_server_uptime</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    :returns the server uptime</span>
 
 <span class="sd">    See :ref:`doc-rest-cmd-server_info` for details</span>
@@ -200,8 +215,11 @@
     <span class="n">days</span><span class="p">,</span> <span class="n">hours</span><span class="p">,</span> <span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">get_server_uptime</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s2">&quot;days&quot;</span><span class="p">:</span><span class="n">days</span><span class="p">,</span> <span class="s2">&quot;hours&quot;</span><span class="p">:</span><span class="n">hours</span><span class="p">,</span> <span class="s2">&quot;minutes&quot;</span><span class="p">:</span><span class="n">minutes</span><span class="p">,</span> <span class="s2">&quot;seconds&quot;</span><span class="p">:</span><span class="n">seconds</span><span class="p">}),</span> <span class="n">status</span><span class="o">=</span><span class="n">httplibclient</span><span class="o">.</span><span class="n">OK</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="get_server_nodename"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.handler.get_server_nodename">[docs]</a><span class="k">def</span> <span class="nf">get_server_nodename</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="get_server_nodename">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.handler.get_server_nodename">[docs]</a>
+<span class="k">def</span> <span class="nf">get_server_nodename</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    :returns the server nodename</span>
 
 <span class="sd">    See :ref:`doc-rest-cmd-server_info` for details</span>
@@ -213,8 +231,11 @@
     <span class="n">nodename</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">get_server_nodename</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s2">&quot;nodename&quot;</span><span class="p">:</span><span class="n">nodename</span><span class="p">}),</span> <span class="n">status</span><span class="o">=</span><span class="n">httplibclient</span><span class="o">.</span><span class="n">OK</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="get_server_publickey"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.handler.get_server_publickey">[docs]</a><span class="k">def</span> <span class="nf">get_server_publickey</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="get_server_publickey">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.handler.get_server_publickey">[docs]</a>
+<span class="k">def</span> <span class="nf">get_server_publickey</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    :returns the server publickey</span>
 
 <span class="sd">    See :ref:`doc-rest-cmd-server_info` for details</span>
@@ -226,8 +247,11 @@
     <span class="n">publickey</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">get_server_publickey</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">publickey</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">httplibclient</span><span class="o">.</span><span class="n">OK</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="file_arrival"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.handler.file_arrival">[docs]</a><span class="k">def</span> <span class="nf">file_arrival</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Returns if a file with specified source, object type has arrived within limit</span>
+
+<div class="viewcode-block" id="file_arrival">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.handler.file_arrival">[docs]</a>
+<span class="k">def</span> <span class="nf">file_arrival</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns if a file with specified source, object type has arrived within limit</span>
 
 <span class="sd">    :param ctx: the request context</span>
 <span class="sd">    :type ctx: :class:`~.util.RequestContext`</span>
@@ -260,8 +284,11 @@
         <span class="n">result</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span><span class="s2">&quot;OK&quot;</span><span class="p">}</span>
     <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">result</span><span class="p">),</span> <span class="n">status</span><span class="o">=</span><span class="n">httplibclient</span><span class="o">.</span><span class="n">OK</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="supervise"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.handler.supervise">[docs]</a><span class="k">def</span> <span class="nf">supervise</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Provides functionality for supervising the node</span>
+
+<div class="viewcode-block" id="supervise">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.handler.supervise">[docs]</a>
+<span class="k">def</span> <span class="nf">supervise</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Provides functionality for supervising the node</span>
 
 <span class="sd">    :param ctx: the request context</span>
 <span class="sd">    :type ctx: :class:`~.util.RequestContext`</span>
@@ -313,6 +340,7 @@
     <span class="k">if</span> <span class="n">stats</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">stats</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">count</span><span class="p">:</span>
         <span class="n">result</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span><span class="s2">&quot;OK&quot;</span><span class="p">}</span>
     <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">result</span><span class="p">),</span> <span class="n">status</span><span class="o">=</span><span class="n">httplibclient</span><span class="o">.</span><span class="n">OK</span><span class="p">)</span></div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -330,7 +358,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -350,8 +378,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Anders Henja.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

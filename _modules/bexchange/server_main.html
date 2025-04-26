@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>bexchange.server_main &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -83,11 +81,16 @@
 <span class="n">SYSLOG_ADDRESS</span> <span class="o">=</span> <span class="s2">&quot;/dev/log&quot;</span>
 <span class="n">SYSLOG_FACILITY</span> <span class="o">=</span> <span class="s2">&quot;local3&quot;</span>
 
-<div class="viewcode-block" id="excepthook"><a class="viewcode-back" href="../../api/bexchange.html#bexchange.server_main.excepthook">[docs]</a><span class="k">def</span> <span class="nf">excepthook</span><span class="p">(</span><span class="o">*</span><span class="n">exc_info</span><span class="p">):</span>
+<div class="viewcode-block" id="excepthook">
+<a class="viewcode-back" href="../../api/bexchange.html#bexchange.server_main.excepthook">[docs]</a>
+<span class="k">def</span> <span class="nf">excepthook</span><span class="p">(</span><span class="o">*</span><span class="n">exc_info</span><span class="p">):</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;unhandled exception&quot;</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="n">exc_info</span><span class="p">)</span>
     <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="create_optparser"><a class="viewcode-back" href="../../api/bexchange.html#bexchange.server_main.create_optparser">[docs]</a><span class="k">def</span> <span class="nf">create_optparser</span><span class="p">():</span>
+
+<div class="viewcode-block" id="create_optparser">
+<a class="viewcode-back" href="../../api/bexchange.html#bexchange.server_main.create_optparser">[docs]</a>
+<span class="k">def</span> <span class="nf">create_optparser</span><span class="p">():</span>
     <span class="n">optparser</span> <span class="o">=</span> <span class="n">exchange_optparse</span><span class="o">.</span><span class="n">create_parser</span><span class="p">()</span>
     <span class="n">optparser</span><span class="o">.</span><span class="n">set_usage</span><span class="p">(</span>
         <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> [--conf=CONFFILE] [ARGS]&quot;</span> <span class="o">%</span> <span class="p">(</span>
@@ -100,7 +103,10 @@
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">optparser</span></div>
 
-<div class="viewcode-block" id="read_config"><a class="viewcode-back" href="../../api/bexchange.html#bexchange.server_main.read_config">[docs]</a><span class="k">def</span> <span class="nf">read_config</span><span class="p">(</span><span class="n">conffile</span><span class="p">):</span>
+
+<div class="viewcode-block" id="read_config">
+<a class="viewcode-back" href="../../api/bexchange.html#bexchange.server_main.read_config">[docs]</a>
+<span class="k">def</span> <span class="nf">read_config</span><span class="p">(</span><span class="n">conffile</span><span class="p">):</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">conffile</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="s2">&quot;configuration file not specified&quot;</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
@@ -108,7 +114,10 @@
     <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="s2">&quot;failed to read configuration from &quot;</span> <span class="o">+</span> <span class="n">conffile</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="get_logging_level"><a class="viewcode-back" href="../../api/bexchange.html#bexchange.server_main.get_logging_level">[docs]</a><span class="k">def</span> <span class="nf">get_logging_level</span><span class="p">(</span><span class="n">conf</span><span class="p">):</span>
+
+<div class="viewcode-block" id="get_logging_level">
+<a class="viewcode-back" href="../../api/bexchange.html#bexchange.server_main.get_logging_level">[docs]</a>
+<span class="k">def</span> <span class="nf">get_logging_level</span><span class="p">(</span><span class="n">conf</span><span class="p">):</span>
     <span class="n">v</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;baltrad.exchange.log.level&quot;</span><span class="p">,</span> <span class="s2">&quot;INFO&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="s2">&quot;DEBUG&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span>
@@ -123,7 +132,10 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span></div>
 
-<div class="viewcode-block" id="configure_logging"><a class="viewcode-back" href="../../api/bexchange.html#bexchange.server_main.configure_logging">[docs]</a><span class="k">def</span> <span class="nf">configure_logging</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="n">logtype</span><span class="p">,</span> <span class="n">logfile</span><span class="p">,</span> <span class="n">logid</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">):</span>
+
+<div class="viewcode-block" id="configure_logging">
+<a class="viewcode-back" href="../../api/bexchange.html#bexchange.server_main.configure_logging">[docs]</a>
+<span class="k">def</span> <span class="nf">configure_logging</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="n">logtype</span><span class="p">,</span> <span class="n">logfile</span><span class="p">,</span> <span class="n">logid</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">):</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
 
@@ -141,19 +153,28 @@
         <span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s1">&#39;python[&#39;</span> <span class="o">+</span> <span class="n">logid</span> <span class="o">+</span> <span class="s1">&#39;]: </span><span class="si">%(name)s</span><span class="s1">: </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="n">add_loghandler</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">formatter</span><span class="p">)</span></div>
 
+
     
-<div class="viewcode-block" id="add_loghandler"><a class="viewcode-back" href="../../api/bexchange.html#bexchange.server_main.add_loghandler">[docs]</a><span class="k">def</span> <span class="nf">add_loghandler</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">formatter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>   
+<div class="viewcode-block" id="add_loghandler">
+<a class="viewcode-back" href="../../api/bexchange.html#bexchange.server_main.add_loghandler">[docs]</a>
+<span class="k">def</span> <span class="nf">add_loghandler</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">formatter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>   
     <span class="n">handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span></div>
+
 
 <span class="c1">## Checks if the process with provided pid is running</span>
 <span class="c1"># by checking the /proc directory.</span>
 <span class="c1"># @param pid - the pid to check for</span>
 <span class="c1"># @return True if a process with provided pid is running, otherwise False</span>
-<div class="viewcode-block" id="isprocessrunning"><a class="viewcode-back" href="../../api/bexchange.html#bexchange.server_main.isprocessrunning">[docs]</a><span class="k">def</span> <span class="nf">isprocessrunning</span><span class="p">(</span><span class="n">pid</span><span class="p">):</span>
+<div class="viewcode-block" id="isprocessrunning">
+<a class="viewcode-back" href="../../api/bexchange.html#bexchange.server_main.isprocessrunning">[docs]</a>
+<span class="k">def</span> <span class="nf">isprocessrunning</span><span class="p">(</span><span class="n">pid</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">&quot;/proc/</span><span class="si">%d</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">pid</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="run"><a class="viewcode-back" href="../../api/bexchange.html#bexchange.server_main.run">[docs]</a><span class="k">def</span> <span class="nf">run</span><span class="p">():</span>
+
+<div class="viewcode-block" id="run">
+<a class="viewcode-back" href="../../api/bexchange.html#bexchange.server_main.run">[docs]</a>
+<span class="k">def</span> <span class="nf">run</span><span class="p">():</span>
     <span class="n">optparser</span> <span class="o">=</span> <span class="n">create_optparser</span><span class="p">()</span>
     <span class="n">optparser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
         <span class="s2">&quot;--foreground&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
@@ -262,8 +283,12 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;REST server listening on port &#39;</span><span class="si">%d</span><span class="s2">&#39; supporting scheme: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">parsedurl</span><span class="o">.</span><span class="n">port</span><span class="p">,</span> <span class="n">parsedurl</span><span class="o">.</span><span class="n">scheme</span><span class="p">))</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">server</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+            <span class="k">pass</span>
         <span class="k">finally</span><span class="p">:</span>
-            <span class="n">server</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span></div>
+            <span class="n">server</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Server stopped&quot;</span><span class="p">)</span></div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -281,7 +306,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -301,8 +326,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Anders Henja.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

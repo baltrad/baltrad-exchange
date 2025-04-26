@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>bexchange.processor.processors &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -71,11 +69,13 @@
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;bexchange.processor&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="processor"><a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.processor">[docs]</a><span class="k">class</span> <span class="nc">processor</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Base class to be used by all processor implementations</span>
+<div class="viewcode-block" id="processor">
+<a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.processor">[docs]</a>
+<span class="k">class</span> <span class="nc">processor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class to be used by all processor implementations</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">active</span><span class="p">,</span> <span class="n">extra_arguments</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        :param backend: The backend that this processor should have access to</span>
 <span class="sd">        :param name: Name that identifies this processor</span>
 <span class="sd">        :param active: If this processor should be active or not</span>
@@ -85,72 +85,129 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_active</span> <span class="o">=</span> <span class="n">active</span>
     
-<div class="viewcode-block" id="processor.backend"><a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.processor.backend">[docs]</a>    <span class="k">def</span> <span class="nf">backend</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="processor.backend">
+<a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.processor.backend">[docs]</a>
+    <span class="k">def</span> <span class="nf">backend</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: the backend instance</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span></div>
+
     
-<div class="viewcode-block" id="processor.name"><a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.processor.name">[docs]</a>    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="processor.name">
+<a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.processor.name">[docs]</a>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: the name of this processor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span></div>
+
     
-<div class="viewcode-block" id="processor.active"><a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.processor.active">[docs]</a>    <span class="k">def</span> <span class="nf">active</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="processor.active">
+<a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.processor.active">[docs]</a>
+    <span class="k">def</span> <span class="nf">active</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: if this processor is active or not</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_active</span></div>
+
     
-<div class="viewcode-block" id="processor.process"><a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.processor.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; The process function. Must be non-blocking. Otherwise this will lock up threads.</span>
+<div class="viewcode-block" id="processor.process">
+<a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.processor.process">[docs]</a>
+    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; The process function. Must be non-blocking. Otherwise this will lock up threads.</span>
 <span class="sd">        This means that the path/metadata should be put on a queue or in some other way passed</span>
 <span class="sd">        on to the actual processing-part without locking up the resources.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="processor.start"><a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.processor.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Starts this processor. Typically by starting a thread or consumer pool</span>
+
+<div class="viewcode-block" id="processor.start">
+<a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.processor.start">[docs]</a>
+    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Starts this processor. Typically by starting a thread or consumer pool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
-    
-<div class="viewcode-block" id="processor.stop"><a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.processor.stop">[docs]</a>    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Stops this processor. Typically by joining a number of threads</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">pass</span></div></div>
 
-<div class="viewcode-block" id="example_processor"><a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.example_processor">[docs]</a><span class="k">class</span> <span class="nc">example_processor</span><span class="p">(</span><span class="n">processor</span><span class="p">):</span>
+    
+<div class="viewcode-block" id="processor.stop">
+<a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.processor.stop">[docs]</a>
+    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops this processor. Typically by joining a number of threads</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+</div>
+
+
+<div class="viewcode-block" id="example_processor">
+<a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.example_processor">[docs]</a>
+<span class="k">class</span> <span class="nc">example_processor</span><span class="p">(</span><span class="n">processor</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">active</span><span class="p">,</span> <span class="n">extra_arguments</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">example_processor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">active</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">name</span>
 
-<div class="viewcode-block" id="example_processor.process"><a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.example_processor.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Running processor </span><span class="si">%s</span><span class="s2"> of type </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_repr</span><span class="p">()))</span></div></div>
+<div class="viewcode-block" id="example_processor.process">
+<a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.example_processor.process">[docs]</a>
+    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Running processor </span><span class="si">%s</span><span class="s2"> of type </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_repr</span><span class="p">()))</span></div>
+</div>
+
         
-<div class="viewcode-block" id="processor_manager"><a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.processor_manager">[docs]</a><span class="k">class</span> <span class="nc">processor_manager</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot; The processor manager. Will ensure that files are passed on to the processors.</span>
+<div class="viewcode-block" id="processor_manager">
+<a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.processor_manager">[docs]</a>
+<span class="k">class</span> <span class="nc">processor_manager</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; The processor manager. Will ensure that files are passed on to the processors.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">processors</span><span class="o">=</span><span class="p">{}</span>
 
-<div class="viewcode-block" id="processor_manager.add_processor"><a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.processor_manager.add_processor">[docs]</a>    <span class="k">def</span> <span class="nf">add_processor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">processor</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Adds a processor to the manager</span>
+<div class="viewcode-block" id="processor_manager.add_processor">
+<a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.processor_manager.add_processor">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_processor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">processor</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds a processor to the manager</span>
 <span class="sd">        :param processor: The processor that should be added</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">processors</span><span class="p">[</span><span class="n">processor</span><span class="o">.</span><span class="n">name</span><span class="p">()]</span> <span class="o">=</span> <span class="n">processor</span></div>
 
-<div class="viewcode-block" id="processor_manager.process"><a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.processor_manager.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Passes on the file to all registered processors. It is up to the processor to determine how</span>
+
+<div class="viewcode-block" id="processor_manager.remove_processor">
+<a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.processor_manager.remove_processor">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_processor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Removes a processor from the manager</span>
+<span class="sd">        :param name: The name of the processor that should be removed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">processors</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">processors</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Failed to stop processor: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">name</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">processors</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Failed to remove processor: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">name</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="processor_manager.process">
+<a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.processor_manager.process">[docs]</a>
+    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Passes on the file to all registered processors. It is up to the processor to determine how</span>
 <span class="sd">        the provided file should be handled.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">pass</span></div>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">processor</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">processors</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">processor</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span> 
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Processor: </span><span class="si">%s</span><span class="s2"> could not process file </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">file</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="processor_manager.create_processor"><a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.processor_manager.create_processor">[docs]</a>    <span class="nd">@classmethod</span>
+
+<div class="viewcode-block" id="processor_manager.create_processor">
+<a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.processor_manager.create_processor">[docs]</a>
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">create_processor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">clz</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">active</span><span class="p">,</span> <span class="n">extra_arguments</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Creates an instance of clz with specified arguments</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates an instance of clz with specified arguments</span>
 <span class="sd">        :param clz: class name specified as &lt;module&gt;.&lt;classname&gt;</span>
 <span class="sd">        :param arguments: a list of arguments that should be used to initialize the class       </span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -162,10 +219,13 @@
             <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">classname</span><span class="p">)(</span><span class="n">backend</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">active</span><span class="p">,</span> <span class="n">extra_arguments</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Must specify class as module.class&quot;</span><span class="p">)</span></div>
+
     
-<div class="viewcode-block" id="processor_manager.from_conf"><a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.processor_manager.from_conf">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="processor_manager.from_conf">
+<a class="viewcode-back" href="../../../api/bexchange.processor.html#bexchange.processor.processors.processor_manager.from_conf">[docs]</a>
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_conf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">backend</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Creates a processor instance from provided json config</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a processor instance from provided json config</span>
 <span class="sd">        :param config: The json config as a dictionary</span>
 <span class="sd">        :param backend: The backend this processor should have access to</span>
 <span class="sd">        :return: the processor instance</span>
@@ -189,7 +249,9 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Processor with name </span><span class="si">%s</span><span class="s2"> is not active&quot;</span><span class="o">%</span><span class="n">name</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="kc">None</span></div></div>
+        <span class="k">return</span> <span class="kc">None</span></div>
+</div>
+
         
 </pre></div>
 
@@ -208,7 +270,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -228,8 +290,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Anders Henja.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

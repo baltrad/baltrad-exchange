@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>bexchange.net.sftpclient &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -68,11 +66,13 @@
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;bexchange.net.sftpclient&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="sftpclient"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.sftpclient.sftpclient">[docs]</a><span class="k">class</span> <span class="nc">sftpclient</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Implementation of a sftpclient using paramiko</span>
+<div class="viewcode-block" id="sftpclient">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.sftpclient.sftpclient">[docs]</a>
+<span class="k">class</span> <span class="nc">sftpclient</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Implementation of a sftpclient using paramiko</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">30.0</span><span class="p">,</span> <span class="n">banner_timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        :param host: The host name</span>
 <span class="sd">        :param port: The port number</span>
 <span class="sd">        :param username: User to login as</span>
@@ -89,32 +89,46 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_sftp</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_client</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="sftpclient.hostname"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.sftpclient.sftpclient.hostname">[docs]</a>    <span class="k">def</span> <span class="nf">hostname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="sftpclient.hostname">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.sftpclient.sftpclient.hostname">[docs]</a>
+    <span class="k">def</span> <span class="nf">hostname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return the hostname</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_host</span></div>
+
     
-<div class="viewcode-block" id="sftpclient.port"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.sftpclient.sftpclient.port">[docs]</a>    <span class="k">def</span> <span class="nf">port</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="sftpclient.port">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.sftpclient.sftpclient.port">[docs]</a>
+    <span class="k">def</span> <span class="nf">port</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return the port number</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_port</span></div>
+
     
-<div class="viewcode-block" id="sftpclient.username"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.sftpclient.sftpclient.username">[docs]</a>    <span class="k">def</span> <span class="nf">username</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="sftpclient.username">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.sftpclient.sftpclient.username">[docs]</a>
+    <span class="k">def</span> <span class="nf">username</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return the username</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_username</span></div>
+
     
-<div class="viewcode-block" id="sftpclient.password"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.sftpclient.sftpclient.password">[docs]</a>    <span class="k">def</span> <span class="nf">password</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="sftpclient.password">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.sftpclient.sftpclient.password">[docs]</a>
+    <span class="k">def</span> <span class="nf">password</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return the password</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_password</span></div>
+
         
-<div class="viewcode-block" id="sftpclient.disconnect"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.sftpclient.sftpclient.disconnect">[docs]</a>    <span class="k">def</span> <span class="nf">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Disconnects from the sftp server</span>
+<div class="viewcode-block" id="sftpclient.disconnect">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.sftpclient.sftpclient.disconnect">[docs]</a>
+    <span class="k">def</span> <span class="nf">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Disconnects from the sftp server</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sftp</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
@@ -129,9 +143,12 @@
             <span class="k">except</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Failed to close client connection&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_client</span> <span class="o">=</span> <span class="kc">None</span>        </div>
+
     
-<div class="viewcode-block" id="sftpclient.connect"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.sftpclient.sftpclient.connect">[docs]</a>    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="sftpclient.connect">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.sftpclient.sftpclient.connect">[docs]</a>
+    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        (Re)connects to the sftp server</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
@@ -149,8 +166,11 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_client</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="k">raise</span></div>
 
-<div class="viewcode-block" id="sftpclient.isfile"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.sftpclient.sftpclient.isfile">[docs]</a>    <span class="k">def</span> <span class="nf">isfile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="sftpclient.isfile">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.sftpclient.sftpclient.isfile">[docs]</a>
+    <span class="k">def</span> <span class="nf">isfile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param path: Path name to check</span>
 <span class="sd">        :return: if specified path is a file or not</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -160,8 +180,11 @@
             <span class="n">result</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="n">result</span></div>
 
-<div class="viewcode-block" id="sftpclient.isdir"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.sftpclient.sftpclient.isdir">[docs]</a>    <span class="k">def</span> <span class="nf">isdir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Checks if the provided path is a directory or not</span>
+
+<div class="viewcode-block" id="sftpclient.isdir">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.sftpclient.sftpclient.isdir">[docs]</a>
+    <span class="k">def</span> <span class="nf">isdir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if the provided path is a directory or not</span>
 
 <span class="sd">        :param path: Path name to check</span>
 <span class="sd">        :return: if specified path is a dir or not</span>
@@ -171,9 +194,12 @@
         <span class="k">except</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="n">result</span></div>
+
     
-<div class="viewcode-block" id="sftpclient.makedirs"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.sftpclient.sftpclient.makedirs">[docs]</a>    <span class="k">def</span> <span class="nf">makedirs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">targetdir</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Creates the directories if they don&#39;t exist</span>
+<div class="viewcode-block" id="sftpclient.makedirs">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.sftpclient.sftpclient.makedirs">[docs]</a>
+    <span class="k">def</span> <span class="nf">makedirs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">targetdir</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Creates the directories if they don&#39;t exist</span>
 <span class="sd">        :param targetdir: The structure to create from current wd</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">targetdir</span><span class="p">):</span>
@@ -186,36 +212,51 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">bdir</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">bname</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_sftp</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">targetdir</span><span class="p">)</span></div>
+
                          
-<div class="viewcode-block" id="sftpclient.chdir"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.sftpclient.sftpclient.chdir">[docs]</a>    <span class="k">def</span> <span class="nf">chdir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dirname</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Changes current directory on server</span>
+<div class="viewcode-block" id="sftpclient.chdir">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.sftpclient.sftpclient.chdir">[docs]</a>
+    <span class="k">def</span> <span class="nf">chdir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dirname</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Changes current directory on server</span>
 <span class="sd">        :param dirname: The directory to change to</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_sftp</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">dirname</span><span class="p">)</span></div>
+
     
-<div class="viewcode-block" id="sftpclient.listdir"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.sftpclient.sftpclient.listdir">[docs]</a>    <span class="k">def</span> <span class="nf">listdir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dirname</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Lists files and directories in the directory</span>
+<div class="viewcode-block" id="sftpclient.listdir">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.sftpclient.sftpclient.listdir">[docs]</a>
+    <span class="k">def</span> <span class="nf">listdir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dirname</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lists files and directories in the directory</span>
 <span class="sd">        :param dirname: The directory to list</span>
 <span class="sd">        :return a list of names</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sftp</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">dirname</span><span class="p">)</span>    </div>
+
     
-<div class="viewcode-block" id="sftpclient.put"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.sftpclient.sftpclient.put">[docs]</a>    <span class="k">def</span> <span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">targetname</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Uploads the file (filename) to the server named targetname.</span>
+<div class="viewcode-block" id="sftpclient.put">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.sftpclient.sftpclient.put">[docs]</a>
+    <span class="k">def</span> <span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">targetname</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Uploads the file (filename) to the server named targetname.</span>
 <span class="sd">        :param filename: Source filename to upload</span>
 <span class="sd">        :param targetname: The destination name</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_sftp</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">targetname</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="sftpclient.get"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.sftpclient.sftpclient.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">targetname</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Fetches the file (filename) from the server and saves it as targetname.</span>
+
+<div class="viewcode-block" id="sftpclient.get">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.sftpclient.sftpclient.get">[docs]</a>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">targetname</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Fetches the file (filename) from the server and saves it as targetname.</span>
 <span class="sd">        :param filename: Source filename to download</span>
 <span class="sd">        :param targetname: The destination name to save as</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_sftp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">targetname</span><span class="p">)</span></div>
+
         
-<div class="viewcode-block" id="sftpclient.getfo"><a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.sftpclient.sftpclient.getfo">[docs]</a>    <span class="k">def</span> <span class="nf">getfo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">remotepath</span><span class="p">,</span> <span class="n">fl</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="sftpclient.getfo">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.sftpclient.sftpclient.getfo">[docs]</a>
+    <span class="k">def</span> <span class="nf">getfo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">remotepath</span><span class="p">,</span> <span class="n">fl</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Copies the file (remotepath) from the server and writes to an open file.</span>
 <span class="sd">        Typically used like:</span>
 <span class="sd">        with NamedTemporaryFile() as fp: c.getfo(&quot;....&quot;, fp)</span>
@@ -224,19 +265,21 @@
 <span class="sd">        :param fl: The destination file object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_sftp</span><span class="o">.</span><span class="n">getfo</span><span class="p">(</span><span class="n">remotepath</span><span class="p">,</span> <span class="n">fl</span><span class="p">)</span></div>
+
     
     <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Enter part when using with ...</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span>
   
     <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">exc_traceback</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Exit part when using with ...</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span></div>
+
   
 <span class="c1">#if __name__==&quot;__main__&quot;:</span>
 <span class="c1">#    #self, host, port, username, password, timeout=30.0, banner_timeout=30</span>
@@ -260,7 +303,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -280,8 +323,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Anders Henja.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

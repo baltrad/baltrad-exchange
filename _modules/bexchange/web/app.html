@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>bexchange.web.app &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -74,12 +72,16 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;baltard.exchange.app&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Application"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.app.Application">[docs]</a><span class="k">class</span> <span class="nc">Application</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="Application">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.app.Application">[docs]</a>
+<span class="k">class</span> <span class="nc">Application</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">url_map</span> <span class="o">=</span> <span class="n">routing</span><span class="o">.</span><span class="n">URL_MAP</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">backend</span> <span class="o">=</span> <span class="n">backend</span>
     
-<div class="viewcode-block" id="Application.dispatch_request"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.app.Application.dispatch_request">[docs]</a>    <span class="k">def</span> <span class="nf">dispatch_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">provider</span><span class="p">):</span>
+<div class="viewcode-block" id="Application.dispatch_request">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.app.Application.dispatch_request">[docs]</a>
+    <span class="k">def</span> <span class="nf">dispatch_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">provider</span><span class="p">):</span>
         <span class="n">adapter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url_map</span><span class="o">.</span><span class="n">bind_to_environ</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">environ</span><span class="p">)</span>
         <span class="n">ctx</span> <span class="o">=</span> <span class="n">webutil</span><span class="o">.</span><span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="p">,</span> <span class="n">provider</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
@@ -93,33 +95,46 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Unknown exception&quot;</span><span class="p">)</span>
             <span class="k">raise</span></div>
 
-<div class="viewcode-block" id="Application.get_backend"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.app.Application.get_backend">[docs]</a>    <span class="k">def</span> <span class="nf">get_backend</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Application.get_backend">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.app.Application.get_backend">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_backend</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span></div>
+
     
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">start_response</span><span class="p">,</span> <span class="n">provider</span><span class="p">):</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">webutil</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">max_content_length</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">max_content_length</span><span class="p">)</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dispatch_request</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">provider</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">response</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">start_response</span><span class="p">)</span>
     
-<div class="viewcode-block" id="Application.from_conf"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.app.Application.from_conf">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="Application.from_conf">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.app.Application.from_conf">[docs]</a>
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_conf</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">conf</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;create instance from configuration.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;create instance from configuration.</span>
 <span class="sd">        :param conf: a :class:`~.config.Properties` instance to configure</span>
 <span class="sd">                     from</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">Application</span><span class="p">(</span><span class="n">backend</span><span class="o">.</span><span class="n">SimpleBackend</span><span class="o">.</span><span class="n">from_conf</span><span class="p">(</span><span class="n">conf</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">result</span></div></div>
+        <span class="k">return</span> <span class="n">result</span></div>
+</div>
 
-<div class="viewcode-block" id="from_conf"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.app.from_conf">[docs]</a><span class="k">def</span> <span class="nf">from_conf</span><span class="p">(</span><span class="n">conf</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;create the entire WSGI application from conf</span>
+
+<div class="viewcode-block" id="from_conf">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.app.from_conf">[docs]</a>
+<span class="k">def</span> <span class="nf">from_conf</span><span class="p">(</span><span class="n">conf</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;create the entire WSGI application from conf</span>
 <span class="sd">    this will wrap the application with necessary middleware</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">app</span> <span class="o">=</span> <span class="n">Application</span><span class="o">.</span><span class="n">from_conf</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
     <span class="n">authmw</span> <span class="o">=</span> <span class="n">webauth</span><span class="o">.</span><span class="n">AuthMiddleware</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">app</span><span class="o">.</span><span class="n">get_backend</span><span class="p">()</span><span class="o">.</span><span class="n">get_auth_manager</span><span class="p">())</span>
     <span class="k">return</span> <span class="n">authmw</span></div>
+
  
-<div class="viewcode-block" id="serve"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.app.serve">[docs]</a><span class="k">def</span> <span class="nf">serve</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;serve the application using werkzeug</span>
+<div class="viewcode-block" id="serve">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.app.serve">[docs]</a>
+<span class="k">def</span> <span class="nf">serve</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;serve the application using werkzeug</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">uri</span> <span class="o">=</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">urlparse</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
@@ -127,6 +142,7 @@
     <span class="n">port</span> <span class="o">=</span> <span class="n">uri</span><span class="o">.</span><span class="n">port</span> <span class="ow">or</span> <span class="mi">80</span>
 
     <span class="n">serving</span><span class="o">.</span><span class="n">run_simple</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">app</span><span class="p">)</span> </div>
+
 
 </pre></div>
 
@@ -145,7 +161,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -165,8 +181,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Anders Henja.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

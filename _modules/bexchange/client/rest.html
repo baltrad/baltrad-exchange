@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>bexchange.client.rest &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -88,26 +86,36 @@
     <span class="k">pass</span>
 
 
-<div class="viewcode-block" id="Request"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.Request">[docs]</a><span class="k">class</span> <span class="nc">Request</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="Request">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.Request">[docs]</a>
+<span class="k">class</span> <span class="nc">Request</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">{}):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="n">method</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">headers</span> <span class="o">=</span> <span class="n">headers</span></div>
 
-<div class="viewcode-block" id="RestfulServer"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.RestfulServer">[docs]</a><span class="k">class</span> <span class="nc">RestfulServer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Access database over the RESTful interface</span>
+
+<div class="viewcode-block" id="RestfulServer">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.RestfulServer">[docs]</a>
+<span class="k">class</span> <span class="nc">RestfulServer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Access database over the RESTful interface</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server_url</span><span class="p">,</span> <span class="n">auth</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_server_url_str</span> <span class="o">=</span> <span class="n">server_url</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_server_url</span> <span class="o">=</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">urlparse</span><span class="p">(</span><span class="n">server_url</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_auth</span> <span class="o">=</span> <span class="n">auth</span>
     
-<div class="viewcode-block" id="RestfulServer.server_url"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.RestfulServer.server_url">[docs]</a>    <span class="k">def</span> <span class="nf">server_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="RestfulServer.server_url">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.RestfulServer.server_url">[docs]</a>
+    <span class="k">def</span> <span class="nf">server_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_server_url_str</span></div>
+
     
-<div class="viewcode-block" id="RestfulServer.store"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.RestfulServer.store">[docs]</a>    <span class="k">def</span> <span class="nf">store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;stores the data in the exchange server.</span>
+<div class="viewcode-block" id="RestfulServer.store">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.RestfulServer.store">[docs]</a>
+    <span class="k">def</span> <span class="nf">store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;stores the data in the exchange server.</span>
 <span class="sd">        :param data: The data</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">Request</span><span class="p">(</span>
@@ -130,8 +138,11 @@
                 <span class="s2">&quot;Unhandled response code: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span>
             <span class="p">)</span></div>
 
-<div class="viewcode-block" id="RestfulServer.post_json_message"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.RestfulServer.post_json_message">[docs]</a>    <span class="k">def</span> <span class="nf">post_json_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_message</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;posts a json message to the exchange server. </span>
+
+<div class="viewcode-block" id="RestfulServer.post_json_message">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.RestfulServer.post_json_message">[docs]</a>
+    <span class="k">def</span> <span class="nf">post_json_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_message</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;posts a json message to the exchange server. </span>
 <span class="sd">        :param data: The data</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">Request</span><span class="p">(</span>
@@ -152,8 +163,11 @@
                 <span class="s2">&quot;Unhandled response code: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span>
             <span class="p">)</span></div>
 
-<div class="viewcode-block" id="RestfulServer.get_statistics"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.RestfulServer.get_statistics">[docs]</a>    <span class="k">def</span> <span class="nf">get_statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spid</span><span class="p">,</span> <span class="n">sources</span><span class="p">,</span> <span class="n">totals</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">qmethod</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">qfilter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">object_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">origins</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;posts a json message to the exchange server. </span>
+
+<div class="viewcode-block" id="RestfulServer.get_statistics">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.RestfulServer.get_statistics">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spid</span><span class="p">,</span> <span class="n">sources</span><span class="p">,</span> <span class="n">totals</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">qmethod</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">qfilter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">object_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">origins</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;posts a json message to the exchange server. </span>
 <span class="sd">        :param data: The data</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">json_message_d</span> <span class="o">=</span> <span class="p">{</span>
@@ -177,8 +191,11 @@
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">execute_request</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">response</span></div>
 
-<div class="viewcode-block" id="RestfulServer.list_statistics"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.RestfulServer.list_statistics">[docs]</a>    <span class="k">def</span> <span class="nf">list_statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;posts a json message to the exchange server. </span>
+
+<div class="viewcode-block" id="RestfulServer.list_statistics">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.RestfulServer.list_statistics">[docs]</a>
+    <span class="k">def</span> <span class="nf">list_statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;posts a json message to the exchange server. </span>
 <span class="sd">        :param data: The data</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">Request</span><span class="p">(</span>
@@ -193,8 +210,11 @@
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">execute_request</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">response</span></div>
 
-<div class="viewcode-block" id="RestfulServer.get_server_info"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.RestfulServer.get_server_info">[docs]</a>    <span class="k">def</span> <span class="nf">get_server_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subcommand</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;posts a json message to the exchange server. </span>
+
+<div class="viewcode-block" id="RestfulServer.get_server_info">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.RestfulServer.get_server_info">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_server_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subcommand</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;posts a json message to the exchange server. </span>
 <span class="sd">        :param data: The data</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">Request</span><span class="p">(</span>
@@ -209,8 +229,11 @@
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">execute_request</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">response</span></div>
 
-<div class="viewcode-block" id="RestfulServer.file_arrival"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.RestfulServer.file_arrival">[docs]</a>    <span class="k">def</span> <span class="nf">file_arrival</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">object_type</span><span class="p">,</span> <span class="n">limit</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;posts a json message to the exchange server. </span>
+
+<div class="viewcode-block" id="RestfulServer.file_arrival">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.RestfulServer.file_arrival">[docs]</a>
+    <span class="k">def</span> <span class="nf">file_arrival</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">object_type</span><span class="p">,</span> <span class="n">limit</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;posts a json message to the exchange server. </span>
 <span class="sd">        :param data: The data</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">json_message_d</span> <span class="o">=</span> <span class="p">{</span>
@@ -231,8 +254,11 @@
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">execute_request</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">response</span></div>
 
-<div class="viewcode-block" id="RestfulServer.supervise"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.RestfulServer.supervise">[docs]</a>    <span class="k">def</span> <span class="nf">supervise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">infotype</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">origins</span><span class="p">,</span> <span class="n">object_type</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">entrylimit</span><span class="p">,</span> <span class="n">delay</span><span class="p">,</span> <span class="n">count</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;posts a json message to the exchange server. </span>
+
+<div class="viewcode-block" id="RestfulServer.supervise">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.RestfulServer.supervise">[docs]</a>
+    <span class="k">def</span> <span class="nf">supervise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">infotype</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">origins</span><span class="p">,</span> <span class="n">object_type</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">entrylimit</span><span class="p">,</span> <span class="n">delay</span><span class="p">,</span> <span class="n">count</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;posts a json message to the exchange server. </span>
 <span class="sd">        :param data: The data</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">json_message_d</span> <span class="o">=</span> <span class="p">{</span>
@@ -258,8 +284,11 @@
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">execute_request</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">response</span></div>
 
-<div class="viewcode-block" id="RestfulServer.execute_request"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.RestfulServer.execute_request">[docs]</a>    <span class="k">def</span> <span class="nf">execute_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Exececutes the actual rest request over http or https. Will also add credentials to the request</span>
+
+<div class="viewcode-block" id="RestfulServer.execute_request">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.RestfulServer.execute_request">[docs]</a>
+    <span class="k">def</span> <span class="nf">execute_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Exececutes the actual rest request over http or https. Will also add credentials to the request</span>
 <span class="sd">        :param req: The REST request</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">conn</span> <span class="o">=</span> <span class="kc">None</span>
@@ -286,27 +315,43 @@
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
                 <span class="s2">&quot;Could not send request to </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_server_url_str</span>
             <span class="p">)</span>
-        <span class="k">return</span> <span class="n">conn</span><span class="o">.</span><span class="n">getresponse</span><span class="p">()</span></div></div>
+        <span class="k">return</span> <span class="n">conn</span><span class="o">.</span><span class="n">getresponse</span><span class="p">()</span></div>
+</div>
 
-<div class="viewcode-block" id="Auth"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.Auth">[docs]</a><span class="k">class</span> <span class="nc">Auth</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Auth">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.Auth">[docs]</a>
+<span class="k">class</span> <span class="nc">Auth</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="n">__meta__</span> <span class="o">=</span> <span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span>
 
-<div class="viewcode-block" id="Auth.add_credentials"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.Auth.add_credentials">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+<div class="viewcode-block" id="Auth.add_credentials">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.Auth.add_credentials">[docs]</a>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">add_credentials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;add authorization credentials to the request</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;add authorization credentials to the request</span>
 
 <span class="sd">        :param req: a :class:`Request` to update</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+</div>
 
-<div class="viewcode-block" id="NoAuth"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.NoAuth">[docs]</a><span class="k">class</span> <span class="nc">NoAuth</span><span class="p">(</span><span class="n">Auth</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;no authentication</span>
+
+<div class="viewcode-block" id="NoAuth">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.NoAuth">[docs]</a>
+<span class="k">class</span> <span class="nc">NoAuth</span><span class="p">(</span><span class="n">Auth</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;no authentication</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="NoAuth.add_credentials"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.NoAuth.add_credentials">[docs]</a>    <span class="k">def</span> <span class="nf">add_credentials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">):</span>
-        <span class="k">pass</span></div></div>
+<div class="viewcode-block" id="NoAuth.add_credentials">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.NoAuth.add_credentials">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_credentials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+</div>
 
-<div class="viewcode-block" id="CryptoAuth"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.CryptoAuth">[docs]</a><span class="k">class</span> <span class="nc">CryptoAuth</span><span class="p">(</span><span class="n">Auth</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;authenicate by signing messages with internal crypto-functionality</span>
+
+<div class="viewcode-block" id="CryptoAuth">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.CryptoAuth">[docs]</a>
+<span class="k">class</span> <span class="nc">CryptoAuth</span><span class="p">(</span><span class="n">Auth</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;authenicate by signing messages with internal crypto-functionality</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signer</span><span class="p">,</span> <span class="n">nodename</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">signer</span><span class="p">,</span> <span class="n">crypto</span><span class="o">.</span><span class="n">private_key</span><span class="p">):</span>
@@ -319,14 +364,20 @@
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Unknown signer format&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_nodename</span> <span class="o">=</span> <span class="n">nodename</span>
 
-<div class="viewcode-block" id="CryptoAuth.add_credentials"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.CryptoAuth.add_credentials">[docs]</a>    <span class="k">def</span> <span class="nf">add_credentials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">):</span>
+<div class="viewcode-block" id="CryptoAuth.add_credentials">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.CryptoAuth.add_credentials">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_credentials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">):</span>
         <span class="n">signable</span> <span class="o">=</span> <span class="n">create_signable_string</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
         <span class="n">signature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_signer</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">signable</span><span class="p">)</span>
         <span class="n">auth</span> <span class="o">=</span> <span class="s2">&quot;exchange-crypto </span><span class="si">%s</span><span class="s2">:</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nodename</span><span class="p">,</span> <span class="n">signature</span><span class="p">)</span>
-        <span class="n">req</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;authorization&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">auth</span></div></div>
+        <span class="n">req</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;authorization&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">auth</span></div>
+</div>
 
-<div class="viewcode-block" id="TinkAuth"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.TinkAuth">[docs]</a><span class="k">class</span> <span class="nc">TinkAuth</span><span class="p">(</span><span class="n">Auth</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;authenicate by signing messages with Tink</span>
+
+<div class="viewcode-block" id="TinkAuth">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.TinkAuth">[docs]</a>
+<span class="k">class</span> <span class="nc">TinkAuth</span><span class="p">(</span><span class="n">Auth</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;authenicate by signing messages with Tink</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key_path</span><span class="p">,</span> <span class="n">key_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">signature</span><span class="o">.</span><span class="n">register</span><span class="p">()</span>
@@ -339,15 +390,21 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_key_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">key_path</span><span class="p">))</span>
 
-<div class="viewcode-block" id="TinkAuth.add_credentials"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.TinkAuth.add_credentials">[docs]</a>    <span class="k">def</span> <span class="nf">add_credentials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">):</span>
+<div class="viewcode-block" id="TinkAuth.add_credentials">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.TinkAuth.add_credentials">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_credentials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">):</span>
         <span class="n">signable</span> <span class="o">=</span> <span class="n">create_signable_string</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
         <span class="n">signature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_signer</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="n">signable</span><span class="p">,</span> <span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
         <span class="n">signature</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">signature</span><span class="p">),</span> <span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
         <span class="n">auth</span> <span class="o">=</span> <span class="s2">&quot;exchange-tink </span><span class="si">%s</span><span class="s2">:</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_key_name</span><span class="p">,</span> <span class="n">signature</span><span class="p">)</span>
-        <span class="n">req</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;authorization&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">auth</span></div></div>
+        <span class="n">req</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;authorization&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">auth</span></div>
+</div>
 
-<div class="viewcode-block" id="create_signable_string"><a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.create_signable_string">[docs]</a><span class="k">def</span> <span class="nf">create_signable_string</span><span class="p">(</span><span class="n">req</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;construct a signable string from a :class:`.Request`</span>
+
+<div class="viewcode-block" id="create_signable_string">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.create_signable_string">[docs]</a>
+<span class="k">def</span> <span class="nf">create_signable_string</span><span class="p">(</span><span class="n">req</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;construct a signable string from a :class:`.Request`</span>
 
 <span class="sd">    See :ref:`doc-rest-crypto-authentication` for details.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -359,6 +416,7 @@
                 <span class="n">fragments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fragments</span><span class="p">)</span></div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -376,7 +434,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -396,8 +454,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Anders Henja.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

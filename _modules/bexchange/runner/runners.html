@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>bexchange.runner.runners &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -77,11 +75,13 @@
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;bexchange.runner.runners&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="runner"><a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.runner">[docs]</a><span class="k">class</span> <span class="nc">runner</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Base class for any runner</span>
+<div class="viewcode-block" id="runner">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.runner">[docs]</a>
+<span class="k">class</span> <span class="nc">runner</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for any runner</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">active</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        :param backend: The backend</span>
 <span class="sd">        :param active: If this runner should be active or not</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -89,60 +89,92 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span> <span class="o">=</span> <span class="n">backend</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_active</span> <span class="o">=</span> <span class="n">active</span>
 
-<div class="viewcode-block" id="runner.backend"><a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.runner.backend">[docs]</a>    <span class="k">def</span> <span class="nf">backend</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="runner.backend">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.runner.backend">[docs]</a>
+    <span class="k">def</span> <span class="nf">backend</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return the backend</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span></div>
 
-<div class="viewcode-block" id="runner.active"><a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.runner.active">[docs]</a>    <span class="k">def</span> <span class="nf">active</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="runner.active">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.runner.active">[docs]</a>
+    <span class="k">def</span> <span class="nf">active</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return if this runner is active or not</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_active</span></div>
+
     
-<div class="viewcode-block" id="runner.setactive"><a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.runner.setactive">[docs]</a>    <span class="k">def</span> <span class="nf">setactive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">active</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="runner.setactive">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.runner.setactive">[docs]</a>
+    <span class="k">def</span> <span class="nf">setactive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">active</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param active: If this runner should be active or not</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_active</span> <span class="o">=</span> <span class="n">active</span></div>
 
-<div class="viewcode-block" id="runner.start"><a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.runner.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Abstract start method. Will start the runner. Typically by setting up some event listening or starting a thread.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Not implemented&quot;</span><span class="p">)</span></div></div>
 
-<div class="viewcode-block" id="inotify_runner_event_handler"><a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.inotify_runner_event_handler">[docs]</a><span class="k">class</span> <span class="nc">inotify_runner_event_handler</span><span class="p">(</span><span class="n">pyinotify</span><span class="o">.</span><span class="n">ProcessEvent</span><span class="p">):</span>
+<div class="viewcode-block" id="runner.start">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.runner.start">[docs]</a>
+    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Abstract start method. Will start the runner. Typically by setting up some event listening or starting a thread.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Not implemented&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="runner.stop">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.runner.stop">[docs]</a>
+    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Abstract stop method. Will try to stop the runner. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Not implemented&quot;</span><span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="inotify_runner_event_handler">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.inotify_runner_event_handler">[docs]</a>
+<span class="k">class</span> <span class="nc">inotify_runner_event_handler</span><span class="p">(</span><span class="n">pyinotify</span><span class="o">.</span><span class="n">ProcessEvent</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inotify_runner</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        :param inotify_runner: The inotify runner that will be called</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span> <span class="o">=</span> <span class="n">inotify_runner</span>
     
-<div class="viewcode-block" id="inotify_runner_event_handler.process_IN_CLOSE_WRITE"><a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.inotify_runner_event_handler.process_IN_CLOSE_WRITE">[docs]</a>    <span class="k">def</span> <span class="nf">process_IN_CLOSE_WRITE</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Will be called by the inotify notifier when file event occurs.</span>
+<div class="viewcode-block" id="inotify_runner_event_handler.process_IN_CLOSE_WRITE">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.inotify_runner_event_handler.process_IN_CLOSE_WRITE">[docs]</a>
+    <span class="k">def</span> <span class="nf">process_IN_CLOSE_WRITE</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Will be called by the inotify notifier when file event occurs.</span>
 <span class="sd">        :param event: The file event</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;IN_CLOSE_WRITE: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">is_ignored</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">):</span>  <span class="c1"># avoid temporary file</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">handle_file</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="inotify_runner_event_handler.process_IN_MOVED_TO"><a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.inotify_runner_event_handler.process_IN_MOVED_TO">[docs]</a>    <span class="k">def</span> <span class="nf">process_IN_MOVED_TO</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Will be called by the inotify notifier when file event occurs.</span>
+
+<div class="viewcode-block" id="inotify_runner_event_handler.process_IN_MOVED_TO">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.inotify_runner_event_handler.process_IN_MOVED_TO">[docs]</a>
+    <span class="k">def</span> <span class="nf">process_IN_MOVED_TO</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Will be called by the inotify notifier when file event occurs.</span>
 <span class="sd">        :param event: The file event</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;IN_MOVED_WRITE: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">is_ignored</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">):</span>  <span class="c1"># avoid temporary file</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">handle_file</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">)</span></div></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">handle_file</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">)</span></div>
+</div>
 
-<div class="viewcode-block" id="inotify_runner"><a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.inotify_runner">[docs]</a><span class="k">class</span> <span class="nc">inotify_runner</span><span class="p">(</span><span class="n">runner</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The inotify runner is used to monitor folders and trigger &quot;store&quot; events. It is run in a separate thread instead of </span>
+
+<div class="viewcode-block" id="inotify_runner">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.inotify_runner">[docs]</a>
+<span class="k">class</span> <span class="nc">inotify_runner</span><span class="p">(</span><span class="n">runner</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The inotify runner is used to monitor folders and trigger &quot;store&quot; events. It is run in a separate thread instead of </span>
 <span class="sd">    beeing created as a daemon-thread since all initiation is performed in the main thread before server is started.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">MASK</span> <span class="o">=</span> <span class="n">pyinotify</span><span class="o">.</span><span class="n">IN_CLOSE_WRITE</span> <span class="o">|</span> <span class="n">pyinotify</span><span class="o">.</span><span class="n">IN_MOVED_TO</span>
     
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">active</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        :param backend: The backend</span>
 <span class="sd">        :param active: If this runner is active or not. NOT USED</span>
 <span class="sd">        :param **args: A number of arguments can be provided</span>
@@ -169,8 +201,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_wm</span> <span class="o">=</span> <span class="n">pyinotify</span><span class="o">.</span><span class="n">WatchManager</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_notifier</span> <span class="o">=</span> <span class="n">pyinotify</span><span class="o">.</span><span class="n">Notifier</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_wm</span><span class="p">,</span> <span class="n">inotify_runner_event_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
 
-<div class="viewcode-block" id="inotify_runner.is_ignored"><a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.inotify_runner.is_ignored">[docs]</a>    <span class="k">def</span> <span class="nf">is_ignored</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Checks if the specified file should be ignored or not, for example when a tmpfile is written.</span>
+<div class="viewcode-block" id="inotify_runner.is_ignored">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.inotify_runner.is_ignored">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_ignored</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if the specified file should be ignored or not, for example when a tmpfile is written.</span>
 <span class="sd">        the check is performed on basename.</span>
 <span class="sd">        :param filename: The filename to be checked</span>
 <span class="sd">        :return True if file should be ignored otherwise False</span>
@@ -179,27 +213,39 @@
             <span class="k">return</span> <span class="kc">False</span>
         <span class="n">bname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pattern</span><span class="p">,</span> <span class="n">bname</span><span class="p">)</span> <span class="o">!=</span> <span class="kc">None</span></div>
+
     
-<div class="viewcode-block" id="inotify_runner.handle_file"><a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.inotify_runner.handle_file">[docs]</a>    <span class="k">def</span> <span class="nf">handle_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Handles the file (by sending it to the backend using the name given to this runner</span>
+<div class="viewcode-block" id="inotify_runner.handle_file">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.inotify_runner.handle_file">[docs]</a>
+    <span class="k">def</span> <span class="nf">handle_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Handles the file (by sending it to the backend using the name given to this runner</span>
 <span class="sd">        :param filename: The filename to handle</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span><span class="o">.</span><span class="n">store_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">)</span>
         <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="inotify_runner.run"><a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.inotify_runner.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;The runner for the thread. Starts the inotify notifier loop</span>
+
+<div class="viewcode-block" id="inotify_runner.run">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.inotify_runner.run">[docs]</a>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The runner for the thread. Starts the inotify notifier loop</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_notifier</span><span class="o">.</span><span class="n">loop</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="inotify_runner.pending_run"><a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.inotify_runner.pending_run">[docs]</a>    <span class="k">def</span> <span class="nf">pending_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pending_filenames</span><span class="p">):</span>
+
+<div class="viewcode-block" id="inotify_runner.pending_run">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.inotify_runner.pending_run">[docs]</a>
+    <span class="k">def</span> <span class="nf">pending_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pending_filenames</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">pending_filenames</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">pending_filenames</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">handle_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
                 <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span> <span class="c1"># Just to not starve real time data handling</span></div>
 
-<div class="viewcode-block" id="inotify_runner.get_pending_files"><a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.inotify_runner.get_pending_files">[docs]</a>    <span class="k">def</span> <span class="nf">get_pending_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">folder</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Lists all files in specified folder</span>
+
+<div class="viewcode-block" id="inotify_runner.get_pending_files">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.inotify_runner.get_pending_files">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_pending_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">folder</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lists all files in specified folder</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">result</span><span class="o">=</span><span class="p">[]</span>
         <span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">listdir</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span> <span class="k">if</span> <span class="n">isfile</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">f</span><span class="p">))]</span>
@@ -209,8 +255,11 @@
                 <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">result</span></div>
 
-<div class="viewcode-block" id="inotify_runner.start"><a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.inotify_runner.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Starts this runner by adding the watched folders and then starting a daemonized thread.</span>
+
+<div class="viewcode-block" id="inotify_runner.start">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.inotify_runner.start">[docs]</a>
+    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Starts this runner by adding the watched folders and then starting a daemonized thread.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">pending_files</span><span class="o">=</span><span class="p">[]</span>
         <span class="k">for</span> <span class="n">folder</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_folders</span><span class="p">:</span>
@@ -225,16 +274,27 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="triggered_fetch_runner"><a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.triggered_fetch_runner">[docs]</a><span class="k">class</span> <span class="nc">triggered_fetch_runner</span><span class="p">(</span><span class="n">runner</span><span class="p">,</span> <span class="n">message_aware</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A triggered runner. This runner implements &#39;message_aware&#39; so that a json-message</span>
+
+<div class="viewcode-block" id="inotify_runner.stop">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.inotify_runner.stop">[docs]</a>
+    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Stopping inotifier&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_notifier</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span></div>
+</div>
+
+
+<div class="viewcode-block" id="triggered_fetch_runner">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.triggered_fetch_runner">[docs]</a>
+<span class="k">class</span> <span class="nc">triggered_fetch_runner</span><span class="p">(</span><span class="n">runner</span><span class="p">,</span> <span class="n">message_aware</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A triggered runner. This runner implements &#39;message_aware&#39; so that a json-message</span>
 <span class="sd">    can be handled. This runner is actually triggered from the WSGI-process and as such</span>
 <span class="sd">    is using the WSGI-servers thread pool. @todo: Implement this as a producer/consumer</span>
 <span class="sd">    thread to avoid any possibility to starve the WSGI-thread pool. </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">active</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        :param backend: The backend</span>
 <span class="sd">        :param active: If this runner is active or not. NOT USED</span>
 <span class="sd">        :param **args: A number of arguments can be provided</span>
@@ -250,13 +310,26 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_invoker_names</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;invoker_names&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_trigger_names</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;trigger_names&quot;</span><span class="p">]</span>
  
-<div class="viewcode-block" id="triggered_fetch_runner.start"><a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.triggered_fetch_runner.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Not used</span>
+<div class="viewcode-block" id="triggered_fetch_runner.start">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.triggered_fetch_runner.start">[docs]</a>
+    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Not used</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
-    
-<div class="viewcode-block" id="triggered_fetch_runner.handle_message"><a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.triggered_fetch_runner.handle_message">[docs]</a>    <span class="k">def</span> <span class="nf">handle_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_message</span><span class="p">,</span> <span class="n">nodename</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Handles the message if the json message contains a trigger that matches trigger names and</span>
+
+
+<div class="viewcode-block" id="triggered_fetch_runner.stop">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.triggered_fetch_runner.stop">[docs]</a>
+    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Not used</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+   
+<div class="viewcode-block" id="triggered_fetch_runner.handle_message">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.triggered_fetch_runner.handle_message">[docs]</a>
+    <span class="k">def</span> <span class="nf">handle_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_message</span><span class="p">,</span> <span class="n">nodename</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Handles the message if the json message contains a trigger that matches trigger names and</span>
 <span class="sd">        that the nodename is allowed within the invoker_names by invoking the fetch method in fetcher</span>
 <span class="sd">        using &quot;arguments&quot; in the json-message.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -266,13 +339,17 @@
             <span class="k">if</span> <span class="s2">&quot;arguments&quot;</span> <span class="ow">in</span> <span class="n">json_message</span><span class="p">:</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">json_message</span><span class="p">[</span><span class="s2">&quot;arguments&quot;</span><span class="p">],</span> <span class="nb">dict</span><span class="p">):</span>
                     <span class="n">kwargs</span> <span class="o">=</span> <span class="n">json_message</span><span class="p">[</span><span class="s2">&quot;arguments&quot;</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_fetcher</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fetcher</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+</div>
 
-<div class="viewcode-block" id="statistics_cleanup_runner"><a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.statistics_cleanup_runner">[docs]</a><span class="k">class</span> <span class="nc">statistics_cleanup_runner</span><span class="p">(</span><span class="n">runner</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Cleans the statistics database</span>
+
+<div class="viewcode-block" id="statistics_cleanup_runner">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.statistics_cleanup_runner">[docs]</a>
+<span class="k">class</span> <span class="nc">statistics_cleanup_runner</span><span class="p">(</span><span class="n">runner</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Cleans the statistics database</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">active</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        :param backend: The backend</span>
 <span class="sd">        :param active: If this runner is active or not</span>
 <span class="sd">        :param args: Dictionary containing &quot;name&quot;, &quot;interval&quot; and &quot;age&quot;</span>
@@ -290,7 +367,7 @@
         
         <span class="k">if</span> <span class="s2">&quot;interval&quot;</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_interval</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;interval&quot;</span><span class="p">]</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_interval</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_interval</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_interval</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;interval should be an integer&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="s2">&quot;age&quot;</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
@@ -298,50 +375,93 @@
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_age</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;age should be an integer&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="statistics_cleanup_runner.run"><a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.statistics_cleanup_runner.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;The runner for the thread. Will trigger a wait for</span>
+<div class="viewcode-block" id="statistics_cleanup_runner.run">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.statistics_cleanup_runner.run">[docs]</a>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The runner for the thread. Will trigger a wait for</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_manager</span><span class="o">.</span><span class="n">cleanup_statentry</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_age</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_event</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_interval</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="statistics_cleanup_runner.start"><a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.statistics_cleanup_runner.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Starts this runner by starting a daemonized thread.</span>
+
+<div class="viewcode-block" id="statistics_cleanup_runner.start">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.statistics_cleanup_runner.start">[docs]</a>
+    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Starts this runner by starting a daemonized thread.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="runner_manager"><a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.runner_manager">[docs]</a><span class="k">class</span> <span class="nc">runner_manager</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot; The runner manager. Will create and register the runner</span>
+
+<div class="viewcode-block" id="statistics_cleanup_runner.stop">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.statistics_cleanup_runner.stop">[docs]</a>
+    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_event</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Stopped cleanup runner&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="runner_manager">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.runner_manager">[docs]</a>
+<span class="k">class</span> <span class="nc">runner_manager</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; The runner manager. Will create and register the runner</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_runners</span><span class="o">=</span><span class="p">[]</span>
 
-<div class="viewcode-block" id="runner_manager.add_runner"><a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.runner_manager.add_runner">[docs]</a>    <span class="k">def</span> <span class="nf">add_runner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runner</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Adds a runner to the manager</span>
+<div class="viewcode-block" id="runner_manager.add_runner">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.runner_manager.add_runner">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_runner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runner</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds a runner to the manager</span>
 <span class="sd">        :param runner: The runner that should be added</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_runners</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">runner</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="runner_manager.start"><a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.runner_manager.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Starts all runners</span>
+
+<div class="viewcode-block" id="runner_manager.start">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.runner_manager.start">[docs]</a>
+    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Starts all runners</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runners</span><span class="p">:</span>
             <span class="n">r</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="runner_manager.get_runners"><a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.runner_manager.get_runners">[docs]</a>    <span class="k">def</span> <span class="nf">get_runners</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="runner_manager.remove">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.runner_manager.remove">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runner</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops and removes a specific runner</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">runner</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runners</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">runner</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+            <span class="k">finally</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_runners</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">runner</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="runner_manager.get_runners">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.runner_manager.get_runners">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_runners</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return the runners</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runners</span></div>
 
-<div class="viewcode-block" id="runner_manager.create_runner"><a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.runner_manager.create_runner">[docs]</a>    <span class="nd">@classmethod</span>
+
+<div class="viewcode-block" id="runner_manager.create_runner">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.runner_manager.create_runner">[docs]</a>
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">create_runner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clz</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">active</span><span class="p">,</span> <span class="n">extra_arguments</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Creates an instance of clz with specified arguments</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates an instance of clz with specified arguments</span>
 <span class="sd">        :param clz: class name specified as &lt;module&gt;.&lt;classname&gt;</span>
 <span class="sd">        :param arguments: a list of arguments that should be used to initialize the class       </span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -353,10 +473,13 @@
             <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">classname</span><span class="p">)(</span><span class="n">backend</span><span class="p">,</span> <span class="n">active</span><span class="p">,</span> <span class="o">**</span><span class="n">extra_arguments</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Must specify class as module.class&quot;</span><span class="p">)</span></div>
+
     
-<div class="viewcode-block" id="runner_manager.from_conf"><a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.runner_manager.from_conf">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="runner_manager.from_conf">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.runner_manager.from_conf">[docs]</a>
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_conf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">backend</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Creates a runner from the specified configuration if it is possible</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a runner from the specified configuration if it is possible</span>
 <span class="sd">        :param config: A runner config pattern. Should at least contain the following</span>
 <span class="sd">        {&quot;class&quot;:&quot;&lt;packagename&gt;.&lt;classname&gt;&quot;</span>
 <span class="sd">        &quot;active&quot;:&lt;true or false&gt;</span>
@@ -377,7 +500,9 @@
             <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_runner</span><span class="p">(</span><span class="n">runner_clazz</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">active</span><span class="p">,</span> <span class="n">extra_arguments</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">p</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Runner of class &#39;</span><span class="si">%s</span><span class="s2">&#39; is not active!&quot;</span><span class="o">%</span><span class="n">runner_clazz</span><span class="p">)</span></div></div>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Runner of class &#39;</span><span class="si">%s</span><span class="s2">&#39; is not active!&quot;</span><span class="o">%</span><span class="n">runner_clazz</span><span class="p">)</span></div>
+</div>
+
 
         
 </pre></div>
@@ -397,7 +522,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -417,8 +542,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Anders Henja.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

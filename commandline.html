@@ -1,19 +1,17 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Command line tools &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css?v=514cf933" />
     
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
+    <script src="_static/documentation_options.js?v=2709fde1"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -46,56 +44,56 @@
           <div class="body" role="main">
             
   <section id="command-line-tools">
-<h1>Command line tools<a class="headerlink" href="#command-line-tools" title="Permalink to this headline">¶</a></h1>
+<h1>Command line tools<a class="headerlink" href="#command-line-tools" title="Link to this heading">¶</a></h1>
 <p>There are two different command line tools. One is used to help configuring the system in various ways from creating keys to testing out
 if a specific filter is behaving as expected. The other tool is for communicating with the server.</p>
 <section id="baltrad-exchange-config">
-<h2>baltrad-exchange-config<a class="headerlink" href="#baltrad-exchange-config" title="Permalink to this headline">¶</a></h2>
+<h2>baltrad-exchange-config<a class="headerlink" href="#baltrad-exchange-config" title="Link to this heading">¶</a></h2>
 <p>Like the command indicates, it’s used for various configuration purposes. Most essential is the one for creating keys since it’s essential
 for a running system.</p>
 <section id="create-keys">
-<h3>create_keys<a class="headerlink" href="#create-keys" title="Permalink to this headline">¶</a></h3>
+<h3>create_keys<a class="headerlink" href="#create-keys" title="Link to this heading">¶</a></h3>
 <p>This command will give you help creating the public/private keys used for the signature handling within the system. The default behaviour is to use “crypto” which
 is the internally created handling using PyCryptodome as library and the service currently supports RSA and DSA keys. The nodename is essential since it will
 be used to set information that will be used when identifying this node to other nodes. The command in itself is straight forward</p>
 <p>You will get help on how to use the command by using the option ‘–help’</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span> %&gt; baltrad-exchange-config create_keys --help
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="w"> </span>%&gt;<span class="w"> </span>baltrad-exchange-config<span class="w"> </span>create_keys<span class="w"> </span>--help
 
- Options:
--h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
--v, --verbose         be verbose
---type<span class="o">=</span>TYPE           Library to use <span class="k">for</span> generating key-pair to create.
-                      Default: crypto <span class="o">(</span>which is the internal key handling<span class="o">)</span>.
-                      Other libraries can be keyczar
+<span class="w"> </span>Options:
+-h,<span class="w"> </span>--help<span class="w">            </span>show<span class="w"> </span>this<span class="w"> </span><span class="nb">help</span><span class="w"> </span>message<span class="w"> </span>and<span class="w"> </span><span class="nb">exit</span>
+-v,<span class="w"> </span>--verbose<span class="w">         </span>be<span class="w"> </span>verbose
+--type<span class="o">=</span>TYPE<span class="w">           </span>Library<span class="w"> </span>to<span class="w"> </span>use<span class="w"> </span><span class="k">for</span><span class="w"> </span>generating<span class="w"> </span>key-pair<span class="w"> </span>to<span class="w"> </span>create.
+<span class="w">                      </span>Default:<span class="w"> </span>crypto<span class="w"> </span><span class="o">(</span>which<span class="w"> </span>is<span class="w"> </span>the<span class="w"> </span>internal<span class="w"> </span>key<span class="w"> </span>handling<span class="o">)</span>.
+<span class="w">                      </span>Other<span class="w"> </span>libraries<span class="w"> </span>can<span class="w"> </span>be<span class="w"> </span>keyczar
 --encryption<span class="o">=</span>ENCRYPTION
-                      Encryption method to use. For internal use you can
-                      either choose dsa or rsa. Default is: dsa
+<span class="w">                      </span>Encryption<span class="w"> </span>method<span class="w"> </span>to<span class="w"> </span>use.<span class="w"> </span>For<span class="w"> </span>internal<span class="w"> </span>use<span class="w"> </span>you<span class="w"> </span>can
+<span class="w">                      </span>either<span class="w"> </span>choose<span class="w"> </span>dsa<span class="w"> </span>or<span class="w"> </span>rsa.<span class="w"> </span>Default<span class="w"> </span>is:<span class="w"> </span>dsa
 --destination<span class="o">=</span>DESTINATION
-                      Directory where the keys should be placed. Default is
-                      current directory.
---nodename<span class="o">=</span>NODENAME   Name of the node <span class="k">for</span> this server.
+<span class="w">                      </span>Directory<span class="w"> </span>where<span class="w"> </span>the<span class="w"> </span>keys<span class="w"> </span>should<span class="w"> </span>be<span class="w"> </span>placed.<span class="w"> </span>Default<span class="w"> </span>is
+<span class="w">                      </span>current<span class="w"> </span>directory.
+--nodename<span class="o">=</span>NODENAME<span class="w">   </span>Name<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>node<span class="w"> </span><span class="k">for</span><span class="w"> </span>this<span class="w"> </span>server.
 </pre></div>
 </div>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt; baltrad-exchange-config create_keys --type<span class="o">=</span>crypto --encryption<span class="o">=</span>dsa --destination<span class="o">=</span>/etc/baltrad/exchange/crypto-keys --nodename<span class="o">=</span>myserver
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt;<span class="w"> </span>baltrad-exchange-config<span class="w"> </span>create_keys<span class="w"> </span>--type<span class="o">=</span>crypto<span class="w"> </span>--encryption<span class="o">=</span>dsa<span class="w"> </span>--destination<span class="o">=</span>/etc/baltrad/exchange/crypto-keys<span class="w"> </span>--nodename<span class="o">=</span>myserver
 Created:
-  Private key: /etc/baltrad/exchange/crypto-keys/myserver.private
-  Public  key: /etc/baltrad/exchange/crypto-keys/myserver.public
-  Public json: /etc/baltrad/exchange/crypto-keys/myserver_public.json
+<span class="w">  </span>Private<span class="w"> </span>key:<span class="w"> </span>/etc/baltrad/exchange/crypto-keys/myserver.private
+<span class="w">  </span>Public<span class="w">  </span>key:<span class="w"> </span>/etc/baltrad/exchange/crypto-keys/myserver.public
+<span class="w">  </span>Public<span class="w"> </span>json:<span class="w"> </span>/etc/baltrad/exchange/crypto-keys/myserver_public.json
 </pre></div>
 </div>
 <p>The other type that is of interest is the <strong>keyczar</strong> support since that provides backward compatibility with already existing installations. The keyczar-project has
 been deprecated and is not supported any longer. However, to keep the exchange working, baltrad-exchange has got it’s own implementation that mimics the relevant
 parts that has been used in the keyczar-library. This means that it is possible to read the public/private keys that has been generated during installation of the
 baltrad software. It can also generate new keys compatible with the old installations. However, there is no support for setting up the DEX-subscription using this tool.</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt; baltrad-exchange-config create_keys --type<span class="o">=</span>keyczar --destination<span class="o">=</span>/etc/baltrad/bltnode-keys --nodename<span class="o">=</span>myserver
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt;<span class="w"> </span>baltrad-exchange-config<span class="w"> </span>create_keys<span class="w"> </span>--type<span class="o">=</span>keyczar<span class="w"> </span>--destination<span class="o">=</span>/etc/baltrad/bltnode-keys<span class="w"> </span>--nodename<span class="o">=</span>myserver
 Created:
-  Private key: /etc/baltrad/bltnode-keys/myserver.priv
-  Public  key: /etc/baltrad/bltnode-keys/myserver.pub
+<span class="w">  </span>Private<span class="w"> </span>key:<span class="w"> </span>/etc/baltrad/bltnode-keys/myserver.priv
+<span class="w">  </span>Public<span class="w">  </span>key:<span class="w"> </span>/etc/baltrad/bltnode-keys/myserver.pub
 </pre></div>
 </div>
 </section>
 <section id="create-publication">
-<h3>create_publication<a class="headerlink" href="#create-publication" title="Permalink to this headline">¶</a></h3>
+<h3>create_publication<a class="headerlink" href="#create-publication" title="Link to this heading">¶</a></h3>
 <p>Creates a publication from the provided template and the provided property-file. If possible, the
 property file will be identified by checking standard installation path. An atempt to find the
 template will be used base on default location / name as well. The resulting json file should be
@@ -135,7 +133,7 @@ printed on stdout</p>
 </dl>
 </section>
 <section id="create-subscription">
-<h3>create_subscription<a class="headerlink" href="#create-subscription" title="Permalink to this headline">¶</a></h3>
+<h3>create_subscription<a class="headerlink" href="#create-subscription" title="Link to this heading">¶</a></h3>
 <p>Usage: baltrad-exchange-config create_subscription [OPTIONS]</p>
 <p>Creates a subscription package from the provided template and the provided property-file. If possible, the
 property file will be identified by checking standard installation path. An atempt to find the
@@ -168,79 +166,79 @@ subscription.</p>
 </dl>
 </section>
 <section id="test-filter">
-<h3>test_filter<a class="headerlink" href="#test-filter" title="Permalink to this headline">¶</a></h3>
+<h3>test_filter<a class="headerlink" href="#test-filter" title="Link to this heading">¶</a></h3>
 <p>Another useful tool is the test_filter which can be used to validate files against a filter to test how the subscription/publication filters should be defined. The matching uses the baltrad-db
 metadata querying and will generate a odim-source sqlite database so that the _bdb/source_name, _bdb/source:WMO and other bdb-specific meta attributes can be ued. This is in contrast with the naming
 that instead uses _baltrad/ as prefix for internal meta data usage.</p>
 <p>A typical filter will have a structure will look something like.</p>
-<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;filter&quot;</span><span class="p">:{</span><span class="w"></span>
-<span class="w">  </span><span class="nt">&quot;filter_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;and_filter&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
-<span class="w">    </span><span class="p">{</span><span class="nt">&quot;filter_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;attribute_filter&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;_bdb/source_name&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">      </span><span class="nt">&quot;operation&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;in&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">      </span><span class="nt">&quot;value_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">      </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;sehem&quot;</span><span class="p">,</span><span class="s2">&quot;seang&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;sella&quot;</span><span class="p">]</span><span class="w"></span>
-<span class="w">    </span><span class="p">},</span><span class="w"></span>
-<span class="w">    </span><span class="p">{</span><span class="nt">&quot;filter_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;attribute_filter&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/what/object&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">      </span><span class="nt">&quot;operation&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;in&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">      </span><span class="nt">&quot;value_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">      </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;SCAN&quot;</span><span class="p">,</span><span class="s2">&quot;PVOL&quot;</span><span class="p">]</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="w">  </span><span class="p">]</span><span class="w"></span>
-<span class="p">}}</span><span class="w"></span>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;filter&quot;</span><span class="p">:{</span>
+<span class="w">  </span><span class="nt">&quot;filter_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;and_filter&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="nt">&quot;filter_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;attribute_filter&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;_bdb/source_name&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;operation&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;in&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;value_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;sehem&quot;</span><span class="p">,</span><span class="s2">&quot;seang&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;sella&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="nt">&quot;filter_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;attribute_filter&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/what/object&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;operation&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;in&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;value_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;SCAN&quot;</span><span class="p">,</span><span class="s2">&quot;PVOL&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}}</span>
 </pre></div>
 </div>
 <p>Since this section is about the test_filter command in the config-tool we will not explain more about the filter and refer to :ref: filters.rst.</p>
 <p>The tool requires two mandatory options and the odim-h5 file to be matched against. If you for example have a test-filter in a json-file that you want
 match against you can also specify the –filter-path which will extract the filter definition from that path.</p>
 <p>For example: –filter-path=/subscription/__test_filter</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>anders@host: ~ %&gt; baltrad-exchange-config test_filter --help
-Usage: baltrad-exchange-config COMMAND <span class="o">[</span>ARGS<span class="o">]</span>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>anders@host:<span class="w"> </span>~<span class="w"> </span>%&gt;<span class="w"> </span>baltrad-exchange-config<span class="w"> </span>test_filter<span class="w"> </span>--help
+Usage:<span class="w"> </span>baltrad-exchange-config<span class="w"> </span>COMMAND<span class="w"> </span><span class="o">[</span>ARGS<span class="o">]</span>
 
-where COMMAND can be one of:
-  - create_keys
-  - test_filter
+where<span class="w"> </span>COMMAND<span class="w"> </span>can<span class="w"> </span>be<span class="w"> </span>one<span class="w"> </span>of:
+<span class="w">  </span>-<span class="w"> </span>create_keys
+<span class="w">  </span>-<span class="w"> </span>test_filter
 
-to get more information about a specific command, write baltrad-exchange-config &lt;COMMAND&gt; --help &lt;filename&gt;
+to<span class="w"> </span>get<span class="w"> </span>more<span class="w"> </span>information<span class="w"> </span>about<span class="w"> </span>a<span class="w"> </span>specific<span class="w"> </span>command,<span class="w"> </span>write<span class="w"> </span>baltrad-exchange-config<span class="w"> </span>&lt;COMMAND&gt;<span class="w"> </span>--help<span class="w"> </span>&lt;filename&gt;
 
 Options:
-  -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
-  -v, --verbose         be verbose
-  --odim-source<span class="o">=</span>ODIM_SOURCE
-                        The odim <span class="nb">source</span> file to use <span class="k">for</span> identifying the <span class="nb">source</span>
-                        of a file. This <span class="nb">command</span> will create a temporary <span class="nb">source</span>
-                        <span class="k">in</span> /tmp unless underwise specified.
-  --dburi<span class="o">=</span>DBURI         The location where odim sources can be found. Default
-                        is to create a temporary db under /tmp.
-  --filter<span class="o">=</span>FILTER       Specifies a file containing a filter. Can be either a
-                        subscription or publication cfg-file or <span class="k">else</span> a
-                        separate file containing toplevel <span class="s1">&#39;filter&#39;</span>
-  --filter-path<span class="o">=</span>FILTER_PATH
-                        Path within the json entry where the filter can be
-                        found.
+<span class="w">  </span>-h,<span class="w"> </span>--help<span class="w">            </span>show<span class="w"> </span>this<span class="w"> </span><span class="nb">help</span><span class="w"> </span>message<span class="w"> </span>and<span class="w"> </span><span class="nb">exit</span>
+<span class="w">  </span>-v,<span class="w"> </span>--verbose<span class="w">         </span>be<span class="w"> </span>verbose
+<span class="w">  </span>--odim-source<span class="o">=</span>ODIM_SOURCE
+<span class="w">                        </span>The<span class="w"> </span>odim<span class="w"> </span><span class="nb">source</span><span class="w"> </span>file<span class="w"> </span>to<span class="w"> </span>use<span class="w"> </span><span class="k">for</span><span class="w"> </span>identifying<span class="w"> </span>the<span class="w"> </span><span class="nb">source</span>
+<span class="w">                        </span>of<span class="w"> </span>a<span class="w"> </span>file.<span class="w"> </span>This<span class="w"> </span><span class="nb">command</span><span class="w"> </span>will<span class="w"> </span>create<span class="w"> </span>a<span class="w"> </span>temporary<span class="w"> </span><span class="nb">source</span>
+<span class="w">                        </span><span class="k">in</span><span class="w"> </span>/tmp<span class="w"> </span>unless<span class="w"> </span>underwise<span class="w"> </span>specified.
+<span class="w">  </span>--dburi<span class="o">=</span>DBURI<span class="w">         </span>The<span class="w"> </span>location<span class="w"> </span>where<span class="w"> </span>odim<span class="w"> </span>sources<span class="w"> </span>can<span class="w"> </span>be<span class="w"> </span>found.<span class="w"> </span>Default
+<span class="w">                        </span>is<span class="w"> </span>to<span class="w"> </span>create<span class="w"> </span>a<span class="w"> </span>temporary<span class="w"> </span>db<span class="w"> </span>under<span class="w"> </span>/tmp.
+<span class="w">  </span>--filter<span class="o">=</span>FILTER<span class="w">       </span>Specifies<span class="w"> </span>a<span class="w"> </span>file<span class="w"> </span>containing<span class="w"> </span>a<span class="w"> </span>filter.<span class="w"> </span>Can<span class="w"> </span>be<span class="w"> </span>either<span class="w"> </span>a
+<span class="w">                        </span>subscription<span class="w"> </span>or<span class="w"> </span>publication<span class="w"> </span>cfg-file<span class="w"> </span>or<span class="w"> </span><span class="k">else</span><span class="w"> </span>a
+<span class="w">                        </span>separate<span class="w"> </span>file<span class="w"> </span>containing<span class="w"> </span>toplevel<span class="w"> </span><span class="s1">&#39;filter&#39;</span>
+<span class="w">  </span>--filter-path<span class="o">=</span>FILTER_PATH
+<span class="w">                        </span>Path<span class="w"> </span>within<span class="w"> </span>the<span class="w"> </span>json<span class="w"> </span>entry<span class="w"> </span>where<span class="w"> </span>the<span class="w"> </span>filter<span class="w"> </span>can<span class="w"> </span>be
+<span class="w">                        </span>found.
 </pre></div>
 </div>
 </section>
 </section>
 <section id="baltrad-exchange-client">
-<h2>baltrad-exchange-client<a class="headerlink" href="#baltrad-exchange-client" title="Permalink to this headline">¶</a></h2>
+<h2>baltrad-exchange-client<a class="headerlink" href="#baltrad-exchange-client" title="Link to this heading">¶</a></h2>
 <p>This tool is used to communicate with the server in various ways. Examples of use can be to store files or to query for statistics and other server information.
 It is possible to get available commands by running</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt; baltrad-exchange-client --help
-Usage: baltrad-exchange-client COMMAND <span class="o">[</span>ARGS<span class="o">]</span>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt;<span class="w"> </span>baltrad-exchange-client<span class="w"> </span>--help
+Usage:<span class="w"> </span>baltrad-exchange-client<span class="w"> </span>COMMAND<span class="w"> </span><span class="o">[</span>ARGS<span class="o">]</span>
 
-where COMMAND can be one of:
-  - batchtest
-  - file_arrival
-  - get_statistics
-  - list_statistic_ids
-  - post_message
-  - server_info
-  - store
+where<span class="w"> </span>COMMAND<span class="w"> </span>can<span class="w"> </span>be<span class="w"> </span>one<span class="w"> </span>of:
+<span class="w">  </span>-<span class="w"> </span>batchtest
+<span class="w">  </span>-<span class="w"> </span>file_arrival
+<span class="w">  </span>-<span class="w"> </span>get_statistics
+<span class="w">  </span>-<span class="w"> </span>list_statistic_ids
+<span class="w">  </span>-<span class="w"> </span>post_message
+<span class="w">  </span>-<span class="w"> </span>server_info
+<span class="w">  </span>-<span class="w"> </span>store
 
-to get more information about a specific command, write baltrad-exchange-client &lt;COMMAND&gt; --help
+to<span class="w"> </span>get<span class="w"> </span>more<span class="w"> </span>information<span class="w"> </span>about<span class="w"> </span>a<span class="w"> </span>specific<span class="w"> </span>command,<span class="w"> </span>write<span class="w"> </span>baltrad-exchange-client<span class="w"> </span>&lt;COMMAND&gt;<span class="w"> </span>--help
 </pre></div>
 </div>
 <p>When communicating with the server it is in most cases required to provide security-related options and these options are common for all commands.</p>
@@ -258,17 +256,17 @@ will be used as default values. Then, if the options are provided these will ove
 running the baltrad-exchange-client command is allowed to read the private key.</p>
 <p>All other options are specific to the above commands. The help section for each of the commands will explain more about how to use each command.</p>
 <section id="batchtest">
-<span id="doc-rest-cmd-batchtest"></span><h3>batchtest<a class="headerlink" href="#batchtest" title="Permalink to this headline">¶</a></h3>
+<span id="doc-rest-cmd-batchtest"></span><h3>batchtest<a class="headerlink" href="#batchtest" title="Link to this heading">¶</a></h3>
 <p>The batchtest uses a basefile that either is a scan or a pvol and uses that as a template and then updates the source and datetime before sending it to the exchange server. It is only the
 information for the swedish radars sekrn, sella, seosd, seoer, sehuv, selek, sehem, seatv, sevax, seang, sekaa and sebaa that will be set in what/source. The soure set will be in the format
 WMO:02666,RAD:SE51,PLC:Karlskrona,CMT:sekaa,NOD:sekaa.</p>
 <p>Example:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt; baltrad-exchange-client batchtest --basefile<span class="o">=</span>/data/incomming/seang_scan_202212150100_0_5.h5
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt;<span class="w"> </span>baltrad-exchange-client<span class="w"> </span>batchtest<span class="w"> </span>--basefile<span class="o">=</span>/data/incomming/seang_scan_202212150100_0_5.h5
 </pre></div>
 </div>
 </section>
 <section id="file-arrival">
-<span id="doc-rest-cmd-file-arrival"></span><h3>file_arrival<a class="headerlink" href="#file-arrival" title="Permalink to this headline">¶</a></h3>
+<span id="doc-rest-cmd-file-arrival"></span><h3>file_arrival<a class="headerlink" href="#file-arrival" title="Link to this heading">¶</a></h3>
 <p>Usage: baltrad-exchange-client file_arrival [OPTIONS]</p>
 <p>Functionality for querying if a file from a specific source has arrived within a given time.</p>
 <p>The returned data will be a json dictionary with status as name and either ERROR or OK in the value.</p>
@@ -277,20 +275,20 @@ WMO:02666,RAD:SE51,PLC:Karlskrona,CMT:sekaa,NOD:sekaa.</p>
 <p><strong>Note</strong> The property <strong>baltrad.exchange.server.statistics.incomming</strong> has to be True in order for this command to work.</p>
 </section>
 <section id="get-statistics">
-<span id="doc-rest-cmd-get-statistics"></span><h3>get_statistics<a class="headerlink" href="#get-statistics" title="Permalink to this headline">¶</a></h3>
+<span id="doc-rest-cmd-get-statistics"></span><h3>get_statistics<a class="headerlink" href="#get-statistics" title="Link to this heading">¶</a></h3>
 <p>Usage: baltrad-exchange-client get_statistics [OPTIONS] –spid=STAT_ID</p>
 <p>Queries the exchange server for various statistics information. The spid is used to identify what statistics
 id that should be queried for. It is possible to query for all existing ids by executing the command
 list_statistic_ids.</p>
 <p>Example: Using totals to know the total amount of entries for one source and spid</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt; baltrad-exchange-client get_statistics --spid<span class="o">=</span>server-incomming --totals
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt;<span class="w"> </span>baltrad-exchange-client<span class="w"> </span>get_statistics<span class="w"> </span>--spid<span class="o">=</span>server-incomming<span class="w"> </span>--totals
 </pre></div>
 </div>
 <p>It is also possible to use filters and origins and object_type for identifying specific entries and get more detailed information.</p>
 <p>Example: Identifying entries that arrived more than 5 minutes delay and processing time greater than 7 ms from test-node</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt; baltrad-exchange-client get_statistics --spid<span class="o">=</span>server-incomming --filter<span class="o">=</span><span class="s1">&#39;datetime&gt;=20240322080000&amp;&amp;entrytime&gt;=20240322080500&amp;&amp;optime&gt;=7&#39;</span> --origins<span class="o">=</span>test-node
-<span class="o">{</span><span class="s1">&#39;spid&#39;</span>: <span class="s1">&#39;server-incomming&#39;</span>, <span class="s1">&#39;origin&#39;</span>: <span class="s1">&#39;anders-nzxt&#39;</span>, <span class="s1">&#39;source&#39;</span>: <span class="s1">&#39;sebaa&#39;</span>, <span class="s1">&#39;hashid&#39;</span>: <span class="s1">&#39;7b76c8342a796f3809d01eb07f91f0adb3065402&#39;</span>,
- <span class="s1">&#39;entrytime&#39;</span>: <span class="s1">&#39;2024-03-22T08:06:38.619946&#39;</span>, <span class="s1">&#39;optime&#39;</span>: <span class="m">7</span>, <span class="s1">&#39;optime_info&#39;</span>: <span class="s1">&#39;metadata&#39;</span>, <span class="s1">&#39;datetime&#39;</span>: <span class="s1">&#39;2024-03-22T08:00:00&#39;</span>, <span class="s1">&#39;object_type&#39;</span>: <span class="s1">&#39;SCAN&#39;</span>, <span class="s1">&#39;elevation_angle&#39;</span>: <span class="m">0</span>.5<span class="o">}</span>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt;<span class="w"> </span>baltrad-exchange-client<span class="w"> </span>get_statistics<span class="w"> </span>--spid<span class="o">=</span>server-incomming<span class="w"> </span>--filter<span class="o">=</span><span class="s1">&#39;datetime&gt;=20240322080000&amp;&amp;entrytime&gt;=20240322080500&amp;&amp;optime&gt;=7&#39;</span><span class="w"> </span>--origins<span class="o">=</span>test-node
+<span class="o">{</span><span class="s1">&#39;spid&#39;</span>:<span class="w"> </span><span class="s1">&#39;server-incomming&#39;</span>,<span class="w"> </span><span class="s1">&#39;origin&#39;</span>:<span class="w"> </span><span class="s1">&#39;anders-nzxt&#39;</span>,<span class="w"> </span><span class="s1">&#39;source&#39;</span>:<span class="w"> </span><span class="s1">&#39;sebaa&#39;</span>,<span class="w"> </span><span class="s1">&#39;hashid&#39;</span>:<span class="w"> </span><span class="s1">&#39;7b76c8342a796f3809d01eb07f91f0adb3065402&#39;</span>,
+<span class="w"> </span><span class="s1">&#39;entrytime&#39;</span>:<span class="w"> </span><span class="s1">&#39;2024-03-22T08:06:38.619946&#39;</span>,<span class="w"> </span><span class="s1">&#39;optime&#39;</span>:<span class="w"> </span><span class="m">7</span>,<span class="w"> </span><span class="s1">&#39;optime_info&#39;</span>:<span class="w"> </span><span class="s1">&#39;metadata&#39;</span>,<span class="w"> </span><span class="s1">&#39;datetime&#39;</span>:<span class="w"> </span><span class="s1">&#39;2024-03-22T08:00:00&#39;</span>,<span class="w"> </span><span class="s1">&#39;object_type&#39;</span>:<span class="w"> </span><span class="s1">&#39;SCAN&#39;</span>,<span class="w"> </span><span class="s1">&#39;elevation_angle&#39;</span>:<span class="w"> </span><span class="m">0</span>.5<span class="o">}</span>
 </pre></div>
 </div>
 <p>Currently the syntax for –filter is one entry follow by a number of entries separated by &amp;&amp;. Each entry should have the following syntax “name[OP]value” where OP can be
@@ -302,18 +300,18 @@ list_statistic_ids.</p>
 </ul>
 </section>
 <section id="list-statistic-ids">
-<span id="doc-rest-cmd-list-statistic-ids"></span><h3>list_statistic_ids<a class="headerlink" href="#list-statistic-ids" title="Permalink to this headline">¶</a></h3>
+<span id="doc-rest-cmd-list-statistic-ids"></span><h3>list_statistic_ids<a class="headerlink" href="#list-statistic-ids" title="Link to this heading">¶</a></h3>
 <p>Usage: baltrad-exchange-client list_statistic_ids [OPTIONS]</p>
 <p>Queries the exchange server for the available statistics ids</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt; baltrad-exchange-client list_statistic_ids
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt;<span class="w"> </span>baltrad-exchange-client<span class="w"> </span>list_statistic_ids
 </pre></div>
 </div>
 </section>
 <section id="post-message">
-<span id="doc-rest-cmd-post-json-message"></span><h3>post_message<a class="headerlink" href="#post-message" title="Permalink to this headline">¶</a></h3>
+<span id="doc-rest-cmd-post-json-message"></span><h3>post_message<a class="headerlink" href="#post-message" title="Link to this heading">¶</a></h3>
 <p>Usage: baltrad-exchange-client post_message [OPTIONS] MESSAGE</p>
 <p>Posts a json message to the exchange server. Can be used to trigger for example a runnable job.</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt; baltrad-exchange-client post_message <span class="s1">&#39;{&quot;trigger&quot;:&quot;trigger_4&quot;}&#39;</span>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt;<span class="w"> </span>baltrad-exchange-client<span class="w"> </span>post_message<span class="w"> </span><span class="s1">&#39;{&quot;trigger&quot;:&quot;trigger_4&quot;}&#39;</span>
 </pre></div>
 </div>
 <p id="doc-rest-cmd-server-info">server_info</p>
@@ -329,37 +327,37 @@ The name this server is identifying itself when sending files</p></li>
 The public key that can be used to identify myself as</p></li>
 </ul>
 </div></blockquote>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt; baltrad-exchange-client server_info uptime
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt;<span class="w"> </span>baltrad-exchange-client<span class="w"> </span>server_info<span class="w"> </span>uptime
 </pre></div>
 </div>
 </section>
 <section id="supervise">
-<span id="id1"></span><h3>supervise<a class="headerlink" href="#supervise" title="Permalink to this headline">¶</a></h3>
+<span id="id1"></span><h3>supervise<a class="headerlink" href="#supervise" title="Link to this heading">¶</a></h3>
 <p>Usage: baltrad-exchange-client supervise [OPTIONS]</p>
 <p>This operation is using the statistics database to monitor that files are received timely. It can be seen
 like a call to get_statistics with –spid=server-incomming and instead of returning the entries only a message
 is returned indicating if criteria is meet or not.</p>
 <p>Example: Check if any file from sebaa has arrived that has a nominal time within last 300 seconds</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt; baltrad-exchange-client supervise --source<span class="o">=</span>sebaa --limit<span class="o">=</span><span class="m">300</span>
-<span class="o">{</span><span class="s1">&#39;status&#39;</span>: <span class="s1">&#39;OK&#39;</span><span class="o">}</span>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt;<span class="w"> </span>baltrad-exchange-client<span class="w"> </span>supervise<span class="w"> </span>--source<span class="o">=</span>sebaa<span class="w"> </span>--limit<span class="o">=</span><span class="m">300</span>
+<span class="o">{</span><span class="s1">&#39;status&#39;</span>:<span class="w"> </span><span class="s1">&#39;OK&#39;</span><span class="o">}</span>
 OK
 </pre></div>
 </div>
 <p>Example: Check if a PVOL has arrived for sebaa that has a nominal time within last 300 seconds</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt; baltrad-exchange-client supervise --source<span class="o">=</span>sebaa --object_type<span class="o">=</span>PVOL --limit<span class="o">=</span><span class="m">300</span>
-<span class="o">{</span><span class="s1">&#39;status&#39;</span>: <span class="s1">&#39;ERROR&#39;</span><span class="o">}</span>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt;<span class="w"> </span>baltrad-exchange-client<span class="w"> </span>supervise<span class="w"> </span>--source<span class="o">=</span>sebaa<span class="w"> </span>--object_type<span class="o">=</span>PVOL<span class="w"> </span>--limit<span class="o">=</span><span class="m">300</span>
+<span class="o">{</span><span class="s1">&#39;status&#39;</span>:<span class="w"> </span><span class="s1">&#39;ERROR&#39;</span><span class="o">}</span>
 ERROR
 </pre></div>
 </div>
 <p>Example: Check if any file arrived within last 300 seconds. Note, that entrylimit is used instead and limit is using default value</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt; baltrad-exchange-client supervise --source<span class="o">=</span>sebaa --entrylimit<span class="o">=</span><span class="m">300</span>
-<span class="o">{</span><span class="s1">&#39;status&#39;</span>: <span class="s1">&#39;OK&#39;</span><span class="o">}</span>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>%&gt;<span class="w"> </span>baltrad-exchange-client<span class="w"> </span>supervise<span class="w"> </span>--source<span class="o">=</span>sebaa<span class="w"> </span>--entrylimit<span class="o">=</span><span class="m">300</span>
+<span class="o">{</span><span class="s1">&#39;status&#39;</span>:<span class="w"> </span><span class="s1">&#39;OK&#39;</span><span class="o">}</span>
 OK
 </pre></div>
 </div>
 </section>
 <section id="store">
-<span id="doc-rest-cmd-store-file"></span><h3>store<a class="headerlink" href="#store" title="Permalink to this headline">¶</a></h3>
+<span id="doc-rest-cmd-store-file"></span><h3>store<a class="headerlink" href="#store" title="Link to this heading">¶</a></h3>
 <p>Usage: baltrad-exchange-client store [OPTIONS] FILE [ FILE]</p>
 <p>Posts a sequence of files to the exchange server.</p>
 </section>
@@ -373,8 +371,9 @@ OK
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">Command line tools</a><ul>
 <li><a class="reference internal" href="#baltrad-exchange-config">baltrad-exchange-config</a><ul>
 <li><a class="reference internal" href="#create-keys">create_keys</a></li>
@@ -397,12 +396,17 @@ OK
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="userguide.html"
-                        title="previous chapter">User Guide</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="rest.html"
-                        title="next chapter">REST interface</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="userguide.html"
+                          title="previous chapter">User Guide</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="rest.html"
+                          title="next chapter">REST interface</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -419,7 +423,7 @@ OK
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -444,8 +448,8 @@ OK
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Anders Henja.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>bexchange.web.util &#8212; baltrad-exchange 0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -71,12 +69,16 @@
 
 <span class="kn">from</span> <span class="nn">werkzeug.exceptions</span> <span class="kn">import</span> <span class="n">HTTPException</span>
 
-<div class="viewcode-block" id="JsonRequestMixin"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.JsonRequestMixin">[docs]</a><span class="k">class</span> <span class="nc">JsonRequestMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Request mixin providing JSON-decoding of request body</span>
+<div class="viewcode-block" id="JsonRequestMixin">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.JsonRequestMixin">[docs]</a>
+<span class="k">class</span> <span class="nc">JsonRequestMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Request mixin providing JSON-decoding of request body</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
-<div class="viewcode-block" id="JsonRequestMixin.get_json_data"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.JsonRequestMixin.get_json_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_json_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;try JSON decoding :attr:`self.data`</span>
+<div class="viewcode-block" id="JsonRequestMixin.get_json_data">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.JsonRequestMixin.get_json_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_json_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;try JSON decoding :attr:`self.data`</span>
 
 <span class="sd">        :return: the decoded data</span>
 <span class="sd">        :raise: :class:`HttpBadRequest` if decoding fails</span>
@@ -87,9 +89,13 @@
                 <span class="n">jdata</span> <span class="o">=</span> <span class="n">jdata</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">jdata</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">HttpBadRequest</span><span class="p">(</span><span class="s2">&quot;invalid json: &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span></div></div>
+            <span class="k">raise</span> <span class="n">HttpBadRequest</span><span class="p">(</span><span class="s2">&quot;invalid json: &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span></div>
+</div>
 
-<div class="viewcode-block" id="Request"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.Request">[docs]</a><span class="k">class</span> <span class="nc">Request</span><span class="p">(</span><span class="n">WerkzeugRequest</span><span class="p">,</span>
+
+<div class="viewcode-block" id="Request">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.Request">[docs]</a>
+<span class="k">class</span> <span class="nc">Request</span><span class="p">(</span><span class="n">WerkzeugRequest</span><span class="p">,</span>
               <span class="n">JsonRequestMixin</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environ</span><span class="p">,</span> <span class="n">max_content_length</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_form_memory_size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">WerkzeugRequest</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environ</span><span class="p">)</span>
@@ -97,22 +103,34 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">max_form_memory_size</span> <span class="o">=</span> <span class="n">max_form_memory_size</span></div>
 
 
-<div class="viewcode-block" id="RequestContext"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.RequestContext">[docs]</a><span class="k">class</span> <span class="nc">RequestContext</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+<div class="viewcode-block" id="RequestContext">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.RequestContext">[docs]</a>
+<span class="k">class</span> <span class="nc">RequestContext</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">provider</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">enable_remove_all_files</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">request</span> <span class="o">=</span> <span class="n">request</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">backend</span> <span class="o">=</span> <span class="n">backend</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">provider</span> <span class="o">=</span> <span class="n">provider</span>
     
-<div class="viewcode-block" id="RequestContext.is_anonymous"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.RequestContext.is_anonymous">[docs]</a>    <span class="k">def</span> <span class="nf">is_anonymous</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="RequestContext.is_anonymous">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.RequestContext.is_anonymous">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_anonymous</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">provider</span> <span class="o">!=</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">provider</span> <span class="o">!=</span> <span class="s2">&quot;noauth&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="kc">True</span></div>
-    
-<div class="viewcode-block" id="RequestContext.make_url"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.RequestContext.make_url">[docs]</a>    <span class="k">def</span> <span class="nf">make_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">path</span></div></div>
 
-<div class="viewcode-block" id="Response"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.Response">[docs]</a><span class="k">class</span> <span class="nc">Response</span><span class="p">(</span><span class="n">WerkzeugResponse</span><span class="p">):</span>
+    
+<div class="viewcode-block" id="RequestContext.make_url">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.RequestContext.make_url">[docs]</a>
+    <span class="k">def</span> <span class="nf">make_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">path</span></div>
+</div>
+
+
+<div class="viewcode-block" id="Response">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.Response">[docs]</a>
+<span class="k">class</span> <span class="nc">Response</span><span class="p">(</span><span class="n">WerkzeugResponse</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;text/plain&quot;</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">httplibclient</span><span class="o">.</span><span class="n">OK</span><span class="p">):</span>
         <span class="n">WerkzeugResponse</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span>
@@ -120,21 +138,33 @@
             <span class="n">status</span><span class="o">=</span><span class="n">status</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="NoContentResponse"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.NoContentResponse">[docs]</a><span class="k">class</span> <span class="nc">NoContentResponse</span><span class="p">(</span><span class="n">WerkzeugResponse</span><span class="p">):</span>
+
+<div class="viewcode-block" id="NoContentResponse">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.NoContentResponse">[docs]</a>
+<span class="k">class</span> <span class="nc">NoContentResponse</span><span class="p">(</span><span class="n">WerkzeugResponse</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">WerkzeugResponse</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">httplibclient</span><span class="o">.</span><span class="n">NO_CONTENT</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="TemporaryRedirectResponse"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.TemporaryRedirectResponse">[docs]</a><span class="k">class</span> <span class="nc">TemporaryRedirectResponse</span><span class="p">(</span><span class="n">WerkzeugResponse</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TemporaryRedirectResponse">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.TemporaryRedirectResponse">[docs]</a>
+<span class="k">class</span> <span class="nc">TemporaryRedirectResponse</span><span class="p">(</span><span class="n">WerkzeugResponse</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">newlocation</span><span class="p">):</span>
         <span class="n">WerkzeugResponse</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">httplibclient</span><span class="o">.</span><span class="n">TEMPORARY_REDIRECT</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">newlocation</span></div>
 
-<div class="viewcode-block" id="PermanentRedirectResponse"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.PermanentRedirectResponse">[docs]</a><span class="k">class</span> <span class="nc">PermanentRedirectResponse</span><span class="p">(</span><span class="n">WerkzeugResponse</span><span class="p">):</span>
+
+<div class="viewcode-block" id="PermanentRedirectResponse">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.PermanentRedirectResponse">[docs]</a>
+<span class="k">class</span> <span class="nc">PermanentRedirectResponse</span><span class="p">(</span><span class="n">WerkzeugResponse</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">newlocation</span><span class="p">):</span>
         <span class="n">WerkzeugResponse</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">httplibclient</span><span class="o">.</span><span class="n">PERMANENT_REDIRECT</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">newlocation</span></div>
 
-<div class="viewcode-block" id="JsonResponse"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.JsonResponse">[docs]</a><span class="k">class</span> <span class="nc">JsonResponse</span><span class="p">(</span><span class="n">WerkzeugResponse</span><span class="p">):</span>
+
+<div class="viewcode-block" id="JsonResponse">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.JsonResponse">[docs]</a>
+<span class="k">class</span> <span class="nc">JsonResponse</span><span class="p">(</span><span class="n">WerkzeugResponse</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">httplibclient</span><span class="o">.</span><span class="n">OK</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">response</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">allow_nan</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -145,23 +175,35 @@
             <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="HttpBadRequest"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.HttpBadRequest">[docs]</a><span class="k">class</span> <span class="nc">HttpBadRequest</span><span class="p">(</span><span class="n">HTTPException</span><span class="p">):</span>
+
+<div class="viewcode-block" id="HttpBadRequest">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.HttpBadRequest">[docs]</a>
+<span class="k">class</span> <span class="nc">HttpBadRequest</span><span class="p">(</span><span class="n">HTTPException</span><span class="p">):</span>
     <span class="n">code</span> <span class="o">=</span> <span class="n">httplibclient</span><span class="o">.</span><span class="n">BAD_REQUEST</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">response</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">HTTPException</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="HttpNotFound"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.HttpNotFound">[docs]</a><span class="k">class</span> <span class="nc">HttpNotFound</span><span class="p">(</span><span class="n">HTTPException</span><span class="p">):</span>
+
+<div class="viewcode-block" id="HttpNotFound">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.HttpNotFound">[docs]</a>
+<span class="k">class</span> <span class="nc">HttpNotFound</span><span class="p">(</span><span class="n">HTTPException</span><span class="p">):</span>
     <span class="n">code</span> <span class="o">=</span> <span class="n">httplibclient</span><span class="o">.</span><span class="n">NOT_FOUND</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">response</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">HTTPException</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span></div>
+
     
-<div class="viewcode-block" id="HttpConflict"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.HttpConflict">[docs]</a><span class="k">class</span> <span class="nc">HttpConflict</span><span class="p">(</span><span class="n">HTTPException</span><span class="p">):</span>
+<div class="viewcode-block" id="HttpConflict">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.HttpConflict">[docs]</a>
+<span class="k">class</span> <span class="nc">HttpConflict</span><span class="p">(</span><span class="n">HTTPException</span><span class="p">):</span>
     <span class="n">code</span> <span class="o">=</span> <span class="n">httplibclient</span><span class="o">.</span><span class="n">CONFLICT</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">response</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">HTTPException</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="HttpUnauthorized"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.HttpUnauthorized">[docs]</a><span class="k">class</span> <span class="nc">HttpUnauthorized</span><span class="p">(</span><span class="n">HTTPException</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;401 Unauthorized</span>
+
+<div class="viewcode-block" id="HttpUnauthorized">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.HttpUnauthorized">[docs]</a>
+<span class="k">class</span> <span class="nc">HttpUnauthorized</span><span class="p">(</span><span class="n">HTTPException</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;401 Unauthorized</span>
 
 <span class="sd">    :param challenge: a string to reply in *www-authenticate* header. If given</span>
 <span class="sd">                      as a sequence of strings, multiple *www-authenticate*</span>
@@ -175,16 +217,23 @@
             <span class="n">challenge</span> <span class="o">=</span> <span class="p">[</span><span class="n">challenge</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_challenges</span> <span class="o">=</span> <span class="n">challenge</span>
     
-<div class="viewcode-block" id="HttpUnauthorized.get_headers"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.HttpUnauthorized.get_headers">[docs]</a>    <span class="k">def</span> <span class="nf">get_headers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environ</span><span class="p">,</span> <span class="n">scope</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="HttpUnauthorized.get_headers">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.HttpUnauthorized.get_headers">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_headers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environ</span><span class="p">,</span> <span class="n">scope</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="n">headers</span> <span class="o">=</span> <span class="n">HTTPException</span><span class="o">.</span><span class="n">get_headers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environ</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">challenge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_challenges</span><span class="p">:</span>
             <span class="n">headers</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s2">&quot;www-authenticate&quot;</span><span class="p">,</span> <span class="n">challenge</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">headers</span></div></div>
+        <span class="k">return</span> <span class="n">headers</span></div>
+</div>
 
-<div class="viewcode-block" id="HttpForbidden"><a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.HttpForbidden">[docs]</a><span class="k">class</span> <span class="nc">HttpForbidden</span><span class="p">(</span><span class="n">HTTPException</span><span class="p">):</span>
+
+<div class="viewcode-block" id="HttpForbidden">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.HttpForbidden">[docs]</a>
+<span class="k">class</span> <span class="nc">HttpForbidden</span><span class="p">(</span><span class="n">HTTPException</span><span class="p">):</span>
     <span class="n">code</span> <span class="o">=</span> <span class="n">httplibclient</span><span class="o">.</span><span class="n">FORBIDDEN</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">response</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">HTTPException</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span></div>
+
 
 </pre></div>
 
@@ -203,7 +252,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -223,8 +272,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Anders Henja.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    &#169; Copyright 2022, Anders Henja.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>
