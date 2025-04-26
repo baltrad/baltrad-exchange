@@ -150,6 +150,16 @@ class publisher(publishers.standard_publisher):
 
         tmpfile.close()
 
+    def stop(self):
+        logger.info("Stopping zmq publisher")
+        try:
+            self._socket.close()
+        except:
+            logger.exception("Failed to close socket")
+        super(publisher, self).stop()
+        logger.info("Zmq publisher stopped")
+
+
 class dmzpublisher(publisher):
     """The zmqdmz publisher is used to publish messages to a dmz proxy. It is run in a separate thread
     """

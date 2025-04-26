@@ -263,6 +263,15 @@ class storage_manager:
         """
         return name in self.storage
     
+    def remove_storage(self, name):
+        """
+        :param name: Name of the storage
+        """
+        try:
+            del self.storage[name]
+        except:
+            logger.exception("Failed to remove storage: %s"%name)
+
     def store(self, name, path, meta):
         """Stores a file in the specified storage.
         :param name: Name in which the file should be stored
@@ -270,7 +279,7 @@ class storage_manager:
         :param meta: Metadata about the file that should be stored
         """
         self.storage[name].store(path, meta)
-        
+    
     @classmethod
     def create_storage(self, clz, name, backend, extra_arguments):
         """Creates an instance of clz with specified arguments

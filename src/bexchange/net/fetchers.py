@@ -144,7 +144,7 @@ class baseuri_patternmatching_fetcher(baseuri_fetcher):
 
     def fnpattern(self):
         """Returns the fnpattern
-        :return: the filename pattern, like \*.h5
+        :return: the filename pattern, like \\*.h5
         """
         return self._fnpattern
     

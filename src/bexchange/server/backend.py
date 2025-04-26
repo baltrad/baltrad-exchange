@@ -41,6 +41,10 @@ import time, datetime
 import threading
 import os,stat,sys
 import uuid
+import pyinotify
+from threading import Thread
+import re
+
 from types import SimpleNamespace
 import logging
 from baltrad.bdbcommon import oh5, expr
@@ -81,6 +85,98 @@ class HandledFiles(object):
             if len(self._handled) > self.limit:
                 self._handled.pop()
         return True
+
+class monitor_conf_dir_inotify_handler(pyinotify.ProcessEvent):
+    """Helper class to monitor a list of folders containing configuration files. Only will process
+    files ending with .json. Both added and removed events will be forwarded.
+    """
+    FILE_PATTERN=".+.json$"
+    MASK=pyinotify.IN_CLOSE_WRITE | pyinotify.IN_MOVED_TO | pyinotify.IN_DELETE | pyinotify.IN_MOVED_FROM
+    def __init__(self, folders, fn_file_written, fn_file_removed):
+        self._folders = folders
+        self._fn_file_written = fn_file_written
+        self._fn_file_removed = fn_file_removed
+        self._wm = pyinotify.WatchManager()
+        self._notifier = pyinotify.Notifier(self._wm, self)
+
+    def run(self):
+        """The runner for the thread. Starts the inotify notifier loop
+        """
+        self._notifier.loop()
+
+    def match_file(self, filename):
+        """Matches the file so that it is following the wanted pattern. Typically *.json.
+        :param filename: the filename that should be verified.
+        """
+        bname = os.path.basename(filename)
+        return re.match(self.FILE_PATTERN, bname) != None
+
+    def process_IN_CLOSE_WRITE(self, event):
+        """Will be called by the inotify notifier when file event occurs.
+        :param event: The file event
+        """
+        logger.debug("IN_CLOSE_WRITE: %s"%event.pathname)
+        if not self.match_file(event.pathname):
+            return
+        if self._fn_file_written:
+            self._fn_file_written(event.pathname)
+
+    def process_IN_MOVED_TO(self, event):
+        """Will be called by the inotify notifier when file event occurs.
+        :param event: The file event
+        """
+        logger.debug("IN_MOVED_TO: %s"%event.pathname)
+        if not self.match_file(event.pathname):
+            return
+        if self._fn_file_written:
+            self._fn_file_written(event.pathname)
+
+    def process_IN_MOVED_FROM(self, event):
+        """Will be called by the inotify notifier when file event occurs.
+        :param event: The file event
+        """
+        logger.debug("IN_MOVED_FROM: %s"%event.pathname)
+        if not self.match_file(event.pathname):
+            return
+        if self._fn_file_removed:
+            self._fn_file_removed(event.pathname)
+
+    def process_IN_DELETE(self, event):
+        """Will be called by the inotify notifier when file event occurs.
+        :param event: The file event
+        """
+        logger.debug("IN_DELETE: %s"%event.pathname)
+        if not self.match_file(event.pathname):
+            return
+        if self._fn_file_removed:
+            self._fn_file_removed(event.pathname)
+
+    def start(self):
+        """Starts the configuration file monitor
+        """
+        for folder in self._folders:
+            logger.info("monitor_conf_dir_inotify_handler watching '%s'"%(folder))
+            self._wm.add_watch(folder, self.MASK)
+
+        self._thread = Thread(target=self.run)
+        self._thread.daemon = True
+        self._thread.start()
+
+class config_handler(object):
+    """Helper class that is registered for all configuration files so that it is possible
+    to handle runtime changes.
+    """
+    def __init__(self, removed, modified, o):
+        self._removed = removed
+        self._modified = modified
+        self._object = o
+    
+    def removed(self, fname):
+        self._removed(fname, self._object)
+
+    def modified(self, fname):
+        self._modified(fname, self._object)
+
 
 class SimpleBackend(backend.Backend):
     """A backend taking care of the exchange
@@ -128,8 +224,32 @@ class SimpleBackend(backend.Backend):
 
         self._starttime = datetime.datetime.now()
 
+        self._current_configuration_files = {}
+
         self.initialize_configuration(self.confdirs)
-    
+
+        logger.info("Starting configuration file monitoring")
+
+        self.conf_monitor = monitor_conf_dir_inotify_handler(self.confdirs, self.conf_file_written, self.conf_file_removed)
+
+        self.conf_monitor.start()
+
+        logger.info("System initialized")
+
+    def conf_file_written(self, filename):
+        logger.info("File written: %s"%filename)
+        if filename in self._current_configuration_files:
+            self._current_configuration_files[filename].modified(filename)
+        else:
+            self.add_configuration_file(filename, True)
+
+    def conf_file_removed(self, filename):
+        logger.info("Filed removed: %s"%filename)
+        if filename in self._current_configuration_files:
+            self._current_configuration_files[filename].removed(filename)
+        else:
+            logger.warn(f"File {filename} not registered in monitored directory but still triggering event.. !?")
+
     def get_storage_manager(self):
         """
         :returns the storage manager used
@@ -165,8 +285,6 @@ class SimpleBackend(backend.Backend):
         logger.info("Starting runners")
         self.runner_manager.start()
 
-        logger.info("System initialized")
-
     def read_bdb_sources(self, odim_source_file):
         """Reads and parses the odim sources
         :param odim_source_file: file containing the odim source definitions
@@ -183,40 +301,171 @@ class SimpleBackend(backend.Backend):
         files = glob.glob("%s/*.json"%d)
         
         for f in files:
-            logger.info("Processing configuration file: %s"%f)
-            with open(f,"r") as fp:
-                data = json.load(fp)
-                if "publication" in data:
-                    p = publisher_manager.from_conf(data["publication"], self)
-                    if p:
-                        logger.info("Adding publication from configuration file: %s"%(f))
-                        self.publications.append(p)
+            self.add_configuration_file(f)
 
-                elif "subscription" in data:
-                    subs = subscription_manager.from_conf(data["subscription"], self)
-                    if subs:
-                        logger.info("Adding subscription from configuration file: %s"%(f))
-                        self.subscriptions.append(subs)
-                
-                elif "storage" in data:
-                    s = self.storage_manager.from_conf(data["storage"], self)
-                    logger.info("Adding storage from configuration file %s"%(f))
-                    self.storage_manager.add_storage(s)
-                
-                elif "runner" in data:
-                    runner = self.runner_manager.from_conf(data["runner"], self)
-                    if runner:
-                        logger.info("Adding runner from configuration file %s"%(f))
-                        self.runner_manager.add_runner(runner)
-                
-                elif "processor" in data:
-                    p = processors.processor_manager.from_conf(data["processor"], self)
-                    if p:
-                        logger.debug("Adding processor from configuration file %s"%(f))
-                        self.processor_manager.add_processor(p)
-                else:
-                    logger.info("Could not identify content of configuration file %s"%f)
+    def add_configuration_file(self, f, runtime=False):
+        """Adds the configuration from a configuration file to the system.
+        :param f: The filename containing the configuration in json format
+        :param runtime: If the configuration is added at startup (False) or during operational run (True)
+        """
+        logger.info("Processing configuration file: %s"%f)
+        with open(f,"r") as fp:
+            data = json.load(fp)
+            if "publication" in data:
+                p = publisher_manager.from_conf(data["publication"], self)
+                if p:
+                    logger.info("Adding publication from configuration file: %s"%(f))
+                    self.publications.append(p)
+                    self._current_configuration_files[f] = config_handler(self.publication_removed, self.publication_modified, p)
 
+            elif "subscription" in data:
+                subs = subscription_manager.from_conf(data["subscription"], self)
+                if subs:
+                    logger.info("Adding subscription from configuration file: %s"%(f))
+                    self.subscriptions.append(subs)
+                    self._current_configuration_files[f] = config_handler(self.subscription_removed, self.subscription_modified, subs)
+
+            elif "storage" in data:
+                s = self.storage_manager.from_conf(data["storage"], self)
+                logger.info("Adding storage from configuration file %s"%(f))
+                self.storage_manager.add_storage(s)
+
+                self._current_configuration_files[f] = config_handler(self.storage_removed, self.storage_modified, s)
+
+            elif "runner" in data:
+                runner = self.runner_manager.from_conf(data["runner"], self)
+                if runner:
+                    logger.info("Adding runner from configuration file %s"%(f))
+                    self.runner_manager.add_runner(runner)
+                    self._current_configuration_files[f] = config_handler(self.runner_removed, self.runner_modified, runner)
+                    if runtime:
+                        runner.start()
+                        logger.info(f"Runner started")
+
+            elif "processor" in data:
+                p = processors.processor_manager.from_conf(data["processor"], self)
+                if p:
+                    logger.debug("Adding processor from configuration file %s"%(f))
+                    self.processor_manager.add_processor(p)
+                    self._current_configuration_files[f] = config_handler(self.processor_removed, self.processor_modified, p)
+
+            else:
+                logger.info("Could not identify content of configuration file %s"%f)
+
+    def processor_modified(self, fname, o):
+        """Called when a processor configuration file is modified.,
+        :param fname: the filename affected
+        :param o: the actual processor
+        """
+        self.processor_removed(fname, o)
+
+        self.add_configuration_file(fname, True)
+
+    def processor_removed(self, fname, o):
+        """Called when removing a processor during runtime operation
+        :param fname: the filename affected
+        :param o: the actual processor
+        """
+        if fname in self._current_configuration_files:
+            del self._current_configuration_files[fname]
+
+        self.processor_manager.remove_processor(o.name())
+
+        logger.info("Processor removed: %s"%fname)
+
+    def storage_modified(self, fname, o):
+        """Called when a storage configuration file is modified.,
+        :param fname: the filename affected
+        :param o: the actual storage
+        """
+        self.storage_removed(fname, o)
+
+        self.add_configuration_file(fname, True)
+
+    def storage_removed(self, fname, o):
+        """Called when removing a storage during runtime operation
+        :param fname: the filename affected
+        :param o: the actual storage
+        """
+        if fname in self._current_configuration_files:
+            del self._current_configuration_files[fname]
+
+        self.storage_manager.remove_storage(o.name())
+
+        logger.info("Storage removed: %s"%fname)
+
+    def subscription_modified(self, fname, o):
+        """Called when a subscription configuration file is modified.,
+        :param fname: the filename affected
+        :param o: the actual subscription
+        """
+        self.subscription_removed(fname, o)
+
+        self.add_configuration_file(fname, True)
+
+    def subscription_removed(self, fname, o):
+        """Called when removing a subscription during runtime operation
+        :param fname: the filename affected
+        :param o: the actual subscription
+        """
+        if fname in self._current_configuration_files:
+            del self._current_configuration_files[fname]
+
+        self.subscriptions.remove(o)
+
+        logger.info("Subscription removed: %s"%fname)
+
+    def publication_modified(self, fname, o):
+        """Called when a publication configuration file is modified.,
+        :param fname: the filename affected
+        :param o: the actual publication
+        """
+        self.publication_removed(fname, o)
+        self.add_configuration_file(fname, True)
+
+
+    def publication_removed(self, fname, o):
+        """Called when removing a publication during runtime operation
+        :param fname: the filename affected
+        :param o: the actual publication
+        """
+        if fname in self._current_configuration_files:
+            del self._current_configuration_files[fname]
+
+        if o in self.publications:
+            try:
+                o.stop()
+            except:
+                logger.exception("Failed to stop publication")
+            self.publications.remove(o)
+
+        logger.info("Publication removed: %s"%fname)
+
+    def publication_modified(self, fname, o):
+        """Called when a publication configuration file is modified.,
+        :param fname: the filename affected
+        :param o: the actual publication
+        """
+        self.publication_removed(fname, o)
+        self.add_configuration_file(fname, True)
+
+    def runner_removed(self, fname, o):
+        """Called when removing a runner during runtime operation
+        :param fname: the filename affected
+        :param o: the actual runner
+        """
+        if fname in self._current_configuration_files:
+            del self._current_configuration_files[fname]
+        self.runner_manager.remove(o)
+        logger.info("Runner removed: %s"%fname)
+
+    def runner_modified(self, fname, o):
+        """Called when a runner configuration file is modified.,
+        :param fname: the filename affected
+        :param o: the actual runner
+        """
+        self.runner_removed(fname, o)
+        self.add_configuration_file(fname, True)
 
     @classmethod
     def from_conf(cls, conf):

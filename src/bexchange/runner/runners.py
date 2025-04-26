@@ -72,6 +72,11 @@ class runner(object):
         """
         raise Exception("Not implemented")
 
+    def stop(self):
+        """Abstract stop method. Will try to stop the runner. 
+        """
+        raise Exception("Not implemented")
+
 class inotify_runner_event_handler(pyinotify.ProcessEvent):
     def __init__(self, inotify_runner):
         """Constructor
@@ -187,6 +192,10 @@ class inotify_runner(runner):
         self._thread.daemon = True
         self._thread.start()
 
+    def stop(self):
+        logger.info("Stopping inotifier")
+        self._notifier.stop()
+
 class triggered_fetch_runner(runner, message_aware):
     """A triggered runner. This runner implements 'message_aware' so that a json-message
     can be handled. This runner is actually triggered from the WSGI-process and as such
@@ -214,7 +223,12 @@ class triggered_fetch_runner(runner, message_aware):
         """Not used
         """
         pass
-    
+
+    def stop(self):
+        """Not used
+        """
+        pass
+   
     def handle_message(self, json_message, nodename):
         """Handles the message if the json message contains a trigger that matches trigger names and
         that the nodename is allowed within the invoker_names by invoking the fetch method in fetcher
@@ -250,7 +264,7 @@ class statistics_cleanup_runner(runner):
         
         if "interval" in args:
             self._interval = args["interval"]
-            if not isinstance(self._interval, int):
+            if not isinstance(self._interval, int) and not isinstance(self._interval, float):
                 raise AttributeError("interval should be an integer")
 
         if "age" in args:
@@ -273,6 +287,14 @@ class statistics_cleanup_runner(runner):
         self._thread.daemon = True
         self._thread.start()
 
+    def stop(self):
+        self._running = False
+        if self._thread:
+            self._event.set()
+            self._thread.join()
+        logger.info("Stopped cleanup runner")
+
+
 class runner_manager:
     """ The runner manager. Will create and register the runner
     """
@@ -292,6 +314,15 @@ class runner_manager:
         """
         for r in self._runners:
             r.start()
+
+    def remove(self, runner):
+        """Stops and removes a specific runner
+        """
+        if runner in self._runners:
+            try:
+                runner.stop()
+            finally:
+                self._runners.remove(runner)
 
     def get_runners(self):
         """

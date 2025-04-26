@@ -24,7 +24,7 @@
 import os
 
 from bexchange.client import rest
-from threading import Thread
+from threading import Thread, Event
 from queue import Queue, Full
 import http.client as httplib
 import ftplib
@@ -166,6 +166,8 @@ class standard_publisher(publisher):
         self._queue_size = queue_size
         self._threads=[]
         self._queue = Queue(self._queue_size)
+        self._event = Event()    # We need an event since Queue doesn't seem to be able to be able to handle a proper shutdown until 3.13
+        self._running = False
 
         self._statistics_ok_plugin = None
         self._statistics_error_plugin = None
@@ -180,6 +182,10 @@ class standard_publisher(publisher):
         :param file: Actual file to be duplicated and sent.
         :param meta: The metadata to be verified by the connections
         """
+        if not self._running:
+            logger.info("Publisher is going down, will not handle more files")
+            return
+
         tmpfile = NamedTemporaryFile(dir=self.backend().get_tmp_folder())
         with open(file, "rb") as fp:
             shutil.copyfileobj(fp, tmpfile)
@@ -195,6 +201,7 @@ class standard_publisher(publisher):
         
         try:
             self._queue.put((tmpfile, meta), False)
+            self._event.set()
         except Full as e:
             logger.exception("Queue for publisher '%s' is full, dropping message with ID:'%s'"%(self.name(), util.create_fileid_from_meta(meta)))
             try:
@@ -215,8 +222,19 @@ class standard_publisher(publisher):
     def consumer(self):
         """ The consumer called by the individual threads. Will grab one entry from the queue and pass it on to the connections.
         """
-        while True:
-            tmpfile, meta = self._queue.get()
+        while self._running:
+            tmpfile, meta = None, None
+
+            self._event.wait()
+
+            try:
+                tmpfile, meta = self._queue.get_nowait()
+            except:
+                pass
+
+            if tmpfile is None: # In 3.13 there will be support for shutdown. For now, just except that we might get None..
+                continue
+
             try:
                 self.do_publish(tmpfile, meta)
                 if self._statistics_ok_plugin:
@@ -236,6 +254,7 @@ class standard_publisher(publisher):
     def start(self):
         """ Starts all consumer threads as daemon threads
         """
+        self._running = True        
         for i in range(self._nrthreads):
             t = Thread(target=self.consumer)
             t.daemon = True
@@ -245,8 +264,13 @@ class standard_publisher(publisher):
     def stop(self):
         """Joins the threads
         """
+        logger.info("Stopping publisher")
+        self._running = False
+        self._event.set()
         for t in self._threads:
             t.join()
+
+        logger.info("Publisher stopped")
 
 class publisher_manager:
     """The manager used for creating publishers from configuration

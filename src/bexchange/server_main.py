@@ -222,5 +222,8 @@ def run():
         logger.info("REST server listening on port '%d' supporting scheme: %s"%(parsedurl.port, parsedurl.scheme))
         try:
             server.start()
+        except KeyboardInterrupt:
+            pass
         finally:
             server.stop()
+            logger.info("Server stopped")

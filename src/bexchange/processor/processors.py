@@ -102,11 +102,30 @@ class processor_manager:
         """
         self.processors[processor.name()] = processor
 
+    def remove_processor(self, name):
+        """Removes a processor from the manager
+        :param name: The name of the processor that should be removed
+        """
+        if name in self.processors:
+            try:
+                self.processors[name].stop()
+            except:
+                logger.exception("Failed to stop processor: %s"%name)
+
+            try:
+                del self.processors[name]
+            except:
+                logger.exception("Failed to remove processor: %s"%name)
+
     def process(self, file, meta):
         """ Passes on the file to all registered processors. It is up to the processor to determine how
         the provided file should be handled.
         """
-        pass
+        for key, processor in self.processors.items():
+            try:
+                processor.process(file, meta) 
+            except:
+                logger.exception("Processor: %s could not process file %s"%(key, file))
 
     @classmethod
     def create_processor(self, name, clz, backend, active, extra_arguments):
