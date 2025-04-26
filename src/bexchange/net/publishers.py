@@ -25,7 +25,7 @@ import os
 
 from bexchange.client import rest
 from threading import Thread, Event
-from queue import Queue, Full
+from queue import Queue, Full, Empty
 import http.client as httplib
 import ftplib
 import urllib.parse as urlparse
@@ -201,7 +201,6 @@ class standard_publisher(publisher):
         
         try:
             self._queue.put((tmpfile, meta), False)
-            self._event.set()
         except Full as e:
             logger.exception("Queue for publisher '%s' is full, dropping message with ID:'%s'"%(self.name(), util.create_fileid_from_meta(meta)))
             try:
@@ -211,6 +210,8 @@ class standard_publisher(publisher):
 
             if self._statistics_error_plugin:
                 self._statistics_error_plugin.increment(self.name(), meta)
+        finally:
+            self._event.set()
 
     def do_publish(self, tmpfile, meta):
         """Passes a file to all connections
@@ -219,33 +220,36 @@ class standard_publisher(publisher):
             c.publish(tmpfile.name, meta)
         tmpfile.close()
 
+    def handle_consumer_file(self, tmpfile, meta):
+        """ Will handle the file that the consumer retrieved from the queue
+        :param self: self
+        :param tmpfile: the tmp file
+        :param meta: the meta data
+        """
+        try:
+            self.do_publish(tmpfile, meta)
+            if self._statistics_ok_plugin:
+                self._statistics_ok_plugin.increment(self.name(), meta)
+        except Exception as e:
+            logger.exception("Publisher: '%s' failed to publish with ID:'%s'"%(self.name(), util.create_fileid_from_meta(meta)))
+            if self._statistics_error_plugin:
+                self._statistics_error_plugin.increment(self.name(), meta)
+
     def consumer(self):
         """ The consumer called by the individual threads. Will grab one entry from the queue and pass it on to the connections.
         """
         while self._running:
-            tmpfile, meta = None, None
-
             try:
+                 # In 3.13 there will be support for shutdown. So we need to use nowait and instead use _event.wait for notification purposes
                 tmpfile, meta = self._queue.get_nowait()
-            except:
-                pass
 
-            if tmpfile is None: # In 3.13 there will be support for shutdown. For now, just except that we might get None..
+                self.handle_consumer_file(tmpfile, meta)
+
+                self._queue.task_done()
+            except Empty:
                 if not self._running:
                     break
                 self._event.wait(0.1)
-                continue
-
-            try:
-                self.do_publish(tmpfile, meta)
-                if self._statistics_ok_plugin:
-                    self._statistics_ok_plugin.increment(self.name(), meta)
-            except Exception as e:
-                logger.exception("Publisher: '%s' failed to publish with ID:'%s'"%(self.name(), util.create_fileid_from_meta(meta)))
-                if self._statistics_error_plugin:
-                    self._statistics_error_plugin.increment(self.name(), meta)
-            finally:
-                self._queue.task_done()
 
     def initialize(self):
         """Initializes the publisher before it is started.
