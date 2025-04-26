@@ -192,7 +192,7 @@ class statistics_manager:
             logger.exception("An error occured when incrementing statistics for spid:%s, origin:%s, ID:%s"%(spid, origin, util.create_fileid_from_meta(meta)))
 
         if save_post:
-            file_datetime = datetime.datetime(meta.what_date.year, meta.what_date.month, meta.what_date.day, meta.what_time.hour, meta.what_time.minute, meta.what_time.second, 0, tzinfo=datetime.UTC)
+            file_datetime = datetime.datetime(meta.what_date.year, meta.what_date.month, meta.what_date.day, meta.what_time.hour, meta.what_time.minute, meta.what_time.second, 0, tzinfo=datetime.timezone.utc)
             file_object = meta.what_object
             file_elangle = None
             if file_object == "SCAN":
@@ -202,7 +202,7 @@ class statistics_manager:
                 if mn:
                     file_elangle = mn.value
 
-            entrytime = datetime.datetime.now(datetime.UTC)
+            entrytime = datetime.datetime.now(datetime.timezone.utc)
             delay = (entrytime - file_datetime).seconds
             try:
                 self._sqldatabase.add(statentry(spid, origin, source, meta.bdb_metadata_hash, datetime.datetime.now(datetime.UTC), optime, optime_info, delay, file_datetime, file_object, file_elangle))

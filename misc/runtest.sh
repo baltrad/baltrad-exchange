@@ -25,7 +25,7 @@ create_and_init_venv() {
   python3 -m pip install 'git+https://github.com/baltrad/baltrad-db.git/#egg=baltrad-bdbcommon&subdirectory=common' || exit_with_message "Could not install bdbcommon"
   python3 -m pip install 'git+https://github.com/baltrad/baltrad-db.git/#egg=baltrad-bdbclient&subdirectory=client/python' || exit_with_message "Could not install bdbclient"
 
-  python3 setup.py develop
+  python3 -m pip install --editable .               #python3 setup.py develop
 }
 
 runtest() {
