@@ -205,7 +205,7 @@ class statistics_manager:
             entrytime = datetime.datetime.now(datetime.timezone.utc)
             delay = (entrytime - file_datetime).seconds
             try:
-                self._sqldatabase.add(statentry(spid, origin, source, meta.bdb_metadata_hash, datetime.datetime.now(datetime.UTC), optime, optime_info, delay, file_datetime, file_object, file_elangle))
+                self._sqldatabase.add(statentry(spid, origin, source, meta.bdb_metadata_hash, datetime.datetime.now(datetime.timezone.utc), optime, optime_info, delay, file_datetime, file_object, file_elangle))
             except:
                 logger.exception("An error occured when adding statentry for spid:%s, origin:%s, ID:%s"%(spid, origin, util.create_fileid_from_meta(meta)))
 
