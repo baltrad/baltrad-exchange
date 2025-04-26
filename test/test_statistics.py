@@ -154,7 +154,7 @@ class test_statistics(unittest.TestCase):
         origin = "origin"
         op_time = 5
         optime_info = None
-        dt = datetime.datetime(2024,4,10,10,0,0)
+        dt = datetime.datetime(2024,4,10,10,0,0, tzinfo=datetime.timezone.utc)
         meta = self.create_meta("PVOL", "senod", dt.date(), dt.time(), "123")
 
         self._statistics_mgr.increment(spid, origin, meta, save_post=True, increment_counter=False, optime=op_time, optime_info=optime_info)
@@ -174,7 +174,7 @@ class test_statistics(unittest.TestCase):
         origin = "origin"
         op_time = 5
         optime_info = None
-        dt = datetime.datetime(2024,4,10,10,0,0)
+        dt = datetime.datetime(2024,4,10,10,0,0, tzinfo=datetime.timezone.utc)
         meta = self.create_meta("PVOL", "senod", dt.date(), dt.time(), "123")
 
         self._sqldatabase.add = MagicMock(side_effect=Exception("an error"))
