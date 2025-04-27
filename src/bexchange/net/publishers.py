@@ -24,7 +24,7 @@
 import os
 
 from bexchange.client import rest
-from threading import Thread, Event
+from threading import Thread, Condition
 from queue import Queue, Full, Empty
 import http.client as httplib
 import ftplib
@@ -166,7 +166,7 @@ class standard_publisher(publisher):
         self._queue_size = queue_size
         self._threads=[]
         self._queue = Queue(self._queue_size)
-        self._event = Event()    # We need an event since Queue doesn't seem to be able to be able to handle a proper shutdown until 3.13
+        self._queue_condition = Condition()    # We need a condition since Queue doesn't seem to be able to be able to handle a proper shutdown until 3.13
         self._running = False
 
         self._statistics_ok_plugin = None
@@ -211,7 +211,8 @@ class standard_publisher(publisher):
             if self._statistics_error_plugin:
                 self._statistics_error_plugin.increment(self.name(), meta)
         finally:
-            self._event.set()
+            with self._queue_condition:
+                self._queue_condition.notify_all()
 
     def do_publish(self, tmpfile, meta):
         """Passes a file to all connections
@@ -249,7 +250,13 @@ class standard_publisher(publisher):
             except Empty:
                 if not self._running:
                     break
-                self._event.wait(0.1)
+
+                try:
+                    with self._queue_condition:
+                        if not self._running:
+                            self._queue_condition.wait(0.1)
+                except RuntimeError:
+                    pass
 
     def initialize(self):
         """Initializes the publisher before it is started.
@@ -271,7 +278,8 @@ class standard_publisher(publisher):
         """
         logger.info("Stopping publisher")
         self._running = False
-        self._event.set()
+        with self._queue_condition:
+            self._queue_condition.notify_all()
         for t in self._threads:
             t.join()
 
