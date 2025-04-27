@@ -62,7 +62,7 @@
 <span class="kn">import</span> <span class="nn">os</span>
 
 <span class="kn">from</span> <span class="nn">bexchange.client</span> <span class="kn">import</span> <span class="n">rest</span>
-<span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Thread</span><span class="p">,</span> <span class="n">Event</span>
+<span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Thread</span><span class="p">,</span> <span class="n">Condition</span>
 <span class="kn">from</span> <span class="nn">queue</span> <span class="kn">import</span> <span class="n">Queue</span><span class="p">,</span> <span class="n">Full</span><span class="p">,</span> <span class="n">Empty</span>
 <span class="kn">import</span> <span class="nn">http.client</span> <span class="k">as</span> <span class="nn">httplib</span>
 <span class="kn">import</span> <span class="nn">ftplib</span>
@@ -242,7 +242,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_queue_size</span> <span class="o">=</span> <span class="n">queue_size</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_threads</span><span class="o">=</span><span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_queue_size</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_event</span> <span class="o">=</span> <span class="n">Event</span><span class="p">()</span>    <span class="c1"># We need an event since Queue doesn&#39;t seem to be able to be able to handle a proper shutdown until 3.13</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_queue_condition</span> <span class="o">=</span> <span class="n">Condition</span><span class="p">()</span>    <span class="c1"># We need a condition since Queue doesn&#39;t seem to be able to be able to handle a proper shutdown until 3.13</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_statistics_ok_plugin</span> <span class="o">=</span> <span class="kc">None</span>
@@ -289,7 +289,8 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_statistics_error_plugin</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_statistics_error_plugin</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="n">meta</span><span class="p">)</span>
         <span class="k">finally</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_event</span><span class="o">.</span><span class="n">set</span><span class="p">()</span></div>
+            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queue_condition</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_queue_condition</span><span class="o">.</span><span class="n">notify_all</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="standard_publisher.do_publish">
@@ -336,7 +337,13 @@
             <span class="k">except</span> <span class="n">Empty</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running</span><span class="p">:</span>
                     <span class="k">break</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_event</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span></div>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queue_condition</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">_queue_condition</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+                    <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="standard_publisher.initialize">
@@ -367,7 +374,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Stopping publisher&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_event</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queue_condition</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_queue_condition</span><span class="o">.</span><span class="n">notify_all</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_threads</span><span class="p">:</span>
             <span class="n">t</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
 
