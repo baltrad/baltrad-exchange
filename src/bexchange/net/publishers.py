@@ -136,6 +136,57 @@ class publisher(object):
         """
         raise RuntimeError("Not implemented")
 
+class pubQueue:
+    """Wrapper around queue.Queue to be able to shutdown. This will be supported in python 3.13 but for now
+    this will be enough.
+    """
+    def __init__(self, qs):
+        """Constructor
+        :param qs: max queue size
+        """
+        self._queue = Queue(qs)
+        self._shutdown = False
+        self._condition = Condition()
+
+    def put(self, item):
+        """Puts an item into the queue without blocking.
+        If queue is shutdown, the item will not be added to the queue and this will be done silently
+        :param item: the item to add to the queue
+        """
+        with self._condition:
+            try:
+                if not self._shutdown:
+                    self._queue.put(item, block=False)
+            finally:
+                self._condition.notify_all()
+ 
+    def get(self, waittime=10):
+        """Returns an item from the queue. The wait time is the time in seconds the
+        thread should wait in the condition until checking for any new item in the queue.
+        This condition will be notified whenever put or shutdown is called.
+        :param waittime: The time to wait in seconds inside the condition
+        """
+        with self._condition:
+            while not self._shutdown:
+                item = None
+                try:
+                    return self._queue.get_nowait()
+                except:
+                    if not self._shutdown:
+                        self._condition.wait(waittime)
+
+    def task_done(self):
+        """Call this when task grabbed from queue is finished
+        """
+        self._queue.task_done()
+
+    def shutdown(self):
+        """Shuts down the queue.
+        """
+        with self._condition:
+            self._shutdown = True
+            self._condition.notify_all()
+
 class standard_publisher(publisher):
     """Standard publisher used for most situations. Provides two arguments. One is threads. The other is queue_size.
     """
@@ -165,8 +216,7 @@ class standard_publisher(publisher):
         self._nrthreads = nrthreads
         self._queue_size = queue_size
         self._threads=[]
-        self._queue = Queue(self._queue_size)
-        self._queue_condition = Condition()    # We need a condition since Queue doesn't seem to be able to be able to handle a proper shutdown until 3.13
+        self._queue = pubQueue(self._queue_size)
         self._running = False
 
         self._statistics_ok_plugin = None
@@ -200,7 +250,7 @@ class standard_publisher(publisher):
             meta = self.backend().metadata_from_file(tmpfile.name)
         
         try:
-            self._queue.put((tmpfile, meta), False)
+            self._queue.put((tmpfile, meta))
         except Full as e:
             logger.exception("Queue for publisher '%s' is full, dropping message with ID:'%s'"%(self.name(), util.create_fileid_from_meta(meta)))
             try:
@@ -210,9 +260,6 @@ class standard_publisher(publisher):
 
             if self._statistics_error_plugin:
                 self._statistics_error_plugin.increment(self.name(), meta)
-        finally:
-            with self._queue_condition:
-                self._queue_condition.notify_all()
 
     def do_publish(self, tmpfile, meta):
         """Passes a file to all connections
@@ -242,7 +289,7 @@ class standard_publisher(publisher):
         while self._running:
             try:
                  # In 3.13 there will be support for shutdown. So we need to use nowait and instead use _event.wait for notification purposes
-                tmpfile, meta = self._queue.get_nowait()
+                tmpfile, meta = self._queue.get()
 
                 self.handle_consumer_file(tmpfile, meta)
 
@@ -250,13 +297,6 @@ class standard_publisher(publisher):
             except Empty:
                 if not self._running:
                     break
-
-                try:
-                    with self._queue_condition:
-                        if not self._running:
-                            self._queue_condition.wait(0.1)
-                except RuntimeError:
-                    pass
 
     def initialize(self):
         """Initializes the publisher before it is started.
@@ -278,8 +318,8 @@ class standard_publisher(publisher):
         """
         logger.info("Stopping publisher")
         self._running = False
-        with self._queue_condition:
-            self._queue_condition.notify_all()
+        self._queue.shutdown()
+
         for t in self._threads:
             t.join()
 
