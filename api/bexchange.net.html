@@ -345,6 +345,43 @@ Each (or most) publisher_connection is associated with one or more senders.</p>
 <section id="module-bexchange.net.publishers">
 <span id="bexchange-net-publishers-module"></span><h2>bexchange.net.publishers module<a class="headerlink" href="#module-bexchange.net.publishers" title="Link to this heading">¶</a></h2>
 <dl class="py class">
+<dt class="sig sig-object py" id="bexchange.net.publishers.pubQueue">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.publishers.</span></span><span class="sig-name descname"><span class="pre">pubQueue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#pubQueue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.pubQueue" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Wrapper around queue.Queue to be able to shutdown. This will be supported in python 3.13 but for now
+this will be enough.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.net.publishers.pubQueue.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">waittime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#pubQueue.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.pubQueue.get" title="Link to this definition">¶</a></dt>
+<dd><p>Returns an item from the queue. The wait time is the time in seconds the
+thread should wait in the condition until checking for any new item in the queue.
+This condition will be notified whenever put or shutdown is called.
+:param waittime: The time to wait in seconds inside the condition</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.net.publishers.pubQueue.put">
+<span class="sig-name descname"><span class="pre">put</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#pubQueue.put"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.pubQueue.put" title="Link to this definition">¶</a></dt>
+<dd><p>Puts an item into the queue without blocking.
+If queue is shutdown, the item will not be added to the queue and this will be done silently
+:param item: the item to add to the queue</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.net.publishers.pubQueue.shutdown">
+<span class="sig-name descname"><span class="pre">shutdown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#pubQueue.shutdown"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.pubQueue.shutdown" title="Link to this definition">¶</a></dt>
+<dd><p>Shuts down the queue.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.net.publishers.pubQueue.task_done">
+<span class="sig-name descname"><span class="pre">task_done</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#pubQueue.task_done"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.pubQueue.task_done" title="Link to this definition">¶</a></dt>
+<dd><p>Call this when task grabbed from queue is finished</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="bexchange.net.publishers.publisher">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.publishers.</span></span><span class="sig-name descname"><span class="pre">publisher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifilter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connections</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decorators</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#publisher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.publisher" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -966,6 +1003,13 @@ with NamedTemporaryFile() as fp: c.getfo(”….”, fp)</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-bexchange.net.publishers">bexchange.net.publishers module</a><ul>
+<li><a class="reference internal" href="#bexchange.net.publishers.pubQueue"><code class="docutils literal notranslate"><span class="pre">pubQueue</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.net.publishers.pubQueue.get"><code class="docutils literal notranslate"><span class="pre">pubQueue.get()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.publishers.pubQueue.put"><code class="docutils literal notranslate"><span class="pre">pubQueue.put()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.publishers.pubQueue.shutdown"><code class="docutils literal notranslate"><span class="pre">pubQueue.shutdown()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.publishers.pubQueue.task_done"><code class="docutils literal notranslate"><span class="pre">pubQueue.task_done()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#bexchange.net.publishers.publisher"><code class="docutils literal notranslate"><span class="pre">publisher</span></code></a><ul>
 <li><a class="reference internal" href="#bexchange.net.publishers.publisher.active"><code class="docutils literal notranslate"><span class="pre">publisher.active()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.net.publishers.publisher.backend"><code class="docutils literal notranslate"><span class="pre">publisher.backend()</span></code></a></li>

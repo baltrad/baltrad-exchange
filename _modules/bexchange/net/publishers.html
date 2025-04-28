@@ -210,6 +210,72 @@
 </div>
 
 
+<div class="viewcode-block" id="pubQueue">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.pubQueue">[docs]</a>
+<span class="k">class</span> <span class="nc">pubQueue</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrapper around queue.Queue to be able to shutdown. This will be supported in python 3.13 but for now</span>
+<span class="sd">    this will be enough.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="sd">        :param qs: max queue size</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">(</span><span class="n">qs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_shutdown</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_condition</span> <span class="o">=</span> <span class="n">Condition</span><span class="p">()</span>
+
+<div class="viewcode-block" id="pubQueue.put">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.pubQueue.put">[docs]</a>
+    <span class="k">def</span> <span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Puts an item into the queue without blocking.</span>
+<span class="sd">        If queue is shutdown, the item will not be added to the queue and this will be done silently</span>
+<span class="sd">        :param item: the item to add to the queue</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_condition</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shutdown</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">block</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">finally</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_condition</span><span class="o">.</span><span class="n">notify_all</span><span class="p">()</span></div>
+
+ 
+<div class="viewcode-block" id="pubQueue.get">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.pubQueue.get">[docs]</a>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">waittime</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns an item from the queue. The wait time is the time in seconds the</span>
+<span class="sd">        thread should wait in the condition until checking for any new item in the queue.</span>
+<span class="sd">        This condition will be notified whenever put or shutdown is called.</span>
+<span class="sd">        :param waittime: The time to wait in seconds inside the condition</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_condition</span><span class="p">:</span>
+            <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shutdown</span><span class="p">:</span>
+                <span class="n">item</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">get_nowait</span><span class="p">()</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shutdown</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_condition</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">waittime</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="pubQueue.task_done">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.pubQueue.task_done">[docs]</a>
+    <span class="k">def</span> <span class="nf">task_done</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Call this when task grabbed from queue is finished</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">task_done</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="pubQueue.shutdown">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.pubQueue.shutdown">[docs]</a>
+    <span class="k">def</span> <span class="nf">shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Shuts down the queue.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_condition</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_shutdown</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_condition</span><span class="o">.</span><span class="n">notify_all</span><span class="p">()</span></div>
+</div>
+
+
 <div class="viewcode-block" id="standard_publisher">
 <a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.standard_publisher">[docs]</a>
 <span class="k">class</span> <span class="nc">standard_publisher</span><span class="p">(</span><span class="n">publisher</span><span class="p">):</span>
@@ -241,8 +307,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_nrthreads</span> <span class="o">=</span> <span class="n">nrthreads</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_queue_size</span> <span class="o">=</span> <span class="n">queue_size</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_threads</span><span class="o">=</span><span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_queue_size</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_queue_condition</span> <span class="o">=</span> <span class="n">Condition</span><span class="p">()</span>    <span class="c1"># We need a condition since Queue doesn&#39;t seem to be able to be able to handle a proper shutdown until 3.13</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span> <span class="o">=</span> <span class="n">pubQueue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_queue_size</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_statistics_ok_plugin</span> <span class="o">=</span> <span class="kc">None</span>
@@ -278,7 +343,7 @@
             <span class="n">meta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="p">()</span><span class="o">.</span><span class="n">metadata_from_file</span><span class="p">(</span><span class="n">tmpfile</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
         
         <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="n">tmpfile</span><span class="p">,</span> <span class="n">meta</span><span class="p">),</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="n">tmpfile</span><span class="p">,</span> <span class="n">meta</span><span class="p">))</span>
         <span class="k">except</span> <span class="n">Full</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Queue for publisher &#39;</span><span class="si">%s</span><span class="s2">&#39; is full, dropping message with ID:&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)))</span>
             <span class="k">try</span><span class="p">:</span>
@@ -287,10 +352,7 @@
                 <span class="k">pass</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_statistics_error_plugin</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_statistics_error_plugin</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="n">meta</span><span class="p">)</span>
-        <span class="k">finally</span><span class="p">:</span>
-            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queue_condition</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_queue_condition</span><span class="o">.</span><span class="n">notify_all</span><span class="p">()</span></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_statistics_error_plugin</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="n">meta</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="standard_publisher.do_publish">
@@ -329,21 +391,14 @@
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                  <span class="c1"># In 3.13 there will be support for shutdown. So we need to use nowait and instead use _event.wait for notification purposes</span>
-                <span class="n">tmpfile</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">get_nowait</span><span class="p">()</span>
+                <span class="n">tmpfile</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">handle_consumer_file</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">task_done</span><span class="p">()</span>
             <span class="k">except</span> <span class="n">Empty</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running</span><span class="p">:</span>
-                    <span class="k">break</span>
-
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queue_condition</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running</span><span class="p">:</span>
-                            <span class="bp">self</span><span class="o">.</span><span class="n">_queue_condition</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
-                <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
-                    <span class="k">pass</span></div>
+                    <span class="k">break</span></div>
 
 
 <div class="viewcode-block" id="standard_publisher.initialize">
@@ -374,8 +429,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Stopping publisher&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queue_condition</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_queue_condition</span><span class="o">.</span><span class="n">notify_all</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+
         <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_threads</span><span class="p">:</span>
             <span class="n">t</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
 
