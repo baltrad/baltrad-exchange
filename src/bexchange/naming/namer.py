@@ -22,11 +22,17 @@
 ## @author Anders Henja, SMHI
 ## @date 2021-08-18
 import re
+import logging
+import importlib
+import math
 from io import StringIO
 from datetime import datetime, timedelta
 from baltrad.bdbcommon.oh5 import (
     Source,
 )
+
+logger = logging.getLogger("bexchange.naming.namer")
+
 PATTERN = re.compile("\\$(?:" + "(\\$)|" +
                      "\\{([_/a-z][_:/a-z0-9 #@+\\-\\.%]*)\\}((.(tolower|toupper|substring|trim|rtrim|ltrim|interval_u|interval_l|replace)(\\((([0-9]+|'[^']*')(,([0-9]+|'[^']*'))?)?\\)))*)" +
                      ")", flags=re.IGNORECASE)
@@ -174,18 +180,61 @@ class suboperation_helper:
         nminute = period*int(interval)
         return self.eval_value[:-2] + "%02d"%nminute
 
+
+class metadata_namer_operation(object):
+    """ Provides possibility to add custom namer operations
+    """
+    def __init__(self, tag, backend, arguments={}):
+        self._tag = tag
+        self._backend = backend
+        self._arguments = arguments
+
+    def tag(self):
+        return self._tag
+
+    def backend(self):
+        return self._backend
+
+    def arguments(self):
+        return self._arguments
+
+    def create(self, placeholder, meta):
+        """ Whenever a registered place holder is found, this method will be called with the current metadata.
+        If it is possible to create the place holder string it is returned, otherwise the placeholder is returned.
+        :param placeholder: the string that was found
+        :param meta: the metadata
+        :return: the string that the placeholder should be replaced with
+        """
+        raise RuntimeError("Subclass must implement create")
+
 ##
 # Used to create file names from metadata associated with a ODIM h5 file.
 class metadata_namer:
+    """ Creates names from metadata
+    """
     def __init__(self, tmpl):
+        """ Constructor
+        :param tmpl: the template string that should be used to generate a name
+        """
         self.tmpl = tmpl
-        self.suboperations={}
-        #self.suboperations["tolower"] = self.tolower
+        self.tagoperations={}
     
+    def register_operation(self, tag, operation):
+        """
+        """
+        self.tagoperations[tag] = operation
+
     def template(self):
+        """
+        :return: the template string
+        """
         return self.tmpl
 
     def name(self, meta):
+        """
+        :param meta: the metadata to create the name from
+        :return: the created string
+        """
         buffer = StringIO()
         
         parsed_tmpl = self.tmpl
@@ -205,6 +254,8 @@ class metadata_namer:
                 replacement_value = self.get_source_item(placeholder[12:], Source.from_string(meta.what_source))
             elif placeholder.startswith("/what/source:"):
                 replacement_value = self.get_source_item(placeholder[13:], Source.from_string(meta.what_source))
+            elif placeholder in self.tagoperations:
+                replacement_value = self.tagoperations[placeholder].create(placeholder, meta)
             elif BALTRAD_DATETIME_PATTERN.search(placeholder):
                 m = BALTRAD_DATETIME_PATTERN.match(placeholder)
                 t = m.group(1)
@@ -263,6 +314,12 @@ class metadata_namer:
         return buffer.getvalue()
     
     def get_attribute_value(self, name, meta):
+        """
+        :param name: the name of the attribute
+        :param meta: the meta data
+        :return: the value if possible
+        :throws LookupError: if name not could be found
+        """
         try:
             return meta.node(name).value
         except LookupError:
@@ -272,6 +329,152 @@ class metadata_namer:
         if key in source:
             return source[key]
         return "undefined"
+
+class metadata_namer_manager:
+    def __init__(self):
+        """Constructor
+        """
+        pass
+
+    @classmethod
+    def create_operation(self, clz, tag, backend, extra_arguments):
+        if clz.find(".") > 0:
+            logger.info("Creating namer operation '%s' with tag='%s'"%(clz, tag))
+            lastdot = clz.rfind(".")
+            module = importlib.import_module(clz[:lastdot])
+            classname = clz[lastdot+1:]
+            return getattr(module, classname)(tag, backend, extra_arguments)
+        else:
+            raise Exception("Must specify class as module.class")       
+ 
+    @classmethod
+    def from_conf(self, config, backend):
+        """Creates a naming operation from the specified configuration if it is possible
+
+        :param config: A namer config pattern. Should at least contain the following
+
+        { "class":"<packagename>.<classname>",
+          "tag":<name of storage>,
+          "arguments":{}"
+        }
+
+        """
+        arguments = {}
+        namer_clazz = config["class"]
+        tag = config["tag"]
+
+        if "arguments" in config:
+            arguments = config["arguments"]
+        
+        p = self.create_operation(namer_clazz, tag, backend, arguments)     
+
+        return p
+   
+class opera_filename_namer(metadata_namer_operation):
+    """ filename operation that implements support for the OPERA naming convention
+    """
+    def __init__(self, tag, backend, arguments={}):
+        """Constructor
+        :param cfg: the configuration necessary for mapping elevation angles to letters
+        """
+        super(opera_filename_namer, self).__init__(tag, backend, arguments)
+        if not "namer_config" in arguments:
+            raise Exception("Must provide namer_config in arguments")
+        self._cfg = arguments["namer_config"]
+
+    # pflag_productidentifier_oflag_originator_yyyyMMddhhmmss[_freeformat].type[.compression]
+    # pflag = T
+    # productidentifier = T1T2A1A2ii            T1T2 radar products = PA,    A1
+    # För svep använder man A2=[A-W] och för volymer A2=[X-Z].
+    # oflag = C
+    # originator = CCCC
+    # yyyyMMddhhmmss
+    def create(self, placeholder, meta):
+        """ Atempts to create a opera filename from the metadata. The created name will be in the format
+        T_{T1}{T2}{A1}{A2}{ii}_C_{CCCC}_{yyyyMMddhhmmss}.h5
+        Where
+        {T1}{T2} = PA
+        {A1} G-Z depending on content of file
+        {A2} A-Z depending on content of file
+        {ii} the last 2 digits in the RAD identifier.
+        {CCCC} - the CCCC
+        {yyyyMMddhhmmss} - the date time from the file.
+
+        :param placeholder: the placeholder
+        :param meta: the metadata
+        :return the string to replace the placeholder with if possible
+        """
+        opera_name = placeholder
+        if meta.what_object in ["PVOL", "SCAN"]:
+            A1=None
+            A2=None
+            quantities = []
+            elangles = []
+            for setctr in range(1,30):
+                setnode = meta.find_node(f"/dataset{setctr}")
+                if setnode:
+                    elangle = meta.find_node(f"/dataset1/where/elangle")
+                    if not elangle:
+                        break
+                    elangles.append(elangle.value)
+                    for paramctr in range(1,40):
+                        paramnode = meta.find_node(f"/dataset{setctr}/data{paramctr}/what/quantity")
+                        if not paramnode:
+                            break
+                        quantities.append(paramnode.value_str())
+
+            if len(elangles) == 0 or len(quantities) == 0:
+                logger.error("Could not identify any angles or quantities in file. Can't create a Opera conformant file without this information")
+                return placeholder
+
+            if "DBZH" in quantities:
+                A1="G"
+            elif "VRADH" in quantities or "VRADV" in quantities:
+                A1="H"
+            elif "WRADH" in quantities or "WRADV" in quantities:
+                A1="I"
+            elif "TH" in quantities and len(quantities) == 1:
+                A1="J"
+            elif "ZDR" in quantities:
+                A1="K"
+            elif "RHOHV" in quantities:
+                A1="L"
+            elif "PHIDP" in quantities:
+                A1="Q"
+            elif "KDP" in quantities:
+                A1="R"
+            elif len(quantities) > 1:
+                A1="Z"
+
+            if len(elangles) > 1:
+                A2="Z"
+            else:
+                elname = "default"
+                if meta.bdb_source_name in self._cfg and "elevation_angles" in self._cfg[meta.bdb_source_name]:
+                    elname = meta.bdb_source_name
+                if elname in self._cfg and "elevation_angles" in  self._cfg[elname]:
+                    for e in self._cfg[meta.bdb_source_name]["elevation_angles"]:
+                        if math.isclose(e, elangles[0]):
+                            idx = self._cfg[meta.bdb_source_name]["elevation_angles"].index(e)
+                            A2 = chr(ord('A') + idx)
+                if A2 is None:
+                    logger.error("Could not identify A2 information from elevation angles. Setting A2 = Y")
+                    A2="Y"
+
+            CCCC=meta.source_parent["CCCC"]
+            ii = Source.from_string(meta.bdb_source)["RAD"][2:]
+            
+            dt = datetime(meta.what_date.year, meta.what_date.month, meta.what_date.day, meta.what_time.hour, meta.what_time.minute, meta.what_time.second, 0)
+            yyyyMMddhhmmss = dt.strftime("%Y%m%d%H%M%S")
+            opera_name=f"T_PA{A1}{A2}{ii}_C_{CCCC}_{yyyyMMddhhmmss}"
+        elif meta.what_object in ["VP"]:
+            source_name = meta.bdb_source_name
+            dt = datetime(meta.what_date.year, meta.what_date.month, meta.what_date.day, meta.what_time.hour, meta.what_time.minute, meta.what_time.second, 0)
+            yyyyMMddhhmmss = dt.strftime("%Y%m%dT%H%M%SZ")
+            opera_name=f"{source_name}_vp_{yyyyMMddhhmmss}"
+        else:
+            logger.error("Can't handle object of type: %s"%meta.what_object)
+        return opera_name
 
 if __name__=="__main__":
     from baltrad.bdbcommon import oh5

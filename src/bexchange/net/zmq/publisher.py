@@ -26,7 +26,7 @@ import logging
 from tempfile import NamedTemporaryFile
 from threading import Thread, Event
 from bexchange.net import connections, publishers
-from bexchange.naming.namer import metadata_namer
+from bexchange.naming.namer import metadata_namer, metadata_namer_manager
 from bexchange import util
 
 logger = logging.getLogger("bexchange.net.zmq.publisher")
@@ -64,6 +64,15 @@ class publisher(publishers.standard_publisher):
 
         if "default" not in self._namers:
             self._namers["default"] = metadata_namer("${_baltrad/source_name}_${/what/object}.tolower()_${/what/date}T${/what/time}.h5")
+
+        naming_operations = []
+        if "naming_operations" in extra_arguments:
+            for op in extra_arguments["naming_operations"]:
+                naming_operations.append(metadata_namer_manager.from_conf(op, backend))
+        
+        for namerinstance in self._namers.values():
+            for no in naming_operations:
+                namerinstance.register_operation(no.tag(), no)
 
         self._context = None
         self._socket = None

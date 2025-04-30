@@ -1,0 +1,55 @@
+{
+"publication": {
+   "_comment_":"Using the opera namer operation to create published file names.",
+   "name":"SFTP file to OPERA server",
+   "class":"bexchange.net.publishers.standard_publisher",
+   "extra_arguments": {
+  	 "threads":1,
+  	 "queue_size":50
+   },
+   "active":true,
+   "connection":{
+     "_comment_":"This is a connection used when publishing files to sftp server without any failover",
+     "class":"bexchange.net.connections.simple_connection",
+     "arguments":{
+       "sender": { "class":"bexchange.net.senders.sftp_sender",
+          "arguments": {
+            "uri":"sftp://sftpuploader:secret@localhost/tmp/primary_sftp/${_baltrad/opera_filename}.h5",
+            "create_missing_directories":true,
+            "naming_operations": [
+              {
+                "tag":"_baltrad/opera_filename",
+                "class":"bexchange.naming.namer.opera_filename_namer",
+                "__comment__":"The elevation angles should be placed in order of naming, i.e. position 0 will be A, 1 B, 2 C and so on..",
+                "arguments":{
+                  "namer_config":{
+                    "default":{"elevation_angles":[0.5, 1.0, 1.5, 2.0, 2.5, 4.0, 8.0, 14.0, 24.0, 40.0, 1.25]},
+                    "sella":{"elevation_angles":[0.5, 1.0, 1.5, 2.0, 2.5, 4.0, 8.0, 14.0, 24.0, 40.0, 1.25]}
+                  }
+                }
+              }
+            ]
+          }
+       }
+     }
+   },
+   "__subscription_origin":["subscription_1"], 
+   "filter":{
+  	 "filter_type": "and_filter", 
+  	 "value": [
+  	   {"filter_type": "attribute_filter", 
+  	    "name": "_bdb/source_name", 
+        "operation": "in", 
+        "value_type": "string", 
+        "value": ["sella"]}, 
+  	   {"filter_type": "attribute_filter", 
+        "name": "/what/object", 
+        "operation": "=", 
+        "value_type": "string", 
+        "value": ["SCAN"]}
+    ]
+  },
+  "decorators":[
+  ]
+}
+}

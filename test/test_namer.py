@@ -22,8 +22,9 @@
 ## @author Anders Henja, SMHI
 ## @date 2021-08-18
 import unittest
-from bexchange.naming.namer import metadata_namer
+from bexchange.naming.namer import metadata_namer, opera_filename_namer
 from baltrad.bdbcommon import oh5
+from baltrad.bdbcommon.oh5 import Source
 from baltrad.bdbcommon.oh5.node import Attribute, Group
 
 import datetime
@@ -187,7 +188,21 @@ class test_namer(unittest.TestCase):
         meta.what_source = "NOD:setst,WMO:12345,RAD:SE52"
         meta.bdb_source_name = "setst"
         return meta
-        
+
+    def create_scan_metadata(self, year, month, day, hour, minute, elangle):
+        meta = oh5.Metadata()
+        meta.add_node("/", Group("what"))
+        meta.add_node("/what", Attribute("object", "SCAN"))
+        meta.add_node("/what", Attribute("date", datetime.date(year, month, day)))
+        meta.add_node("/what", Attribute("time", datetime.time(hour, minute)))
+        meta.add_node("/", Group("dataset1"))
+        meta.add_node("/dataset1", Group("where"))
+        meta.add_node("/dataset1/where", Attribute("elangle", elangle))
+        meta.bdb_source = "NOD:setst,WMO:12345,RAD:SE52,WIGOS:12345"
+        meta.what_source = "NOD:setst,WMO:12345,RAD:SE52"
+        meta.bdb_source_name = "setst"
+        return meta
+
     def test_baltrad_datetime_u(self):
         namer = metadata_namer("${_baltrad/datetime_u:15:%Y%m%d%H%M}")
 
@@ -217,4 +232,92 @@ class test_namer(unittest.TestCase):
                 self.assertEqual("200001011230", name)
             elif i >= 45 and i < 60:
                 self.assertEqual("200001011245", name)
-  
+
+    def create_opera_metadata(self, year, month, day, hour, minute, source, sourcename, source_parent, otype, quantities=["DBZH"], elangles=[0.5]):
+        meta = oh5.Metadata()
+        meta.source_parent = source_parent
+        meta.add_node("/", Group("what"))
+        meta.add_node("/what", Attribute("object", otype))
+        meta.add_node("/what", Attribute("date", datetime.date(year, month, day)))
+        meta.add_node("/what", Attribute("time", datetime.time(hour, minute)))
+        ectr = 1
+        for elangle in elangles:
+            meta.add_node("/", Group(f"dataset{ectr}"))
+            meta.add_node(f"/dataset{ectr}", Group("where"))
+            meta.add_node(f"/dataset{ectr}/where", Attribute("elangle", elangle))
+            qctr = 1
+            for quantity in quantities:
+                meta.add_node(f"/dataset{ectr}", Group(f"data{qctr}"))
+                meta.add_node(f"/dataset{ectr}/data{qctr}", Group("what"))
+                meta.add_node(f"/dataset{ectr}/data{qctr}/what", Attribute("quantity", quantity))
+                qctr = qctr + 1
+            ectr = ectr + 1
+        meta.bdb_source = source
+        meta.what_source = source
+        meta.bdb_source_name = sourcename
+        return meta
+
+    def test_baltrad_opera_filename_PVOL_DBZH_A_angle(self):
+        namer = metadata_namer("${_baltrad/opera_filename}")
+        ofn = opera_filename_namer("_baltrad/opera_filename", None, {"cfg":{"sella":{"elevation_angles":[0.5, 1.0, 1.5, 2.0, 2.5, 4.0, 8.0, 14.0, 24.0, 40.0, 1.25]}}})
+
+        namer.register_operation("_baltrad/opera_filename", ofn)
+
+        meta = self.create_opera_metadata(2000, 1, 1, 12, 0, "NOD:sella,RAD:SE41", "sella", Source("se", {"CCCC":"ESWI"}),"PVOL", ["DBZH"], [0.5])
+        self.assertEqual("T_PAGA41_C_ESWI_20000101120000", namer.name(meta))
+
+
+    def test_baltrad_opera_filename_PVOL_DBZH_B_angle(self):
+        namer = metadata_namer("${_baltrad/opera_filename}")
+        ofn = opera_filename_namer("_baltrad/opera_filename", None, {"cfg":{"sella":{"elevation_angles":[0.5, 1.0, 1.5, 2.0, 2.5, 4.0, 8.0, 14.0, 24.0, 40.0, 1.25]}}})
+
+        namer.register_operation("_baltrad/opera_filename", ofn)
+
+        meta = self.create_opera_metadata(2000, 1, 1, 12, 0, "NOD:sella,RAD:SE41", "sella", Source("se", {"CCCC":"ESWI"}),"PVOL", ["DBZH"], [1.0])
+        self.assertEqual("T_PAGB41_C_ESWI_20000101120000", namer.name(meta))
+
+    def test_baltrad_opera_filename_PVOL_DBZH_multiple_angles(self):
+        namer = metadata_namer("${_baltrad/opera_filename}")
+        ofn = opera_filename_namer("_baltrad/opera_filename", None, {"cfg":{"sella":{"elevation_angles":[0.5, 1.0, 1.5, 2.0, 2.5, 4.0, 8.0, 14.0, 24.0, 40.0, 1.25]}}})
+
+        namer.register_operation("_baltrad/opera_filename", ofn)
+
+        meta = self.create_opera_metadata(2000, 1, 1, 12, 0, "NOD:sella,RAD:SE41", "sella", Source("se", {"CCCC":"ESWI"}),"PVOL", ["DBZH"], [0.5, 1.0])
+        self.assertEqual("T_PAGZ41_C_ESWI_20000101120000", namer.name(meta))
+
+    def test_baltrad_opera_filename_PVOL_TH_A_angle(self):
+        namer = metadata_namer("${_baltrad/opera_filename}")
+        ofn = opera_filename_namer("_baltrad/opera_filename", None, {"cfg":{"sella":{"elevation_angles":[0.5, 1.0, 1.5, 2.0, 2.5, 4.0, 8.0, 14.0, 24.0, 40.0, 1.25]}}})
+
+        namer.register_operation("_baltrad/opera_filename", ofn)
+
+        meta = self.create_opera_metadata(2000, 1, 1, 12, 0, "NOD:sella,RAD:SE41", "sella", Source("se", {"CCCC":"ESWI"}),"PVOL", ["TH"], [0.5])
+        self.assertEqual("T_PAJA41_C_ESWI_20000101120000", namer.name(meta))
+
+
+    def test_baltrad_opera_filename_PVOL_DBZH_TH_A_angle(self):
+        namer = metadata_namer("${_baltrad/opera_filename}")
+        ofn = opera_filename_namer("_baltrad/opera_filename", None, {"cfg":{"sella":{"elevation_angles":[0.5, 1.0, 1.5, 2.0, 2.5, 4.0, 8.0, 14.0, 24.0, 40.0, 1.25]}}})
+
+        namer.register_operation("_baltrad/opera_filename", ofn)
+
+        meta = self.create_opera_metadata(2000, 1, 1, 12, 0, "NOD:sella,RAD:SE41", "sella", Source("se", {"CCCC":"ESWI"}),"PVOL", ["DBZH", "TH"], [0.5])
+        self.assertEqual("T_PAGA41_C_ESWI_20000101120000", namer.name(meta))
+
+    def test_baltrad_opera_filename_SCAN_DBZH_A_angle(self):
+        namer = metadata_namer("${_baltrad/opera_filename}")
+        ofn = opera_filename_namer("_baltrad/opera_filename", None, {"cfg":{"sella":{"elevation_angles":[0.5, 1.0, 1.5, 2.0, 2.5, 4.0, 8.0, 14.0, 24.0, 40.0, 1.25]}}})
+
+        namer.register_operation("_baltrad/opera_filename", ofn)
+
+        meta = self.create_opera_metadata(2000, 1, 1, 12, 0, "NOD:sella,RAD:SE41", "sella", Source("se", {"CCCC":"ESWI"}),"SCAN", ["DBZH"], [0.5])
+        self.assertEqual("T_PAGA41_C_ESWI_20000101120000", namer.name(meta))
+
+    def test_baltrad_opera_filename_VP(self):
+        namer = metadata_namer("${_baltrad/opera_filename}")
+        ofn = opera_filename_namer("_baltrad/opera_filename", None, {"cfg":{"sella":{"elevation_angles":[0.5, 1.0, 1.5, 2.0, 2.5, 4.0, 8.0, 14.0, 24.0, 40.0, 1.25]}}})
+
+        namer.register_operation("_baltrad/opera_filename", ofn)
+
+        meta = self.create_opera_metadata(2000, 1, 1, 12, 0, "NOD:sella,RAD:SE41", "sella", Source("se", {"CCCC":"ESWI"}),"VP", ["DBZH"], [0.5])
+        self.assertEqual("sella_vp_20000101T120000Z", namer.name(meta))

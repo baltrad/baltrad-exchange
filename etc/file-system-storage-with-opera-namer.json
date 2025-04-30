@@ -1,0 +1,31 @@
+{
+  "storage": {
+    "class":"bexchange.storage.storages.file_storage",
+    "name":"default_storage",
+    "arguments": {
+      "simulate":false,
+      "structure":[
+        {"object":"SCAN",
+         "path":"/tmp/baltrad_bdb",
+         "name_pattern":"${_baltrad/datetime_l:15:%Y/%m/%d/%H/%M}/${_baltrad/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.h5"
+        },
+        {"path":"/tmp/baltrad_bdb",
+         "name_pattern":"${_baltrad/datetime_l:15:%Y/%m/%d/%H/%M}/${_baltrad/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z.h5"
+        }
+      ],
+      "naming_operations": [
+        {
+          "tag":"_baltrad/opera_filename",
+          "class":"bexchange.naming.namer.opera_filename_namer",
+          "__comment__":"The elevation angles should be placed in order of naming, i.e. position 0 will be A, 1 B, 2 C and so on..",
+          "arguments":{
+            "namer_config":{
+              "default":{"elevation_angles":[0.5, 1.0, 1.5, 2.0, 2.5, 4.0, 8.0, 14.0, 24.0, 40.0, 1.25]},
+              "sella":{"elevation_angles":[0.5, 1.0, 1.5, 2.0, 2.5, 4.0, 8.0, 14.0, 24.0, 40.0, 1.25]}
+            }
+          }
+        }
+      ]
+    }
+  }
+}

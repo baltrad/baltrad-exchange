@@ -41,8 +41,11 @@ class metadata_helper(object):
             raise LookupError("No source in metadata")
         
         metadata_hash = hasher.hash(meta)
-        source = source_manager.get_source(meta)
+        source = source_manager.get_source(meta, True)
         
+        meta.source_parent = None
+        if source.parent_object:
+            meta.source_parent=source.parent_object
         meta.bdb_source = source.to_string()
         meta.bdb_source_name = source.name
         meta.bdb_metadata_hash = metadata_hash

@@ -82,10 +82,12 @@ class none_storage(storage):
         return self._name
 
 class file_store:
-    def __init__(self, path, name_pattern, simulate=False, keep_same_name=False):
+    def __init__(self, path, name_pattern, naming_operations=[], simulate=False, keep_same_name=False):
         self.path = path
         self.name_pattern = name_pattern
         self.namer = namer.metadata_namer(self.name_pattern)
+        for no in naming_operations:
+            self.namer.register_operation(no.tag(), no)
         self._simulate = simulate
         self._keep_same_name = keep_same_name
     
@@ -135,11 +137,16 @@ class file_storage(storage):
         if "simulate" in kwargs and isinstance(kwargs["simulate"], bool):
             self._simulate = kwargs["simulate"]
         
+        naming_operations = []
+        if "naming_operations" in kwargs:
+            for op in kwargs["naming_operations"]:
+                naming_operations.append(namer.metadata_namer_manager.from_conf(op, backend))
+
         for s in self.structure_d:
             if ("object" in s and not s["object"]) or "object" not in s:
-                self.structures["default"]=file_store(s["path"],s["name_pattern"], self._simulate)
+                self.structures["default"]=file_store(s["path"],s["name_pattern"], naming_operations, self._simulate)
             else:
-                self.structures[s["object"]]=file_store(s["path"],s["name_pattern"], self._simulate)
+                self.structures[s["object"]]=file_store(s["path"],s["name_pattern"], naming_operations, self._simulate)
 
     def get_attribute_value(self, name, meta):
         """

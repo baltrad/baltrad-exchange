@@ -124,9 +124,10 @@ class SqlAlchemySourceManager(object):
         
                 self.insert_source_values(conn, source_id, source)
     
-    def get_source(self, meta):
+    def get_source(self, meta, add_parent_object=False):
         """
         :param meta: The metadata containing source
+        :param add_parent_object: This is adding a parent to the source. This will modify the bdb Source object by adding the member parent_object.
         :return: A complete source from the metadata source identifier
         """
         with self.get_connection() as conn:
@@ -139,7 +140,10 @@ class SqlAlchemySourceManager(object):
 
         with self.get_connection() as conn:
             source = get_source_by_id(conn, source_id)
-            
+            source.parent_object = None            
+            if add_parent_object:
+                source.parent_object = get_source_by_id(conn, get_parent_source_id(conn, source.parent))
+
         # We must add file information to the metadata
         msources = meta.source()
         for k in msources.keys():
@@ -148,6 +152,14 @@ class SqlAlchemySourceManager(object):
         
         return source
     
+    def get_parent_source(self, parent):
+        """
+        :param parent: The id of the parent.
+        :return: The parent source matching the string in parent.
+        """
+        with self.get_connection() as conn:
+            return get_source_by_id(conn, get_parent_source_id(conn, parent))
+
     ##
     # Insert Key-values from a source
     #
@@ -236,7 +248,7 @@ def get_source_id(conn, source):
 
 def get_source_by_id(conn, source_id):
     name_qry = sql.select(
-        [sources.c.name],
+        [sources.c.name, sources.c.parent],
         sources.c.id==source_id
     )
 
@@ -246,9 +258,23 @@ def get_source_by_id(conn, source_id):
     )
     
     source = oh5.Source()
+    
+    sourceresult = conn.execute(name_qry).first()
+    if sourceresult is None:
+        raise LookupError(f"Could not identify any source with id={source_id}")
 
-    source.name = conn.execute(name_qry).scalar()
+    source.name = sourceresult["name"]
+    source.parent = sourceresult["parent"]
+
     for row in conn.execute(kv_qry).fetchall():
         source[row["key"]] = row["value"]
 
     return source
+
+def get_parent_source_id(conn, parent):
+    # Parents should always have their parent = None otherwise we probably are trying to identify a standard source and not a parent
+    source_id_qry = sql.select([sources.c.id]).filter(sources.c.parent==None).filter(sources.c.name==parent)
+    result = conn.execute(source_id_qry).scalar()
+    if result is None:
+        raise LookupError(f"Could not identify any parent source with id {parent}")
+    return result

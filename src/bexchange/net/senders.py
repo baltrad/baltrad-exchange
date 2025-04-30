@@ -38,7 +38,7 @@ import shutil
 from paramiko import SSHClient
 from scp import SCPClient
 
-from bexchange.naming.namer import metadata_namer
+from bexchange.naming.namer import metadata_namer, metadata_namer_manager
 from bexchange.client import rest
 from bexchange.net.sftpclient import sftpclient
 from bexchange.net.exceptions import *
@@ -323,7 +323,7 @@ class baseuri_sender(sender):
         
         if "create_missing_directories" in arguments:
             self._create_missing_directories = arguments["create_missing_directories"]
-            
+
         if "uri" in arguments and arguments["uri"]:
             self._uri = arguments["uri"]
             uri = urlparse.urlparse(self._uri)
@@ -335,6 +335,15 @@ class baseuri_sender(sender):
             if uri.password:
                 self._password = uri.password
             self._namer = metadata_namer(uri.path)
+
+        if "naming_operations" in arguments and len(arguments["naming_operations"]) > 0:
+            if not self._namer:
+                raise Exception("Providing naming_operations without a uri")
+            for noperation in arguments["naming_operations"]:
+                op = metadata_namer_manager.from_conf(noperation, backend)
+                if op:
+                    logger.info("Registering %s"%op.tag())
+                    self._namer.register_operation(op.tag(), op)
 
     def name(self, meta):
         """Creates a unique name from the metadatanamer created from the uri
