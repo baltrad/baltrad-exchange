@@ -259,7 +259,7 @@ class test_namer(unittest.TestCase):
 
     def test_baltrad_opera_filename_PVOL_DBZH_A_angle(self):
         namer = metadata_namer("${_baltrad/opera_filename}")
-        ofn = opera_filename_namer("_baltrad/opera_filename", None, {"cfg":{"sella":{"elevation_angles":[0.5, 1.0, 1.5, 2.0, 2.5, 4.0, 8.0, 14.0, 24.0, 40.0, 1.25]}}})
+        ofn = opera_filename_namer("_baltrad/opera_filename", None, {"namer_config":{"sella":{"elevation_angles":[0.5, 1.0, 1.5, 2.0, 2.5, 4.0, 8.0, 14.0, 24.0, 40.0, 1.25]}}})
 
         namer.register_operation("_baltrad/opera_filename", ofn)
 
@@ -269,7 +269,7 @@ class test_namer(unittest.TestCase):
 
     def test_baltrad_opera_filename_PVOL_DBZH_B_angle(self):
         namer = metadata_namer("${_baltrad/opera_filename}")
-        ofn = opera_filename_namer("_baltrad/opera_filename", None, {"cfg":{"sella":{"elevation_angles":[0.5, 1.0, 1.5, 2.0, 2.5, 4.0, 8.0, 14.0, 24.0, 40.0, 1.25]}}})
+        ofn = opera_filename_namer("_baltrad/opera_filename", None, {"namer_config":{"sella":{"elevation_angles":[0.5, 1.0, 1.5, 2.0, 2.5, 4.0, 8.0, 14.0, 24.0, 40.0, 1.25]}}})
 
         namer.register_operation("_baltrad/opera_filename", ofn)
 
@@ -278,7 +278,7 @@ class test_namer(unittest.TestCase):
 
     def test_baltrad_opera_filename_PVOL_DBZH_multiple_angles(self):
         namer = metadata_namer("${_baltrad/opera_filename}")
-        ofn = opera_filename_namer("_baltrad/opera_filename", None, {"cfg":{"sella":{"elevation_angles":[0.5, 1.0, 1.5, 2.0, 2.5, 4.0, 8.0, 14.0, 24.0, 40.0, 1.25]}}})
+        ofn = opera_filename_namer("_baltrad/opera_filename", None, {"namer_config":{"sella":{"elevation_angles":[0.5, 1.0, 1.5, 2.0, 2.5, 4.0, 8.0, 14.0, 24.0, 40.0, 1.25]}}})
 
         namer.register_operation("_baltrad/opera_filename", ofn)
 
@@ -287,7 +287,7 @@ class test_namer(unittest.TestCase):
 
     def test_baltrad_opera_filename_PVOL_TH_A_angle(self):
         namer = metadata_namer("${_baltrad/opera_filename}")
-        ofn = opera_filename_namer("_baltrad/opera_filename", None, {"cfg":{"sella":{"elevation_angles":[0.5, 1.0, 1.5, 2.0, 2.5, 4.0, 8.0, 14.0, 24.0, 40.0, 1.25]}}})
+        ofn = opera_filename_namer("_baltrad/opera_filename", None, {"namer_config":{"sella":{"elevation_angles":[0.5, 1.0, 1.5, 2.0, 2.5, 4.0, 8.0, 14.0, 24.0, 40.0, 1.25]}}})
 
         namer.register_operation("_baltrad/opera_filename", ofn)
 
@@ -297,7 +297,7 @@ class test_namer(unittest.TestCase):
 
     def test_baltrad_opera_filename_PVOL_DBZH_TH_A_angle(self):
         namer = metadata_namer("${_baltrad/opera_filename}")
-        ofn = opera_filename_namer("_baltrad/opera_filename", None, {"cfg":{"sella":{"elevation_angles":[0.5, 1.0, 1.5, 2.0, 2.5, 4.0, 8.0, 14.0, 24.0, 40.0, 1.25]}}})
+        ofn = opera_filename_namer("_baltrad/opera_filename", None, {"namer_config":{"sella":{"elevation_angles":[0.5, 1.0, 1.5, 2.0, 2.5, 4.0, 8.0, 14.0, 24.0, 40.0, 1.25]}}})
 
         namer.register_operation("_baltrad/opera_filename", ofn)
 
@@ -306,7 +306,7 @@ class test_namer(unittest.TestCase):
 
     def test_baltrad_opera_filename_SCAN_DBZH_A_angle(self):
         namer = metadata_namer("${_baltrad/opera_filename}")
-        ofn = opera_filename_namer("_baltrad/opera_filename", None, {"cfg":{"sella":{"elevation_angles":[0.5, 1.0, 1.5, 2.0, 2.5, 4.0, 8.0, 14.0, 24.0, 40.0, 1.25]}}})
+        ofn = opera_filename_namer("_baltrad/opera_filename", None, {"namer_config":{"sella":{"elevation_angles":[0.5, 1.0, 1.5, 2.0, 2.5, 4.0, 8.0, 14.0, 24.0, 40.0, 1.25]}}})
 
         namer.register_operation("_baltrad/opera_filename", ofn)
 
@@ -315,7 +315,7 @@ class test_namer(unittest.TestCase):
 
     def test_baltrad_opera_filename_VP(self):
         namer = metadata_namer("${_baltrad/opera_filename}")
-        ofn = opera_filename_namer("_baltrad/opera_filename", None, {"cfg":{"sella":{"elevation_angles":[0.5, 1.0, 1.5, 2.0, 2.5, 4.0, 8.0, 14.0, 24.0, 40.0, 1.25]}}})
+        ofn = opera_filename_namer("_baltrad/opera_filename", None, {"namer_config":{"sella":{"elevation_angles":[0.5, 1.0, 1.5, 2.0, 2.5, 4.0, 8.0, 14.0, 24.0, 40.0, 1.25]}}})
 
         namer.register_operation("_baltrad/opera_filename", ofn)
 
