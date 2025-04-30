@@ -196,8 +196,8 @@ class simple_rotating_file_storage(storage):
         self._backend = backend
         self._number_of_files = 100
         self._folder = kwargs["folder"]
-        self._scanstore = file_store(self._folder, "${_baltrad/source_name}_scan_${/dataset1/where/elangle}_${/what/date}T${/what/time}.h5", False, True)
-        self._otherstore = file_store(self._folder, "${_baltrad/source_name}_${/what/object}.tolower()_${/what/date}T${/what/time}.h5", False, True)
+        self._scanstore = file_store(self._folder, "${_baltrad/source_name}_scan_${/dataset1/where/elangle}_${/what/date}T${/what/time}.h5", [], False, True)
+        self._otherstore = file_store(self._folder, "${_baltrad/source_name}_${/what/object}.tolower()_${/what/date}T${/what/time}.h5", [], False, True)
 
         self.lock = threading.Lock()
 
