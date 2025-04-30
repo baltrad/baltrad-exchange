@@ -56,10 +56,25 @@
 <dt class="sig sig-object py" id="bexchange.naming.namer.metadata_namer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.naming.namer.</span></span><span class="sig-name descname"><span class="pre">metadata_namer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tmpl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#metadata_namer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.metadata_namer" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Creates names from metadata</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.naming.namer.metadata_namer.get_attribute_value">
 <span class="sig-name descname"><span class="pre">get_attribute_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#metadata_namer.get_attribute_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.metadata_namer.get_attribute_value" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – the name of the attribute</p></li>
+<li><p><strong>meta</strong> – the meta data</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the value if possible</p>
+</dd>
+<dt class="field-odd">Throws LookupError<span class="colon">:</span></dt>
+<dd class="field-odd"><p>if name not could be found</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.naming.namer.metadata_namer.get_source_item">
@@ -69,12 +84,120 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.naming.namer.metadata_namer.name">
 <span class="sig-name descname"><span class="pre">name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#metadata_namer.name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.metadata_namer.name" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>meta</strong> – the metadata to create the name from</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the created string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.naming.namer.metadata_namer.register_operation">
+<span class="sig-name descname"><span class="pre">register_operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#metadata_namer.register_operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.metadata_namer.register_operation" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.naming.namer.metadata_namer.template">
 <span class="sig-name descname"><span class="pre">template</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#metadata_namer.template"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.metadata_namer.template" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the template string</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bexchange.naming.namer.metadata_namer_manager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.naming.namer.</span></span><span class="sig-name descname"><span class="pre">metadata_namer_manager</span></span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#metadata_namer_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.metadata_namer_manager" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.naming.namer.metadata_namer_manager.create_operation">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clz</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#metadata_namer_manager.create_operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.metadata_namer_manager.create_operation" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.naming.namer.metadata_namer_manager.from_conf">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_conf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#metadata_namer_manager.from_conf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.metadata_namer_manager.from_conf" title="Link to this definition">¶</a></dt>
+<dd><p>Creates a naming operation from the specified configuration if it is possible</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> – A namer config pattern. Should at least contain the following</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>{ “class”:”&lt;packagename&gt;.&lt;classname&gt;”,</dt><dd><p>“tag”:&lt;name of storage&gt;,
+“arguments”:{}”</p>
+</dd>
+</dl>
+<p>}</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bexchange.naming.namer.metadata_namer_operation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.naming.namer.</span></span><span class="sig-name descname"><span class="pre">metadata_namer_operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#metadata_namer_operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.metadata_namer_operation" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Provides possibility to add custom namer operations</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.naming.namer.metadata_namer_operation.arguments">
+<span class="sig-name descname"><span class="pre">arguments</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#metadata_namer_operation.arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.metadata_namer_operation.arguments" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.naming.namer.metadata_namer_operation.backend">
+<span class="sig-name descname"><span class="pre">backend</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#metadata_namer_operation.backend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.metadata_namer_operation.backend" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.naming.namer.metadata_namer_operation.create">
+<span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">placeholder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#metadata_namer_operation.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.metadata_namer_operation.create" title="Link to this definition">¶</a></dt>
+<dd><p>Whenever a registered place holder is found, this method will be called with the current metadata.
+If it is possible to create the place holder string it is returned, otherwise the placeholder is returned.
+:param placeholder: the string that was found
+:param meta: the metadata
+:return: the string that the placeholder should be replaced with</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.naming.namer.metadata_namer_operation.tag">
+<span class="sig-name descname"><span class="pre">tag</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#metadata_namer_operation.tag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.metadata_namer_operation.tag" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bexchange.naming.namer.opera_filename_namer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.naming.namer.</span></span><span class="sig-name descname"><span class="pre">opera_filename_namer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#opera_filename_namer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.opera_filename_namer" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bexchange.naming.namer.metadata_namer_operation" title="bexchange.naming.namer.metadata_namer_operation"><code class="xref py py-class docutils literal notranslate"><span class="pre">metadata_namer_operation</span></code></a></p>
+<p>filename operation that implements support for the OPERA naming convention</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.naming.namer.opera_filename_namer.create">
+<span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">placeholder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#opera_filename_namer.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.opera_filename_namer.create" title="Link to this definition">¶</a></dt>
+<dd><p>Atempts to create a opera filename from the metadata. The created name will be in the format
+T_{T1}{T2}{A1}{A2}{ii}_C_{CCCC}_{yyyyMMddhhmmss}.h5
+Where
+{T1}{T2} = PA
+{A1} G-Z depending on content of file
+{A2} A-Z depending on content of file
+{ii} the last 2 digits in the RAD identifier.
+{CCCC} - the CCCC
+{yyyyMMddhhmmss} - the date time from the file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>placeholder</strong> – the placeholder</p></li>
+<li><p><strong>meta</strong> – the metadata</p></li>
+</ul>
+</dd>
+</dl>
+<p>:return the string to replace the placeholder with if possible</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -202,7 +325,24 @@ a subset is changed.
 <li><a class="reference internal" href="#bexchange.naming.namer.metadata_namer.get_attribute_value"><code class="docutils literal notranslate"><span class="pre">metadata_namer.get_attribute_value()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.naming.namer.metadata_namer.get_source_item"><code class="docutils literal notranslate"><span class="pre">metadata_namer.get_source_item()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.naming.namer.metadata_namer.name"><code class="docutils literal notranslate"><span class="pre">metadata_namer.name()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.naming.namer.metadata_namer.register_operation"><code class="docutils literal notranslate"><span class="pre">metadata_namer.register_operation()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.naming.namer.metadata_namer.template"><code class="docutils literal notranslate"><span class="pre">metadata_namer.template()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.naming.namer.metadata_namer_manager"><code class="docutils literal notranslate"><span class="pre">metadata_namer_manager</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.naming.namer.metadata_namer_manager.create_operation"><code class="docutils literal notranslate"><span class="pre">metadata_namer_manager.create_operation()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.naming.namer.metadata_namer_manager.from_conf"><code class="docutils literal notranslate"><span class="pre">metadata_namer_manager.from_conf()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.naming.namer.metadata_namer_operation"><code class="docutils literal notranslate"><span class="pre">metadata_namer_operation</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.naming.namer.metadata_namer_operation.arguments"><code class="docutils literal notranslate"><span class="pre">metadata_namer_operation.arguments()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.naming.namer.metadata_namer_operation.backend"><code class="docutils literal notranslate"><span class="pre">metadata_namer_operation.backend()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.naming.namer.metadata_namer_operation.create"><code class="docutils literal notranslate"><span class="pre">metadata_namer_operation.create()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.naming.namer.metadata_namer_operation.tag"><code class="docutils literal notranslate"><span class="pre">metadata_namer_operation.tag()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.naming.namer.opera_filename_namer"><code class="docutils literal notranslate"><span class="pre">opera_filename_namer</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.naming.namer.opera_filename_namer.create"><code class="docutils literal notranslate"><span class="pre">opera_filename_namer.create()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#bexchange.naming.namer.suboperation_helper"><code class="docutils literal notranslate"><span class="pre">suboperation_helper</span></code></a><ul>

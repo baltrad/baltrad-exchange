@@ -175,9 +175,10 @@
     
 <div class="viewcode-block" id="SqlAlchemySourceManager.get_source">
 <a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.sqlbackend.SqlAlchemySourceManager.get_source">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meta</span><span class="p">,</span> <span class="n">add_parent_object</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param meta: The metadata containing source</span>
+<span class="sd">        :param add_parent_object: This is adding a parent to the source. This will modify the bdb Source object by adding the member parent_object.</span>
 <span class="sd">        :return: A complete source from the metadata source identifier</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_connection</span><span class="p">()</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
@@ -190,7 +191,10 @@
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_connection</span><span class="p">()</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
             <span class="n">source</span> <span class="o">=</span> <span class="n">get_source_by_id</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">source_id</span><span class="p">)</span>
-            
+            <span class="n">source</span><span class="o">.</span><span class="n">parent_object</span> <span class="o">=</span> <span class="kc">None</span>            
+            <span class="k">if</span> <span class="n">add_parent_object</span><span class="p">:</span>
+                <span class="n">source</span><span class="o">.</span><span class="n">parent_object</span> <span class="o">=</span> <span class="n">get_source_by_id</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">get_parent_source_id</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">source</span><span class="o">.</span><span class="n">parent</span><span class="p">))</span>
+
         <span class="c1"># We must add file information to the metadata</span>
         <span class="n">msources</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">source</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">msources</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -200,6 +204,17 @@
         <span class="k">return</span> <span class="n">source</span></div>
 
     
+<div class="viewcode-block" id="SqlAlchemySourceManager.get_parent_source">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.sqlbackend.SqlAlchemySourceManager.get_parent_source">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_parent_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param parent: The id of the parent.</span>
+<span class="sd">        :return: The parent source matching the string in parent.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_connection</span><span class="p">()</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">get_source_by_id</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">get_parent_source_id</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">parent</span><span class="p">))</span></div>
+
+
     <span class="c1">##</span>
     <span class="c1"># Insert Key-values from a source</span>
     <span class="c1">#</span>
@@ -300,7 +315,7 @@
 <a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.sqlbackend.get_source_by_id">[docs]</a>
 <span class="k">def</span> <span class="nf">get_source_by_id</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">source_id</span><span class="p">):</span>
     <span class="n">name_qry</span> <span class="o">=</span> <span class="n">sql</span><span class="o">.</span><span class="n">select</span><span class="p">(</span>
-        <span class="p">[</span><span class="n">sources</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="p">],</span>
+        <span class="p">[</span><span class="n">sources</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">sources</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">parent</span><span class="p">],</span>
         <span class="n">sources</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">id</span><span class="o">==</span><span class="n">source_id</span>
     <span class="p">)</span>
 
@@ -310,12 +325,29 @@
     <span class="p">)</span>
     
     <span class="n">source</span> <span class="o">=</span> <span class="n">oh5</span><span class="o">.</span><span class="n">Source</span><span class="p">()</span>
+    
+    <span class="n">sourceresult</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">name_qry</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">sourceresult</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">LookupError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not identify any source with id=</span><span class="si">{</span><span class="n">source_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="n">source</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">name_qry</span><span class="p">)</span><span class="o">.</span><span class="n">scalar</span><span class="p">()</span>
+    <span class="n">source</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">sourceresult</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+    <span class="n">source</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">sourceresult</span><span class="p">[</span><span class="s2">&quot;parent&quot;</span><span class="p">]</span>
+
     <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">kv_qry</span><span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">():</span>
         <span class="n">source</span><span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;key&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
 
     <span class="k">return</span> <span class="n">source</span></div>
+
+
+<div class="viewcode-block" id="get_parent_source_id">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.sqlbackend.get_parent_source_id">[docs]</a>
+<span class="k">def</span> <span class="nf">get_parent_source_id</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+    <span class="c1"># Parents should always have their parent = None otherwise we probably are trying to identify a standard source and not a parent</span>
+    <span class="n">source_id_qry</span> <span class="o">=</span> <span class="n">sql</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="n">sources</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">id</span><span class="p">])</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">sources</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">parent</span><span class="o">==</span><span class="kc">None</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">sources</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="o">==</span><span class="n">parent</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">source_id_qry</span><span class="p">)</span><span class="o">.</span><span class="n">scalar</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">LookupError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not identify any parent source with id </span><span class="si">{</span><span class="n">parent</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span></div>
 
 </pre></div>
 

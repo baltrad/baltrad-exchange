@@ -439,11 +439,27 @@ files ending with .json. Both added and removed events will be forwarded.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="bexchange.server.sqlbackend.SqlAlchemySourceManager.get_source">
-<span class="sig-name descname"><span class="pre">get_source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/sqlbackend.html#SqlAlchemySourceManager.get_source"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.sqlbackend.SqlAlchemySourceManager.get_source" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bexchange.server.sqlbackend.SqlAlchemySourceManager.get_parent_source">
+<span class="sig-name descname"><span class="pre">get_parent_source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/sqlbackend.html#SqlAlchemySourceManager.get_parent_source"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.sqlbackend.SqlAlchemySourceManager.get_parent_source" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>meta</strong> – The metadata containing source</p>
+<dd class="field-odd"><p><strong>parent</strong> – The id of the parent.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The parent source matching the string in parent.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.server.sqlbackend.SqlAlchemySourceManager.get_source">
+<span class="sig-name descname"><span class="pre">get_source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_parent_object</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/sqlbackend.html#SqlAlchemySourceManager.get_source"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.sqlbackend.SqlAlchemySourceManager.get_source" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>meta</strong> – The metadata containing source</p></li>
+<li><p><strong>add_parent_object</strong> – This is adding a parent to the source. This will modify the bdb Source object by adding the member parent_object.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A complete source from the metadata source identifier</p>
@@ -471,6 +487,11 @@ files ending with .json. Both added and removed events will be forwarded.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bexchange.server.sqlbackend.force_sqlite_foreign_keys">
 <span class="sig-prename descclassname"><span class="pre">bexchange.server.sqlbackend.</span></span><span class="sig-name descname"><span class="pre">force_sqlite_foreign_keys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dbapi_con</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">con_record</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/sqlbackend.html#force_sqlite_foreign_keys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.sqlbackend.force_sqlite_foreign_keys" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="bexchange.server.sqlbackend.get_parent_source_id">
+<span class="sig-prename descclassname"><span class="pre">bexchange.server.sqlbackend.</span></span><span class="sig-name descname"><span class="pre">get_parent_source_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/sqlbackend.html#get_parent_source_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.sqlbackend.get_parent_source_id" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
@@ -658,12 +679,14 @@ files ending with .json. Both added and removed events will be forwarded.</p>
 <li><a class="reference internal" href="#bexchange.server.sqlbackend.SqlAlchemySourceManager.add_sources"><code class="docutils literal notranslate"><span class="pre">SqlAlchemySourceManager.add_sources()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.server.sqlbackend.SqlAlchemySourceManager.driver"><code class="docutils literal notranslate"><span class="pre">SqlAlchemySourceManager.driver</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.server.sqlbackend.SqlAlchemySourceManager.get_connection"><code class="docutils literal notranslate"><span class="pre">SqlAlchemySourceManager.get_connection()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.sqlbackend.SqlAlchemySourceManager.get_parent_source"><code class="docutils literal notranslate"><span class="pre">SqlAlchemySourceManager.get_parent_source()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.server.sqlbackend.SqlAlchemySourceManager.get_source"><code class="docutils literal notranslate"><span class="pre">SqlAlchemySourceManager.get_source()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.server.sqlbackend.SqlAlchemySourceManager.init_tables"><code class="docutils literal notranslate"><span class="pre">SqlAlchemySourceManager.init_tables()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.server.sqlbackend.SqlAlchemySourceManager.insert_source_values"><code class="docutils literal notranslate"><span class="pre">SqlAlchemySourceManager.insert_source_values()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#bexchange.server.sqlbackend.force_sqlite_foreign_keys"><code class="docutils literal notranslate"><span class="pre">force_sqlite_foreign_keys()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.sqlbackend.get_parent_source_id"><code class="docutils literal notranslate"><span class="pre">get_parent_source_id()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.server.sqlbackend.get_source_by_id"><code class="docutils literal notranslate"><span class="pre">get_source_by_id()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.server.sqlbackend.get_source_id"><code class="docutils literal notranslate"><span class="pre">get_source_id()</span></code></a></li>
 </ul>

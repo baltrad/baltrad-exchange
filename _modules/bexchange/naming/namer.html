@@ -60,11 +60,17 @@
 <span class="c1">## @author Anders Henja, SMHI</span>
 <span class="c1">## @date 2021-08-18</span>
 <span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">importlib</span>
+<span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
 <span class="kn">from</span> <span class="nn">baltrad.bdbcommon.oh5</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">Source</span><span class="p">,</span>
 <span class="p">)</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;bexchange.naming.namer&quot;</span><span class="p">)</span>
+
 <span class="n">PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">$(?:&quot;</span> <span class="o">+</span> <span class="s2">&quot;(</span><span class="se">\\</span><span class="s2">$)|&quot;</span> <span class="o">+</span>
                      <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">{([_/a-z][_:/a-z0-9 #@+</span><span class="se">\\</span><span class="s2">-</span><span class="se">\\</span><span class="s2">.%]*)</span><span class="se">\\</span><span class="s2">}((.(tolower|toupper|substring|trim|rtrim|ltrim|interval_u|interval_l|replace)(</span><span class="se">\\</span><span class="s2">((([0-9]+|&#39;[^&#39;]*&#39;)(,([0-9]+|&#39;[^&#39;]*&#39;))?)?</span><span class="se">\\</span><span class="s2">)))*)&quot;</span> <span class="o">+</span>
                      <span class="s2">&quot;)&quot;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
@@ -245,25 +251,86 @@
 </div>
 
 
+
+<div class="viewcode-block" id="metadata_namer_operation">
+<a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.metadata_namer_operation">[docs]</a>
+<span class="k">class</span> <span class="nc">metadata_namer_operation</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Provides possibility to add custom namer operations</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{}):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tag</span> <span class="o">=</span> <span class="n">tag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span> <span class="o">=</span> <span class="n">backend</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_arguments</span> <span class="o">=</span> <span class="n">arguments</span>
+
+<div class="viewcode-block" id="metadata_namer_operation.tag">
+<a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.metadata_namer_operation.tag">[docs]</a>
+    <span class="k">def</span> <span class="nf">tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tag</span></div>
+
+
+<div class="viewcode-block" id="metadata_namer_operation.backend">
+<a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.metadata_namer_operation.backend">[docs]</a>
+    <span class="k">def</span> <span class="nf">backend</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span></div>
+
+
+<div class="viewcode-block" id="metadata_namer_operation.arguments">
+<a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.metadata_namer_operation.arguments">[docs]</a>
+    <span class="k">def</span> <span class="nf">arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_arguments</span></div>
+
+
+<div class="viewcode-block" id="metadata_namer_operation.create">
+<a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.metadata_namer_operation.create">[docs]</a>
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">placeholder</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Whenever a registered place holder is found, this method will be called with the current metadata.</span>
+<span class="sd">        If it is possible to create the place holder string it is returned, otherwise the placeholder is returned.</span>
+<span class="sd">        :param placeholder: the string that was found</span>
+<span class="sd">        :param meta: the metadata</span>
+<span class="sd">        :return: the string that the placeholder should be replaced with</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Subclass must implement create&quot;</span><span class="p">)</span></div>
+</div>
+
+
 <span class="c1">##</span>
 <span class="c1"># Used to create file names from metadata associated with a ODIM h5 file.</span>
 <div class="viewcode-block" id="metadata_namer">
 <a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.metadata_namer">[docs]</a>
 <span class="k">class</span> <span class="nc">metadata_namer</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Creates names from metadata</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tmpl</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Constructor</span>
+<span class="sd">        :param tmpl: the template string that should be used to generate a name</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tmpl</span> <span class="o">=</span> <span class="n">tmpl</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">suboperations</span><span class="o">=</span><span class="p">{}</span>
-        <span class="c1">#self.suboperations[&quot;tolower&quot;] = self.tolower</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tagoperations</span><span class="o">=</span><span class="p">{}</span>
     
+<div class="viewcode-block" id="metadata_namer.register_operation">
+<a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.metadata_namer.register_operation">[docs]</a>
+    <span class="k">def</span> <span class="nf">register_operation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">operation</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tagoperations</span><span class="p">[</span><span class="n">tag</span><span class="p">]</span> <span class="o">=</span> <span class="n">operation</span></div>
+
+
 <div class="viewcode-block" id="metadata_namer.template">
 <a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.metadata_namer.template">[docs]</a>
     <span class="k">def</span> <span class="nf">template</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: the template string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmpl</span></div>
 
 
 <div class="viewcode-block" id="metadata_namer.name">
 <a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.metadata_namer.name">[docs]</a>
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param meta: the metadata to create the name from</span>
+<span class="sd">        :return: the created string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">buffer</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
         
         <span class="n">parsed_tmpl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmpl</span>
@@ -283,6 +350,8 @@
                 <span class="n">replacement_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_source_item</span><span class="p">(</span><span class="n">placeholder</span><span class="p">[</span><span class="mi">12</span><span class="p">:],</span> <span class="n">Source</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">meta</span><span class="o">.</span><span class="n">what_source</span><span class="p">))</span>
             <span class="k">elif</span> <span class="n">placeholder</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;/what/source:&quot;</span><span class="p">):</span>
                 <span class="n">replacement_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_source_item</span><span class="p">(</span><span class="n">placeholder</span><span class="p">[</span><span class="mi">13</span><span class="p">:],</span> <span class="n">Source</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">meta</span><span class="o">.</span><span class="n">what_source</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">placeholder</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tagoperations</span><span class="p">:</span>
+                <span class="n">replacement_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tagoperations</span><span class="p">[</span><span class="n">placeholder</span><span class="p">]</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">placeholder</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">BALTRAD_DATETIME_PATTERN</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">placeholder</span><span class="p">):</span>
                 <span class="n">m</span> <span class="o">=</span> <span class="n">BALTRAD_DATETIME_PATTERN</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">placeholder</span><span class="p">)</span>
                 <span class="n">t</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -344,6 +413,12 @@
 <div class="viewcode-block" id="metadata_namer.get_attribute_value">
 <a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.metadata_namer.get_attribute_value">[docs]</a>
     <span class="k">def</span> <span class="nf">get_attribute_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param name: the name of the attribute</span>
+<span class="sd">        :param meta: the meta data</span>
+<span class="sd">        :return: the value if possible</span>
+<span class="sd">        :throws LookupError: if name not could be found</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">meta</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
         <span class="k">except</span> <span class="ne">LookupError</span><span class="p">:</span>
@@ -356,6 +431,167 @@
         <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">source</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">source</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
         <span class="k">return</span> <span class="s2">&quot;undefined&quot;</span></div>
+</div>
+
+
+<div class="viewcode-block" id="metadata_namer_manager">
+<a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.metadata_namer_manager">[docs]</a>
+<span class="k">class</span> <span class="nc">metadata_namer_manager</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="metadata_namer_manager.create_operation">
+<a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.metadata_namer_manager.create_operation">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create_operation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clz</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">extra_arguments</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">clz</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Creating namer operation &#39;</span><span class="si">%s</span><span class="s2">&#39; with tag=&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">clz</span><span class="p">,</span> <span class="n">tag</span><span class="p">))</span>
+            <span class="n">lastdot</span> <span class="o">=</span> <span class="n">clz</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+            <span class="n">module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">clz</span><span class="p">[:</span><span class="n">lastdot</span><span class="p">])</span>
+            <span class="n">classname</span> <span class="o">=</span> <span class="n">clz</span><span class="p">[</span><span class="n">lastdot</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">classname</span><span class="p">)(</span><span class="n">tag</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">extra_arguments</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Must specify class as module.class&quot;</span><span class="p">)</span>       </div>
+
+ 
+<div class="viewcode-block" id="metadata_namer_manager.from_conf">
+<a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.metadata_namer_manager.from_conf">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_conf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">backend</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a naming operation from the specified configuration if it is possible</span>
+
+<span class="sd">        :param config: A namer config pattern. Should at least contain the following</span>
+
+<span class="sd">        { &quot;class&quot;:&quot;&lt;packagename&gt;.&lt;classname&gt;&quot;,</span>
+<span class="sd">          &quot;tag&quot;:&lt;name of storage&gt;,</span>
+<span class="sd">          &quot;arguments&quot;:{}&quot;</span>
+<span class="sd">        }</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">arguments</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">namer_clazz</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">]</span>
+        <span class="n">tag</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;tag&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="s2">&quot;arguments&quot;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
+            <span class="n">arguments</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;arguments&quot;</span><span class="p">]</span>
+        
+        <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_operation</span><span class="p">(</span><span class="n">namer_clazz</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">arguments</span><span class="p">)</span>     
+
+        <span class="k">return</span> <span class="n">p</span></div>
+</div>
+
+   
+<div class="viewcode-block" id="opera_filename_namer">
+<a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.opera_filename_namer">[docs]</a>
+<span class="k">class</span> <span class="nc">opera_filename_namer</span><span class="p">(</span><span class="n">metadata_namer_operation</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; filename operation that implements support for the OPERA naming convention</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{}):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="sd">        :param cfg: the configuration necessary for mapping elevation angles to letters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">opera_filename_namer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">arguments</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="s2">&quot;namer_config&quot;</span> <span class="ow">in</span> <span class="n">arguments</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Must provide namer_config in arguments&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;namer_config&quot;</span><span class="p">]</span>
+
+    <span class="c1"># pflag_productidentifier_oflag_originator_yyyyMMddhhmmss[_freeformat].type[.compression]</span>
+    <span class="c1"># pflag = T</span>
+    <span class="c1"># productidentifier = T1T2A1A2ii            T1T2 radar products = PA,    A1</span>
+    <span class="c1"># För svep använder man A2=[A-W] och för volymer A2=[X-Z].</span>
+    <span class="c1"># oflag = C</span>
+    <span class="c1"># originator = CCCC</span>
+    <span class="c1"># yyyyMMddhhmmss</span>
+<div class="viewcode-block" id="opera_filename_namer.create">
+<a class="viewcode-back" href="../../../api/bexchange.naming.html#bexchange.naming.namer.opera_filename_namer.create">[docs]</a>
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">placeholder</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Atempts to create a opera filename from the metadata. The created name will be in the format</span>
+<span class="sd">        T_{T1}{T2}{A1}{A2}{ii}_C_{CCCC}_{yyyyMMddhhmmss}.h5</span>
+<span class="sd">        Where</span>
+<span class="sd">        {T1}{T2} = PA</span>
+<span class="sd">        {A1} G-Z depending on content of file</span>
+<span class="sd">        {A2} A-Z depending on content of file</span>
+<span class="sd">        {ii} the last 2 digits in the RAD identifier.</span>
+<span class="sd">        {CCCC} - the CCCC</span>
+<span class="sd">        {yyyyMMddhhmmss} - the date time from the file.</span>
+
+<span class="sd">        :param placeholder: the placeholder</span>
+<span class="sd">        :param meta: the metadata</span>
+<span class="sd">        :return the string to replace the placeholder with if possible</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">opera_name</span> <span class="o">=</span> <span class="n">placeholder</span>
+        <span class="k">if</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_object</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;PVOL&quot;</span><span class="p">,</span> <span class="s2">&quot;SCAN&quot;</span><span class="p">]:</span>
+            <span class="n">A1</span><span class="o">=</span><span class="kc">None</span>
+            <span class="n">A2</span><span class="o">=</span><span class="kc">None</span>
+            <span class="n">quantities</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">elangles</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">setctr</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">30</span><span class="p">):</span>
+                <span class="n">setnode</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">find_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/dataset</span><span class="si">{</span><span class="n">setctr</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">setnode</span><span class="p">:</span>
+                    <span class="n">elangle</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">find_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/dataset1/where/elangle&quot;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">elangle</span><span class="p">:</span>
+                        <span class="k">break</span>
+                    <span class="n">elangles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">elangle</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">paramctr</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">40</span><span class="p">):</span>
+                        <span class="n">paramnode</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">find_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/dataset</span><span class="si">{</span><span class="n">setctr</span><span class="si">}</span><span class="s2">/data</span><span class="si">{</span><span class="n">paramctr</span><span class="si">}</span><span class="s2">/what/quantity&quot;</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">paramnode</span><span class="p">:</span>
+                            <span class="k">break</span>
+                        <span class="n">quantities</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">paramnode</span><span class="o">.</span><span class="n">value_str</span><span class="p">())</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">elangles</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">quantities</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not identify any angles or quantities in file. Can&#39;t create a Opera conformant file without this information&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">placeholder</span>
+
+            <span class="k">if</span> <span class="s2">&quot;DBZH&quot;</span> <span class="ow">in</span> <span class="n">quantities</span><span class="p">:</span>
+                <span class="n">A1</span><span class="o">=</span><span class="s2">&quot;G&quot;</span>
+            <span class="k">elif</span> <span class="s2">&quot;VRADH&quot;</span> <span class="ow">in</span> <span class="n">quantities</span> <span class="ow">or</span> <span class="s2">&quot;VRADV&quot;</span> <span class="ow">in</span> <span class="n">quantities</span><span class="p">:</span>
+                <span class="n">A1</span><span class="o">=</span><span class="s2">&quot;H&quot;</span>
+            <span class="k">elif</span> <span class="s2">&quot;WRADH&quot;</span> <span class="ow">in</span> <span class="n">quantities</span> <span class="ow">or</span> <span class="s2">&quot;WRADV&quot;</span> <span class="ow">in</span> <span class="n">quantities</span><span class="p">:</span>
+                <span class="n">A1</span><span class="o">=</span><span class="s2">&quot;I&quot;</span>
+            <span class="k">elif</span> <span class="s2">&quot;TH&quot;</span> <span class="ow">in</span> <span class="n">quantities</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">quantities</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">A1</span><span class="o">=</span><span class="s2">&quot;J&quot;</span>
+            <span class="k">elif</span> <span class="s2">&quot;ZDR&quot;</span> <span class="ow">in</span> <span class="n">quantities</span><span class="p">:</span>
+                <span class="n">A1</span><span class="o">=</span><span class="s2">&quot;K&quot;</span>
+            <span class="k">elif</span> <span class="s2">&quot;RHOHV&quot;</span> <span class="ow">in</span> <span class="n">quantities</span><span class="p">:</span>
+                <span class="n">A1</span><span class="o">=</span><span class="s2">&quot;L&quot;</span>
+            <span class="k">elif</span> <span class="s2">&quot;PHIDP&quot;</span> <span class="ow">in</span> <span class="n">quantities</span><span class="p">:</span>
+                <span class="n">A1</span><span class="o">=</span><span class="s2">&quot;Q&quot;</span>
+            <span class="k">elif</span> <span class="s2">&quot;KDP&quot;</span> <span class="ow">in</span> <span class="n">quantities</span><span class="p">:</span>
+                <span class="n">A1</span><span class="o">=</span><span class="s2">&quot;R&quot;</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">quantities</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">A1</span><span class="o">=</span><span class="s2">&quot;Z&quot;</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">elangles</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">A2</span><span class="o">=</span><span class="s2">&quot;Z&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">elname</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span>
+                <span class="k">if</span> <span class="n">meta</span><span class="o">.</span><span class="n">bdb_source_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span> <span class="ow">and</span> <span class="s2">&quot;elevation_angles&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="p">[</span><span class="n">meta</span><span class="o">.</span><span class="n">bdb_source_name</span><span class="p">]:</span>
+                    <span class="n">elname</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">bdb_source_name</span>
+                <span class="k">if</span> <span class="n">elname</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span> <span class="ow">and</span> <span class="s2">&quot;elevation_angles&quot;</span> <span class="ow">in</span>  <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="p">[</span><span class="n">elname</span><span class="p">]:</span>
+                    <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="p">[</span><span class="n">meta</span><span class="o">.</span><span class="n">bdb_source_name</span><span class="p">][</span><span class="s2">&quot;elevation_angles&quot;</span><span class="p">]:</span>
+                        <span class="k">if</span> <span class="n">math</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">elangles</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                            <span class="n">idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="p">[</span><span class="n">meta</span><span class="o">.</span><span class="n">bdb_source_name</span><span class="p">][</span><span class="s2">&quot;elevation_angles&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                            <span class="n">A2</span> <span class="o">=</span> <span class="nb">chr</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="n">idx</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">A2</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not identify A2 information from elevation angles. Setting A2 = Y&quot;</span><span class="p">)</span>
+                    <span class="n">A2</span><span class="o">=</span><span class="s2">&quot;Y&quot;</span>
+
+            <span class="n">CCCC</span><span class="o">=</span><span class="n">meta</span><span class="o">.</span><span class="n">source_parent</span><span class="p">[</span><span class="s2">&quot;CCCC&quot;</span><span class="p">]</span>
+            <span class="n">ii</span> <span class="o">=</span> <span class="n">Source</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">meta</span><span class="o">.</span><span class="n">bdb_source</span><span class="p">)[</span><span class="s2">&quot;RAD&quot;</span><span class="p">][</span><span class="mi">2</span><span class="p">:]</span>
+            
+            <span class="n">dt</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">(</span><span class="n">meta</span><span class="o">.</span><span class="n">what_date</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_date</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_date</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_time</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_time</span><span class="o">.</span><span class="n">minute</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_time</span><span class="o">.</span><span class="n">second</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">yyyyMMddhhmmss</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">%H%M%S&quot;</span><span class="p">)</span>
+            <span class="n">opera_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;T_PA</span><span class="si">{</span><span class="n">A1</span><span class="si">}{</span><span class="n">A2</span><span class="si">}{</span><span class="n">ii</span><span class="si">}</span><span class="s2">_C_</span><span class="si">{</span><span class="n">CCCC</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">yyyyMMddhhmmss</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">elif</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_object</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;VP&quot;</span><span class="p">]:</span>
+            <span class="n">source_name</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">bdb_source_name</span>
+            <span class="n">dt</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">(</span><span class="n">meta</span><span class="o">.</span><span class="n">what_date</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_date</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_date</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_time</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_time</span><span class="o">.</span><span class="n">minute</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">what_time</span><span class="o">.</span><span class="n">second</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">yyyyMMddhhmmss</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">T%H%M%SZ&quot;</span><span class="p">)</span>
+            <span class="n">opera_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">source_name</span><span class="si">}</span><span class="s2">_vp_</span><span class="si">{</span><span class="n">yyyyMMddhhmmss</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Can&#39;t handle object of type: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">meta</span><span class="o">.</span><span class="n">what_object</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">opera_name</span></div>
 </div>
 
 

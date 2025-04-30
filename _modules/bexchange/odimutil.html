@@ -86,8 +86,11 @@
             <span class="k">raise</span> <span class="ne">LookupError</span><span class="p">(</span><span class="s2">&quot;No source in metadata&quot;</span><span class="p">)</span>
         
         <span class="n">metadata_hash</span> <span class="o">=</span> <span class="n">hasher</span><span class="o">.</span><span class="n">hash</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span>
-        <span class="n">source</span> <span class="o">=</span> <span class="n">source_manager</span><span class="o">.</span><span class="n">get_source</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="n">source_manager</span><span class="o">.</span><span class="n">get_source</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
         
+        <span class="n">meta</span><span class="o">.</span><span class="n">source_parent</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">source</span><span class="o">.</span><span class="n">parent_object</span><span class="p">:</span>
+            <span class="n">meta</span><span class="o">.</span><span class="n">source_parent</span><span class="o">=</span><span class="n">source</span><span class="o">.</span><span class="n">parent_object</span>
         <span class="n">meta</span><span class="o">.</span><span class="n">bdb_source</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">to_string</span><span class="p">()</span>
         <span class="n">meta</span><span class="o">.</span><span class="n">bdb_source_name</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">name</span>
         <span class="n">meta</span><span class="o">.</span><span class="n">bdb_metadata_hash</span> <span class="o">=</span> <span class="n">metadata_hash</span>
