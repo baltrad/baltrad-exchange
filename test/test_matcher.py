@@ -98,3 +98,33 @@ class test_matcher(unittest.TestCase):
 
         meta.bdb_source_name = "sekaa"
         self.assertEqual(False, self._matcher.match(meta, ifilter.to_xpr()))
+
+    def test_bdb_age(self):
+        now = datetime.datetime.now(datetime.timezone.utc)
+        meta = Metadata();
+        meta.add_node("/", Group("what"))
+        meta.add_node("/what", Attribute("source", "WMO:02606"))
+        meta.add_node("/what", Attribute("date", datetime.date(now.year, now.month, now.day)))
+        meta.add_node("/what", Attribute("time", datetime.time(now.hour, now.minute, now.second)))
+        meta.add_node("/what", Attribute("object", "pvol"))
+
+        v = {"filter_type": "attribute_filter", "name":"_bdb/what_age", "operation":"<", "value_type":"int","value":10}
+
+        ifilter = self._manager.from_value(v)
+
+        self.assertEqual(True, self._matcher.match(meta, ifilter.to_xpr()))
+
+    def test_bdb_age_too_old(self):
+        now = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(seconds=30)
+        meta = Metadata();
+        meta.add_node("/", Group("what"))
+        meta.add_node("/what", Attribute("source", "WMO:02606"))
+        meta.add_node("/what", Attribute("date", datetime.date(now.year, now.month, now.day)))
+        meta.add_node("/what", Attribute("time", datetime.time(now.hour, now.minute, now.second)))
+        meta.add_node("/what", Attribute("object", "pvol"))
+
+        v = {"filter_type": "attribute_filter", "name":"_bdb/what_age", "operation":"<", "value_type":"int","value":10}
+
+        ifilter = self._manager.from_value(v)
+
+        self.assertEqual(False, self._matcher.match(meta, ifilter.to_xpr()))

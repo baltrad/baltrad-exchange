@@ -208,7 +208,7 @@ class or_filter(node_filter):
         for v in value["value"]:
             childs.append(manager.from_value(v))
             
-        return and_filter(childs)
+        return or_filter(childs)
 
     def __repr__(self):
         """The string representation of this instance.
