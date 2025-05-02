@@ -24,12 +24,12 @@
 from __future__ import absolute_import
 
 import unittest
-
+from unittest.mock import MagicMock
 from bexchange.decorators.decorator import decorator_manager, decorator
 
 class test_filter(decorator):
-    def __init__(self, arg1, arg2):
-        super(test_filter, self).__init__()
+    def __init__(self, backend, allow_discard, arg1, arg2):
+        super(test_filter, self).__init__(backend, allow_discard)
         self.arg1=arg1
         self.arg2=arg2
     
@@ -38,13 +38,16 @@ class test_filter(decorator):
 
 class test_decorator_manager(unittest.TestCase):
     def test_create_instance(self):
-        clz = decorator_manager.create("test_decorator.test_filter", ["a1", "a2"])
+        backend = MagicMock()
+        clz = decorator_manager.create(backend, "test_decorator.test_filter", True, ["a1", "a2"])
+        self.assertEqual(True, clz.allow_discard())
         self.assertEqual("a1", clz.arg1)
         self.assertEqual("a2", clz.arg2)        
 
     def test_create_instance_invalid_arguments(self):
         try:
-            clz = decorator_manager.create("test_decorator.test_filter", ["a1"])
+            backend = MagicMock()
+            clz = decorator_manager.create(backend, "test_decorator.test_filter", True, ["a1"])
             self.fail("Expected TypeError")
         except TypeError:
             pass
