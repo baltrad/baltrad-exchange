@@ -73,14 +73,31 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A decorator is used for modifying a file before it is distributed. Incomming files are not decorated before they are saved. Instead, if that function is</span>
 <span class="sd">    wanted a copy-publisher should be used instead.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">pass</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">allow_discard</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span> <span class="o">=</span> <span class="n">backend</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_allow_discard</span> <span class="o">=</span> <span class="n">allow_discard</span>
+    
+<div class="viewcode-block" id="decorator.backend">
+<a class="viewcode-back" href="../../../api/bexchange.decorators.html#bexchange.decorators.decorator.decorator.backend">[docs]</a>
+    <span class="k">def</span> <span class="nf">backend</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: the backend</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span></div>
+
+
+<div class="viewcode-block" id="decorator.allow_discard">
+<a class="viewcode-back" href="../../../api/bexchange.decorators.html#bexchange.decorators.decorator.decorator.allow_discard">[docs]</a>
+    <span class="k">def</span> <span class="nf">allow_discard</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns if this decorator has been configured to allow for discarding the decoration of the file completely</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_allow_discard</span></div>
+
     
 <div class="viewcode-block" id="decorator.decorate">
 <a class="viewcode-back" href="../../../api/bexchange.decorators.html#bexchange.decorators.decorator.decorator.decorate">[docs]</a>
-    <span class="k">def</span> <span class="nf">decorate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ino</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;If this decorator decorates the infile, then a new temporary file will be created. The old temporary file will be removed and</span>
-<span class="sd">        then a new temporary file will be returned.</span>
+    <span class="k">def</span> <span class="nf">decorate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ino</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;If this decorator decorates the infile, then a new temporary file will be created and returned.</span>
 <span class="sd">        :param ino: A tempfile.NamedTemporaryFile instance</span>
 <span class="sd">        :returns: A tempfile.NamedTemporaryFile instance</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -93,14 +110,14 @@
 <div class="viewcode-block" id="example_filter">
 <a class="viewcode-back" href="../../../api/bexchange.decorators.html#bexchange.decorators.decorator.example_filter">[docs]</a>
 <span class="k">class</span> <span class="nc">example_filter</span><span class="p">(</span><span class="n">decorator</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">example_filter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">allow_discard</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">example_filter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">allow_discard</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">arg1</span><span class="o">=</span><span class="n">arg1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">arg2</span><span class="o">=</span><span class="n">arg2</span>
     
 <div class="viewcode-block" id="example_filter.decorate">
 <a class="viewcode-back" href="../../../api/bexchange.decorators.html#bexchange.decorators.decorator.example_filter.decorate">[docs]</a>
-    <span class="k">def</span> <span class="nf">decorate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inf</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">decorate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inf</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">inf</span></div>
 </div>
 
@@ -122,9 +139,10 @@
 <div class="viewcode-block" id="decorator_manager.create">
 <a class="viewcode-back" href="../../../api/bexchange.decorators.html#bexchange.decorators.decorator.decorator_manager.create">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clz</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">clz</span><span class="p">,</span> <span class="n">allow_discard</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates an instance of clz with specified arguments</span>
 <span class="sd">        :param clz: class name specified as &lt;module&gt;.&lt;classname&gt;</span>
+<span class="sd">        :param allow_discard: If decorate returns None, then this file should be discarded.</span>
 <span class="sd">        :param arguments: a list of arguments that should be used to initialize the class       </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Creating decorator: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">clz</span><span class="p">)</span>
@@ -132,7 +150,7 @@
             <span class="n">lastdot</span> <span class="o">=</span> <span class="n">clz</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
             <span class="n">module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">clz</span><span class="p">[:</span><span class="n">lastdot</span><span class="p">])</span>
             <span class="n">classname</span> <span class="o">=</span> <span class="n">clz</span><span class="p">[</span><span class="n">lastdot</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
-            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">classname</span><span class="p">)(</span><span class="o">*</span><span class="n">arguments</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">classname</span><span class="p">)(</span><span class="n">backend</span><span class="p">,</span> <span class="n">allow_discard</span><span class="p">,</span> <span class="o">*</span><span class="n">arguments</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Must specify class as module.class&quot;</span><span class="p">)</span></div>
 </div>
