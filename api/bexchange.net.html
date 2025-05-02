@@ -356,7 +356,9 @@ this will be enough.</p>
 <dd><p>Returns an item from the queue. The wait time is the time in seconds the
 thread should wait in the condition until checking for any new item in the queue.
 This condition will be notified whenever put or shutdown is called.
-:param waittime: The time to wait in seconds inside the condition</p>
+:param waittime: The time to wait in seconds inside the condition
+:return: Will always return an item
+:throws: pubQueueShutdown</p>
 </dd></dl>
 
 <dl class="py method">
@@ -379,6 +381,13 @@ If queue is shutdown, the item will not be added to the queue and this will be d
 <dd><p>Call this when task grabbed from queue is finished</p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="bexchange.net.publishers.pubQueueShutdown">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.publishers.</span></span><span class="sig-name descname"><span class="pre">pubQueueShutdown</span></span><a class="reference internal" href="../_modules/bexchange/net/publishers.html#pubQueueShutdown"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.publishers.pubQueueShutdown" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>thrown to indicate that an entry already exists</p>
 </dd></dl>
 
 <dl class="py class">
@@ -1010,6 +1019,7 @@ with NamedTemporaryFile() as fp: c.getfo(”….”, fp)</p>
 <li><a class="reference internal" href="#bexchange.net.publishers.pubQueue.task_done"><code class="docutils literal notranslate"><span class="pre">pubQueue.task_done()</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#bexchange.net.publishers.pubQueueShutdown"><code class="docutils literal notranslate"><span class="pre">pubQueueShutdown</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.net.publishers.publisher"><code class="docutils literal notranslate"><span class="pre">publisher</span></code></a><ul>
 <li><a class="reference internal" href="#bexchange.net.publishers.publisher.active"><code class="docutils literal notranslate"><span class="pre">publisher.active()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.net.publishers.publisher.backend"><code class="docutils literal notranslate"><span class="pre">publisher.backend()</span></code></a></li>

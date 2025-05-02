@@ -153,7 +153,10 @@
     <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The runner for the thread. Starts the inotify notifier loop</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_notifier</span><span class="o">.</span><span class="n">loop</span><span class="p">()</span></div>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_notifier</span><span class="o">.</span><span class="n">loop</span><span class="p">()</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Leaving loop&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="monitor_conf_dir_inotify_handler.match_file">
@@ -173,10 +176,13 @@
 <span class="sd">        :param event: The file event</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;IN_CLOSE_WRITE: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">match_file</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">):</span>
-            <span class="k">return</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fn_file_written</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_fn_file_written</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">)</span></div>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">match_file</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">):</span>
+                <span class="k">return</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fn_file_written</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_fn_file_written</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Failure in IN_CLOSE_WRITE&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="monitor_conf_dir_inotify_handler.process_IN_MOVED_TO">
@@ -186,10 +192,13 @@
 <span class="sd">        :param event: The file event</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;IN_MOVED_TO: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">match_file</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">):</span>
-            <span class="k">return</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fn_file_written</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_fn_file_written</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">)</span></div>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">match_file</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">):</span>
+                <span class="k">return</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fn_file_written</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_fn_file_written</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Failure in IN_MOVED_TO&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="monitor_conf_dir_inotify_handler.process_IN_MOVED_FROM">
@@ -199,10 +208,13 @@
 <span class="sd">        :param event: The file event</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;IN_MOVED_FROM: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">match_file</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">):</span>
-            <span class="k">return</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fn_file_removed</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_fn_file_removed</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">)</span></div>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">match_file</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">):</span>
+                <span class="k">return</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fn_file_removed</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_fn_file_removed</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Failure in IN_MOVED_FROM&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="monitor_conf_dir_inotify_handler.process_IN_DELETE">
@@ -212,10 +224,13 @@
 <span class="sd">        :param event: The file event</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;IN_DELETE: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">match_file</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">):</span>
-            <span class="k">return</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fn_file_removed</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_fn_file_removed</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">)</span></div>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">match_file</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">):</span>
+                <span class="k">return</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fn_file_removed</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_fn_file_removed</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Failure in IN_DELETE&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="monitor_conf_dir_inotify_handler.start">

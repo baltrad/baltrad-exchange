@@ -210,6 +210,13 @@
 </div>
 
 
+<div class="viewcode-block" id="pubQueueShutdown">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.pubQueueShutdown">[docs]</a>
+<span class="k">class</span> <span class="nc">pubQueueShutdown</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;thrown to indicate that an entry already exists</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+
 <div class="viewcode-block" id="pubQueue">
 <a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.pubQueue">[docs]</a>
 <span class="k">class</span> <span class="nc">pubQueue</span><span class="p">:</span>
@@ -246,15 +253,17 @@
 <span class="sd">        thread should wait in the condition until checking for any new item in the queue.</span>
 <span class="sd">        This condition will be notified whenever put or shutdown is called.</span>
 <span class="sd">        :param waittime: The time to wait in seconds inside the condition</span>
+<span class="sd">        :return: Will always return an item</span>
+<span class="sd">        :throws: pubQueueShutdown</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_condition</span><span class="p">:</span>
             <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shutdown</span><span class="p">:</span>
-                <span class="n">item</span> <span class="o">=</span> <span class="kc">None</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">get_nowait</span><span class="p">()</span>
                 <span class="k">except</span><span class="p">:</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shutdown</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_condition</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">waittime</span><span class="p">)</span></div>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_condition</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">waittime</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">pubQueueShutdown</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="pubQueue.task_done">
@@ -396,7 +405,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">handle_consumer_file</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">task_done</span><span class="p">()</span>
-            <span class="k">except</span> <span class="n">Empty</span><span class="p">:</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running</span><span class="p">:</span>
                     <span class="k">break</span></div>
 
