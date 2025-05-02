@@ -247,14 +247,25 @@ class standard_publisher(publisher):
             shutil.copyfileobj(fp, tmpfile)
         tmpfile.flush()
         
-        logger.debug("Decorating file with %d decorators before adding it on queue"%len(self._decorators))
+        logger.debug("Decorating file '%s' with %d decorators before adding it on queue"%(tmpfile.name, len(self._decorators)))
         if len(self._decorators) > 0:
+            fileid = util.create_fileid_from_meta(meta)
             for d in self._decorators:
-                logger.info("Running decorator %s on ID:'%s'"%(type(d), util.create_fileid_from_meta(meta)))
-                tmpfile = d.decorate(tmpfile)
-            tmpfile.flush()
-            meta = self.backend().metadata_from_file(tmpfile.name)
-        
+                logger.info("Running decorator %s on ID:'%s'"%(type(d), fileid))
+                newtmpfile = d.decorate(tmpfile, meta)
+                if newtmpfile is None and d.allow_discard():
+                    logger.info("Discarding %s completely since decorator configured for '%s' has allow_discard=True"%(self.name(), fileid))
+                    return
+                elif newtmpfile is not None:
+                    try:
+                        tmpfile.close()
+                    except:
+                        pass
+                    tmpfile = newtmpfile
+                elif newtmpfile is None:
+                    continue
+                meta = self.backend().metadata_from_file(tmpfile.name)
+
         try:
             self._queue.put((tmpfile, meta))
         except Full as e:
@@ -404,7 +415,10 @@ class publisher_manager:
         if "decorators" in config:
             decoratorconf =  config["decorators"]
             for ds in decoratorconf:
-                decorator = decorator_manager.create(ds["decorator"], ds["arguments"])
+                allow_discard=False
+                if "allow_discard" in ds:
+                    allow_discard=ds["allow_discard"]
+                decorator = decorator_manager.create(backend, ds["decorator"], allow_discard, ds["arguments"])
                 decorators.append(decorator)
 
         ifilter = filter_manager.from_value({"filter_type":"always_filter", "value":{}})

@@ -51,6 +51,7 @@
   },
   "__decorators":[
     { "decorator":"b2o_decorator.b2o_decorator",
+      "allow_discard":true,
       "arguments":[
       	["DBZH", "VRADH", "TH"]
       ]
