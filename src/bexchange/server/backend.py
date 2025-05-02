@@ -102,7 +102,10 @@ class monitor_conf_dir_inotify_handler(pyinotify.ProcessEvent):
     def run(self):
         """The runner for the thread. Starts the inotify notifier loop
         """
-        self._notifier.loop()
+        try:
+            self._notifier.loop()
+        finally:
+            logger.error("Leaving loop")
 
     def match_file(self, filename):
         """Matches the file so that it is following the wanted pattern. Typically *.json.
@@ -116,40 +119,52 @@ class monitor_conf_dir_inotify_handler(pyinotify.ProcessEvent):
         :param event: The file event
         """
         logger.debug("IN_CLOSE_WRITE: %s"%event.pathname)
-        if not self.match_file(event.pathname):
-            return
-        if self._fn_file_written:
-            self._fn_file_written(event.pathname)
+        try:
+            if not self.match_file(event.pathname):
+                return
+            if self._fn_file_written:
+                self._fn_file_written(event.pathname)
+        except:
+            logger.exception("Failure in IN_CLOSE_WRITE")
 
     def process_IN_MOVED_TO(self, event):
         """Will be called by the inotify notifier when file event occurs.
         :param event: The file event
         """
         logger.debug("IN_MOVED_TO: %s"%event.pathname)
-        if not self.match_file(event.pathname):
-            return
-        if self._fn_file_written:
-            self._fn_file_written(event.pathname)
+        try:
+            if not self.match_file(event.pathname):
+                return
+            if self._fn_file_written:
+                self._fn_file_written(event.pathname)
+        except:
+            logger.exception("Failure in IN_MOVED_TO")
 
     def process_IN_MOVED_FROM(self, event):
         """Will be called by the inotify notifier when file event occurs.
         :param event: The file event
         """
         logger.debug("IN_MOVED_FROM: %s"%event.pathname)
-        if not self.match_file(event.pathname):
-            return
-        if self._fn_file_removed:
-            self._fn_file_removed(event.pathname)
+        try:
+            if not self.match_file(event.pathname):
+                return
+            if self._fn_file_removed:
+                self._fn_file_removed(event.pathname)
+        except:
+            logger.exception("Failure in IN_MOVED_FROM")
 
     def process_IN_DELETE(self, event):
         """Will be called by the inotify notifier when file event occurs.
         :param event: The file event
         """
         logger.debug("IN_DELETE: %s"%event.pathname)
-        if not self.match_file(event.pathname):
-            return
-        if self._fn_file_removed:
-            self._fn_file_removed(event.pathname)
+        try:
+            if not self.match_file(event.pathname):
+                return
+            if self._fn_file_removed:
+                self._fn_file_removed(event.pathname)
+        except:
+            logger.exception("Failure in IN_DELETE")
 
     def start(self):
         """Starts the configuration file monitor

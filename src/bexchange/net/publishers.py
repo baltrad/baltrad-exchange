@@ -136,6 +136,10 @@ class publisher(object):
         """
         raise RuntimeError("Not implemented")
 
+class pubQueueShutdown(Exception):
+    """thrown to indicate that an entry already exists
+    """
+
 class pubQueue:
     """Wrapper around queue.Queue to be able to shutdown. This will be supported in python 3.13 but for now
     this will be enough.
@@ -165,15 +169,17 @@ class pubQueue:
         thread should wait in the condition until checking for any new item in the queue.
         This condition will be notified whenever put or shutdown is called.
         :param waittime: The time to wait in seconds inside the condition
+        :return: Will always return an item
+        :throws: pubQueueShutdown
         """
         with self._condition:
             while not self._shutdown:
-                item = None
                 try:
                     return self._queue.get_nowait()
                 except:
                     if not self._shutdown:
                         self._condition.wait(waittime)
+            raise pubQueueShutdown()
 
     def task_done(self):
         """Call this when task grabbed from queue is finished
@@ -294,7 +300,7 @@ class standard_publisher(publisher):
                 self.handle_consumer_file(tmpfile, meta)
 
                 self._queue.task_done()
-            except Empty:
+            except Exception:
                 if not self._running:
                     break
 

@@ -49,7 +49,12 @@
         "value": ["SCAN"]}
     ]
   },
-  "decorators":[
+  "__decorators":[
+    { "decorator":"b2o_decorator.b2o_decorator",
+      "arguments":[
+      	["DBZH", "VRADH", "TH"]
+      ]
+    }
   ]
 }
 }
