@@ -630,35 +630,36 @@ the ones that was configured.</p>
 <span class="k">class</span> <span class="nc">keep_quantities_decorator</span><span class="p">(</span><span class="n">decorator</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Removes all quantities in a volume or scan except the ones specified.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quantities</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">keep_quantities_decorator</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">allow_discard</span><span class="p">,</span> <span class="n">quantities</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;DBZH&quot;</span><span class="p">,</span><span class="s2">&quot;TH&quot;</span><span class="p">],</span> <span class="n">age</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">keep_quantities_decorator</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">allow_discard</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_quantities</span> <span class="o">=</span> <span class="n">quantities</span>
     
-    <span class="k">def</span> <span class="nf">decorate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inf</span><span class="p">):</span>
-        <span class="n">outf</span> <span class="o">=</span> <span class="n">inf</span>
+    <span class="k">def</span> <span class="nf">decorate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inf</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">a</span> <span class="o">=</span> <span class="n">_raveio</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">outf</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">object</span>
             <span class="k">if</span> <span class="n">_polarvolume</span><span class="o">.</span><span class="n">isPolarVolume</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="ow">or</span> <span class="n">_polarscan</span><span class="o">.</span><span class="n">isPolarScan</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
-    	        <span class="n">a</span><span class="o">.</span><span class="n">removeParametersExcept</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_quantities</span><span class="p">)</span>
-    	        <span class="n">newf</span> <span class="o">=</span> <span class="n">NamedTemporaryFile</span><span class="p">()</span>
-    	        <span class="n">rio</span> <span class="o">=</span> <span class="n">_raveio</span><span class="o">.</span><span class="n">new</span><span class="p">()</span>
-    	        <span class="n">rio</span><span class="o">.</span><span class="n">object</span> <span class="o">=</span> <span class="n">a</span>
-    	        <span class="n">rio</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">newf</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-    	        <span class="n">outf</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-    	        <span class="n">outf</span> <span class="o">=</span> <span class="n">newf</span>
+                <span class="n">a</span><span class="o">.</span><span class="n">removeParametersExcept</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_quantities</span><span class="p">)</span>
+                <span class="n">newf</span> <span class="o">=</span> <span class="n">NamedTemporaryFile</span><span class="p">()</span>
+                <span class="n">rio</span> <span class="o">=</span> <span class="n">_raveio</span><span class="o">.</span><span class="n">new</span><span class="p">()</span>
+                <span class="n">rio</span><span class="o">.</span><span class="n">object</span> <span class="o">=</span> <span class="n">a</span>
+                <span class="n">rio</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">newf</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="n">newf</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+                <span class="k">return</span> <span class="n">newf</span>
         <span class="k">except</span><span class="p">:</span>
-    	    <span class="kn">import</span> <span class="nn">traceback</span>
-    	    <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">(</span><span class="s2">&quot;Failed&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">outf</span>
+            <span class="kn">import</span> <span class="nn">traceback</span>
+            <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">(</span><span class="s2">&quot;Failed&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
 
 </pre></div>
 </div>
 <p>The decorator is in turn configured in the publisher as</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;decorators&quot;</span>:<span class="o">[</span>
 <span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="s2">&quot;decorator&quot;</span>:<span class="s2">&quot;rave_be_decorator.keep_quantities_decorator&quot;</span>,
-<span class="w">  </span><span class="s2">&quot;arguments&quot;</span>:<span class="o">[</span>
-<span class="w">     </span><span class="o">[</span><span class="s2">&quot;DBZH&quot;</span>,<span class="w"> </span><span class="s2">&quot;VRADH&quot;</span>,<span class="w"> </span><span class="s2">&quot;TH&quot;</span><span class="o">]</span>
-<span class="w">  </span><span class="o">]</span>
+<span class="w">   </span><span class="s2">&quot;allow_discard&quot;</span>:true,
+<span class="w">   </span><span class="s2">&quot;arguments&quot;</span>:<span class="o">{</span>
+<span class="w">        </span><span class="s2">&quot;quantities&quot;</span>:<span class="o">[</span><span class="s2">&quot;DBZH&quot;</span>,<span class="w"> </span><span class="s2">&quot;VRADH&quot;</span>,<span class="w"> </span><span class="s2">&quot;TH&quot;</span><span class="o">]</span>,
+<span class="w">      </span><span class="s2">&quot;age&quot;</span>:10
+<span class="w">  </span><span class="o">}</span>
 <span class="w"> </span><span class="o">}</span>
 <span class="o">]</span>
 </pre></div>
