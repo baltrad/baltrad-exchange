@@ -8,24 +8,23 @@ import shutil
 class keep_quantities_decorator(decorator):
     """Removes all quantities in a volume or scan except the ones specified.
     """
-    def __init__(self, quantities):
-        super(keep_quantities_decorator, self).__init__()
+    def __init__(self, backend, allow_discard, quantities=["DBZH","TH"], age=60):
+        super(keep_quantities_decorator, self).__init__(backend, allow_discard)
         self._quantities = quantities
     
-    def decorate(self, inf):
-        outf = inf
+    def decorate(self, inf, meta):
         try:
             a = _raveio.open(outf.name).object
             if _polarvolume.isPolarVolume(a) or _polarscan.isPolarScan(a):
-    	        a.removeParametersExcept(self._quantities)
-    	        newf = NamedTemporaryFile()
-    	        rio = _raveio.new()
-    	        rio.object = a
-    	        rio.save(newf.name)
-    	        outf.close()
-    	        outf = newf
+                a.removeParametersExcept(self._quantities)
+                newf = NamedTemporaryFile()
+                rio = _raveio.new()
+                rio.object = a
+                rio.save(newf.name)
+                newf.flush()
+                return newf
         except:
-    	    import traceback
-    	    traceback.print_exc("Failed")
-        return outf
+            import traceback
+            traceback.print_exc("Failed")
+        return None
 

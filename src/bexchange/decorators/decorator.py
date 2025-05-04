@@ -90,6 +90,6 @@ class decorator_manager:
             lastdot = clz.rfind(".")
             module = importlib.import_module(clz[:lastdot])
             classname = clz[lastdot+1:]
-            return getattr(module, classname)(backend, allow_discard, *arguments)
+            return getattr(module, classname)(backend, allow_discard, **arguments)
         else:
             raise Exception("Must specify class as module.class")

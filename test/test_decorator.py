@@ -39,7 +39,7 @@ class test_filter(decorator):
 class test_decorator_manager(unittest.TestCase):
     def test_create_instance(self):
         backend = MagicMock()
-        clz = decorator_manager.create(backend, "test_decorator.test_filter", True, ["a1", "a2"])
+        clz = decorator_manager.create(backend, "test_decorator.test_filter", True, {"arg1":"a1", "arg2":"a2"})
         self.assertEqual(True, clz.allow_discard())
         self.assertEqual("a1", clz.arg1)
         self.assertEqual("a2", clz.arg2)        
@@ -47,7 +47,7 @@ class test_decorator_manager(unittest.TestCase):
     def test_create_instance_invalid_arguments(self):
         try:
             backend = MagicMock()
-            clz = decorator_manager.create(backend, "test_decorator.test_filter", True, ["a1"])
+            clz = decorator_manager.create(backend, "test_decorator.test_filter", True, {"arg1":"a1"})
             self.fail("Expected TypeError")
         except TypeError:
             pass
