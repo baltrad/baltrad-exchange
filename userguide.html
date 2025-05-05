@@ -426,7 +426,7 @@ For example ${/what/object} will give SCAN/PVOL/.. Then there are a few unique p
 </dd>
 <dt><strong>/what/source:&lt;ID&gt;</strong></dt><dd><p>Grabs the &lt;ID&gt; directly from /what/source and returns it. Note, if source is incomplete this will return “undefined”</p>
 </dd>
-<dt><strong>_baltrad/datetime(:[A-Za-z0-9\-/: _%]+)?</strong></dt><dd><p>For creating datetime strings from the what/date + what/time. The dateformat is same as provided in the datetime class. For example if you want to specify a date
+<dt><a href="#id1"><span class="problematic" id="id2">**</span></a>_baltrad/datetime(:[A-Za-z0-9\-/: _%]+)?**baltrad</dt><dd><p>For creating datetime strings from the what/date + what/time. The dateformat is same as provided in the datetime class. For example if you want to specify a date
 as 2022/11/03/12/04, the you use the following description <em>${_baltrad/datetime:%Y/%m/%d/%H/%M}</em>.</p>
 </dd>
 <dt><strong>_baltrad/datetime_u:([0-9]{2})(:[A-Za-z0-9\-/: _%]+)?</strong></dt><dd><p>In some cases you might want to have minute-intervals. For example a directory structure where you want all files between minute 1-15 to be placed in a folder with 15 as minutes. This
@@ -455,14 +455,54 @@ These are used directly on the placeholder. For example <em>${what/source:CMT}.t
 </dd>
 <dt><strong>rtrim()</strong></dt><dd><p>Trims the right side of the string from any white spaces.</p>
 </dd>
-<dt><strong>interval_u(interval[,limit])</strong></dt><dd><p>** Do not use, under development**</p>
+<dt><strong>interval_u(interval[,limit])</strong></dt><dd><p><strong>Do not use, under development</strong></p>
 </dd>
-<dt><strong>interval_l(interval)</strong></dt><dd><p>** Do not use, under development**</p>
+<dt><strong>interval_l(interval)</strong></dt><dd><p><strong>Do not use, under development</strong></p>
 </dd>
 </dl>
 <p>With the above knowledge, assuming that a scan with elevation angle=0.5 arrives from sella, with /what/date=20221103 and /what/time=220315 then the following
 expression <em>${_baltrad/datetime_l:15:%Y/%m/%d/%H/%M}/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.h5</em>
 will result in <em>2022/11/03/22/00/sella_scan_202211032203_0.5.h5</em>.</p>
+</section>
+<section id="extending-namers">
+<h4>Extending namers<a class="headerlink" href="#extending-namers" title="Link to this heading">¶</a></h4>
+<p>It is possible to extend the naming functionality with custom tags by subclassing bexchange.namer.metadata_namer_operation. At the time of writing this documentation
+baltrad exchange provides one custom namer that can be added when creating the names.</p>
+<section id="baltrad-opera-filename-bexchange-namer-opera-filename-namer">
+<h5><strong>${_baltrad/opera_filename}</strong> bexchange.namer.opera_filename_namer<a class="headerlink" href="#baltrad-opera-filename-bexchange-namer-opera-filename-namer" title="Link to this heading">¶</a></h5>
+<p>This is a custom filename namer that can be used to generate filenames following the opera naming convention. The namer configuration should be defined
+as</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;naming_operations&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;tag&quot;</span><span class="p">:</span><span class="s2">&quot;_baltrad/opera_filename&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;bexchange.naming.namer.opera_filename_namer&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;__comment__&quot;</span><span class="p">:</span><span class="s2">&quot;Follows Opera naming, lowest angle=A and so on..&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;arguments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;namer_config&quot;</span><span class="p">:{</span>
+<span class="w">          </span><span class="nt">&quot;default&quot;</span><span class="p">:{</span><span class="nt">&quot;elevation_angles&quot;</span><span class="p">:[</span><span class="mf">0.5</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.5</span><span class="p">,</span><span class="w"> </span><span class="mf">2.0</span><span class="p">,</span><span class="w"> </span><span class="mf">2.5</span><span class="p">,</span><span class="w"> </span><span class="mf">4.0</span><span class="p">,</span><span class="w"> </span><span class="mf">8.0</span><span class="p">,</span><span class="w"> </span><span class="mf">14.0</span><span class="p">,</span><span class="w"> </span><span class="mf">24.0</span><span class="p">,</span><span class="w"> </span><span class="mf">40.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.25</span><span class="p">]},</span>
+<span class="w">          </span><span class="nt">&quot;sella&quot;</span><span class="p">:{</span><span class="nt">&quot;elevation_angles&quot;</span><span class="p">:[</span><span class="mf">0.5</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.5</span><span class="p">,</span><span class="w"> </span><span class="mf">2.0</span><span class="p">,</span><span class="w"> </span><span class="mf">2.5</span><span class="p">,</span><span class="w"> </span><span class="mf">4.0</span><span class="p">,</span><span class="w"> </span><span class="mf">8.0</span><span class="p">,</span><span class="w"> </span><span class="mf">14.0</span><span class="p">,</span><span class="w"> </span><span class="mf">24.0</span><span class="p">,</span><span class="w"> </span><span class="mf">40.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.25</span><span class="p">]}</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;__filename__&quot;</span><span class="p">:</span><span class="s2">&quot;/..../opera_namer_config.json&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Since elevation angles are getting defined using letters the order of elevation angles where A is lowest elevation angle, B second lowest and so on, all elevation angles for a site has to be
+specified in order to know what letters that should be used. Either the entry “namer_config”:{…} can be defined directly in the json configuration file for the class using the opera filenamer tag
+or else you can have a globally available config file containing the radar sources. This file should also be defined using “namer_config”:{….} but it should be placed in a separate file that is
+referenced in the arguments when creating the opera_filename_namer.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;namer_config&quot;</span><span class="p">:{</span>
+<span class="w">    </span><span class="nt">&quot;default&quot;</span><span class="p">:{</span><span class="nt">&quot;elevation_angles&quot;</span><span class="p">:[</span><span class="mf">0.5</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.5</span><span class="p">,</span><span class="w"> </span><span class="mf">2.0</span><span class="p">,</span><span class="w"> </span><span class="mf">2.5</span><span class="p">,</span><span class="w"> </span><span class="mf">4.0</span><span class="p">,</span><span class="w"> </span><span class="mf">8.0</span><span class="p">,</span><span class="w"> </span><span class="mf">14.0</span><span class="p">,</span><span class="w"> </span><span class="mf">24.0</span><span class="p">,</span><span class="w"> </span><span class="mf">40.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.25</span><span class="p">]},</span>
+<span class="w">    </span><span class="nt">&quot;sella&quot;</span><span class="p">:{</span><span class="nt">&quot;elevation_angles&quot;</span><span class="p">:[</span><span class="mf">0.5</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.5</span><span class="p">,</span><span class="w"> </span><span class="mf">2.0</span><span class="p">,</span><span class="w"> </span><span class="mf">2.5</span><span class="p">,</span><span class="w"> </span><span class="mf">4.0</span><span class="p">,</span><span class="w"> </span><span class="mf">8.0</span><span class="p">,</span><span class="w"> </span><span class="mf">14.0</span><span class="p">,</span><span class="w"> </span><span class="mf">24.0</span><span class="p">,</span><span class="w"> </span><span class="mf">40.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.25</span><span class="p">]}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
 </section>
 </section>
 <section id="publications-publication">
@@ -529,7 +569,7 @@ be explained further down.</p>
 </dd>
 </dl>
 </div></blockquote>
-<p><a href="#id1"><span class="problematic" id="id2">`</span></a>sing a simple_connection which only supports one sender.
+<p><a href="#id3"><span class="problematic" id="id4">`</span></a>sing a simple_connection which only supports one sender.
 The sender used will be a <em>baltrad.exchange.net.senders.rest_sender</em> which uses the “stock” baltrad-exchange exchange protocol.</p>
 <p>When the publisher sends a file to the simple_connection it will be passed to the sender that will atempt to send the message to the
 destination.</p>
@@ -793,6 +833,10 @@ python packages will be needed lockfile, pycryptodomex numpy, paramiko, scp, bal
 <li><a class="reference internal" href="#subscriptions-subscription">Subscriptions (subscription)</a></li>
 <li><a class="reference internal" href="#storages-storage">Storages (storage)</a><ul>
 <li><a class="reference internal" href="#naming">Naming</a></li>
+<li><a class="reference internal" href="#extending-namers">Extending namers</a><ul>
+<li><a class="reference internal" href="#baltrad-opera-filename-bexchange-namer-opera-filename-namer"><strong>${_baltrad/opera_filename}</strong> bexchange.namer.opera_filename_namer</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a class="reference internal" href="#publications-publication">Publications (publication)</a><ul>
