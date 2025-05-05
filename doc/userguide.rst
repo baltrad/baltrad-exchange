@@ -446,7 +446,7 @@ For example ${/what/object} will give SCAN/PVOL/.. Then there are a few unique p
 **/what/source:<ID>**
   Grabs the <ID> directly from /what/source and returns it. Note, if source is incomplete this will return "undefined"
   
-**_baltrad/datetime(:[A-Za-z0-9\\-/: _%]+)?**
+**_baltrad/datetime(:[A-Za-z0-9\\-/: _%]+)?**baltrad
   For creating datetime strings from the what/date + what/time. The dateformat is same as provided in the datetime class. For example if you want to specify a date
   as 2022/11/03/12/04, the you use the following description *${_baltrad/datetime:%Y/%m/%d/%H/%M}*.
 
@@ -487,15 +487,59 @@ Currently the supported suboperations are:
   Trims the right side of the string from any white spaces.
   
 **interval_u(interval[,limit])**
-  ** Do not use, under development**
+  **Do not use, under development**
   
 **interval_l(interval)**
-  ** Do not use, under development**
+  **Do not use, under development**
 
 
 With the above knowledge, assuming that a scan with elevation angle=0.5 arrives from sella, with /what/date=20221103 and /what/time=220315 then the following
 expression *${_baltrad/datetime_l:15:%Y/%m/%d/%H/%M}/${_bdb/source:NOD}_${/what/object}.tolower()_${/what/date}T${/what/time}Z_${/dataset1/where/elangle}.h5*
 will result in *2022/11/03/22/00/sella_scan_202211032203_0.5.h5*.
+
+Extending namers
+----------------
+It is possible to extend the naming functionality with custom tags by subclassing bexchange.namer.metadata_namer_operation. At the time of writing this documentation
+baltrad exchange provides one custom namer that can be added when creating the names.
+
+**${_baltrad/opera_filename}** bexchange.namer.opera_filename_namer
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+This is a custom filename namer that can be used to generate filenames following the opera naming convention. The namer configuration should be defined
+as 
+
+.. code-block:: json
+
+  {
+    "naming_operations": [
+      {
+        "tag":"_baltrad/opera_filename",
+        "class":"bexchange.naming.namer.opera_filename_namer",
+        "__comment__":"Follows Opera naming, lowest angle=A and so on..",        
+        "arguments": {
+          "namer_config":{
+            "default":{"elevation_angles":[0.5, 1.0, 1.5, 2.0, 2.5, 4.0, 8.0, 14.0, 24.0, 40.0, 1.25]},
+            "sella":{"elevation_angles":[0.5, 1.0, 1.5, 2.0, 2.5, 4.0, 8.0, 14.0, 24.0, 40.0, 1.25]}
+          },
+          "__filename__":"/..../opera_namer_config.json"
+        }
+      }
+    ]
+  }
+
+Since elevation angles are getting defined using letters the order of elevation angles where A is lowest elevation angle, B second lowest and so on, all elevation angles for a site has to be
+specified in order to know what letters that should be used. Either the entry "namer_config":{...} can be defined directly in the json configuration file for the class using the opera filenamer tag
+or else you can have a globally available config file containing the radar sources. This file should also be defined using "namer_config":{....} but it should be placed in a separate file that is
+referenced in the arguments when creating the opera_filename_namer.
+
+.. code-block:: json
+
+  {
+    "namer_config":{
+      "default":{"elevation_angles":[0.5, 1.0, 1.5, 2.0, 2.5, 4.0, 8.0, 14.0, 24.0, 40.0, 1.25]},
+      "sella":{"elevation_angles":[0.5, 1.0, 1.5, 2.0, 2.5, 4.0, 8.0, 14.0, 24.0, 40.0, 1.25]}
+    }
+  }
 
 .. _ug_publications:
 

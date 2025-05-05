@@ -25,6 +25,7 @@ import re
 import logging
 import importlib
 import math
+import json
 from io import StringIO
 from datetime import datetime, timedelta
 from baltrad.bdbcommon.oh5 import (
@@ -378,9 +379,19 @@ class opera_filename_namer(metadata_namer_operation):
         :param cfg: the configuration necessary for mapping elevation angles to letters
         """
         super(opera_filename_namer, self).__init__(tag, backend, arguments)
-        if not "namer_config" in arguments:
+        if "namer_config" in arguments:
+            self._cfg = arguments["namer_config"]
+        elif "filename" in arguments:
+            self._cfg = self.read_config(arguments["filename"])
+        else:
             raise Exception("Must provide namer_config in arguments")
-        self._cfg = arguments["namer_config"]
+
+    def read_config(self, filename):
+        with open(filename, "r") as fp:
+            cfg = json.load(fp)
+            if not "namer_config" in cfg:
+                raise Exception("Configuration read from file does not contain root namer_config")
+            return cfg
 
     # pflag_productidentifier_oflag_originator_yyyyMMddhhmmss[_freeformat].type[.compression]
     # pflag = T
