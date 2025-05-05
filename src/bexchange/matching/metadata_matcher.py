@@ -85,7 +85,7 @@ class metadata_matcher:
             return self.find_source(name, Source.from_string(self.meta.bdb_source))
         elif name.startswith("_bdb/source_name"):
             return[self.meta.bdb_source_name]
-        elif name.startswith("_bdb/what_age"):
+        elif name.startswith("_exchange/what_age"):
             whatdt = datetime.datetime(self.meta.what_date.year, self.meta.what_date.month, self.meta.what_date.day, self.meta.what_time.hour, self.meta.what_time.minute, self.meta.what_time.second, tzinfo=datetime.timezone.utc)
             nowdt = datetime.datetime.now(datetime.timezone.utc)
             seconds = (nowdt - whatdt).seconds

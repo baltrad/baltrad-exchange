@@ -108,7 +108,7 @@ class test_matcher(unittest.TestCase):
         meta.add_node("/what", Attribute("time", datetime.time(now.hour, now.minute, now.second)))
         meta.add_node("/what", Attribute("object", "pvol"))
 
-        v = {"filter_type": "attribute_filter", "name":"_bdb/what_age", "operation":"<", "value_type":"int","value":10}
+        v = {"filter_type": "attribute_filter", "name":"_exchange/what_age", "operation":"<", "value_type":"int","value":10}
 
         ifilter = self._manager.from_value(v)
 
@@ -123,7 +123,7 @@ class test_matcher(unittest.TestCase):
         meta.add_node("/what", Attribute("time", datetime.time(now.hour, now.minute, now.second)))
         meta.add_node("/what", Attribute("object", "pvol"))
 
-        v = {"filter_type": "attribute_filter", "name":"_bdb/what_age", "operation":"<", "value_type":"int","value":10}
+        v = {"filter_type": "attribute_filter", "name":"_exchange/what_age", "operation":"<", "value_type":"int","value":10}
 
         ifilter = self._manager.from_value(v)
 
