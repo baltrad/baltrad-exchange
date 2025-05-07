@@ -8,8 +8,8 @@ import shutil
 class keep_quantities_decorator(decorator):
     """Removes all quantities in a volume or scan except the ones specified.
     """
-    def __init__(self, backend, allow_discard, quantities=["DBZH","TH"], age=60):
-        super(keep_quantities_decorator, self).__init__(backend, allow_discard)
+    def __init__(self, backend, alldiscard_on_noneow_discard, quantities=["DBZH","TH"], age=60):
+        super(keep_quantities_decorator, self).__init__(backend, discard_on_none)
         self._quantities = quantities
     
     def decorate(self, inf, meta):

@@ -253,14 +253,17 @@ class standard_publisher(publisher):
             for d in self._decorators:
                 logger.info("Running decorator %s on ID:'%s'"%(type(d), fileid))
                 newtmpfile = d.decorate(tmpfile, meta)
-                if newtmpfile is None and d.allow_discard():
-                    logger.info("Discarding %s completely since decorator configured for '%s' has allow_discard=True"%(self.name(), fileid))
+                if newtmpfile is None and d.discard_on_none():
+                    logger.info("Discarding %s completely since decorator configured for '%s' has discard_on_none=True"%(self.name(), fileid))
+                    tmpfile.close()
                     return
-                elif newtmpfile is not None:
+                elif newtmpfile is not None and newtmpfile != tmpfile:
                     try:
+                        logger.info("Closing tmpfile")
                         tmpfile.close()
                     except:
                         pass
+                    logger.info("Assinging tempfile")
                     tmpfile = newtmpfile
                 elif newtmpfile is None:
                     continue
@@ -415,10 +418,10 @@ class publisher_manager:
         if "decorators" in config:
             decoratorconf =  config["decorators"]
             for ds in decoratorconf:
-                allow_discard=False
-                if "allow_discard" in ds:
-                    allow_discard=ds["allow_discard"]
-                decorator = decorator_manager.create(backend, ds["decorator"], allow_discard, ds["arguments"])
+                discard_on_none=False
+                if "discard_on_none" in ds:
+                    discard_on_none=ds["discard_on_none"]
+                decorator = decorator_manager.create(backend, ds["decorator"], discard_on_none, ds["arguments"])
                 decorators.append(decorator)
 
         ifilter = filter_manager.from_value({"filter_type":"always_filter", "value":{}})
