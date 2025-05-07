@@ -723,7 +723,7 @@ The decorator is in turn configured in the publisher as
 
    "decorators":[
     { "decorator":"rave_be_decorator.keep_quantities_decorator",
-      "allow_discard":true,
+      "discard_on_none":true,
       "arguments":{
      	   "quantities":["DBZH", "VRADH", "TH"],
          "age":10
