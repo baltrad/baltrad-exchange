@@ -557,6 +557,15 @@ class copy_sender(sender):
             self._create_missing_directories = arguments["create_missing_directories"]
         self._namer = metadata_namer(self._path)
 
+        if "naming_operations" in arguments and len(arguments["naming_operations"]) > 0:
+            if not self._namer:
+                raise Exception("Providing naming_operations without a path")
+            for noperation in arguments["naming_operations"]:
+                op = metadata_namer_manager.from_conf(noperation, backend)
+                if op:
+                    logger.info("Registering %s"%op.tag())
+                    self._namer.register_operation(op.tag(), op)
+
     def name(self, meta):
         """Creates the name to use when copying the file from the metadata
         :param meta: The metadata

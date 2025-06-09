@@ -464,9 +464,9 @@ class opera_filename_namer(metadata_namer_operation):
                 if meta.bdb_source_name in self._cfg and "elevation_angles" in self._cfg[meta.bdb_source_name]:
                     elname = meta.bdb_source_name
                 if elname in self._cfg and "elevation_angles" in  self._cfg[elname]:
-                    for e in self._cfg[meta.bdb_source_name]["elevation_angles"]:
+                    for e in self._cfg[elname]["elevation_angles"]:
                         if math.isclose(e, elangles[0]):
-                            idx = self._cfg[meta.bdb_source_name]["elevation_angles"].index(e)
+                            idx = self._cfg[elname]["elevation_angles"].index(e)
                             A2 = chr(ord('A') + idx)
                 if A2 is None:
                     logger.error("Could not identify A2 information from elevation angles. Setting A2 = Y")
