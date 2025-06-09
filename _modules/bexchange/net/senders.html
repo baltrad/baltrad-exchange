@@ -675,6 +675,15 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_create_missing_directories</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;create_missing_directories&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_namer</span> <span class="o">=</span> <span class="n">metadata_namer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="s2">&quot;naming_operations&quot;</span> <span class="ow">in</span> <span class="n">arguments</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;naming_operations&quot;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_namer</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Providing naming_operations without a path&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">noperation</span> <span class="ow">in</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;naming_operations&quot;</span><span class="p">]:</span>
+                <span class="n">op</span> <span class="o">=</span> <span class="n">metadata_namer_manager</span><span class="o">.</span><span class="n">from_conf</span><span class="p">(</span><span class="n">noperation</span><span class="p">,</span> <span class="n">backend</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">op</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Registering </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">op</span><span class="o">.</span><span class="n">tag</span><span class="p">())</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_namer</span><span class="o">.</span><span class="n">register_operation</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">tag</span><span class="p">(),</span> <span class="n">op</span><span class="p">)</span>
+
 <div class="viewcode-block" id="copy_sender.name">
 <a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.copy_sender.name">[docs]</a>
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
