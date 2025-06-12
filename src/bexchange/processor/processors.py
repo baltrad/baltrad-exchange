@@ -86,7 +86,7 @@ class example_processor(processor):
         self._name = name
 
     def process(self, path, meta):
-        logger.debug("Running processor %s of type %s"%(self.name(), self.name_repr()))
+        logger.debug("Running processor %s of type %s"%(self.name(), type(self)))
         
 class processor_manager:
     """ The processor manager. Will ensure that files are passed on to the processors.

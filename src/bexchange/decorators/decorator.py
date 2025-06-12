@@ -24,6 +24,7 @@
 import importlib
 import sys
 import logging
+from datetime import timedelta, datetime, timezone
 
 logger = logging.getLogger("bexchange.decorators.decorator")
 
@@ -65,6 +66,48 @@ class example_filter(decorator):
     
     def decorate(self, inf, meta):
         return inf
+
+##
+# MAX age filter.
+class max_age_filter(decorator):
+    """ MAX age filter that will indicate if file should be removed or not. allow_discard is enforced to True since this is a filter.
+    """
+    def __init__(self, backend, allow_discard, max_acceptable_age=0, max_acceptable_age_block=0):
+        """ Constructor
+        :param backend: the backend
+        :param allow_discard: not used (will be enforced to True)
+        :param max_acceptable_age: Max age before an alert message is written
+        :param max_acceptable_age_block: Max age before the file is discarded
+        """
+        super(max_age_filter, self).__init__(backend, True)  # We force discarding of files since that is the reason for this filter
+        self._max_acceptable_age = max_acceptable_age
+        self._max_acceptable_age_block = max_acceptable_age_block
+    
+    def decorate(self, inf, meta):
+        """ Will  use the metadata to know if the file should be filtered or not.
+        """
+        if self._max_acceptable_age > 0 and self._max_acceptable_age_block > 0:
+            fileUTC = datetime(meta.what_date.year, meta.what_date.month, meta.what_date.day, meta.what_time.hour, meta.what_time.minute, meta.what_time.second, tzinfo=timezone.utc)
+            nowUTC = datetime.now(timezone.utc)
+            file_delay = nowUTC - fileUTC
+            if file_delay < timedelta(seconds = self._max_acceptable_age):
+                pass
+            elif file_delay >= timedelta(seconds = self._max_acceptable_age) and file_delay < timedelta(seconds=self._max_acceptable_age_block):
+                if meta.what_object == "SCAN":
+                    logger.info("Alert message: the SCAN %s with elangle %2.1f from %s was processed %5.2f s after nominal /what/time"% \
+                        (meta.what_time, meta.find_node("/dataset1/where/elangle").value, meta.bdb_source_name, file_delay.total_seconds()))
+                else:
+                    logger.info("Alert message: the PVOL from %s was processed %5.2f s after nominal /what/time"%(meta.what_time, meta.bdb_source_name, file_delay.total_seconds()))
+            elif file_delay > timedelta(seconds = self._max_acceptable_age_block):
+                if meta.what_object == "SCAN":
+                    logger.info("Block message: the SCAN %s with elangle %2.1f from %s was blocked, it is %5.2f s after nominal /what/time (threshold %5.2f s)"% \
+                        (meta.what_time, meta.find_node("/dataset1/where/elangle").value, meta.bdb_source_name, file_delay.total_seconds(), float(self._max_acceptable_age_block)))
+                else:
+                    logger.info("Block message: the PVOL %s from %s was blocked, it is %5.2f s after nominal /what/time (threshold %5.2f s)"% \
+                        (meta.what_time, meta.bdb_source_name, file_delay.total_seconds(), float(self.max_acceptable_file_age_block)))
+                return None
+        return inf
+
 
 ##
 # Manager that handles the creation of decorators from a class name and a number of arguments.

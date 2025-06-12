@@ -259,11 +259,9 @@ class standard_publisher(publisher):
                     return
                 elif newtmpfile is not None and newtmpfile != tmpfile:
                     try:
-                        logger.info("Closing tmpfile")
                         tmpfile.close()
                     except:
                         pass
-                    logger.info("Assinging tempfile")
                     tmpfile = newtmpfile
                 elif newtmpfile is None:
                     continue
