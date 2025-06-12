@@ -115,6 +115,19 @@ class it can be created by invoking decorator_manager.create(“module….class 
 
 </dd></dl>
 
+<dl class="py class">
+<dt class="sig sig-object py" id="bexchange.decorators.decorator.max_age_filter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.decorators.decorator.</span></span><span class="sig-name descname"><span class="pre">max_age_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_discard</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_acceptable_age</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_acceptable_age_block</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/decorators/decorator.html#max_age_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.decorators.decorator.max_age_filter" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bexchange.decorators.decorator.decorator" title="bexchange.decorators.decorator.decorator"><code class="xref py py-class docutils literal notranslate"><span class="pre">decorator</span></code></a></p>
+<p>MAX age filter that will indicate if file should be removed or not. allow_discard is enforced to True since this is a filter.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.decorators.decorator.max_age_filter.decorate">
+<span class="sig-name descname"><span class="pre">decorate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/decorators/decorator.html#max_age_filter.decorate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.decorators.decorator.max_age_filter.decorate" title="Link to this definition">¶</a></dt>
+<dd><p>Will  use the metadata to know if the file should be filtered or not.</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-bexchange.decorators">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-bexchange.decorators" title="Link to this heading">¶</a></h2>
@@ -146,6 +159,10 @@ class it can be created by invoking decorator_manager.create(“module….class 
 </li>
 <li><a class="reference internal" href="#bexchange.decorators.decorator.example_filter"><code class="docutils literal notranslate"><span class="pre">example_filter</span></code></a><ul>
 <li><a class="reference internal" href="#bexchange.decorators.decorator.example_filter.decorate"><code class="docutils literal notranslate"><span class="pre">example_filter.decorate()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.decorators.decorator.max_age_filter"><code class="docutils literal notranslate"><span class="pre">max_age_filter</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.decorators.decorator.max_age_filter.decorate"><code class="docutils literal notranslate"><span class="pre">max_age_filter.decorate()</span></code></a></li>
 </ul>
 </li>
 </ul>
