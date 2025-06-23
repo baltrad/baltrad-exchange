@@ -478,6 +478,9 @@
 <span class="sd">         }</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">sftp_sender</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">,</span> <span class="n">arguments</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_confirm_upload</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="s2">&quot;confirm_upload&quot;</span> <span class="ow">in</span> <span class="n">arguments</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_confirm_upload</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;confirm_upload&quot;</span><span class="p">]</span>
 
 <div class="viewcode-block" id="sftp_sender.send">
 <a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.sftp_sender.send">[docs]</a>
@@ -496,7 +499,7 @@
                 <span class="n">c</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">bdir</span><span class="p">)</span>
             <span class="n">c</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">bdir</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;sftp_sender: address:</span><span class="si">%s</span><span class="s2">, basename:</span><span class="si">%s</span><span class="s2"> uploaded ID:&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">(),</span> <span class="n">fname</span><span class="p">,</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)))</span>
-            <span class="n">c</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span></div>
+            <span class="n">c</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">confirm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_confirm_upload</span><span class="p">)</span></div>
 </div>
 
 

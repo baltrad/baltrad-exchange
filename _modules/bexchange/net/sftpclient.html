@@ -235,12 +235,12 @@
     
 <div class="viewcode-block" id="sftpclient.put">
 <a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.sftpclient.sftpclient.put">[docs]</a>
-    <span class="k">def</span> <span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">targetname</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">targetname</span><span class="p">,</span> <span class="n">confirm</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Uploads the file (filename) to the server named targetname.</span>
 <span class="sd">        :param filename: Source filename to upload</span>
 <span class="sd">        :param targetname: The destination name</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_sftp</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">targetname</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sftp</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">targetname</span><span class="p">,</span> <span class="n">confirm</span><span class="o">=</span><span class="n">confirm</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="sftpclient.get">
