@@ -387,6 +387,9 @@ class sftp_sender(baseuri_sender):
          }
         """
         super(sftp_sender, self).__init__(backend, aid, arguments)
+        self._confirm_upload = False
+        if "confirm_upload" in arguments:
+            self._confirm_upload = arguments["confirm_upload"]
 
     def send(self, path, meta):
         """Sends the file using sftp.
@@ -403,7 +406,7 @@ class sftp_sender(baseuri_sender):
                 c.makedirs(bdir)
             c.chdir(bdir)
             logger.info("sftp_sender: address:%s, basename:%s uploaded ID:'%s'" % (self.hostname(), fname, util.create_fileid_from_meta(meta)))
-            c.put(path, fname)
+            c.put(path, fname, confirm=self._confirm_upload)
 
 class scp_sender(baseuri_sender):
     """Publishes files over scp

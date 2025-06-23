@@ -160,12 +160,12 @@ class sftpclient(object):
         """
         return self._sftp.listdir(dirname)    
     
-    def put(self, filename, targetname):
+    def put(self, filename, targetname, confirm=True):
         """ Uploads the file (filename) to the server named targetname.
         :param filename: Source filename to upload
         :param targetname: The destination name
         """
-        self._sftp.put(filename, targetname)
+        self._sftp.put(filename, targetname, confirm=confirm)
 
     def get(self, filename, targetname):
         """ Fetches the file (filename) from the server and saves it as targetname.
