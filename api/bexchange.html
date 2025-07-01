@@ -399,9 +399,11 @@
 <li class="toctree-l2"><a class="reference internal" href="bexchange.naming.html#module-bexchange.naming.namer">bexchange.naming.namer module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="bexchange.naming.html#bexchange.naming.namer.metadata_namer"><code class="docutils literal notranslate"><span class="pre">metadata_namer</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="bexchange.naming.html#bexchange.naming.namer.metadata_namer.get_attribute_value"><code class="docutils literal notranslate"><span class="pre">metadata_namer.get_attribute_value()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.naming.html#bexchange.naming.namer.metadata_namer.get_property"><code class="docutils literal notranslate"><span class="pre">metadata_namer.get_property()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="bexchange.naming.html#bexchange.naming.namer.metadata_namer.get_source_item"><code class="docutils literal notranslate"><span class="pre">metadata_namer.get_source_item()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="bexchange.naming.html#bexchange.naming.namer.metadata_namer.name"><code class="docutils literal notranslate"><span class="pre">metadata_namer.name()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="bexchange.naming.html#bexchange.naming.namer.metadata_namer.register_operation"><code class="docutils literal notranslate"><span class="pre">metadata_namer.register_operation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.naming.html#bexchange.naming.namer.metadata_namer.set_properties"><code class="docutils literal notranslate"><span class="pre">metadata_namer.set_properties()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="bexchange.naming.html#bexchange.naming.namer.metadata_namer.template"><code class="docutils literal notranslate"><span class="pre">metadata_namer.template()</span></code></a></li>
 </ul>
 </li>
@@ -1093,6 +1095,16 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.config.</span></span><span class="sig-name descname"><span class="pre">Properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/config.html#Properties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.config.Properties" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
+<dt class="sig sig-object py" id="bexchange.config.Properties.dictionary">
+<span class="sig-name descname"><span class="pre">dictionary</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/config.html#Properties.dictionary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.config.Properties.dictionary" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>returns the internal dictionary</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="bexchange.config.Properties.filter">
 <span class="sig-name descname"><span class="pre">filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/config.html#Properties.filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.config.Properties.filter" title="Link to this definition">¶</a></dt>
 <dd><p>apply a prefix to the key lookups</p>
@@ -1443,6 +1455,7 @@ the following extra options types:</p>
 <li><a class="reference internal" href="#module-bexchange.config">bexchange.config module</a><ul>
 <li><a class="reference internal" href="#bexchange.config.Error"><code class="docutils literal notranslate"><span class="pre">Error</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.config.Properties"><code class="docutils literal notranslate"><span class="pre">Properties</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.config.Properties.dictionary"><code class="docutils literal notranslate"><span class="pre">Properties.dictionary()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.config.Properties.filter"><code class="docutils literal notranslate"><span class="pre">Properties.filter()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.config.Properties.get"><code class="docutils literal notranslate"><span class="pre">Properties.get()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.config.Properties.get_boolean"><code class="docutils literal notranslate"><span class="pre">Properties.get_boolean()</span></code></a></li>

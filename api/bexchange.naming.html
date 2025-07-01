@@ -77,6 +77,14 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="bexchange.naming.namer.metadata_namer.get_property">
+<span class="sig-name descname"><span class="pre">get_property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#metadata_namer.get_property"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.metadata_namer.get_property" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the property with specified name.
+:param name: the name of the property
+:return the property if found, otherwise an empty string</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="bexchange.naming.namer.metadata_namer.get_source_item">
 <span class="sig-name descname"><span class="pre">get_source_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#metadata_namer.get_source_item"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.metadata_namer.get_source_item" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -97,7 +105,17 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.naming.namer.metadata_namer.register_operation">
 <span class="sig-name descname"><span class="pre">register_operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#metadata_namer.register_operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.metadata_namer.register_operation" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Registers a namer operation
+:param tag: the identifier used in the name template
+:param operation: a metadata_namer_operation instance</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.naming.namer.metadata_namer.set_properties">
+<span class="sig-name descname"><span class="pre">set_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">properties</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#metadata_namer.set_properties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.metadata_namer.set_properties" title="Link to this definition">¶</a></dt>
+<dd><p>Sets properties in the namer. Can either provide a property file name or else a dictionary.
+:param properties: Either a filename (string) to a property file or a dictionary with the properties</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.naming.namer.metadata_namer.template">
@@ -328,9 +346,11 @@ a subset is changed.
 <li><a class="reference internal" href="#module-bexchange.naming.namer">bexchange.naming.namer module</a><ul>
 <li><a class="reference internal" href="#bexchange.naming.namer.metadata_namer"><code class="docutils literal notranslate"><span class="pre">metadata_namer</span></code></a><ul>
 <li><a class="reference internal" href="#bexchange.naming.namer.metadata_namer.get_attribute_value"><code class="docutils literal notranslate"><span class="pre">metadata_namer.get_attribute_value()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.naming.namer.metadata_namer.get_property"><code class="docutils literal notranslate"><span class="pre">metadata_namer.get_property()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.naming.namer.metadata_namer.get_source_item"><code class="docutils literal notranslate"><span class="pre">metadata_namer.get_source_item()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.naming.namer.metadata_namer.name"><code class="docutils literal notranslate"><span class="pre">metadata_namer.name()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.naming.namer.metadata_namer.register_operation"><code class="docutils literal notranslate"><span class="pre">metadata_namer.register_operation()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.naming.namer.metadata_namer.set_properties"><code class="docutils literal notranslate"><span class="pre">metadata_namer.set_properties()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.naming.namer.metadata_namer.template"><code class="docutils literal notranslate"><span class="pre">metadata_namer.template()</span></code></a></li>
 </ul>
 </li>
