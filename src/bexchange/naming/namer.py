@@ -357,6 +357,52 @@ class metadata_namer:
             return source[key]
         return "undefined"
 
+##
+# Used to create file names from metadata associated with a ODIM h5 file.
+class property_metadata_namer(metadata_namer):
+    """ Creates names from metadata
+    """
+    def __init__(self, tmpl):
+        """ Constructor
+        :param tmpl: the template string that should be used to generate a name
+        """
+        super(property_metadata_namer, self).__init__(tmpl)
+
+    def name(self, meta):
+        """
+        :param meta: the metadata to create the name from
+        :return: the created string
+        """
+        buffer = StringIO()
+        
+        parsed_tmpl = self.tmpl
+        m = re.search(PATTERN, parsed_tmpl)
+        while m:
+            span = m.span() # Keeps track on where in file this pattern is matching
+            placeholder = m.group(2);
+            suboperation = m.group(3);
+            
+            # This is the beginning of the name until the first match
+            buffer.write(parsed_tmpl[0:span[0]])
+            if placeholder.startswith("_property:"):
+                replacement_value = self.get_property(placeholder[10:])
+
+            if replacement_value is not None:
+                if suboperation:
+                    replacement_value = suboperation_helper(replacement_value,suboperation).eval()
+            else:
+                replacement_value = parsed_tmpl[span[0]:span[1]]
+            if isinstance(replacement_value,float):
+                buffer.write("%g"%replacement_value)
+            elif isinstance(replacement_value,int):
+                buffer.write("%d"%replacement_value)
+            else:
+                buffer.write(replacement_value)
+            parsed_tmpl = parsed_tmpl[span[1]:]
+            m = re.search(PATTERN, parsed_tmpl)
+        buffer.write(parsed_tmpl)   
+        return buffer.getvalue()
+
 class metadata_namer_manager:
     def __init__(self):
         """Constructor

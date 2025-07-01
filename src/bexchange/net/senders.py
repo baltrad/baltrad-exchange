@@ -38,7 +38,7 @@ import shutil
 from paramiko import SSHClient
 from scp import SCPClient
 
-from bexchange.naming.namer import metadata_namer, metadata_namer_manager
+from bexchange.naming.namer import metadata_namer, property_metadata_namer, metadata_namer_manager
 from bexchange.client import rest
 from bexchange.net.sftpclient import sftpclient
 from bexchange.net.exceptions import *
@@ -325,7 +325,13 @@ class baseuri_sender(sender):
             self._create_missing_directories = arguments["create_missing_directories"]
 
         if "uri" in arguments and arguments["uri"]:
-            self._uri = arguments["uri"]
+            if "properties" in arguments:
+                pnamer = property_metadata_namer(arguments["uri"])
+                pnamer.set_properties(arguments["properties"])
+                self._uri = pnamer.name(None)
+            else:
+                self._uri = arguments["uri"]
+
             uri = urlparse.urlparse(self._uri)
             self._hostname = uri.hostname
             if uri.port:
@@ -335,9 +341,6 @@ class baseuri_sender(sender):
             if uri.password:
                 self._password = uri.password
             self._namer = metadata_namer(uri.path)
-
-            if "properties" in arguments:
-                self._namer.set_properties(arguments["properties"])
 
         if "naming_operations" in arguments and len(arguments["naming_operations"]) > 0:
             if not self._namer:
@@ -400,7 +403,7 @@ class sftp_sender(baseuri_sender):
         :param meta: the meta object for all metadata of file
         """        
         publishedname = self.name(meta)
-        logger.debug("sftp_adapter: connecting to: host=%s, port=%d, user=%s"%(self.hostname(), self.port(), self.username()))
+        logger.debug("sftp_adapter: connecting to: host=%s, port=%d, user='%s'"%(self.hostname(), self.port(), self.username()))
         with sftpclient(self.hostname(), port=self.port(), username=self.username(), password=self.password()) as c:
             bdir = os.path.dirname(publishedname)
             fname = os.path.basename(publishedname)
