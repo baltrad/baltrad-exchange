@@ -336,6 +336,9 @@ class baseuri_sender(sender):
                 self._password = uri.password
             self._namer = metadata_namer(uri.path)
 
+            if "properties" in arguments:
+                self._namer.set_properties(arguments["properties"])
+
         if "naming_operations" in arguments and len(arguments["naming_operations"]) > 0:
             if not self._namer:
                 raise Exception("Providing naming_operations without a uri")

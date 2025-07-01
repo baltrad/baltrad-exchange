@@ -26,8 +26,10 @@ import logging
 import importlib
 import math
 import json
+import os
 from io import StringIO
 from datetime import datetime, timedelta
+from bexchange import config
 from baltrad.bdbcommon.oh5 import (
     Source,
 )
@@ -219,11 +221,33 @@ class metadata_namer:
         """
         self.tmpl = tmpl
         self.tagoperations={}
+        self._properties = {}
     
     def register_operation(self, tag, operation):
-        """
+        """Registers a namer operation
+        :param tag: the identifier used in the name template
+        :param operation: a metadata_namer_operation instance
         """
         self.tagoperations[tag] = operation
+
+    def set_properties(self, properties):
+        """Sets properties in the namer. Can either provide a property file name or else a dictionary.
+        :param properties: Either a filename (string) to a property file or a dictionary with the properties
+        """
+        if isinstance(properties, dict):
+            self._properties = properties
+        elif isinstance(properties, str):
+            if os.path.exists(properties):
+                self._properties = config.Properties.load(properties).dictionary()
+
+    def get_property(self, name):
+        """Returns the property with specified name.
+        :param name: the name of the property
+        :return the property if found, otherwise an empty string
+        """
+        if name in self._properties:
+            return self._properties[name]
+        return ""
 
     def template(self):
         """
@@ -255,6 +279,8 @@ class metadata_namer:
                 replacement_value = self.get_source_item(placeholder[12:], Source.from_string(meta.what_source))
             elif placeholder.startswith("/what/source:"):
                 replacement_value = self.get_source_item(placeholder[13:], Source.from_string(meta.what_source))
+            elif placeholder.startswith("_property:"):
+                replacement_value = self.get_property(placeholder[10:])
             elif placeholder in self.tagoperations:
                 replacement_value = self.tagoperations[placeholder].create(placeholder, meta)
             elif BALTRAD_DATETIME_PATTERN.search(placeholder):
@@ -298,7 +324,7 @@ class metadata_namer:
             else:
                 replacement_value = self.get_attribute_value(placeholder, meta)
 
-            if replacement_value:
+            if replacement_value is not None:
                 if suboperation:
                     replacement_value = suboperation_helper(replacement_value,suboperation).eval()
             else:

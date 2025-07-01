@@ -35,7 +35,6 @@ import base64
 import importlib
 from bexchange.matching import filters
 from bexchange.matching.filters import filter_manager
-from bexchange.naming.namer import metadata_namer
 from tempfile import NamedTemporaryFile
 import shutil
 from bexchange.decorators.decorator import decorator_manager

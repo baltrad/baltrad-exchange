@@ -33,6 +33,7 @@ THIS_DIR=os.path.dirname(__file__)
 
 class test_namer(unittest.TestCase):
     NAMER_CONFIG_FILENAME=f"{THIS_DIR}/fixtures/namer_config.json"
+    FIXTURE_NAMER_PROPERTY_FILE=f"{THIS_DIR}/fixtures/namer.properties"
     def test_replace_attribute(self):
         meta = oh5.Metadata()
         meta.add_node("/", Group("what"))
@@ -333,3 +334,25 @@ class test_namer(unittest.TestCase):
 
         meta = self.create_opera_metadata(2000, 1, 1, 12, 0, "NOD:sella,RAD:SE41", "sella", Source("se", {"CCCC":"ESWI"}),"VP", ["DBZH"], [0.5])
         self.assertEqual("sella_vp_20000101T120000Z", namer.name(meta))
+
+    def test_properties_dict(self):
+        namer = metadata_namer("${_property:se.this.property.1}_${_property:se.this.property.2}_${/what/date}_${/what/time}")
+        namer.set_properties({"se.this.property.1":"yes","se.this.property.2":123})
+
+        meta = self.create_metadata(2000, 1, 1, 12, 0)
+        self.assertEqual("yes_123_20000101_120000", namer.name(meta))
+
+    def test_properties_file(self):
+        namer = metadata_namer("${_property:se.this.property.1}_${_property:se.this.property.2}_${/what/date}_${/what/time}")
+        namer.set_properties(self.FIXTURE_NAMER_PROPERTY_FILE)
+
+        meta = self.create_metadata(2000, 1, 1, 12, 0)
+        self.assertEqual("yes_123_20000101_120000", namer.name(meta))
+
+    def test_properties_file_property_not_found(self):
+        namer = metadata_namer("${_property:se.this.property.1}_${_property:se.this.property.2}_${_property:se.this.property.3}_${/what/date}_${/what/time}")
+        namer.set_properties(self.FIXTURE_NAMER_PROPERTY_FILE)
+
+        meta = self.create_metadata(2000, 1, 1, 12, 0)
+        self.assertEqual("yes_123__20000101_120000", namer.name(meta))
+

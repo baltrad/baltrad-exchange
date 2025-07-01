@@ -52,6 +52,12 @@ class Properties(object):
     def prefix(self):
         return self._prefix
     
+    def dictionary(self):
+        """
+        :return: returns the internal dictionary
+        """
+        return self._values
+
     def get(self, key, default=_undefined):
         """get the value associated with the key
 
