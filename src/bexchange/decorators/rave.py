@@ -24,10 +24,12 @@
 ## @date 2025-06-12
 from __future__ import absolute_import
 
-from bexchange.decorators.decorator import decorator_manager, decorator
-import _raveio, _rave, _polarvolume, _polarscan
+from bexchange.decorators.decorator import decorator_manager
+from bexchange.decorators.decorator import decorator as basedecorator
+
+import _raveio, _rave, _polarvolume, _polarscan, _verticalprofile
 from tempfile import NamedTemporaryFile
-import shutil, logging
+import shutil, logging, importlib, struct, math
 from datetime import timedelta, datetime, timezone
 
 logger = logging.getLogger("bexchange.decorators.rave")
@@ -42,20 +44,156 @@ RAVE_VERSIONS={
    _raveio.RaveIO_ODIM_Version_UNDEFINED:RAVE_VERSION_UNDEFINED
 }
 
-class filter_quantities(decorator):
-    """Removes all quantities in a volume or scan except the ones specified.
+class object_modifier(object):
+    """A modifier is used for modifying a file in memory
     """
-    def __init__(self, backend, allow_discard, quantities, version_table={}):
+    def __init__(self, backend):
+        self._backend = backend
+    
+    def backend(self):
+        """
+        :return: the backend
+        """
+        return self._backend
+
+    def modify(self, obj, meta, **kw):
+        """If this modifier can operate on the object it will be modified directly. It assumes that the object is a rave object of some type
+        :param obj: A rave core object
+        :returns: N/A
+        """
+        raise Exception("Not implemented")    
+
+class coordinate_modifier(object_modifier):
+    """ Modifies coordinates in objects like scans, volumes and vertical profiles
+    """
+    def __init__(self, backend, format="hex", coordinates={}):
+        """ Constructor
+        :param backend: the backend
+        :param format: the format of the coordinates. Can be either hex, dex or rad. If hex, then a conversion from hex to float is performed (hex value should be radians or meters. rad and deg is float
+        """
+        super(coordinate_modifier, self).__init__(backend)
+        self._coordinates=coordinates
+        if format not in ["hex", "deg", "rad"]:
+            raise Exception("Format must be either 'hex', 'rad' or 'deg'(rees)")
+        self._format = format
+    
+    def double_to_hex(self, x):
+        """ Convert a float to a hex representation
+        :param x: the doble value to convert
+        :return the hex string
+        """
+        return hex(struct.unpack('<Q', struct.pack('<d', x))[0])
+
+    def hex_to_double(self, x):
+        """ Convert a hex string into a float
+        :param x: the hex string
+        :return the float value
+        """
+        return struct.unpack('!d', bytes.fromhex(x.strip().replace("0x", "")))[0]    
+
+    def modify(self, obj, meta, **kw):
+        """ Modifies coordinates for polar scans, polar volumes and vertical profiles if coordinate entry is found in coordinates
+        :param obj: the rave object
+        :param meta: the metadata
+        :return None
+        """
+        if _polarscan.isPolarScan(obj) or _verticalprofile.isVerticalProfile(obj) or _polarvolume.isPolarVolume(obj):
+            if meta.bdb_source_name in self._coordinates:
+                vlon = self._coordinates[meta.bdb_source_name]["longitude"]
+                vlat = self._coordinates[meta.bdb_source_name]["latitude"]
+                vheight = self._coordinates[meta.bdb_source_name]["height"]
+
+                if self._format == "hex":
+                    obj.longitude = self.hex_to_double(vlon)
+                    obj.latitude = self.hex_to_double(vlat)
+                    obj.height = self.hex_to_double(vheight)
+                elif self._format == "rad":
+                    obj.longitude = vlon
+                    obj.latitude = vlat
+                    obj.height = vheight
+                elif self._format == "deg":
+                    obj.longitude = vlon * math.pi / 180.0
+                    obj.latitude = vlat * math.pi / 180.0
+                    obj.height = vheight
+                return
+
+class scan_attribute_renamer(object_modifier):
+    """ Modifies attribute names according to outgoing version.
+    """
+    def __init__(self, backend, version_mapping):
+        """ Constructor
+        :param backend: the backend
+        :param version_mapping: the attribute version mapping
+        """
+        super(scan_attribute_renamer, self).__init__(backend)
+        self._version_mapping=version_mapping
+
+    def modify(self, obj, meta, **kw):
+        """ Modifies top level attributes in scans 
+        :param obj: the rave object
+        :param meta: the metadata
+        :return None
+        """
+        if _polarscan.isPolarScan(obj):
+            if "wanted_version" in kw:
+                wanted_version = kw["wanted_version"]
+                if wanted_version in self._version_mapping:
+                    translation_table = self._version_mapping[wanted_version]
+                    for k in translation_table:
+                        if obj.hasAttribute(k):
+                            v = obj.getAttribute(k)
+                            obj.removeAttribute(k)
+                            if translation_table[k] is not None:
+                                newname = translation_table[k]
+                                obj.addAttribute(newname, v)
+
+class rave_inmemory_manager:
+    """The manager for creating inmemory_operations used within bexchange. 
+    """
+    def __init__(self):
+        """Constructor
+        """
+        pass
+    
+    @classmethod
+    def create(self, backend, clz, arguments):
+        """Creates an instance of clz with specified arguments
+        :param clz: class name specified as <module>.<classname>
+        :param arguments: a list of arguments that should be used to initialize the class       
+        """
+        logger.info("Creating inmemory_modifier: %s"%clz)
+        if clz.find(".") > 0:
+            lastdot = clz.rfind(".")
+            module = importlib.import_module(clz[:lastdot])
+            classname = clz[lastdot+1:]
+            return getattr(module, classname)(backend, **arguments)
+        else:
+            raise Exception("Must specify class as module.class")
+
+class decorator(basedecorator):
+    """Rave decorator utilizing the functionality in rave to perform inmemory operations
+    """
+    def __init__(self, backend, allow_discard, quantities, version_table={}, inmemory_modifiers=[]):
         """Constructor
         :param backend: the backend
         :param allow_discard: if decorate returns None and allow_discard is = True, then the file is removed and not sent
         :param quantities: the quantities to keep in the file
         :param version_table: will write the outgoing file in the version according to the version table
+        :param inmemory_modifiers: operations that will take place in the file before it is written
         """
-        super(filter_quantities, self).__init__(backend, allow_discard)
+        super(decorator, self).__init__(backend, allow_discard)
         logger.info(f"quantities={quantities}, version_table={version_table}")
         self._quantities = quantities
         self._version_table = version_table
+        self._inmemory_modifiers=[]
+        if inmemory_modifiers:
+            for im in inmemory_modifiers:
+                if "modifier" in im:
+                    arguments = {}
+                    if "arguments" in im:
+                        arguments = im["arguments"]
+                    modifier = rave_inmemory_manager.create(backend, im["modifier"], arguments)
+                    self._inmemory_modifiers.append(modifier)
 
     def convert_from_odim_version(self, read_version):
         """ Converts the _raveio read_version into a string representing the version
@@ -76,6 +214,23 @@ class filter_quantities(decorator):
                 return k
         raise Exception(f"Can't identify out_version={out_version}")
 
+    def get_wanted_version(self, read_version):
+        """ Calculates wanted version from the read version
+        :param read_version: the incomming file version
+        :return: the wanted version
+        """
+        result = read_version
+        if len(self._version_table) > 0:
+            rin_version = self.convert_from_odim_version(read_version)
+            if rin_version != RAVE_VERSION_UNDEFINED:
+                if rin_version in self._version_table:
+                    result = self._version_table[rin_version]
+                elif "default" in self._version_table:
+                    result = self._version_table["default"]
+                else:
+                    result = rin_version
+        return result
+
     def decorate(self, inf, meta):
         """ Removes requested quantities from the infile and writes a new file that is returned
         :param inf: The name of the incomming file
@@ -85,23 +240,19 @@ class filter_quantities(decorator):
         try:
             if meta.what_object == "SCAN" or meta.what_object == "PVOL":
                 rin = _raveio.open(inf.name)
-                a = rin.object
-                a.removeParametersExcept(self._quantities)
+
+                wanted_version = self.get_wanted_version(rin.read_version)
+
+                rin.object.removeParametersExcept(self._quantities)
+
+                for im in self._inmemory_modifiers:
+                    logger.debug("Running modifier: %s"%im)
+                    im.modify(rin.object, meta, read_version=rin.read_version, wanted_version=wanted_version)
+
                 newf = NamedTemporaryFile(dir=self.backend().get_tmp_folder())
                 rio = _raveio.new()
-                rio.object = a
-                if len(self._version_table) > 0:
-                    rin_version = self.convert_from_odim_version(rin.read_version)
-                    if rin_version != RAVE_VERSION_UNDEFINED:
-                        if rin_version in self._version_table:
-                            out_version = self._version_table[rin_version]
-                        elif "default" in self._version_table:
-                            out_version = self._version_table["default"]
-                        else:
-                            out_version = rin_version
-                        rio.version = self.convert_to_odim_version(out_version)
-                    else:
-                        rio.version = rin.read_version
+                rio.object = rin.object
+                rio.version =  self.convert_to_odim_version(wanted_version)
                 rio.save(newf.name)
                 newf.flush()
                 return newf
