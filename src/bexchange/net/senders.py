@@ -340,7 +340,10 @@ class baseuri_sender(sender):
                 self._username = uri.username
             if uri.password:
                 self._password = uri.password
-            self._namer = metadata_namer(uri.path)
+            upath = uri.path
+            if len(upath) > 0 and upath[0] == "/":
+                upath = upath[1:]
+            self._namer = metadata_namer(upath)
 
         if "naming_operations" in arguments and len(arguments["naming_operations"]) > 0:
             if not self._namer:

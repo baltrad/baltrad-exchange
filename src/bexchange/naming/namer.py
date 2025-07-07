@@ -384,6 +384,7 @@ class property_metadata_namer(metadata_namer):
             
             # This is the beginning of the name until the first match
             buffer.write(parsed_tmpl[0:span[0]])
+            replacement_value=None
             if placeholder.startswith("_property:"):
                 replacement_value = self.get_property(placeholder[10:])
 
