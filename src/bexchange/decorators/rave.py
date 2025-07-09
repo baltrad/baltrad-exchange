@@ -147,6 +147,55 @@ class scan_attribute_renamer(object_modifier):
                                 newname = translation_table[k]
                                 obj.addAttribute(newname, v)
 
+class scan_volume_parameter_remover(object_modifier):
+    """ Modifies attribute names according to outgoing version.
+    """
+    def __init__(self, backend, quantities_to_keep):
+        """ Constructor
+        :param backend: the backend
+        :param quantities_to_keep: the parameters to keep
+        """
+        super(scan_volume_parameter_remover, self).__init__(backend)
+        self._quantities_to_keep = quantities_to_keep
+
+    def modify(self, obj, meta, **kw):
+        """ Modifies top level attributes in scans 
+        :param obj: the rave object
+        :param meta: the metadata
+        :return None
+        """
+        if _polarscan.isPolarScan(obj) or _polarvolume.isPolarVolume(obj):
+            obj.removeParametersExcept(self._quantities_to_keep)
+
+class what_source_setter(object_modifier):
+    """ Sets a specific what/source in a file
+    """
+    def __init__(self, backend, sources):
+        """ Constructor
+        :param backend: the backend
+        :param sources: a mapping between source and a what/source string
+        """
+        super(what_source_setter, self).__init__(backend)
+        self._sources = sources
+
+    def modify(self, obj, meta, **kw):
+        """ Modifies top level attributes in scans 
+        :param obj: the rave object
+        :param meta: the metadata
+        :return None
+        """
+        if meta.bdb_source_name in self._sources or "default" in self._sources:
+            src_to_set = None
+            if meta.bdb_source_name in self._sources:
+                src_to_set = self._sources[meta.bdb_source_name]
+            else:
+                src_to_set = self._sources["default"]
+            try:
+                if "source" in dir(obj):
+                    obj.source = src_to_set
+            except:
+                pass
+
 class rave_inmemory_manager:
     """The manager for creating inmemory_operations used within bexchange. 
     """
@@ -173,17 +222,15 @@ class rave_inmemory_manager:
 class decorator(basedecorator):
     """Rave decorator utilizing the functionality in rave to perform inmemory operations
     """
-    def __init__(self, backend, allow_discard, quantities, version_table={}, inmemory_modifiers=[]):
+    def __init__(self, backend, allow_discard, can_return_invalid_file_content, version_table={}, inmemory_modifiers=[]):
         """Constructor
         :param backend: the backend
         :param allow_discard: if decorate returns None and allow_discard is = True, then the file is removed and not sent
-        :param quantities: the quantities to keep in the file
         :param version_table: will write the outgoing file in the version according to the version table
         :param inmemory_modifiers: operations that will take place in the file before it is written
         """
-        super(decorator, self).__init__(backend, allow_discard)
-        logger.info(f"quantities={quantities}, version_table={version_table}")
-        self._quantities = quantities
+        super(decorator, self).__init__(backend, allow_discard, can_return_invalid_file_content)
+        logger.info(f"version_table={version_table}")
         self._version_table = version_table
         self._inmemory_modifiers=[]
         if inmemory_modifiers:
@@ -242,8 +289,6 @@ class decorator(basedecorator):
                 rin = _raveio.open(inf.name)
 
                 wanted_version = self.get_wanted_version(rin.read_version)
-
-                rin.object.removeParametersExcept(self._quantities)
 
                 for im in self._inmemory_modifiers:
                     logger.debug("Running modifier: %s"%im)

@@ -34,9 +34,15 @@ class decorator(object):
     """A decorator is used for modifying a file before it is distributed. Incomming files are not decorated before they are saved. Instead, if that function is
     wanted a copy-publisher should be used instead.
     """
-    def __init__(self, backend, discard_on_none):
+    def __init__(self, backend, discard_on_none, can_return_invalid_file_content=False):
+        """ Constructor
+        :param backend: the backend
+        :param discard_on_none: if this decorator should indicate that the file should be completely removed if decorate is returning None
+        :param can_recalculatecan_return_invalid_file_content_meta: In some situations a decorator can create files containing invalid meta (for example non-existing sources). In these situations we should not recalculate meta.
+        """
         self._backend = backend
         self._discard_on_none = discard_on_none
+        self._can_return_invalid_file_content = can_return_invalid_file_content
     
     def backend(self):
         """
@@ -49,6 +55,14 @@ class decorator(object):
         """
         return self._discard_on_none
     
+    def can_return_invalid_file_content(self):
+        """ Returns if this decorator can return invalid file content, typically if the decorator modifies
+        a file in some way that it will not pass basic checks like existing sources etc.
+        :return: if this decorator can return invalid file content or not
+        """
+        return self._can_return_invalid_file_content
+
+
     def decorate(self, ino, meta):
         """If this decorator decorates the infile, then a new temporary file will be created and returned.
         :param ino: A tempfile.NamedTemporaryFile instance
@@ -59,8 +73,8 @@ class decorator(object):
 ##
 # Example..
 class example_filter(decorator):
-    def __init__(self, backend, discard_on_none, arg1, arg2):
-        super(example_filter, self).__init__(backend, discard_on_none)
+    def __init__(self, backend, discard_on_none, can_return_invalid_file_content, arg1, arg2):
+        super(example_filter, self).__init__(backend, discard_on_none, can_return_invalid_file_content)
         self.arg1=arg1
         self.arg2=arg2
     
@@ -72,14 +86,14 @@ class example_filter(decorator):
 class max_age_filter(decorator):
     """ MAX age filter that will indicate if file should be removed or not. allow_discard is enforced to True since this is a filter.
     """
-    def __init__(self, backend, allow_discard, max_acceptable_age=0, max_acceptable_age_block=0, target_name=None):
+    def __init__(self, backend, allow_discard, can_return_invalid_file_content, max_acceptable_age=0, max_acceptable_age_block=0, target_name=None):
         """ Constructor
         :param backend: the backend
         :param allow_discard: not used (will be enforced to True)
         :param max_acceptable_age: Max age before an alert message is written
         :param max_acceptable_age_block: Max age before the file is discarded
         """
-        super(max_age_filter, self).__init__(backend, True)  # We force discarding of files since that is the reason for this filter
+        super(max_age_filter, self).__init__(backend, True, False)  # We force discarding of files since that is the reason for this filter
         self._max_acceptable_age = max_acceptable_age
         self._max_acceptable_age_block = max_acceptable_age_block
         self._target_name = target_name
@@ -127,7 +141,7 @@ class decorator_manager:
         pass
     
     @classmethod
-    def create(self, backend, clz, discard_on_none, arguments):
+    def create(self, backend, clz, discard_on_none, can_return_invalid_file_content, arguments):
         """Creates an instance of clz with specified arguments
         :param clz: class name specified as <module>.<classname>
         :param discard_on_none: If decorate returns None, then this file should be discarded.
@@ -138,6 +152,6 @@ class decorator_manager:
             lastdot = clz.rfind(".")
             module = importlib.import_module(clz[:lastdot])
             classname = clz[lastdot+1:]
-            return getattr(module, classname)(backend, discard_on_none, **arguments)
+            return getattr(module, classname)(backend, discard_on_none, can_return_invalid_file_content, **arguments)
         else:
             raise Exception("Must specify class as module.class")

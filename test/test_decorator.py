@@ -28,8 +28,8 @@ from unittest.mock import MagicMock
 from bexchange.decorators.decorator import decorator_manager, decorator
 
 class test_filter(decorator):
-    def __init__(self, backend, discard_on_none, arg1, arg2):
-        super(test_filter, self).__init__(backend, discard_on_none)
+    def __init__(self, backend, discard_on_none, can_return_invalid_file_content, arg1, arg2):
+        super(test_filter, self).__init__(backend, discard_on_none, can_return_invalid_file_content)
         self.arg1=arg1
         self.arg2=arg2
     
@@ -39,8 +39,9 @@ class test_filter(decorator):
 class test_decorator_manager(unittest.TestCase):
     def test_create_instance(self):
         backend = MagicMock()
-        clz = decorator_manager.create(backend, "test_decorator.test_filter", True, {"arg1":"a1", "arg2":"a2"})
+        clz = decorator_manager.create(backend, "test_decorator.test_filter", True, True, {"arg1":"a1", "arg2":"a2"})
         self.assertEqual(True, clz.discard_on_none())
+        self.assertEqual(True, clz.can_return_invalid_file_content())
         self.assertEqual("a1", clz.arg1)
         self.assertEqual("a2", clz.arg2)        
 

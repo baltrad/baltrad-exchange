@@ -264,7 +264,12 @@ class standard_publisher(publisher):
                     tmpfile = newtmpfile
                 elif newtmpfile is None:
                     continue
-                meta = self.backend().metadata_from_file(tmpfile.name)
+                
+                try:
+                    meta = self.backend().metadata_from_file(tmpfile.name)
+                except:
+                    if not d.can_return_invalid_file_content():
+                        raise
 
         try:
             self._queue.put((tmpfile, meta))
@@ -277,6 +282,7 @@ class standard_publisher(publisher):
 
             if self._statistics_error_plugin:
                 self._statistics_error_plugin.increment(self.name(), meta)
+
 
     def do_publish(self, tmpfile, meta):
         """Passes a file to all connections
@@ -416,9 +422,12 @@ class publisher_manager:
             decoratorconf =  config["decorators"]
             for ds in decoratorconf:
                 discard_on_none=False
+                can_return_invalid_file_content=False
                 if "discard_on_none" in ds:
                     discard_on_none=ds["discard_on_none"]
-                decorator = decorator_manager.create(backend, ds["decorator"], discard_on_none, ds["arguments"])
+                if "can_return_invalid_file_content" in ds:
+                    can_return_invalid_file_content=ds["can_return_invalid_file_content"]
+                decorator = decorator_manager.create(backend, ds["decorator"], discard_on_none, can_return_invalid_file_content, ds["arguments"])
                 decorators.append(decorator)
 
         ifilter = filter_manager.from_value({"filter_type":"always_filter", "value":{}})

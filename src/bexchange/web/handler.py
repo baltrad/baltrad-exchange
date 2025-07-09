@@ -34,6 +34,7 @@ from bexchange.net.exceptions import DuplicateException
 
 from .util import (
     HttpConflict,
+    HttpNotAcceptable,
     HttpForbidden,
     HttpNotFound,
     JsonResponse,
@@ -67,7 +68,7 @@ def post_file(ctx):
         try:
             metadata = ctx.backend.store_file(tmp.name, ctx.backend.get_auth_manager().get_nodename(ctx.request))
         except LookupError as e:
-            raise HttpNotAccepatble(str(e))
+            raise HttpNotAcceptable(str(e))
         except DuplicateException as e:
             raise HttpConflict("duplicate file entry: %s"%str(e))
 
@@ -85,7 +86,7 @@ def post_dex_file(ctx):
         try:
             metadata = ctx.backend.store_file(tmp.name, ctx.backend.get_auth_manager().get_nodename(ctx.request))
         except LookupError as e:
-            raise HttpNotAccepatble(str(e))
+            raise HttpNotAcceptable(str(e))
         except DuplicateException as e:
             raise HttpConflict("duplicate file entry: %s"%str(e))
 

@@ -120,6 +120,11 @@ class HttpConflict(HTTPException):
     def __init__(self, description=None, response=None):
         HTTPException.__init__(self, description, response)
 
+class HttpNotAcceptable(HTTPException):
+    code = httplibclient.NOT_ACCEPTABLE
+    def __init__(self, description=None, response=None):
+        HTTPException.__init__(self, description, response)
+
 class HttpUnauthorized(HTTPException):
     """401 Unauthorized
 
