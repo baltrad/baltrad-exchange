@@ -150,6 +150,36 @@ class distributed_connection(publisher_connection):
             except Exception as e:
                 logger.exception("Failed to send file to %s, ID:'%s'"%(sender.id(), util.create_fileid_from_meta(meta)))
 
+class combined_connection(publisher_connection):
+    """Combined connection is a way to combine different connection types into one so that you for example can
+    have different connections in one. For example, assume that you always wants a file to be sent to a specific
+    target and then that you want a sequence of fail over connections after that.
+    """
+    def __init__(self, backend, arguments):
+        super(combined_connection, self).__init__(backend)
+        self._connections = []
+        if "connections" in arguments:
+            for conncfg in arguments["connections"]:
+                if "class" in conncfg:
+                    args = []
+                    if "arguments" in conncfg:
+                        args = conncfg["arguments"]
+                    self._connections.append(connection_manager.from_conf(backend, conncfg["class"], args))
+        else:
+            raise Exception("Requires 'connections' in arguments")
+        
+    def publish(self, path, meta):
+        """ Publishes the file to all connections for this connection
+        :param path: the file path
+        :param meta: the metadata 
+        """
+        for connection in self._connections:
+            try:
+                connection.publish(path, meta)
+            except Exception as e:
+                logger.exception("Failed to publish file to %s, ID:'%s'"%(sender.id(), util.create_fileid_from_meta(meta)))
+
+
 class connection_manager(object):
     """The connection manager is used for creating connection instances from the provided configuration
     """
