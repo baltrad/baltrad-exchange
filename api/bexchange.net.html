@@ -68,6 +68,23 @@
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="bexchange.net.connections.combined_connection">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.connections.</span></span><span class="sig-name descname"><span class="pre">combined_connection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#combined_connection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.combined_connection" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bexchange.net.connections.publisher_connection" title="bexchange.net.connections.publisher_connection"><code class="xref py py-class docutils literal notranslate"><span class="pre">publisher_connection</span></code></a></p>
+<p>Combined connection is a way to combine different connection types into one so that you for example can
+have different connections in one. For example, assume that you always wants a file to be sent to a specific
+target and then that you want a sequence of fail over connections after that.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.net.connections.combined_connection.publish">
+<span class="sig-name descname"><span class="pre">publish</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#combined_connection.publish"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.combined_connection.publish" title="Link to this definition">¶</a></dt>
+<dd><p>Publishes the file to all connections for this connection
+:param path: the file path
+:param meta: the metadata</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="bexchange.net.connections.connection_manager">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.connections.</span></span><span class="sig-name descname"><span class="pre">connection_manager</span></span><a class="reference internal" href="../_modules/bexchange/net/connections.html#connection_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.connection_manager" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -939,6 +956,10 @@ with NamedTemporaryFile() as fp: c.getfo(”….”, fp)</p>
 <li><a class="reference internal" href="#module-bexchange.net.connections">bexchange.net.connections module</a><ul>
 <li><a class="reference internal" href="#bexchange.net.connections.backup_connection"><code class="docutils literal notranslate"><span class="pre">backup_connection</span></code></a><ul>
 <li><a class="reference internal" href="#bexchange.net.connections.backup_connection.publish"><code class="docutils literal notranslate"><span class="pre">backup_connection.publish()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.net.connections.combined_connection"><code class="docutils literal notranslate"><span class="pre">combined_connection</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.net.connections.combined_connection.publish"><code class="docutils literal notranslate"><span class="pre">combined_connection.publish()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#bexchange.net.connections.connection_manager"><code class="docutils literal notranslate"><span class="pre">connection_manager</span></code></a><ul>

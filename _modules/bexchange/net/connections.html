@@ -221,6 +221,42 @@
 </div>
 
 
+<div class="viewcode-block" id="combined_connection">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.combined_connection">[docs]</a>
+<span class="k">class</span> <span class="nc">combined_connection</span><span class="p">(</span><span class="n">publisher_connection</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Combined connection is a way to combine different connection types into one so that you for example can</span>
+<span class="sd">    have different connections in one. For example, assume that you always wants a file to be sent to a specific</span>
+<span class="sd">    target and then that you want a sequence of fail over connections after that.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">combined_connection</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">backend</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_connections</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="s2">&quot;connections&quot;</span> <span class="ow">in</span> <span class="n">arguments</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">conncfg</span> <span class="ow">in</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;connections&quot;</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="s2">&quot;class&quot;</span> <span class="ow">in</span> <span class="n">conncfg</span><span class="p">:</span>
+                    <span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">if</span> <span class="s2">&quot;arguments&quot;</span> <span class="ow">in</span> <span class="n">conncfg</span><span class="p">:</span>
+                        <span class="n">args</span> <span class="o">=</span> <span class="n">conncfg</span><span class="p">[</span><span class="s2">&quot;arguments&quot;</span><span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_connections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">connection_manager</span><span class="o">.</span><span class="n">from_conf</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">conncfg</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">],</span> <span class="n">args</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Requires &#39;connections&#39; in arguments&quot;</span><span class="p">)</span>
+        
+<div class="viewcode-block" id="combined_connection.publish">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.combined_connection.publish">[docs]</a>
+    <span class="k">def</span> <span class="nf">publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Publishes the file to all connections for this connection</span>
+<span class="sd">        :param path: the file path</span>
+<span class="sd">        :param meta: the metadata </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">connection</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connections</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">connection</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Failed to publish file to </span><span class="si">%s</span><span class="s2">, ID:&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">sender</span><span class="o">.</span><span class="n">id</span><span class="p">(),</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)))</span></div>
+</div>
+
+
+
 <div class="viewcode-block" id="connection_manager">
 <a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.connection_manager">[docs]</a>
 <span class="k">class</span> <span class="nc">connection_manager</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
