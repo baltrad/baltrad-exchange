@@ -200,6 +200,14 @@
         <span class="n">HTTPException</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="HttpNotAcceptable">
+<a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.HttpNotAcceptable">[docs]</a>
+<span class="k">class</span> <span class="nc">HttpNotAcceptable</span><span class="p">(</span><span class="n">HTTPException</span><span class="p">):</span>
+    <span class="n">code</span> <span class="o">=</span> <span class="n">httplibclient</span><span class="o">.</span><span class="n">NOT_ACCEPTABLE</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">response</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">HTTPException</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="HttpUnauthorized">
 <a class="viewcode-back" href="../../../api/bexchange.web.html#bexchange.web.util.HttpUnauthorized">[docs]</a>
 <span class="k">class</span> <span class="nc">HttpUnauthorized</span><span class="p">(</span><span class="n">HTTPException</span><span class="p">):</span>

@@ -74,9 +74,15 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A decorator is used for modifying a file before it is distributed. Incomming files are not decorated before they are saved. Instead, if that function is</span>
 <span class="sd">    wanted a copy-publisher should be used instead.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">discard_on_none</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">discard_on_none</span><span class="p">,</span> <span class="n">can_return_invalid_file_content</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Constructor</span>
+<span class="sd">        :param backend: the backend</span>
+<span class="sd">        :param discard_on_none: if this decorator should indicate that the file should be completely removed if decorate is returning None</span>
+<span class="sd">        :param can_recalculatecan_return_invalid_file_content_meta: In some situations a decorator can create files containing invalid meta (for example non-existing sources). In these situations we should not recalculate meta.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span> <span class="o">=</span> <span class="n">backend</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_discard_on_none</span> <span class="o">=</span> <span class="n">discard_on_none</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_can_return_invalid_file_content</span> <span class="o">=</span> <span class="n">can_return_invalid_file_content</span>
     
 <div class="viewcode-block" id="decorator.backend">
 <a class="viewcode-back" href="../../../api/bexchange.decorators.html#bexchange.decorators.decorator.decorator.backend">[docs]</a>
@@ -95,6 +101,17 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_discard_on_none</span></div>
 
     
+<div class="viewcode-block" id="decorator.can_return_invalid_file_content">
+<a class="viewcode-back" href="../../../api/bexchange.decorators.html#bexchange.decorators.decorator.decorator.can_return_invalid_file_content">[docs]</a>
+    <span class="k">def</span> <span class="nf">can_return_invalid_file_content</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns if this decorator can return invalid file content, typically if the decorator modifies</span>
+<span class="sd">        a file in some way that it will not pass basic checks like existing sources etc.</span>
+<span class="sd">        :return: if this decorator can return invalid file content or not</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_can_return_invalid_file_content</span></div>
+
+
+
 <div class="viewcode-block" id="decorator.decorate">
 <a class="viewcode-back" href="../../../api/bexchange.decorators.html#bexchange.decorators.decorator.decorator.decorate">[docs]</a>
     <span class="k">def</span> <span class="nf">decorate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ino</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
@@ -111,8 +128,8 @@
 <div class="viewcode-block" id="example_filter">
 <a class="viewcode-back" href="../../../api/bexchange.decorators.html#bexchange.decorators.decorator.example_filter">[docs]</a>
 <span class="k">class</span> <span class="nc">example_filter</span><span class="p">(</span><span class="n">decorator</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">discard_on_none</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">example_filter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">discard_on_none</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">discard_on_none</span><span class="p">,</span> <span class="n">can_return_invalid_file_content</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">example_filter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">discard_on_none</span><span class="p">,</span> <span class="n">can_return_invalid_file_content</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">arg1</span><span class="o">=</span><span class="n">arg1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">arg2</span><span class="o">=</span><span class="n">arg2</span>
     
@@ -130,14 +147,14 @@
 <span class="k">class</span> <span class="nc">max_age_filter</span><span class="p">(</span><span class="n">decorator</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; MAX age filter that will indicate if file should be removed or not. allow_discard is enforced to True since this is a filter.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">allow_discard</span><span class="p">,</span> <span class="n">max_acceptable_age</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_acceptable_age_block</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">target_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">allow_discard</span><span class="p">,</span> <span class="n">can_return_invalid_file_content</span><span class="p">,</span> <span class="n">max_acceptable_age</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_acceptable_age_block</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">target_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Constructor</span>
 <span class="sd">        :param backend: the backend</span>
 <span class="sd">        :param allow_discard: not used (will be enforced to True)</span>
 <span class="sd">        :param max_acceptable_age: Max age before an alert message is written</span>
 <span class="sd">        :param max_acceptable_age_block: Max age before the file is discarded</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">max_age_filter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>  <span class="c1"># We force discarding of files since that is the reason for this filter</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">max_age_filter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>  <span class="c1"># We force discarding of files since that is the reason for this filter</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_max_acceptable_age</span> <span class="o">=</span> <span class="n">max_acceptable_age</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_max_acceptable_age_block</span> <span class="o">=</span> <span class="n">max_acceptable_age_block</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_target_name</span> <span class="o">=</span> <span class="n">target_name</span>
@@ -193,7 +210,7 @@
 <div class="viewcode-block" id="decorator_manager.create">
 <a class="viewcode-back" href="../../../api/bexchange.decorators.html#bexchange.decorators.decorator.decorator_manager.create">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">clz</span><span class="p">,</span> <span class="n">discard_on_none</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">clz</span><span class="p">,</span> <span class="n">discard_on_none</span><span class="p">,</span> <span class="n">can_return_invalid_file_content</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates an instance of clz with specified arguments</span>
 <span class="sd">        :param clz: class name specified as &lt;module&gt;.&lt;classname&gt;</span>
 <span class="sd">        :param discard_on_none: If decorate returns None, then this file should be discarded.</span>
@@ -204,7 +221,7 @@
             <span class="n">lastdot</span> <span class="o">=</span> <span class="n">clz</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
             <span class="n">module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">clz</span><span class="p">[:</span><span class="n">lastdot</span><span class="p">])</span>
             <span class="n">classname</span> <span class="o">=</span> <span class="n">clz</span><span class="p">[</span><span class="n">lastdot</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
-            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">classname</span><span class="p">)(</span><span class="n">backend</span><span class="p">,</span> <span class="n">discard_on_none</span><span class="p">,</span> <span class="o">**</span><span class="n">arguments</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">classname</span><span class="p">)(</span><span class="n">backend</span><span class="p">,</span> <span class="n">discard_on_none</span><span class="p">,</span> <span class="n">can_return_invalid_file_content</span><span class="p">,</span> <span class="o">**</span><span class="n">arguments</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Must specify class as module.class&quot;</span><span class="p">)</span></div>
 </div>
