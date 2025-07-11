@@ -165,6 +165,36 @@
 </div>
 
     
+<div class="viewcode-block" id="noop_sender">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.noop_sender">[docs]</a>
+<span class="k">class</span> <span class="nc">noop_sender</span><span class="p">(</span><span class="n">sender</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; No operation sender which just ignores sending the message and will return wanted value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="sd">        :param backend: The backend</span>
+<span class="sd">        :param aid: Id for this sender</span>
+<span class="sd">        :param arguments: Dictionary. If &quot;return_value&quot; is provided (True or False), this will be the value returned</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">noop_sender</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_return_value</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="s2">&quot;return_value&quot;</span> <span class="ow">in</span> <span class="n">arguments</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_return_value</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;return_value&quot;</span><span class="p">]</span>
+    
+<div class="viewcode-block" id="noop_sender.send">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.noop_sender.send">[docs]</a>
+    <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sends the file on all storages associated with self</span>
+<span class="sd">        :param file: path to file that should be sent</span>
+<span class="sd">        :param meta: the meta object for all metadata of file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">aid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">()</span>
+        <span class="n">return_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_return_value</span>
+        <span class="n">fileid</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">aid</span><span class="si">}</span><span class="s2"> has been suppressed using noop_sender, returning </span><span class="si">{</span><span class="n">return_value</span><span class="si">}</span><span class="s2"> for </span><span class="si">{</span><span class="n">fileid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">return_value</span></div>
+</div>
+
 
 <div class="viewcode-block" id="dex_sender">
 <a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.dex_sender">[docs]</a>

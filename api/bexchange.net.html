@@ -708,6 +708,21 @@ If queue is shutdown, the item will not be added to the queue and this will be d
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="bexchange.net.senders.noop_sender">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.senders.</span></span><span class="sig-name descname"><span class="pre">noop_sender</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#noop_sender"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.noop_sender" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bexchange.net.senders.sender" title="bexchange.net.senders.sender"><code class="xref py py-class docutils literal notranslate"><span class="pre">sender</span></code></a></p>
+<p>No operation sender which just ignores sending the message and will return wanted value.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.net.senders.noop_sender.send">
+<span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#noop_sender.send"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.noop_sender.send" title="Link to this definition">¶</a></dt>
+<dd><p>Sends the file on all storages associated with self
+:param file: path to file that should be sent
+:param meta: the meta object for all metadata of file</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="bexchange.net.senders.rest_sender">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.senders.</span></span><span class="sig-name descname"><span class="pre">rest_sender</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#rest_sender"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.rest_sender" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#bexchange.net.senders.sender" title="bexchange.net.senders.sender"><code class="xref py py-class docutils literal notranslate"><span class="pre">sender</span></code></a></p>
@@ -1097,6 +1112,10 @@ with NamedTemporaryFile() as fp: c.getfo(”….”, fp)</p>
 <li><a class="reference internal" href="#bexchange.net.senders.ftp_sender.connect"><code class="docutils literal notranslate"><span class="pre">ftp_sender.connect()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.net.senders.ftp_sender.does_dir_exist"><code class="docutils literal notranslate"><span class="pre">ftp_sender.does_dir_exist()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.net.senders.ftp_sender.send"><code class="docutils literal notranslate"><span class="pre">ftp_sender.send()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.net.senders.noop_sender"><code class="docutils literal notranslate"><span class="pre">noop_sender</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.net.senders.noop_sender.send"><code class="docutils literal notranslate"><span class="pre">noop_sender.send()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#bexchange.net.senders.rest_sender"><code class="docutils literal notranslate"><span class="pre">rest_sender</span></code></a><ul>
