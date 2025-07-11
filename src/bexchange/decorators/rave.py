@@ -285,7 +285,7 @@ class decorator(basedecorator):
         :return: a decorated file if applicable
         """
         try:
-            if meta.what_object == "SCAN" or meta.what_object == "PVOL":
+            if meta.what_object == "SCAN" or meta.what_object == "PVOL" or meta.what_object == "VP":
                 rin = _raveio.open(inf.name)
 
                 wanted_version = self.get_wanted_version(rin.read_version)
