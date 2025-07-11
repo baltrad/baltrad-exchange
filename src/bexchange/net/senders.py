@@ -109,6 +109,30 @@ class storage_sender(sender):
                 storage = sm.get_storage(s)
                 storage.store(file, meta)    
     
+class noop_sender(sender):
+    """ No operation sender which just ignores sending the message and will return wanted value.
+    """
+    def __init__(self, backend, aid, arguments):
+        """Constructor
+        :param backend: The backend
+        :param aid: Id for this sender
+        :param arguments: Dictionary. If "return_value" is provided (True or False), this will be the value returned
+        """
+        super(noop_sender, self).__init__(backend, aid)
+        self._return_value = True
+        if "return_value" in arguments:
+            self._return_value = arguments["return_value"]
+    
+    def send(self, file, meta):
+        """Sends the file on all storages associated with self
+        :param file: path to file that should be sent
+        :param meta: the meta object for all metadata of file
+        """
+        aid = self.id()
+        return_value = self._return_value
+        fileid = util.create_fileid_from_meta(meta)
+        logger.info(f"{aid} has been suppressed using noop_sender, returning {return_value} for {fileid}")
+        return return_value
 
 class dex_sender(sender):
     """Legacy DEX communication sending files to old nodes.
