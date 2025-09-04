@@ -184,7 +184,9 @@ class what_source_setter(object_modifier):
         :param meta: the metadata
         :return None
         """
+        logger.info("what_source_setter.modify(source=%s)"%meta.bdb_source_name)
         if meta.bdb_source_name in self._sources or "default" in self._sources:
+            logger.info("Modifying source for: %s"%meta.bdb_source_name)
             src_to_set = None
             if meta.bdb_source_name in self._sources:
                 src_to_set = self._sources[meta.bdb_source_name]
@@ -192,6 +194,7 @@ class what_source_setter(object_modifier):
                 src_to_set = self._sources["default"]
             try:
                 if "source" in dir(obj):
+                    logger.info("New source for: %s is %s"%(meta.bdb_source_name, src_to_set))
                     obj.source = src_to_set
             except:
                 pass
