@@ -185,6 +185,14 @@ class sftpclient(object):
         """
         self._sftp.getfo(remotepath, fl)
     
+    def rename(self, filename, targetname):
+        """
+        Renames the file
+        :param filename: Original filename to rename
+        :param targetname: The new name
+        """
+        self._sftp.rename(filename, targetname)
+
     def __enter__(self):
         """
         Enter part when using with ...

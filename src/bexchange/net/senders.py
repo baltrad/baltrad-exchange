@@ -421,8 +421,16 @@ class sftp_sender(baseuri_sender):
         """
         super(sftp_sender, self).__init__(backend, aid, arguments)
         self._confirm_upload = False
+        self._create_tempname = False
+        self._tempname_suffix = ".tmp"
+
         if "confirm_upload" in arguments:
             self._confirm_upload = arguments["confirm_upload"]
+        if "create_tempname" in arguments:
+            self._create_tempname = arguments["create_tempname"]
+        if "tempname_suffix" in arguments and arguments["tempname_suffix"]:
+            self._tempname_suffix = arguments["tempname_suffix"]
+
 
     def send(self, path, meta):
         """Sends the file using sftp.
@@ -438,8 +446,18 @@ class sftp_sender(baseuri_sender):
             if self.create_missing_directories():
                 c.makedirs(bdir)
             c.chdir(bdir)
-            logger.info("sftp_sender: address:%s, basename:%s uploaded ID:'%s'" % (self.hostname(), fname, util.create_fileid_from_meta(meta)))
-            c.put(path, fname, confirm=self._confirm_upload)
+            if self._create_tempname:
+                tfname = fname + self._tempname_suffix
+                logger.info("sftp_sender: address:%s, basename:%s uploaded ID:'%s'" % (self.hostname(), tfname, util.create_fileid_from_meta(meta)))
+                c.put(path, tfname, confirm=self._confirm_upload)
+                if not c.isfile(fname):
+                    logger.info("sftp_sender: Renaming %s to %s uploaded ID:'%s'" % (tfname, fname, util.create_fileid_from_meta(meta)))
+                else:
+                    logger.warn("sftp_sender: Cant rename %s since %s already exists uploaded ID:'%s'"%(tfname, fname, util.create_fileid_from_meta(meta)))
+                c.rename(tfname, fname)
+            else:
+                logger.info("sftp_sender: address:%s, basename:%s uploaded ID:'%s'" % (self.hostname(), fname, util.create_fileid_from_meta(meta)))
+                c.put(path, fname, confirm=self._confirm_upload)
 
 class scp_sender(baseuri_sender):
     """Publishes files over scp
