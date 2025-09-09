@@ -799,6 +799,16 @@ which currently supports DSA &amp; RSA keys. DSA uses DSS, RSA uses pkcs1_15.</p
 <dd><p>Bases: <a class="reference internal" href="#bexchange.net.senders.baseuri_sender" title="bexchange.net.senders.baseuri_sender"><code class="xref py py-class docutils literal notranslate"><span class="pre">baseuri_sender</span></code></a></p>
 <p>Sends files over sftp</p>
 <dl class="py method">
+<dt class="sig sig-object py" id="bexchange.net.senders.sftp_sender.client">
+<span class="sig-name descname"><span class="pre">client</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#sftp_sender.client"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.sftp_sender.client" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>a sftpclient instance with hostname, port, username and password set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.senders.sftp_sender.send">
 <span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#sftp_sender.send"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.sftp_sender.send" title="Link to this definition">¶</a></dt>
 <dd><p>Sends the file using sftp.
@@ -1145,6 +1155,7 @@ with NamedTemporaryFile() as fp: c.getfo(”….”, fp)</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#bexchange.net.senders.sftp_sender"><code class="docutils literal notranslate"><span class="pre">sftp_sender</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.net.senders.sftp_sender.client"><code class="docutils literal notranslate"><span class="pre">sftp_sender.client()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.net.senders.sftp_sender.send"><code class="docutils literal notranslate"><span class="pre">sftp_sender.send()</span></code></a></li>
 </ul>
 </li>

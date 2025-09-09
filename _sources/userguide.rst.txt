@@ -700,6 +700,21 @@ set of arguments to be initiated you find examples on how to use them in the etc
 **bexchange.net.senders.sftp_sender**
   Sends files over sftp
 
+  "arguments": {
+    "properties":"<property filename>",
+    "uri":"sftp://<username>:<password>@<hostname>:<port>/<folder_and_filename>",
+    "create_missing_directories":false,
+    "tmppattern":["^","."]
+  }
+
+  *properties* can be used in the URI, for example ${_property:this.username}. In this case, it will check the properties for this.username and
+  replace that part in the uri.
+
+  *uri* is what it sounds like, for sftp_sender the scheme is sftp:
+
+  *tmppattern* in some situations the file has to be uploaded with some identifier before it is renamed to wanted name in uri. the pattern should always be find-str and then replacement str.
+
+
 **bexchange.net.senders.scp_sender**
   Publishes files over scp
   

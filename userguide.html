@@ -638,7 +638,7 @@ we can use a failover_connection instead. This connection type allows a list of 
 <h4>Senders<a class="headerlink" href="#senders" title="Link to this heading">¶</a></h4>
 <p>The senders are protocol specific and ensures that the data is sent correctly and if applicable, in a secure way. There are several predefined ways to send files. Since each sender has it’s own
 set of arguments to be initiated you find examples on how to use them in the etc-catalogue.</p>
-<dl class="simple">
+<dl>
 <dt><strong>bexchange.net.senders.storage_sender</strong></dt><dd><p>Publishes a file using file storages. This is very useful if you want to decorate a file before it is put on the storage.</p>
 </dd>
 <dt><strong>bexchange.net.senders.dex_sender</strong></dt><dd><p>Legacy DEX communication sending files to old nodes</p>
@@ -646,6 +646,18 @@ set of arguments to be initiated you find examples on how to use them in the etc
 <dt><strong>bexchange.net.senders.rest_sender</strong></dt><dd><p>Sends a file to another node that is running baltrad-exchange. The rest sender uses the internal crypto library for signing messages which currently supports DSA &amp; RSA keys. DSA uses DSS, RSA uses pkcs1_15.</p>
 </dd>
 <dt><strong>bexchange.net.senders.sftp_sender</strong></dt><dd><p>Sends files over sftp</p>
+<dl class="simple">
+<dt>“arguments”: {</dt><dd><p>“properties”:”&lt;property filename&gt;”,
+“uri”:”sftp://&lt;username&gt;:&lt;password&gt;&#64;&lt;hostname&gt;:&lt;port&gt;/&lt;folder_and_filename&gt;”,
+“create_missing_directories”:false,
+“tmppattern”:[“^”,”.”]</p>
+</dd>
+</dl>
+<p>}</p>
+<p><em>properties</em> can be used in the URI, for example ${_property:this.username}. In this case, it will check the properties for this.username and
+replace that part in the uri.</p>
+<p><em>uri</em> is what it sounds like, for sftp_sender the scheme is sftp:</p>
+<p><em>tmppattern</em> in some situations the file has to be uploaded with some identifier before it is renamed to wanted name in uri. the pattern should always be find-str and then replacement str.</p>
 </dd>
 <dt><strong>bexchange.net.senders.scp_sender</strong></dt><dd><p>Publishes files over scp</p>
 </dd>
