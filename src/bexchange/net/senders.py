@@ -35,6 +35,7 @@ import uuid
 import paramiko
 import ftplib
 import shutil
+import re
 from paramiko import SSHClient
 from scp import SCPClient
 
@@ -421,16 +422,20 @@ class sftp_sender(baseuri_sender):
         """
         super(sftp_sender, self).__init__(backend, aid, arguments)
         self._confirm_upload = False
-        self._create_tempname = False
-        self._tempname_suffix = ".tmp"
+        self._tmppattern = None
 
         if "confirm_upload" in arguments:
             self._confirm_upload = arguments["confirm_upload"]
-        if "create_tempname" in arguments:
-            self._create_tempname = arguments["create_tempname"]
-        if "tempname_suffix" in arguments and arguments["tempname_suffix"]:
-            self._tempname_suffix = arguments["tempname_suffix"]
+        if "tmppattern" in arguments:
+            if isinstance(arguments["tmppattern"], list) and len(arguments["tmppattern"]) == 2:
+                self._tmppattern = arguments["tmppattern"]
 
+
+    def client(self):
+        """
+        :returns: a sftpclient instance with hostname, port, username and password set
+        """
+        return sftpclient(self.hostname(), port=self.port(), username=self.username(), password=self.password())
 
     def send(self, path, meta):
         """Sends the file using sftp.
@@ -439,25 +444,28 @@ class sftp_sender(baseuri_sender):
         """        
         publishedname = self.name(meta)
         logger.debug("sftp_adapter: connecting to: host=%s, port=%d, user='%s'"%(self.hostname(), self.port(), self.username()))
-        with sftpclient(self.hostname(), port=self.port(), username=self.username(), password=self.password()) as c:
+
+        c = self.client()
+        try:
+            c.connect()
             bdir = os.path.dirname(publishedname)
             fname = os.path.basename(publishedname)
             logger.debug("Connected to %s"%self.hostname())
             if self.create_missing_directories():
                 c.makedirs(bdir)
             c.chdir(bdir)
-            if self._create_tempname:
-                tfname = fname + self._tempname_suffix
-                logger.info("sftp_sender: address:%s, basename:%s uploaded ID:'%s'" % (self.hostname(), tfname, util.create_fileid_from_meta(meta)))
+
+            if self._tmppattern:
+                tfname = re.sub(self._tmppattern[0], self._tmppattern[1], fname)
+                logger.info("sftp_sender: address:%s, temporary basename:%s uploaded ID:'%s'" % (self.hostname(), tfname, util.create_fileid_from_meta(meta)))
                 c.put(path, tfname, confirm=self._confirm_upload)
-                if not c.isfile(fname):
-                    logger.info("sftp_sender: Renaming %s to %s uploaded ID:'%s'" % (tfname, fname, util.create_fileid_from_meta(meta)))
-                else:
-                    logger.warn("sftp_sender: Cant rename %s since %s already exists uploaded ID:'%s'"%(tfname, fname, util.create_fileid_from_meta(meta)))
+                logger.info("sftp_sender: Renaming %s to %s uploaded ID:'%s'" % (tfname, fname, util.create_fileid_from_meta(meta)))
                 c.rename(tfname, fname)
             else:
                 logger.info("sftp_sender: address:%s, basename:%s uploaded ID:'%s'" % (self.hostname(), fname, util.create_fileid_from_meta(meta)))
                 c.put(path, fname, confirm=self._confirm_upload)
+        finally:
+            c.disconnect()
 
 class scp_sender(baseuri_sender):
     """Publishes files over scp
