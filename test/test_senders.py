@@ -49,8 +49,35 @@ class test_senders(unittest.TestCase):
         meta.add_node("/what", Attribute("time", datetime.time(12, 0)))
         return meta
 
+    def test_sftp_sender_invalid_temppattern_1(self):
+        backend = MagicMock()
+        meta = self.create_meta()
+        arguments = {
+            "confirm_upload":False,
+            "uri":"sftp://username:password@localhost:1234/data/${_baltrad/source:NOD}.h5",
+            "tmppattern":["^"]
+        }
+        try:
+            sender = senders.sftp_sender(backend, "aid", arguments)
+            self.fail("Expected ValueError")
+        except ValueError:
+            pass
 
-    def test_sftp_sender_tempfile(self):
+    def test_sftp_sender_invalid_temppattern_3(self):
+        backend = MagicMock()
+        meta = self.create_meta()
+        arguments = {
+            "confirm_upload":False,
+            "uri":"sftp://username:password@localhost:1234/data/${_baltrad/source:NOD}.h5",
+            "tmppattern":["^", ".", ".h5$"]
+        }
+        try:
+            sender = senders.sftp_sender(backend, "aid", arguments)
+            self.fail("Expected ValueError")
+        except ValueError:
+            pass
+
+    def test_sftp_sender_tmppattern(self):
         backend = MagicMock()
         meta = self.create_meta()
         arguments = {
@@ -71,8 +98,28 @@ class test_senders(unittest.TestCase):
         sftpobj.put.assert_called_with("thisfile.h5", ".sella.h5", confirm=False)
         sftpobj.rename.assert_called_with(".sella.h5", "sella.h5")
 
+    def test_sftp_sender_tmppattern_two_sets(self):
+        backend = MagicMock()
+        meta = self.create_meta()
+        arguments = {
+            "confirm_upload":False,
+            "uri":"sftp://username:password@localhost:1234/data/${_baltrad/source:NOD}.h5",
+            "tmppattern":["^",".", ".h5$", ".tmp"]
+        }
+        sender = senders.sftp_sender(backend, "aid", arguments)
+        sftpobj = MagicMock()
+        sender.client = MagicMock(return_value=sftpobj)
 
-    def test_sftp_sender_no_tempfile(self):
+        # Run test
+        sender.send("thisfile.h5", meta)
+
+        # Verify
+        sftpobj.makedirs.assert_called()
+        sftpobj.chdir.assert_called_with("data")
+        sftpobj.put.assert_called_with("thisfile.h5", ".sella.tmp", confirm=False)
+        sftpobj.rename.assert_called_with(".sella.tmp", "sella.h5")
+
+    def test_sftp_sender_no_tmppattern(self):
         backend = MagicMock()
         meta = self.create_meta()
         arguments = {

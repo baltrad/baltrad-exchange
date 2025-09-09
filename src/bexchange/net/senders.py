@@ -427,8 +427,12 @@ class sftp_sender(baseuri_sender):
         if "confirm_upload" in arguments:
             self._confirm_upload = arguments["confirm_upload"]
         if "tmppattern" in arguments:
-            if isinstance(arguments["tmppattern"], list) and len(arguments["tmppattern"]) == 2:
+            if isinstance(arguments["tmppattern"], list) and len(arguments["tmppattern"]) > 0 and len(arguments["tmppattern"])%2==0:
                 self._tmppattern = arguments["tmppattern"]
+            elif isinstance(arguments["tmppattern"], list) and len(arguments["tmppattern"]) == 0:
+                pass
+            else:
+                raise ValueError("Not a valid tmppattern. Should be a list with length evenly divided by two where first value is match pattern and second value is replacement pattern")
 
 
     def client(self):
@@ -456,7 +460,9 @@ class sftp_sender(baseuri_sender):
             c.chdir(bdir)
 
             if self._tmppattern:
-                tfname = re.sub(self._tmppattern[0], self._tmppattern[1], fname)
+                tfname = fname
+                for m, r in zip(*[iter(self._tmppattern)]*2):
+                    tfname = re.sub(m, r, tfname)
                 logger.info("sftp_sender: address:%s, temporary basename:%s uploaded ID:'%s'" % (self.hostname(), tfname, util.create_fileid_from_meta(meta)))
                 c.put(path, tfname, confirm=self._confirm_upload)
                 logger.info("sftp_sender: Renaming %s to %s uploaded ID:'%s'" % (tfname, fname, util.create_fileid_from_meta(meta)))

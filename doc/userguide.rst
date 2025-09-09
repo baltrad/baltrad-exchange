@@ -712,7 +712,8 @@ set of arguments to be initiated you find examples on how to use them in the etc
 
   *uri* is what it sounds like, for sftp_sender the scheme is sftp:
 
-  *tmppattern* in some situations the file has to be uploaded with some identifier before it is renamed to wanted name in uri. the pattern should always be find-str and then replacement str.
+  *tmppattern* in some situations the file has to be uploaded with some identifier before it is renamed to wanted name in uri. The pattern should always be find-str and then replacement str.
+  and the length of the list should be evenly divided by two so the format can be defined as [<re match>, <replacement>]*
 
 
 **bexchange.net.senders.scp_sender**
