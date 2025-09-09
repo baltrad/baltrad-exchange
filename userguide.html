@@ -657,7 +657,8 @@ set of arguments to be initiated you find examples on how to use them in the etc
 <p><em>properties</em> can be used in the URI, for example ${_property:this.username}. In this case, it will check the properties for this.username and
 replace that part in the uri.</p>
 <p><em>uri</em> is what it sounds like, for sftp_sender the scheme is sftp:</p>
-<p><em>tmppattern</em> in some situations the file has to be uploaded with some identifier before it is renamed to wanted name in uri. the pattern should always be find-str and then replacement str.</p>
+<p><em>tmppattern</em> in some situations the file has to be uploaded with some identifier before it is renamed to wanted name in uri. The pattern should always be find-str and then replacement str.
+and the length of the list should be evenly divided by two so the format can be defined as [&lt;re match&gt;, &lt;replacement&gt;]*</p>
 </dd>
 <dt><strong>bexchange.net.senders.scp_sender</strong></dt><dd><p>Publishes files over scp</p>
 </dd>
