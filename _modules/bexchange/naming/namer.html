@@ -637,13 +637,17 @@
                         <span class="n">paramnode</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">find_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/dataset</span><span class="si">{</span><span class="n">setctr</span><span class="si">}</span><span class="s2">/data</span><span class="si">{</span><span class="n">paramctr</span><span class="si">}</span><span class="s2">/what/quantity&quot;</span><span class="p">)</span>
                         <span class="k">if</span> <span class="ow">not</span> <span class="n">paramnode</span><span class="p">:</span>
                             <span class="k">break</span>
-                        <span class="n">quantities</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">paramnode</span><span class="o">.</span><span class="n">value_str</span><span class="p">())</span>
+                        <span class="n">paramname</span> <span class="o">=</span> <span class="n">paramnode</span><span class="o">.</span><span class="n">value_str</span><span class="p">()</span>
+                        <span class="k">if</span> <span class="n">paramname</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">quantities</span><span class="p">:</span>
+                            <span class="n">quantities</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">paramname</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">elangles</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">quantities</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not identify any angles or quantities in file. Can&#39;t create a Opera conformant file without this information&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">placeholder</span>
 
-            <span class="k">if</span> <span class="s2">&quot;DBZH&quot;</span> <span class="ow">in</span> <span class="n">quantities</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">quantities</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">A1</span><span class="o">=</span><span class="s2">&quot;Z&quot;</span>
+            <span class="k">elif</span> <span class="s2">&quot;DBZH&quot;</span> <span class="ow">in</span> <span class="n">quantities</span><span class="p">:</span>
                 <span class="n">A1</span><span class="o">=</span><span class="s2">&quot;G&quot;</span>
             <span class="k">elif</span> <span class="s2">&quot;VRADH&quot;</span> <span class="ow">in</span> <span class="n">quantities</span> <span class="ow">or</span> <span class="s2">&quot;VRADV&quot;</span> <span class="ow">in</span> <span class="n">quantities</span><span class="p">:</span>
                 <span class="n">A1</span><span class="o">=</span><span class="s2">&quot;H&quot;</span>
@@ -659,8 +663,6 @@
                 <span class="n">A1</span><span class="o">=</span><span class="s2">&quot;Q&quot;</span>
             <span class="k">elif</span> <span class="s2">&quot;KDP&quot;</span> <span class="ow">in</span> <span class="n">quantities</span><span class="p">:</span>
                 <span class="n">A1</span><span class="o">=</span><span class="s2">&quot;R&quot;</span>
-            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">quantities</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">A1</span><span class="o">=</span><span class="s2">&quot;Z&quot;</span>
 
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">elangles</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">A2</span><span class="o">=</span><span class="s2">&quot;Z&quot;</span>
