@@ -505,13 +505,17 @@ class opera_filename_namer(metadata_namer_operation):
                         paramnode = meta.find_node(f"/dataset{setctr}/data{paramctr}/what/quantity")
                         if not paramnode:
                             break
-                        quantities.append(paramnode.value_str())
+                        paramname = paramnode.value_str()
+                        if paramname not in quantities:
+                            quantities.append(paramname)
 
             if len(elangles) == 0 or len(quantities) == 0:
                 logger.error("Could not identify any angles or quantities in file. Can't create a Opera conformant file without this information")
                 return placeholder
 
-            if "DBZH" in quantities:
+            if len(quantities) > 1:
+                A1="Z"
+            elif "DBZH" in quantities:
                 A1="G"
             elif "VRADH" in quantities or "VRADV" in quantities:
                 A1="H"
@@ -527,8 +531,6 @@ class opera_filename_namer(metadata_namer_operation):
                 A1="Q"
             elif "KDP" in quantities:
                 A1="R"
-            elif len(quantities) > 1:
-                A1="Z"
 
             if len(elangles) > 1:
                 A2="Z"

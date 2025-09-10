@@ -306,7 +306,7 @@ class test_namer(unittest.TestCase):
         namer.register_operation("_baltrad/opera_filename", ofn)
 
         meta = self.create_opera_metadata(2000, 1, 1, 12, 0, "NOD:sella,RAD:SE41", "sella", Source("se", {"CCCC":"ESWI"}),"PVOL", ["DBZH", "TH"], [0.5])
-        self.assertEqual("T_PAGA41_C_ESWI_20000101120000", namer.name(meta))
+        self.assertEqual("T_PAZA41_C_ESWI_20000101120000", namer.name(meta))
 
     def test_baltrad_opera_filename_SCAN_DBZH_A_angle(self):
         namer = metadata_namer("${_baltrad/opera_filename}")
@@ -316,6 +316,15 @@ class test_namer(unittest.TestCase):
 
         meta = self.create_opera_metadata(2000, 1, 1, 12, 0, "NOD:sella,RAD:SE41", "sella", Source("se", {"CCCC":"ESWI"}),"SCAN", ["DBZH"], [0.5])
         self.assertEqual("T_PAGA41_C_ESWI_20000101120000", namer.name(meta))
+
+    def test_baltrad_opera_filename_SCAN_DBZH_TH_A_angle(self):
+        namer = metadata_namer("${_baltrad/opera_filename}")
+        ofn = opera_filename_namer("_baltrad/opera_filename", None, {"namer_config":{"sella":{"elevation_angles":[0.5, 1.0, 1.5, 2.0, 2.5, 4.0, 8.0, 14.0, 24.0, 40.0, 1.25]}}})
+
+        namer.register_operation("_baltrad/opera_filename", ofn)
+
+        meta = self.create_opera_metadata(2000, 1, 1, 12, 0, "NOD:sella,RAD:SE41", "sella", Source("se", {"CCCC":"ESWI"}),"SCAN", ["DBZH", "TH"], [0.5])
+        self.assertEqual("T_PAZA41_C_ESWI_20000101120000", namer.name(meta))
 
     def test_baltrad_opera_filename_VP(self):
         namer = metadata_namer("${_baltrad/opera_filename}")
