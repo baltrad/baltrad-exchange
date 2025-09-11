@@ -225,17 +225,20 @@ class rave_inmemory_manager:
 class decorator(basedecorator):
     """Rave decorator utilizing the functionality in rave to perform inmemory operations
     """
-    def __init__(self, backend, allow_discard, can_return_invalid_file_content, version_table={}, inmemory_modifiers=[]):
+    def __init__(self, backend, allow_discard, can_return_invalid_file_content, version_table={}, inmemory_modifiers=[], additionalmeta={}):
         """Constructor
         :param backend: the backend
         :param allow_discard: if decorate returns None and allow_discard is = True, then the file is removed and not sent
         :param version_table: will write the outgoing file in the version according to the version table
         :param inmemory_modifiers: operations that will take place in the file before it is written
+        :param additionalmeta: a dictionary containing additional how-attributes that should be added to the file
         """
         super(decorator, self).__init__(backend, allow_discard, can_return_invalid_file_content)
         logger.info(f"version_table={version_table}")
         self._version_table = version_table
         self._inmemory_modifiers=[]
+        self._additionalmeta=None
+
         if inmemory_modifiers:
             for im in inmemory_modifiers:
                 if "modifier" in im:
@@ -244,6 +247,11 @@ class decorator(basedecorator):
                         arguments = im["arguments"]
                     modifier = rave_inmemory_manager.create(backend, im["modifier"], arguments)
                     self._inmemory_modifiers.append(modifier)
+
+        if not isinstance(additionalmeta, dict):
+            raise ValueError("additionalmeta must be a dictionary")
+        if len(additionalmeta) > 0:
+            self._additionalmeta = additionalmeta
 
     def convert_from_odim_version(self, read_version):
         """ Converts the _raveio read_version into a string representing the version
@@ -301,6 +309,10 @@ class decorator(basedecorator):
                 rio = _raveio.new()
                 rio.object = rin.object
                 rio.version =  self.convert_to_odim_version(wanted_version)
+
+                if self._additionalmeta:
+                    rio.extras=self._additionalmeta
+
                 rio.save(newf.name)
                 newf.flush()
                 return newf
