@@ -27,7 +27,7 @@ from __future__ import absolute_import
 from bexchange.decorators.decorator import decorator_manager
 from bexchange.decorators.decorator import decorator as basedecorator
 
-import _raveio, _rave, _polarvolume, _polarscan, _verticalprofile
+import _raveio, _rave, _polarvolume, _polarscan, _verticalprofile, _odimsources
 from tempfile import NamedTemporaryFile
 import shutil, logging, importlib, struct, math
 from datetime import timedelta, datetime, timezone
@@ -198,6 +198,56 @@ class what_source_setter(object_modifier):
                     obj.source = src_to_set
             except:
                 pass
+
+class what_source_updater(object_modifier):
+    """ Updates the what/source with wanted members
+    """
+    def __init__(self, backend, config, sources):
+        """ Constructor
+        :param backend: the backend
+        :param sources: a mapping between source and a list of what/source attributes
+        """
+        super(what_source_updater, self).__init__(backend)
+        self._config = _odimsources.load(config)
+        self._sources = sources
+
+    def create_source(self, nodname, source, sources_to_update):
+        result = source
+        odimsource = self._config.get(nodname)
+        for x in sources_to_update:
+            if x in ["NOD", "RAD", "PLC", "WMO", "WIGOS", ]:
+                if source.find("%s:"%x) < 0:
+                    if x == "NOD" and odimsource.nod:
+                        result = result + ",NOD:%s"%odimsource.nod
+                    elif x == "RAD" and odimsource.rad:
+                        result = result + ",RAD:%s"%odimsource.rad
+                    elif x == "PLC" and odimsource.plc:
+                        result = result + ",PLC:%s"%odimsource.plc
+                    elif x == "WMO" and odimsource.wmo:
+                        result = result + ",WMO:%s"%odimsource.wmo
+                    elif x == "WIGOS" and odimsource.wigos:
+                        result = result + ",WIGOS:%s"%odimsource.wigos
+        return result
+
+    def modify(self, obj, meta, **kw):
+        """ Modifies top level /what/source attribute in objects 
+        :param obj: the rave object
+        :param meta: the metadata
+        :return None
+        """
+        if meta.bdb_source_name in self._sources or "default" in self._sources:
+            src_to_set = None
+            if meta.bdb_source_name in self._sources:
+                src_members = self._sources[meta.bdb_source_name]
+            else:
+                src_members = self._sources["default"]
+            try:
+                if "source" in dir(obj):
+                    src_to_set = self.create_source(meta.bdb_source_name, obj.source, src_members)
+                    logger.info("New source for: %s is %s"%(meta.bdb_source_name, src_to_set))
+                    obj.source = src_to_set
+            except:
+                logger.exception("Failure when updating source")
 
 class rave_inmemory_manager:
     """The manager for creating inmemory_operations used within bexchange. 
