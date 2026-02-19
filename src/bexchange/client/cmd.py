@@ -30,7 +30,6 @@ import json
 import os, sys
 import socket
 import urllib.parse as urlparse
-import pkg_resources
 import datetime,time,math
 import subprocess
 from tempfile import NamedTemporaryFile
@@ -40,6 +39,7 @@ from http import client as httplibclient
 # This should always be available
 from baltradcrypto import crypto
 from baltradcrypto.crypto import keyczarcrypto
+from baltradutils import resources
 
 class ExecutionError(RuntimeError):
     pass
@@ -76,7 +76,7 @@ class Command(object):
         :raise: :class:`LookupError` if not found
         """
         try:
-            return pkg_resources.load_entry_point(
+            return resources.load_entry_point(
                 "bexchange",
                 "bexchange.client.commands",
                 name
@@ -86,7 +86,7 @@ class Command(object):
 
     @classmethod
     def get_commands(cls):
-        return pkg_resources.get_entry_map("bexchange")["bexchange.client.commands"].keys()
+        return resources.get_entry_map("bexchange.client.commands").keys()
 
 class StoreFile(Command):
     def update_optionparser(self, parser):

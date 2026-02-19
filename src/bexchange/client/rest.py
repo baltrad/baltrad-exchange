@@ -27,7 +27,6 @@ import json
 import os
 import socket
 import urllib.parse as urlparse
-import pkg_resources
 import ssl
 import base64
 import uuid

@@ -31,7 +31,7 @@ from bexchange.db import util as dbutil
 
 from baltrad.bdbcommon import oh5
 
-from sqlalchemy import engine, event, exc as sqlexc, sql
+from sqlalchemy import engine, event, exc as sqlexc, sql, literal, or_, and_, insert, update, select
 
 from sqlalchemy.types import (
     Integer,
@@ -106,23 +106,24 @@ class SqlAlchemySourceManager(object):
         :param srclist: a list of bdbcommon.oh5.Sources
         """
         with self.get_connection() as conn:
-            count = conn.execute("select count(*) from sources").fetchone()["count(*)"]
+            count = conn.execute(sql.select(sql.func.count()).select_from(sources)).scalar()
             if count > 0:
                 return True
-            conn.execute("delete from source_kvs")
-            conn.execute("delete from sources")
+            conn.execute(source_kvs.delete())
+            conn.execute(sources.delete())
             for source in srclist:
                 logger.info("SourceManager. adding: %s"%str(source))
                 try:
                     source_id = conn.execute(
                         sources.insert(),
-                        name=source.name,
-                        parent=source.parent
+                        {"name":source.name,
+                         "parent":source.parent}
                     ).inserted_primary_key[0]
                 except sqlexc.IntegrityError:
                     raise RuntimeError("duplicate of source.name")
         
                 self.insert_source_values(conn, source_id, source)
+            conn.commit()
     
     def get_source(self, meta, add_parent_object=False):
         """
@@ -191,89 +192,90 @@ class SqlAlchemySourceManager(object):
 ##
 # Copy-pasted from baltrad-db server functionality
 def get_source_id(conn, source):
-    where = sql.literal(False)
     keys = source.keys()
-    ignoreORG=False
+    ignoreORG = False
     if "ORG" in keys:
-        if "WMO" in keys or "NOD" in keys or "RAD" in keys or "PLC" in keys or "WIGOS" in keys:
-            ignoreORG=True
- 
+        if any(k in keys for k in ["WMO", "NOD", "RAD", "PLC", "WIGOS"]):
+            ignoreORG = True
+
+    where_clause = literal(False)
     for key, value in source.items():
         if ignoreORG and key == "ORG":
             continue
-        #print("ADDING %s=%s"%(key,value))
-        where = sql.or_(
-            where,
-            sql.and_(
-                source_kvs.c.key==key,
-                source_kvs.c.value==value
+        where_clause = or_(
+            where_clause,
+            and_(
+                source_kvs.c.key == key,
+                source_kvs.c.value == value
             )
         )
- 
-    qry = sql.select(
-        [source_kvs.c.source_id, source_kvs.c.key, source_kvs.c.value],
-        where,
-        distinct=True
+
+    qry = (
+        select(
+            source_kvs.c.source_id, 
+            source_kvs.c.key, 
+            source_kvs.c.value
+        )
+        .where(where_clause)
+        .distinct()
     )
-     
+
     result = conn.execute(qry)
-     
+    
     source_id_matches = {}
     max_no_of_matches = 0
     best_match_id = None
     multiple_matches = False
+
     for row in result:
-        source_id = row[source_kvs.c.source_id]
-        if not source_id in source_id_matches:
+        source_id = row.source_id
+        
+        if source_id not in source_id_matches:
             source_id_matches[source_id] = 0
-        row_key = row[source_kvs.c.key]
-        row_value = row[source_kvs.c.value]
+            
+        row_key = row.key
+        row_value = row.value
+        
         for key, value in source.items():
             if ignoreORG and key == "ORG":
                 continue
             elif key == row_key and value == row_value:
                 source_id_matches[source_id] += 1
-                if source_id_matches[source_id] > max_no_of_matches:
-                    max_no_of_matches = source_id_matches[source_id]
+                
+                current_matches = source_id_matches[source_id]
+                if current_matches > max_no_of_matches:
+                    max_no_of_matches = current_matches
                     best_match_id = source_id
                     multiple_matches = False
-                elif source_id_matches[source_id] == max_no_of_matches:
+                elif current_matches == max_no_of_matches:
                     multiple_matches = True
-     
+
     if multiple_matches:
-        logger.debug("Could not determine source due to multiple equally matching sources found for %s." % (str(source)))
+        logger.debug(f"Could not determine source due to multiple equally matching sources found for {source}.")
         best_match_id = None
- 
+
     return best_match_id
 
 def get_source_by_id(conn, source_id):
-    name_qry = sql.select(
-        [sources.c.name, sources.c.parent],
-        sources.c.id==source_id
-    )
-
-    kv_qry = sql.select(
-        [source_kvs],
-        source_kvs.c.source_id==source_id
-    )
+    name_qry = select(sources.c.name, sources.c.parent).where(sources.c.id == source_id)
+    kv_qry = select(source_kvs).where(source_kvs.c.source_id == source_id)
     
     source = oh5.Source()
-    
+
     sourceresult = conn.execute(name_qry).first()
     if sourceresult is None:
         raise LookupError(f"Could not identify any source with id={source_id}")
-
-    source.name = sourceresult["name"]
-    source.parent = sourceresult["parent"]
-
-    for row in conn.execute(kv_qry).fetchall():
-        source[row["key"]] = row["value"]
+    source.name = sourceresult.name
+    source.parent = sourceresult.parent
+    result = conn.execute(kv_qry)
+    for row in result:
+        source[row.key] = row.value
 
     return source
 
 def get_parent_source_id(conn, parent):
     # Parents should always have their parent = None otherwise we probably are trying to identify a standard source and not a parent
-    source_id_qry = sql.select([sources.c.id]).filter(sources.c.parent==None).filter(sources.c.name==parent)
+    source_id_qry = sql.select(sources.c.id).where(sources.c.parent==None).where(sources.c.name==parent)
     result = conn.execute(source_id_qry).scalar()
     if result is None:
         raise LookupError(f"Could not identify any parent source with id {parent}")

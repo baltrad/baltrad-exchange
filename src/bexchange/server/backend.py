@@ -41,9 +41,10 @@ import time, datetime
 import threading
 import os,stat,sys
 import uuid
-import pyinotify
 from threading import Thread
 import re
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
 
 from types import SimpleNamespace
 import logging
@@ -86,26 +87,19 @@ class HandledFiles(object):
                 self._handled.pop()
         return True
 
-class monitor_conf_dir_inotify_handler(pyinotify.ProcessEvent):
+class monitor_conf_dir_inotify_handler(FileSystemEventHandler):
     """Helper class to monitor a list of folders containing configuration files. Only will process
     files ending with .json. Both added and removed events will be forwarded.
+    Now uses watchdog library instead of pyinotify for cross-platform compatibility.
     """
     FILE_PATTERN=".+.json$"
-    MASK=pyinotify.IN_CLOSE_WRITE | pyinotify.IN_MOVED_TO | pyinotify.IN_DELETE | pyinotify.IN_MOVED_FROM
+    
     def __init__(self, folders, fn_file_written, fn_file_removed):
+        super().__init__()
         self._folders = folders
         self._fn_file_written = fn_file_written
         self._fn_file_removed = fn_file_removed
-        self._wm = pyinotify.WatchManager()
-        self._notifier = pyinotify.Notifier(self._wm, self)
-
-    def run(self):
-        """The runner for the thread. Starts the inotify notifier loop
-        """
-        try:
-            self._notifier.loop()
-        finally:
-            logger.error("Leaving loop")
+        self._observer = Observer()
 
     def match_file(self, filename):
         """Matches the file so that it is following the wanted pattern. Typically *.json.
@@ -114,68 +108,66 @@ class monitor_conf_dir_inotify_handler(pyinotify.ProcessEvent):
         bname = os.path.basename(filename)
         return re.match(self.FILE_PATTERN, bname) != None
 
-    def process_IN_CLOSE_WRITE(self, event):
-        """Will be called by the inotify notifier when file event occurs.
+    def on_closed(self, event):
+        """Will be called by the watchdog observer when file close event occurs.
         :param event: The file event
         """
-        logger.debug("IN_CLOSE_WRITE: %s"%event.pathname)
-        try:
-            if not self.match_file(event.pathname):
-                return
-            if self._fn_file_written:
-                self._fn_file_written(event.pathname)
-        except:
-            logger.exception("Failure in IN_CLOSE_WRITE")
+        if not event.is_directory:
+            logger.debug("FILE_CLOSED: %s"%event.src_path)
+            try:
+                if not self.match_file(event.src_path):
+                    return
+                if self._fn_file_written:
+                    self._fn_file_written(event.src_path)
+            except:
+                logger.exception("Failure in on_closed")
 
-    def process_IN_MOVED_TO(self, event):
-        """Will be called by the inotify notifier when file event occurs.
+    def on_moved(self, event):
+        """Will be called by the watchdog observer when file move event occurs.
         :param event: The file event
         """
-        logger.debug("IN_MOVED_TO: %s"%event.pathname)
-        try:
-            if not self.match_file(event.pathname):
-                return
-            if self._fn_file_written:
-                self._fn_file_written(event.pathname)
-        except:
-            logger.exception("Failure in IN_MOVED_TO")
+        if not event.is_directory:
+            logger.debug("FILE_MOVED_TO: %s"%event.dest_path)
+            try:
+                if not self.match_file(event.dest_path):
+                    return
+                if self._fn_file_written:
+                    self._fn_file_written(event.dest_path)
+            except:
+                logger.exception("Failure in on_moved (dest)")
+            
+            # Handle the source path as a removal
+            logger.debug("FILE_MOVED_FROM: %s"%event.src_path)
+            try:
+                if not self.match_file(event.src_path):
+                    return
+                if self._fn_file_removed:
+                    self._fn_file_removed(event.src_path)
+            except:
+                logger.exception("Failure in on_moved (src)")
 
-    def process_IN_MOVED_FROM(self, event):
-        """Will be called by the inotify notifier when file event occurs.
+    def on_deleted(self, event):
+        """Will be called by the watchdog observer when file delete event occurs.
         :param event: The file event
         """
-        logger.debug("IN_MOVED_FROM: %s"%event.pathname)
-        try:
-            if not self.match_file(event.pathname):
-                return
-            if self._fn_file_removed:
-                self._fn_file_removed(event.pathname)
-        except:
-            logger.exception("Failure in IN_MOVED_FROM")
-
-    def process_IN_DELETE(self, event):
-        """Will be called by the inotify notifier when file event occurs.
-        :param event: The file event
-        """
-        logger.debug("IN_DELETE: %s"%event.pathname)
-        try:
-            if not self.match_file(event.pathname):
-                return
-            if self._fn_file_removed:
-                self._fn_file_removed(event.pathname)
-        except:
-            logger.exception("Failure in IN_DELETE")
+        if not event.is_directory:
+            logger.debug("FILE_DELETED: %s"%event.src_path)
+            try:
+                if not self.match_file(event.src_path):
+                    return
+                if self._fn_file_removed:
+                    self._fn_file_removed(event.src_path)
+            except:
+                logger.exception("Failure in on_deleted")
 
     def start(self):
         """Starts the configuration file monitor
         """
         for folder in self._folders:
             logger.info("monitor_conf_dir_inotify_handler watching '%s'"%(folder))
-            self._wm.add_watch(folder, self.MASK)
+            self._observer.schedule(self, folder, recursive=False)
 
-        self._thread = Thread(target=self.run)
-        self._thread.daemon = True
-        self._thread.start()
+        self._observer.start()
 
 class config_handler(object):
     """Helper class that is registered for all configuration files so that it is possible

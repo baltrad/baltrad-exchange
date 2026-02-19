@@ -24,8 +24,6 @@
 
 from abc import abstractmethod, ABCMeta
 
-import pkg_resources
-
 from bexchange.util import abstractclassmethod
 
 from bexchange import config

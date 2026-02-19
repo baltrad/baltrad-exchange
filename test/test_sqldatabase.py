@@ -32,7 +32,7 @@ from bexchange.db import sqldatabase
 
 logger = logging.getLogger("test_sqldatabase")
 
-class test_publisher(unittest.TestCase):
+class TestSqlDatabase(unittest.TestCase):
     def setUp(self):
         self._database = sqldatabase.SqlAlchemyDatabase("sqlite:///:memory:")
     

@@ -34,7 +34,7 @@ from baltrad.bdbcommon.oh5.node import Attribute, Group
 
 logger = logging.getLogger("test_statistics")
 
-class test_statistics(unittest.TestCase):
+class TestStatistics(unittest.TestCase):
     def setUp(self):
         self._sqldatabase = MagicMock()
         self._statistics_mgr = statistics.statistics_manager(self._sqldatabase)

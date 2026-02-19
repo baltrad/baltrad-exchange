@@ -29,7 +29,7 @@ import abc
 import os, sys
 import socket
 import urllib.parse as urlparse
-import pkg_resources
+from baltradutils import resources
 import datetime,time,logging
 import subprocess
 from tempfile import NamedTemporaryFile
@@ -70,7 +70,7 @@ class Command(object):
         :raise: :class:`LookupError` if not found
         """
         try:
-            return pkg_resources.load_entry_point(
+            return resources.load_entry_point(
                 "bexchange",
                 "bexchange.zmq.commands",
                 name
@@ -80,7 +80,7 @@ class Command(object):
 
     @classmethod
     def get_commands(cls):
-        return pkg_resources.get_entry_map("bexchange")["bexchange.zmq.commands"].keys()
+        return resources.get_entry_map("bexchange.zmq.commands").keys()
 
 class Monitor(Command):
     def update_optionparser(self, parser):

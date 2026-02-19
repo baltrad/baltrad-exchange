@@ -123,7 +123,7 @@ class max_age_filter(decorator):
                         (meta.what_time, meta.find_node("/dataset1/where/elangle").value, meta.bdb_source_name, file_delay.total_seconds(), float(self._max_acceptable_age_block)))
                 else:
                     logger.info("Block message: the PVOL %s from %s was blocked{target_str}, it is %5.2f s after nominal /what/time (threshold %5.2f s)"% \
-                        (meta.what_time, meta.bdb_source_name, file_delay.total_seconds(), float(self.max_acceptable_file_age_block)))
+                        (meta.what_time, meta.bdb_source_name, file_delay.total_seconds(), float(self._max_acceptable_age_block)))
                 return None
         return inf
 

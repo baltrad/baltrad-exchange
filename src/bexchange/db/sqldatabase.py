@@ -30,7 +30,7 @@ import logging
 
 from sqlalchemy import asc,desc,func,text
 from sqlalchemy import engine, event, exc as sqlexc, sql
-from sqlalchemy.orm import mapper, sessionmaker
+from sqlalchemy.orm import registry, sessionmaker
 
 from sqlalchemy.types import (
     Integer,
@@ -55,6 +55,7 @@ from bexchange.db import util as dbutil
 logger = logging.getLogger("bexchange.db.sqldatabase")
 
 dbmeta = MetaData()
+mapper_registry = registry()
 
 ##
 # Used to ensure that the 
@@ -159,8 +160,8 @@ class statentry(object):
             self.attributes = {}
         self.attributes[name] = value
 
-mapper(statistics, db_statistics)
-mapper(statentry, db_statentry)
+mapper_registry.map_imperatively(statistics, db_statistics)
+mapper_registry.map_imperatively(statentry, db_statentry)
 
 logger = logging.getLogger("bexchange.db.sqldatabase")
 
@@ -322,7 +323,9 @@ class SqlAlchemyDatabase(object):
         logger.info("Cleanup of statentries older than %s"%maxagedt.strftime("%Y-%m-%d %H:%M"))
         q = db_statentry.delete().where(db_statentry.c.entrytime < maxagedt.strftime("%Y-%m-%d %H:%M"))
         logger.debug("Query: %s"%q)
-        self._engine.execute(q)
+        with self.get_connection() as conn:
+            conn.execute(q)
+            conn.commit()
 
     def increment_statistics(self, spid, origin, source):
         with self.get_session() as session:

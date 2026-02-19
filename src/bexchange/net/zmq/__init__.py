@@ -15,4 +15,3 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with baltrad-exchange.  If not, see <http://www.gnu.org/licenses/>.
 ###############################################################################
-__import__('pkg_resources').declare_namespace(__name__)

@@ -24,13 +24,12 @@
 
 import abc
 import logging
-import pkg_resources
 import os
 
 from bexchange import util
 from bexchange import config
 from baltradcrypto import crypto
-
+from baltradutils import resources
 logger = logging.getLogger("bexchange.auth")
 
 class AuthError(Exception):
@@ -223,7 +222,7 @@ class Auth(object):
         :param name: The name of the entrypoint as defined in setup.py, e.g. crypto, keyczar...
         :return: the class represented by name. Used to create an instance of correct type 
         """
-        return pkg_resources.load_entry_point(
+        return resources.load_entry_point(
             "bexchange",
             "bexchange.auth",
             name

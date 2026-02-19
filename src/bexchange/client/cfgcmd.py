@@ -30,7 +30,6 @@ import json, tarfile
 import os, sys, re
 import socket
 import urllib.parse as urlparse
-import pkg_resources
 import datetime,time
 import subprocess
 from tempfile import TemporaryDirectory
@@ -48,6 +47,7 @@ from bexchange.net import dexutils
 
 from baltradcrypto import crypto
 from baltradcrypto.crypto import keyczarcrypto
+from baltradutils import resources
 
 # Default configuration file.
 DEFAULT_CONFIG = "/etc/baltrad/exchange/etc/baltrad-exchange.properties"
@@ -107,7 +107,7 @@ class Command(object):
 
     @classmethod
     def get_commands(cls):
-        return pkg_resources.get_entry_map("bexchange")["bexchange.config.commands"].keys()
+        return resources.get_entry_map("bexchange.config.commands").keys()
 
 class CreateKeys(Command):
     def update_optionparser(self, parser):

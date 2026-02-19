@@ -23,7 +23,6 @@
 ## @date 2021-08-18
 import abc
 import logging
-import pkg_resources
 import os
 
 from bexchange import util
