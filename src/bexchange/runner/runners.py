@@ -23,14 +23,13 @@
 ## @date 2022-10-28
 import importlib
 import logging
+import pyinotify
 import os, re
 from os import listdir
 from os.path import isfile, join
 import time
 
 from threading import Thread, Event
-from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler
 
 from bexchange.naming import namer
 from bexchange.util import message_aware
@@ -78,37 +77,34 @@ class runner(object):
         """
         raise Exception("Not implemented")
 
-class inotify_runner_event_handler(FileSystemEventHandler):
+class inotify_runner_event_handler(pyinotify.ProcessEvent):
     def __init__(self, inotify_runner):
         """Constructor
         :param inotify_runner: The inotify runner that will be called
         """
-        super().__init__()
         self._runner = inotify_runner
     
-    def on_closed(self, event):
-        """Will be called by the watchdog observer when file close event occurs.
+    def process_IN_CLOSE_WRITE(self, event):
+        """Will be called by the inotify notifier when file event occurs.
         :param event: The file event
         """
-        if not event.is_directory:
-            logger.debug("FILE_CLOSED: %s"%event.src_path)
-            if not self._runner.is_ignored(event.src_path):  # avoid temporary file
-                self._runner.handle_file(event.src_path)
+        logger.debug("IN_CLOSE_WRITE: %s"%event.pathname)
+        if not self._runner.is_ignored(event.pathname):  # avoid temporary file
+            self._runner.handle_file(event.pathname)
 
-    def on_moved(self, event):
-        """Will be called by the watchdog observer when file move event occurs.
+    def process_IN_MOVED_TO(self, event):
+        """Will be called by the inotify notifier when file event occurs.
         :param event: The file event
         """
-        if not event.is_directory:
-            logger.debug("FILE_MOVED: %s"%event.dest_path)
-            if not self._runner.is_ignored(event.dest_path):  # avoid temporary file
-                self._runner.handle_file(event.dest_path)
+        logger.debug("IN_MOVED_WRITE: %s"%event.pathname)
+        if not self._runner.is_ignored(event.pathname):  # avoid temporary file
+            self._runner.handle_file(event.pathname)
 
 class inotify_runner(runner):
     """The inotify runner is used to monitor folders and trigger "store" events. It is run in a separate thread instead of 
     beeing created as a daemon-thread since all initiation is performed in the main thread before server is started.
-    Now uses watchdog library instead of pyinotify for cross-platform compatibility.
     """
+    MASK = pyinotify.IN_CLOSE_WRITE | pyinotify.IN_MOVED_TO
     
     def __init__(self, backend, active, **args):
         """Constructor
@@ -135,8 +131,8 @@ class inotify_runner(runner):
         if "process-pending-files" in args:
             self._process_pending_files=args["process-pending-files"]
 
-        self._observer = Observer()
-        self._event_handler = inotify_runner_event_handler(self)
+        self._wm = pyinotify.WatchManager()
+        self._notifier = pyinotify.Notifier(self._wm, inotify_runner_event_handler(self))
 
     def is_ignored(self, filename):
         """Checks if the specified file should be ignored or not, for example when a tmpfile is written.
@@ -156,6 +152,11 @@ class inotify_runner(runner):
         self._backend.store_file(filename, self._name)
         os.unlink(filename)
 
+    def run(self):
+        """The runner for the thread. Starts the inotify notifier loop
+        """
+        self._notifier.loop()
+
     def pending_run(self, pending_filenames):
         if pending_filenames:
             for filename in pending_filenames:
@@ -174,25 +175,26 @@ class inotify_runner(runner):
         return result
 
     def start(self):
-        """Starts this runner by adding the watched folders and then starting the observer.
+        """Starts this runner by adding the watched folders and then starting a daemonized thread.
         """
         pending_files=[]
         for folder in self._folders:
             logger.info("inotify_runner(%s) watching '%s'"%(self._name, folder))
             pending_files.extend(self.get_pending_files(folder))
-            self._observer.schedule(self._event_handler, folder, recursive=False)
+            self._wm.add_watch(folder, self.MASK)
 
         if len(pending_files) > 0 and self._process_pending_files:
             self._pending_thread = Thread(target=self.pending_run, args=(pending_files,))
             self._pending_thread.daemon = True
             self._pending_thread.start()
 
-        self._observer.start()
+        self._thread = Thread(target=self.run)
+        self._thread.daemon = True
+        self._thread.start()
 
     def stop(self):
         logger.info("Stopping inotifier")
-        self._observer.stop()
-        self._observer.join()
+        self._notifier.stop()
 
 class triggered_fetch_runner(runner, message_aware):
     """A triggered runner. This runner implements 'message_aware' so that a json-message
