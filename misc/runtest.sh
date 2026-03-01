@@ -15,9 +15,8 @@ create_and_init_venv() {
   fi
   python3 -m venv "$envpath"
   source $envpath/bin/activate
-  pip3 install --upgrade pip setuptools==57.5.0 
-  pip3 install "nose2 >= 0.12" --trusted-host pypi.python.org
-  pip3 install "mock >= 1.0" --trusted-host pypi.python.org
+  pip3 install "pytest >= 7.4.3" --trusted-host pypi.python.org
+  pip3 install "mock>=0.7,<=4.0.3" --trusted-host pypi.python.org
   pip3 install "zmq" --trusted-host pypi.python.org
   pip3 install "cryptography == 3.3.1" --trusted-host pypi.python.org
   python3 -m pip install 'git+https://github.com/baltrad/baltrad-utils.git' || exit_with_message "Could not install baltrad-utils"
@@ -25,13 +24,13 @@ create_and_init_venv() {
   python3 -m pip install 'git+https://github.com/baltrad/baltrad-db.git/#egg=baltrad-bdbcommon&subdirectory=common' || exit_with_message "Could not install bdbcommon"
   python3 -m pip install 'git+https://github.com/baltrad/baltrad-db.git/#egg=baltrad-bdbclient&subdirectory=client/python' || exit_with_message "Could not install bdbclient"
 
-  python3 -m pip install --editable .               #python3 setup.py develop
+  python3 -m pip install --editable .
 }
 
 runtest() {
   echo "Running tests"
   package_dir=$1
-  PYTHONPATH=src:test python3 -m nose2 --config misc/unittest.cfg --plugin nose2.plugins.junitxml --junit-xml
+  PYTHONPATH=src:test python3 -m pytest --junitxml=test-results.xml
 }
 
 
