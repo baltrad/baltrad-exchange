@@ -68,6 +68,227 @@ class test_matcher(unittest.TestCase):
 
         self.assertEqual(True, self._matcher.match(meta, ifilter.to_xpr()))
 
+    def test_and_2_values(self):
+        meta = Metadata();
+        meta.add_node("/", Group("what"))
+        meta.add_node("/what", Attribute("source", "WMO:02606"))
+        meta.add_node("/what", Attribute("date", datetime.date(2000, 1, 2)))
+        meta.add_node("/what", Attribute("time", datetime.time(12, 5)))
+        meta.add_node("/what", Attribute("object", "pvol"))
+
+        v = {"filter_type": "and_filter", 
+             "value": [
+              {"filter_type": "attribute_filter",  "name": "/what/source", "operation": "=", "value_type": "string", "value": ["WMO:02606"]},
+              {"filter_type": "attribute_filter",  "name": "/what/date", "operation": "=", "value_type": "string", "value": ["20000102"]}
+             ]
+            }
+
+        ifilter = self._manager.from_value(v)
+
+        self.assertEqual(True, self._matcher.match(meta, ifilter.to_xpr()))
+
+    def test_and_3_values(self):
+        meta = Metadata();
+        meta.add_node("/", Group("what"))
+        meta.add_node("/what", Attribute("source", "WMO:02606"))
+        meta.add_node("/what", Attribute("date", datetime.date(2000, 1, 2)))
+        meta.add_node("/what", Attribute("time", datetime.time(12, 5)))
+        meta.add_node("/what", Attribute("object", "pvol"))
+
+        v = {"filter_type": "and_filter", 
+             "value": [
+              {"filter_type": "attribute_filter",  "name": "/what/source", "operation": "=", "value_type": "string", "value": ["WMO:02606"]},
+              {"filter_type": "attribute_filter",  "name": "/what/date", "operation": "=", "value_type": "string", "value": ["20000102"]},
+              {"filter_type": "attribute_filter",  "name": "/what/time", "operation": "=", "value_type": "string", "value": ["120500"]}
+             ]
+            }
+
+        ifilter = self._manager.from_value(v)
+
+        self.assertEqual(True, self._matcher.match(meta, ifilter.to_xpr()))
+
+    def test_and_4_values(self):
+        meta = Metadata();
+        meta.add_node("/", Group("what"))
+        meta.add_node("/what", Attribute("source", "WMO:02606"))
+        meta.add_node("/what", Attribute("date", datetime.date(2000, 1, 2)))
+        meta.add_node("/what", Attribute("time", datetime.time(12, 5)))
+        meta.add_node("/what", Attribute("object", "pvol"))
+
+        v = {"filter_type": "and_filter", 
+             "value": [
+              {"filter_type": "attribute_filter",  "name": "/what/source", "operation": "=", "value_type": "string", "value": ["WMO:02606"]},
+              {"filter_type": "attribute_filter",  "name": "/what/date", "operation": "=", "value_type": "string", "value": ["20000102"]},
+              {"filter_type": "attribute_filter",  "name": "/what/time", "operation": "=", "value_type": "string", "value": ["120500"]},
+              {"filter_type": "attribute_filter",  "name": "/what/object", "operation": "=", "value_type": "string", "value": ["pvol"]}
+             ]
+            }
+
+        ifilter = self._manager.from_value(v)
+
+        self.assertEqual(True, self._matcher.match(meta, ifilter.to_xpr()))
+
+    def test_and_4_values_False(self):
+        meta = Metadata();
+        meta.add_node("/", Group("what"))
+        meta.add_node("/what", Attribute("source", "WMO:02606"))
+        meta.add_node("/what", Attribute("date", datetime.date(2000, 1, 2)))
+        meta.add_node("/what", Attribute("time", datetime.time(12, 5)))
+        meta.add_node("/what", Attribute("object", "pvol"))
+
+        v = {"filter_type": "and_filter", 
+             "value": [
+              {"filter_type": "attribute_filter",  "name": "/what/source", "operation": "=", "value_type": "string", "value": ["WMO:02606"]},
+              {"filter_type": "attribute_filter",  "name": "/what/date", "operation": "=", "value_type": "string", "value": ["20000102"]},
+              {"filter_type": "attribute_filter",  "name": "/what/time", "operation": "=", "value_type": "string", "value": ["120500"]},
+              {"filter_type": "attribute_filter",  "name": "/what/object", "operation": "=", "value_type": "string", "value": ["scan"]}
+             ]
+            }
+
+        ifilter = self._manager.from_value(v)
+
+        self.assertEqual(False, self._matcher.match(meta, ifilter.to_xpr()))
+
+    def test_or_2_values(self):
+        meta = Metadata();
+        meta.add_node("/", Group("what"))
+        meta.add_node("/what", Attribute("source", "WMO:02606"))
+        meta.add_node("/what", Attribute("date", datetime.date(2000, 1, 2)))
+        meta.add_node("/what", Attribute("time", datetime.time(12, 5)))
+        meta.add_node("/what", Attribute("object", "pvol"))
+
+        v = {"filter_type": "or_filter", 
+             "value": [
+              {"filter_type": "attribute_filter",  "name": "/what/source", "operation": "=", "value_type": "string", "value": ["WMO:02606"]},
+              {"filter_type": "attribute_filter",  "name": "/what/date", "operation": "=", "value_type": "string", "value": ["20000102"]}
+             ]
+            }
+
+        ifilter = self._manager.from_value(v)
+
+        self.assertEqual(True, self._matcher.match(meta, ifilter.to_xpr()))
+
+    def test_or_2_values_oneTrue(self):
+        meta = Metadata();
+        meta.add_node("/", Group("what"))
+        meta.add_node("/what", Attribute("source", "WMO:02606"))
+        meta.add_node("/what", Attribute("date", datetime.date(2000, 1, 2)))
+        meta.add_node("/what", Attribute("time", datetime.time(12, 5)))
+        meta.add_node("/what", Attribute("object", "pvol"))
+
+        v = {"filter_type": "or_filter", 
+             "value": [
+              {"filter_type": "attribute_filter",  "name": "/what/source", "operation": "=", "value_type": "string", "value": ["WMO:02606"]},
+              {"filter_type": "attribute_filter",  "name": "/what/date", "operation": "=", "value_type": "string", "value": ["20260102"]}
+             ]
+            }
+
+        ifilter = self._manager.from_value(v)
+
+        self.assertEqual(True, self._matcher.match(meta, ifilter.to_xpr()))
+
+    def test_or_3_values(self):
+        meta = Metadata();
+        meta.add_node("/", Group("what"))
+        meta.add_node("/what", Attribute("source", "WMO:02606"))
+        meta.add_node("/what", Attribute("date", datetime.date(2000, 1, 2)))
+        meta.add_node("/what", Attribute("time", datetime.time(12, 5)))
+        meta.add_node("/what", Attribute("object", "pvol"))
+
+        v = {"filter_type": "or_filter", 
+             "value": [
+              {"filter_type": "attribute_filter",  "name": "/what/source", "operation": "=", "value_type": "string", "value": ["WMO:02606"]},
+              {"filter_type": "attribute_filter",  "name": "/what/date", "operation": "=", "value_type": "string", "value": ["20000102"]},
+              {"filter_type": "attribute_filter",  "name": "/what/time", "operation": "=", "value_type": "string", "value": ["120500"]}
+             ]
+            }
+
+        ifilter = self._manager.from_value(v)
+
+        self.assertEqual(True, self._matcher.match(meta, ifilter.to_xpr()))
+
+    def test_or_3_values_twoFalse(self):
+        meta = Metadata();
+        meta.add_node("/", Group("what"))
+        meta.add_node("/what", Attribute("source", "WMO:02606"))
+        meta.add_node("/what", Attribute("date", datetime.date(2000, 1, 2)))
+        meta.add_node("/what", Attribute("time", datetime.time(12, 5)))
+        meta.add_node("/what", Attribute("object", "pvol"))
+
+        v = {"filter_type": "or_filter", 
+             "value": [
+              {"filter_type": "attribute_filter",  "name": "/what/source", "operation": "=", "value_type": "string", "value": ["WMO:02606"]},
+              {"filter_type": "attribute_filter",  "name": "/what/date", "operation": "=", "value_type": "string", "value": ["20260102"]},
+              {"filter_type": "attribute_filter",  "name": "/what/time", "operation": "=", "value_type": "string", "value": ["130500"]}
+             ]
+            }
+
+        ifilter = self._manager.from_value(v)
+
+        self.assertEqual(True, self._matcher.match(meta, ifilter.to_xpr()))
+
+    def test_or_4_values(self):
+        meta = Metadata();
+        meta.add_node("/", Group("what"))
+        meta.add_node("/what", Attribute("source", "WMO:02606"))
+        meta.add_node("/what", Attribute("date", datetime.date(2000, 1, 2)))
+        meta.add_node("/what", Attribute("time", datetime.time(12, 5)))
+        meta.add_node("/what", Attribute("object", "pvol"))
+
+        v = {"filter_type": "or_filter", 
+             "value": [
+              {"filter_type": "attribute_filter",  "name": "/what/source", "operation": "=", "value_type": "string", "value": ["WMO:02606"]},
+              {"filter_type": "attribute_filter",  "name": "/what/date", "operation": "=", "value_type": "string", "value": ["20000102"]},
+              {"filter_type": "attribute_filter",  "name": "/what/time", "operation": "=", "value_type": "string", "value": ["120500"]},
+              {"filter_type": "attribute_filter",  "name": "/what/object", "operation": "=", "value_type": "string", "value": ["pvol"]}
+             ]
+            }
+
+        ifilter = self._manager.from_value(v)
+
+        self.assertEqual(True, self._matcher.match(meta, ifilter.to_xpr()))
+
+    def test_or_4_values_threeFalse(self):
+        meta = Metadata();
+        meta.add_node("/", Group("what"))
+        meta.add_node("/what", Attribute("source", "WMO:02606"))
+        meta.add_node("/what", Attribute("date", datetime.date(2000, 1, 2)))
+        meta.add_node("/what", Attribute("time", datetime.time(12, 5)))
+        meta.add_node("/what", Attribute("object", "pvol"))
+
+        v = {"filter_type": "or_filter", 
+             "value": [
+              {"filter_type": "attribute_filter",  "name": "/what/source", "operation": "=", "value_type": "string", "value": ["WMO:02606"]},
+              {"filter_type": "attribute_filter",  "name": "/what/date", "operation": "=", "value_type": "string", "value": ["20260102"]},
+              {"filter_type": "attribute_filter",  "name": "/what/time", "operation": "=", "value_type": "string", "value": ["130500"]},
+              {"filter_type": "attribute_filter",  "name": "/what/object", "operation": "=", "value_type": "string", "value": ["scan"]}
+             ]
+            }
+
+        ifilter = self._manager.from_value(v)
+
+        self.assertEqual(True, self._matcher.match(meta, ifilter.to_xpr()))
+
+    def test_or_4_values_allFalse(self):
+        meta = Metadata();
+        meta.add_node("/", Group("what"))
+        meta.add_node("/what", Attribute("source", "WMO:02606"))
+        meta.add_node("/what", Attribute("date", datetime.date(2000, 1, 2)))
+        meta.add_node("/what", Attribute("time", datetime.time(12, 5)))
+        meta.add_node("/what", Attribute("object", "pvol"))
+
+        v = {"filter_type": "and_filter", 
+             "value": [
+              {"filter_type": "attribute_filter",  "name": "/what/source", "operation": "=", "value_type": "string", "value": ["WMO:02607"]},
+              {"filter_type": "attribute_filter",  "name": "/what/date", "operation": "=", "value_type": "string", "value": ["20260102"]},
+              {"filter_type": "attribute_filter",  "name": "/what/time", "operation": "=", "value_type": "string", "value": ["130500"]},
+              {"filter_type": "attribute_filter",  "name": "/what/object", "operation": "=", "value_type": "string", "value": ["scan"]}
+             ]
+            }
+
+        ifilter = self._manager.from_value(v)
+
+        self.assertEqual(False, self._matcher.match(meta, ifilter.to_xpr()))
 
     def test_notfilter(self):
         meta = Metadata();

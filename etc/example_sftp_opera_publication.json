@@ -46,7 +46,12 @@
         "name": "/what/object", 
         "operation": "=", 
         "value_type": "string", 
-        "value": ["SCAN"]}
+        "value": ["SCAN"]},
+  	   {"filter_type": "attribute_filter", 
+        "name": "how/malfunc", 
+        "operation": "!=", 
+        "value_type": "string", 
+        "value": ["True"]}
     ]
   },
   "__decorators":[

@@ -51,14 +51,14 @@ class metadata_matcher:
         evaluator.add_procedure("-", operator.sub)
         evaluator.add_procedure("*", operator.mul)
         evaluator.add_procedure("/", operator.floordiv)
-        evaluator.add_procedure("=", operator.eq)
+        evaluator.add_procedure("=", self.eq)
         evaluator.add_procedure("!=", operator.ne)
         evaluator.add_procedure("<", operator.lt)
         evaluator.add_procedure(">", operator.gt)
         evaluator.add_procedure(">=", operator.ge)
         evaluator.add_procedure("<=", operator.le)
-        evaluator.add_procedure("and", operator.and_)
-        evaluator.add_procedure("or", operator.or_)
+        evaluator.add_procedure("and", self.and_)
+        evaluator.add_procedure("or", self.or_)
         evaluator.add_procedure("not", operator.not_)
         evaluator.add_procedure("like", self.like)
         evaluator.add_procedure("in", self.in_)
@@ -79,18 +79,21 @@ class metadata_matcher:
         :param ttype: The type we are looking for
         :return: the value if found
         """
+        result = None
         if name.startswith("what/source:"):
-            return self.find_source(name, self.meta.source())
+            result =  self.find_source(name, self.meta.source())
         elif name.startswith("_bdb/source:"):
-            return self.find_source(name, Source.from_string(self.meta.bdb_source))
+            result =  self.find_source(name, Source.from_string(self.meta.bdb_source))
         elif name.startswith("_bdb/source_name"):
-            return[self.meta.bdb_source_name]
+            result = [self.meta.bdb_source_name]
         elif name.startswith("_exchange/what_age"):
             whatdt = datetime.datetime(self.meta.what_date.year, self.meta.what_date.month, self.meta.what_date.day, self.meta.what_time.hour, self.meta.what_time.minute, self.meta.what_time.second, tzinfo=datetime.timezone.utc)
             nowdt = datetime.datetime.now(datetime.timezone.utc)
             seconds = (nowdt - whatdt).seconds
-            return seconds
-        return self.find_plain(name, ttype)
+            result =seconds
+        else:
+            result = self.find_plain(name, ttype)
+        return result
 
     def find_source(self, name, source):
         """Finds a source identifier within the source.
@@ -132,6 +135,21 @@ class metadata_matcher:
         :return: True or False
         """
         return any(item in rhs for item in lhs)
+
+    def eq(self, lhs, rhs):
+        return operator.eq(lhs, rhs)
+
+    def and_(self, *values):
+        """Checks if all values evaluates to True
+        :return: True or False
+        """
+        return all(values)
+
+    def or_(self, *values):
+        """Checks if at least one of values evaluates to True
+        :return: True or False
+        """
+        return any(values)
 
     def like(self, lhs, rhs):
         """Matches against a \*-pattern.
