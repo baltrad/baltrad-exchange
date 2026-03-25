@@ -13,7 +13,7 @@ REQUIRED_PACKAGES= [
     "werkzeug >= 2.0.2",
     "sqlalchemy >= 2.0",
     "cherrypy >= 18.6.1",
-    "paramiko >= 2.9.3, < 3.0",
+    "paramiko >= 3.4.0, < 4.0",
     "scp >= 0.13.0, < 0.15"
 ]
 
