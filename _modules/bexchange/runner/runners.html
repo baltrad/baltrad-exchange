@@ -61,7 +61,6 @@
 <span class="c1">## @date 2022-10-28</span>
 <span class="kn">import</span> <span class="nn">importlib</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">pyinotify</span>
 <span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">re</span>
 <span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">listdir</span>
 <span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">isfile</span><span class="p">,</span> <span class="n">join</span>
@@ -72,6 +71,7 @@
 <span class="kn">from</span> <span class="nn">bexchange.naming</span> <span class="kn">import</span> <span class="n">namer</span>
 <span class="kn">from</span> <span class="nn">bexchange.util</span> <span class="kn">import</span> <span class="n">message_aware</span>
 <span class="kn">from</span> <span class="nn">bexchange.net.fetchers</span> <span class="kn">import</span> <span class="n">fetcher_manager</span>
+<span class="kn">from</span> <span class="nn">bexchange.file_watcher</span> <span class="kn">import</span> <span class="n">FileWatcher</span><span class="p">,</span> <span class="n">FileWatcherEventHandler</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;bexchange.runner.runners&quot;</span><span class="p">)</span>
 
@@ -132,36 +132,39 @@
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Not implemented&quot;</span><span class="p">)</span></div>
 </div>
 
-
+    
 <div class="viewcode-block" id="inotify_runner_event_handler">
 <a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.inotify_runner_event_handler">[docs]</a>
-<span class="k">class</span> <span class="nc">inotify_runner_event_handler</span><span class="p">(</span><span class="n">pyinotify</span><span class="o">.</span><span class="n">ProcessEvent</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">inotify_runner_event_handler</span><span class="p">(</span><span class="n">FileWatcherEventHandler</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inotify_runner</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        :param inotify_runner: The inotify runner that will be called</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span> <span class="o">=</span> <span class="n">inotify_runner</span>
     
-<div class="viewcode-block" id="inotify_runner_event_handler.process_IN_CLOSE_WRITE">
-<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.inotify_runner_event_handler.process_IN_CLOSE_WRITE">[docs]</a>
-    <span class="k">def</span> <span class="nf">process_IN_CLOSE_WRITE</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Will be called by the inotify notifier when file event occurs.</span>
+<div class="viewcode-block" id="inotify_runner_event_handler.on_closed">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.inotify_runner_event_handler.on_closed">[docs]</a>
+    <span class="k">def</span> <span class="nf">on_closed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Will be called by the watchdog observer when file close event occurs.</span>
 <span class="sd">        :param event: The file event</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;IN_CLOSE_WRITE: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">is_ignored</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">):</span>  <span class="c1"># avoid temporary file</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">handle_file</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">event</span><span class="o">.</span><span class="n">is_directory</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;on_closed: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">event</span><span class="o">.</span><span class="n">src_path</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">is_ignored</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">src_path</span><span class="p">):</span>  <span class="c1"># avoid temporary file</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">handle_file</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">src_path</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="inotify_runner_event_handler.process_IN_MOVED_TO">
-<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.inotify_runner_event_handler.process_IN_MOVED_TO">[docs]</a>
-    <span class="k">def</span> <span class="nf">process_IN_MOVED_TO</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Will be called by the inotify notifier when file event occurs.</span>
+<div class="viewcode-block" id="inotify_runner_event_handler.on_created">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.inotify_runner_event_handler.on_created">[docs]</a>
+    <span class="k">def</span> <span class="nf">on_created</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Will be called by the watchdog observer when file move event occurs.</span>
 <span class="sd">        :param event: The file event</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;IN_MOVED_WRITE: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">is_ignored</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">):</span>  <span class="c1"># avoid temporary file</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">handle_file</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pathname</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">event</span><span class="o">.</span><span class="n">is_directory</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;on_created: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">event</span><span class="o">.</span><span class="n">src_path</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">is_ignored</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">src_path</span><span class="p">):</span>  <span class="c1"># avoid temporary file</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">handle_file</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">src_path</span><span class="p">)</span></div>
 </div>
 
 
@@ -171,8 +174,6 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The inotify runner is used to monitor folders and trigger &quot;store&quot; events. It is run in a separate thread instead of </span>
 <span class="sd">    beeing created as a daemon-thread since all initiation is performed in the main thread before server is started.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">MASK</span> <span class="o">=</span> <span class="n">pyinotify</span><span class="o">.</span><span class="n">IN_CLOSE_WRITE</span> <span class="o">|</span> <span class="n">pyinotify</span><span class="o">.</span><span class="n">IN_MOVED_TO</span>
-    
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">active</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        :param backend: The backend</span>
@@ -198,8 +199,7 @@
         <span class="k">if</span> <span class="s2">&quot;process-pending-files&quot;</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_process_pending_files</span><span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;process-pending-files&quot;</span><span class="p">]</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_wm</span> <span class="o">=</span> <span class="n">pyinotify</span><span class="o">.</span><span class="n">WatchManager</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_notifier</span> <span class="o">=</span> <span class="n">pyinotify</span><span class="o">.</span><span class="n">Notifier</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_wm</span><span class="p">,</span> <span class="n">inotify_runner_event_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_watcher</span> <span class="o">=</span> <span class="n">FileWatcher</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_folders</span><span class="p">,</span> <span class="n">inotify_runner_event_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <div class="viewcode-block" id="inotify_runner.is_ignored">
 <a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.inotify_runner.is_ignored">[docs]</a>
@@ -221,16 +221,13 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Handles the file (by sending it to the backend using the name given to this runner</span>
 <span class="sd">        :param filename: The filename to handle</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span><span class="o">.</span><span class="n">store_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">)</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="inotify_runner.run">
-<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.inotify_runner.run">[docs]</a>
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The runner for the thread. Starts the inotify notifier loop</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_notifier</span><span class="o">.</span><span class="n">loop</span><span class="p">()</span></div>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span><span class="o">.</span><span class="n">store_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="inotify_runner.pending_run">
@@ -263,27 +260,145 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">pending_files</span><span class="o">=</span><span class="p">[]</span>
         <span class="k">for</span> <span class="n">folder</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_folders</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;inotify_runner(</span><span class="si">%s</span><span class="s2">) watching &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="n">folder</span><span class="p">))</span>
             <span class="n">pending_files</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_pending_files</span><span class="p">(</span><span class="n">folder</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_wm</span><span class="o">.</span><span class="n">add_watch</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">MASK</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pending_files</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_pending_files</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_pending_thread</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pending_run</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">pending_files</span><span class="p">,))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_pending_thread</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_pending_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
+        <span class="c1">#self._thread = Thread(target=self.run)</span>
+        <span class="c1">#self._thread.daemon = True</span>
+        <span class="c1">#self._thread.start()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_watcher</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># Start the file watcher in daemon mode</span></div>
 
 
 <div class="viewcode-block" id="inotify_runner.stop">
 <a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.inotify_runner.stop">[docs]</a>
     <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Stopping inotifier&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_notifier</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span></div>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Stopping watcher&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_watcher</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span></div>
 </div>
 
+
+<span class="c1"># class inotify_runner_event_handler(pyinotify.ProcessEvent):</span>
+<span class="c1">#     def __init__(self, inotify_runner):</span>
+<span class="c1">#         &quot;&quot;&quot;Constructor</span>
+<span class="c1">#         :param inotify_runner: The inotify runner that will be called</span>
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         self._runner = inotify_runner</span>
+    
+<span class="c1">#     def process_IN_CLOSE_WRITE(self, event):</span>
+<span class="c1">#         &quot;&quot;&quot;Will be called by the inotify notifier when file event occurs.</span>
+<span class="c1">#         :param event: The file event</span>
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         logger.debug(&quot;IN_CLOSE_WRITE: %s&quot;%event.pathname)</span>
+<span class="c1">#         if not self._runner.is_ignored(event.pathname):  # avoid temporary file</span>
+<span class="c1">#             self._runner.handle_file(event.pathname)</span>
+
+<span class="c1">#     def process_IN_MOVED_TO(self, event):</span>
+<span class="c1">#         &quot;&quot;&quot;Will be called by the inotify notifier when file event occurs.</span>
+<span class="c1">#         :param event: The file event</span>
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         logger.debug(&quot;IN_MOVED_WRITE: %s&quot;%event.pathname)</span>
+<span class="c1">#         if not self._runner.is_ignored(event.pathname):  # avoid temporary file</span>
+<span class="c1">#             self._runner.handle_file(event.pathname)</span>
+
+<span class="c1"># class inotify_runner(runner):</span>
+<span class="c1">#     &quot;&quot;&quot;The inotify runner is used to monitor folders and trigger &quot;store&quot; events. It is run in a separate thread instead of </span>
+<span class="c1">#     beeing created as a daemon-thread since all initiation is performed in the main thread before server is started.</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     MASK = pyinotify.IN_CLOSE_WRITE | pyinotify.IN_MOVED_TO</span>
+    
+<span class="c1">#     def __init__(self, backend, active, **args):</span>
+<span class="c1">#         &quot;&quot;&quot;Constructor</span>
+<span class="c1">#         :param backend: The backend</span>
+<span class="c1">#         :param active: If this runner is active or not. NOT USED</span>
+<span class="c1">#         :param **args: A number of arguments can be provided</span>
+<span class="c1">#           folders        - a list of folder names to monitor</span>
+<span class="c1">#           ignore-pattern - If files matching the provided pattern should be ignored or not</span>
+<span class="c1">#           pattern        - The pattern to check for files to ignore</span>
+<span class="c1">#           name           - The name this inotify runner should be using</span>
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         super(inotify_runner, self).__init__(backend, active)</span>
+<span class="c1">#         self._name = &quot;inotify-runner&quot;</span>
+<span class="c1">#         self._folders = args[&quot;folders&quot;]</span>
+<span class="c1">#         self._ignore_pattern = True</span>
+<span class="c1">#         self._process_pending_files = False</span>
+<span class="c1">#         self._pattern = &quot;&quot;</span>
+<span class="c1">#         if &quot;ignore-pattern&quot; in args:</span>
+<span class="c1">#             self._ignore_pattern = args[&quot;ignore-pattern&quot;]</span>
+<span class="c1">#         if &quot;pattern&quot; in args:</span>
+<span class="c1">#             self._pattern = args[&quot;pattern&quot;]</span>
+<span class="c1">#         if &quot;name&quot; in args:</span>
+<span class="c1">#             self._name = args[&quot;name&quot;]</span>
+<span class="c1">#         if &quot;process-pending-files&quot; in args:</span>
+<span class="c1">#             self._process_pending_files=args[&quot;process-pending-files&quot;]</span>
+
+<span class="c1">#         self._wm = pyinotify.WatchManager()</span>
+<span class="c1">#         self._notifier = pyinotify.Notifier(self._wm, inotify_runner_event_handler(self))</span>
+
+<span class="c1">#     def is_ignored(self, filename):</span>
+<span class="c1">#         &quot;&quot;&quot;Checks if the specified file should be ignored or not, for example when a tmpfile is written.</span>
+<span class="c1">#         the check is performed on basename.</span>
+<span class="c1">#         :param filename: The filename to be checked</span>
+<span class="c1">#         :return True if file should be ignored otherwise False</span>
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         if self._ignore_pattern:</span>
+<span class="c1">#             return False</span>
+<span class="c1">#         bname = os.path.basename(filename)</span>
+<span class="c1">#         return re.match(self._pattern, bname) != None</span>
+    
+<span class="c1">#     def handle_file(self, filename):</span>
+<span class="c1">#         &quot;&quot;&quot;Handles the file (by sending it to the backend using the name given to this runner</span>
+<span class="c1">#         :param filename: The filename to handle</span>
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         self._backend.store_file(filename, self._name)</span>
+<span class="c1">#         os.unlink(filename)</span>
+
+<span class="c1">#     def run(self):</span>
+<span class="c1">#         &quot;&quot;&quot;The runner for the thread. Starts the inotify notifier loop</span>
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         self._notifier.loop()</span>
+
+<span class="c1">#     def pending_run(self, pending_filenames):</span>
+<span class="c1">#         if pending_filenames:</span>
+<span class="c1">#             for filename in pending_filenames:</span>
+<span class="c1">#                 self.handle_file(filename)</span>
+<span class="c1">#                 time.sleep(0.1) # Just to not starve real time data handling</span>
+
+<span class="c1">#     def get_pending_files(self, folder):</span>
+<span class="c1">#         &quot;&quot;&quot;Lists all files in specified folder</span>
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         result=[]</span>
+<span class="c1">#         files = [f for f in listdir(folder) if isfile(join(folder, f))]</span>
+<span class="c1">#         for f in files:</span>
+<span class="c1">#             filename = join(folder, f)</span>
+<span class="c1">#             if not self.is_ignored(filename):</span>
+<span class="c1">#                 result.append(filename)</span>
+<span class="c1">#         return result</span>
+
+<span class="c1">#     def start(self):</span>
+<span class="c1">#         &quot;&quot;&quot;Starts this runner by adding the watched folders and then starting a daemonized thread.</span>
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         pending_files=[]</span>
+<span class="c1">#         for folder in self._folders:</span>
+<span class="c1">#             logger.info(&quot;inotify_runner(%s) watching &#39;%s&#39;&quot;%(self._name, folder))</span>
+<span class="c1">#             pending_files.extend(self.get_pending_files(folder))</span>
+<span class="c1">#             self._wm.add_watch(folder, self.MASK)</span>
+
+<span class="c1">#         if len(pending_files) &gt; 0 and self._process_pending_files:</span>
+<span class="c1">#             self._pending_thread = Thread(target=self.pending_run, args=(pending_files,))</span>
+<span class="c1">#             self._pending_thread.daemon = True</span>
+<span class="c1">#             self._pending_thread.start()</span>
+
+<span class="c1">#         self._thread = Thread(target=self.run)</span>
+<span class="c1">#         self._thread.daemon = True</span>
+<span class="c1">#         self._thread.start()</span>
+
+<span class="c1">#     def stop(self):</span>
+<span class="c1">#         logger.info(&quot;Stopping inotifier&quot;)</span>
+<span class="c1">#         self._notifier.stop()</span>
 
 <div class="viewcode-block" id="triggered_fetch_runner">
 <a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.triggered_fetch_runner">[docs]</a>

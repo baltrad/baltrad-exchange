@@ -852,7 +852,7 @@
         <li><a href="api/bexchange.web.html#bexchange.web.handler.file_arrival">(in module bexchange.web.handler)</a>
 </li>
       </ul></li>
-      <li><a href="api/bexchange.server.html#bexchange.server.backend.monitor_conf_dir_inotify_handler.FILE_PATTERN">FILE_PATTERN (bexchange.server.backend.monitor_conf_dir_inotify_handler attribute)</a>
+      <li><a href="api/bexchange.server.html#bexchange.server.backend.monitor_conf_dir_file_watcher.FILE_PATTERN">FILE_PATTERN (bexchange.server.backend.monitor_conf_dir_file_watcher attribute)</a>
 </li>
       <li><a href="api/bexchange.storage.html#bexchange.storage.storages.file_storage">file_storage (class in bexchange.storage.storages)</a>
 </li>
@@ -1298,15 +1298,9 @@
 </li>
       <li><a href="api/bexchange.net.html#bexchange.net.sftpclient.sftpclient.makedirs">makedirs() (bexchange.net.sftpclient.sftpclient method)</a>
 </li>
-      <li><a href="api/bexchange.runner.html#bexchange.runner.runners.inotify_runner.MASK">MASK (bexchange.runner.runners.inotify_runner attribute)</a>
-
-      <ul>
-        <li><a href="api/bexchange.server.html#bexchange.server.backend.monitor_conf_dir_inotify_handler.MASK">(bexchange.server.backend.monitor_conf_dir_inotify_handler attribute)</a>
-</li>
-      </ul></li>
       <li><a href="api/bexchange.matching.html#bexchange.matching.metadata_matcher.metadata_matcher.match">match() (bexchange.matching.metadata_matcher.metadata_matcher method)</a>
 </li>
-      <li><a href="api/bexchange.server.html#bexchange.server.backend.monitor_conf_dir_inotify_handler.match_file">match_file() (bexchange.server.backend.monitor_conf_dir_inotify_handler method)</a>
+      <li><a href="api/bexchange.server.html#bexchange.server.backend.monitor_conf_dir_file_watcher.match_file">match_file() (bexchange.server.backend.monitor_conf_dir_file_watcher method)</a>
 </li>
       <li><a href="api/bexchange.matching.html#bexchange.matching.metadata_matcher.metadata_matcher.match_path">match_path() (bexchange.matching.metadata_matcher.metadata_matcher method)</a>
 </li>
@@ -1447,7 +1441,7 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/bexchange.server.html#bexchange.server.backend.monitor_conf_dir_inotify_handler">monitor_conf_dir_inotify_handler (class in bexchange.server.backend)</a>
+      <li><a href="api/bexchange.server.html#bexchange.server.backend.monitor_conf_dir_file_watcher">monitor_conf_dir_file_watcher (class in bexchange.server.backend)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1517,16 +1511,30 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/bexchange.db.html#bexchange.db.sqldatabase.statentry.object_type">object_type (bexchange.db.sqldatabase.statentry attribute)</a>
 </li>
+      <li><a href="api/bexchange.runner.html#bexchange.runner.runners.inotify_runner_event_handler.on_closed">on_closed() (bexchange.runner.runners.inotify_runner_event_handler method)</a>
+
+      <ul>
+        <li><a href="api/bexchange.server.html#bexchange.server.backend.monitor_conf_dir_file_watcher.on_closed">(bexchange.server.backend.monitor_conf_dir_file_watcher method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/bexchange.runner.html#bexchange.runner.runners.inotify_runner_event_handler.on_created">on_created() (bexchange.runner.runners.inotify_runner_event_handler method)</a>
+
+      <ul>
+        <li><a href="api/bexchange.server.html#bexchange.server.backend.monitor_conf_dir_file_watcher.on_created">(bexchange.server.backend.monitor_conf_dir_file_watcher method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/bexchange.server.html#bexchange.server.backend.monitor_conf_dir_file_watcher.on_deleted">on_deleted() (bexchange.server.backend.monitor_conf_dir_file_watcher method)</a>
+</li>
       <li><a href="api/bexchange.naming.html#bexchange.naming.namer.opera_filename_namer">opera_filename_namer (class in bexchange.naming.namer)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/bexchange.db.html#bexchange.db.sqldatabase.statentry.optime">optime (bexchange.db.sqldatabase.statentry attribute)</a>
 </li>
       <li><a href="api/bexchange.db.html#bexchange.db.sqldatabase.statentry.optime_info">optime_info (bexchange.db.sqldatabase.statentry attribute)</a>
 </li>
       <li><a href="api/bexchange.html#bexchange.exchange_optparse.Option">Option (class in bexchange.exchange_optparse)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/bexchange.matching.html#bexchange.matching.metadata_matcher.metadata_matcher.or_">or_() (bexchange.matching.metadata_matcher.metadata_matcher method)</a>
 </li>
       <li><a href="api/bexchange.matching.html#bexchange.matching.filters.or_filter">or_filter (class in bexchange.matching.filters)</a>
@@ -1611,26 +1619,10 @@
         <li><a href="api/bexchange.processor.html#bexchange.processor.processors.processor_manager.process">(bexchange.processor.processors.processor_manager method)</a>
 </li>
       </ul></li>
-      <li><a href="api/bexchange.server.html#bexchange.server.backend.SimpleBackend.process_conf_dir">process_conf_dir() (bexchange.server.backend.SimpleBackend method)</a>
-</li>
-      <li><a href="api/bexchange.runner.html#bexchange.runner.runners.inotify_runner_event_handler.process_IN_CLOSE_WRITE">process_IN_CLOSE_WRITE() (bexchange.runner.runners.inotify_runner_event_handler method)</a>
-
-      <ul>
-        <li><a href="api/bexchange.server.html#bexchange.server.backend.monitor_conf_dir_inotify_handler.process_IN_CLOSE_WRITE">(bexchange.server.backend.monitor_conf_dir_inotify_handler method)</a>
-</li>
-      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/bexchange.server.html#bexchange.server.backend.monitor_conf_dir_inotify_handler.process_IN_DELETE">process_IN_DELETE() (bexchange.server.backend.monitor_conf_dir_inotify_handler method)</a>
+      <li><a href="api/bexchange.server.html#bexchange.server.backend.SimpleBackend.process_conf_dir">process_conf_dir() (bexchange.server.backend.SimpleBackend method)</a>
 </li>
-      <li><a href="api/bexchange.server.html#bexchange.server.backend.monitor_conf_dir_inotify_handler.process_IN_MOVED_FROM">process_IN_MOVED_FROM() (bexchange.server.backend.monitor_conf_dir_inotify_handler method)</a>
-</li>
-      <li><a href="api/bexchange.runner.html#bexchange.runner.runners.inotify_runner_event_handler.process_IN_MOVED_TO">process_IN_MOVED_TO() (bexchange.runner.runners.inotify_runner_event_handler method)</a>
-
-      <ul>
-        <li><a href="api/bexchange.server.html#bexchange.server.backend.monitor_conf_dir_inotify_handler.process_IN_MOVED_TO">(bexchange.server.backend.monitor_conf_dir_inotify_handler method)</a>
-</li>
-      </ul></li>
       <li><a href="api/bexchange.processor.html#bexchange.processor.processors.processor">processor (class in bexchange.processor.processors)</a>
 </li>
       <li><a href="api/bexchange.processor.html#bexchange.processor.processors.processor_manager">processor_manager (class in bexchange.processor.processors)</a>
@@ -1739,13 +1731,9 @@
 </li>
       <li><a href="api/bexchange.naming.html#bexchange.naming.namer.suboperation_helper.rtrim">rtrim() (bexchange.naming.namer.suboperation_helper method)</a>
 </li>
-      <li><a href="api/bexchange.runner.html#bexchange.runner.runners.inotify_runner.run">run() (bexchange.runner.runners.inotify_runner method)</a>
+      <li><a href="api/bexchange.runner.html#bexchange.runner.runners.statistics_cleanup_runner.run">run() (bexchange.runner.runners.statistics_cleanup_runner method)</a>
 
       <ul>
-        <li><a href="api/bexchange.runner.html#bexchange.runner.runners.statistics_cleanup_runner.run">(bexchange.runner.runners.statistics_cleanup_runner method)</a>
-</li>
-        <li><a href="api/bexchange.server.html#bexchange.server.backend.monitor_conf_dir_inotify_handler.run">(bexchange.server.backend.monitor_conf_dir_inotify_handler method)</a>
-</li>
         <li><a href="api/bexchange.html#bexchange.client_main.run">(in module bexchange.client_main)</a>
 </li>
         <li><a href="api/bexchange.html#bexchange.config_main.run">(in module bexchange.config_main)</a>
@@ -1874,7 +1862,7 @@
 </li>
         <li><a href="api/bexchange.runner.html#bexchange.runner.runners.triggered_fetch_runner.start">(bexchange.runner.runners.triggered_fetch_runner method)</a>
 </li>
-        <li><a href="api/bexchange.server.html#bexchange.server.backend.monitor_conf_dir_inotify_handler.start">(bexchange.server.backend.monitor_conf_dir_inotify_handler method)</a>
+        <li><a href="api/bexchange.server.html#bexchange.server.backend.monitor_conf_dir_file_watcher.start">(bexchange.server.backend.monitor_conf_dir_file_watcher method)</a>
 </li>
       </ul></li>
   </ul></td>

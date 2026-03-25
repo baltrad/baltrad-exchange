@@ -696,19 +696,17 @@
 <li class="toctree-l2"><a class="reference internal" href="bexchange.runner.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="bexchange.runner.html#module-bexchange.runner.runners">bexchange.runner.runners module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="bexchange.runner.html#bexchange.runner.runners.inotify_runner"><code class="docutils literal notranslate"><span class="pre">inotify_runner</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="bexchange.runner.html#bexchange.runner.runners.inotify_runner.MASK"><code class="docutils literal notranslate"><span class="pre">inotify_runner.MASK</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="bexchange.runner.html#bexchange.runner.runners.inotify_runner.get_pending_files"><code class="docutils literal notranslate"><span class="pre">inotify_runner.get_pending_files()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="bexchange.runner.html#bexchange.runner.runners.inotify_runner.handle_file"><code class="docutils literal notranslate"><span class="pre">inotify_runner.handle_file()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="bexchange.runner.html#bexchange.runner.runners.inotify_runner.is_ignored"><code class="docutils literal notranslate"><span class="pre">inotify_runner.is_ignored()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="bexchange.runner.html#bexchange.runner.runners.inotify_runner.pending_run"><code class="docutils literal notranslate"><span class="pre">inotify_runner.pending_run()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="bexchange.runner.html#bexchange.runner.runners.inotify_runner.run"><code class="docutils literal notranslate"><span class="pre">inotify_runner.run()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="bexchange.runner.html#bexchange.runner.runners.inotify_runner.start"><code class="docutils literal notranslate"><span class="pre">inotify_runner.start()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="bexchange.runner.html#bexchange.runner.runners.inotify_runner.stop"><code class="docutils literal notranslate"><span class="pre">inotify_runner.stop()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="bexchange.runner.html#bexchange.runner.runners.inotify_runner_event_handler"><code class="docutils literal notranslate"><span class="pre">inotify_runner_event_handler</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="bexchange.runner.html#bexchange.runner.runners.inotify_runner_event_handler.process_IN_CLOSE_WRITE"><code class="docutils literal notranslate"><span class="pre">inotify_runner_event_handler.process_IN_CLOSE_WRITE()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="bexchange.runner.html#bexchange.runner.runners.inotify_runner_event_handler.process_IN_MOVED_TO"><code class="docutils literal notranslate"><span class="pre">inotify_runner_event_handler.process_IN_MOVED_TO()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.runner.html#bexchange.runner.runners.inotify_runner_event_handler.on_closed"><code class="docutils literal notranslate"><span class="pre">inotify_runner_event_handler.on_closed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.runner.html#bexchange.runner.runners.inotify_runner_event_handler.on_created"><code class="docutils literal notranslate"><span class="pre">inotify_runner_event_handler.on_created()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="bexchange.runner.html#bexchange.runner.runners.runner"><code class="docutils literal notranslate"><span class="pre">runner</span></code></a><ul>
@@ -791,16 +789,13 @@
 <li class="toctree-l4"><a class="reference internal" href="bexchange.server.html#bexchange.server.backend.config_handler.removed"><code class="docutils literal notranslate"><span class="pre">config_handler.removed()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="bexchange.server.html#bexchange.server.backend.monitor_conf_dir_inotify_handler"><code class="docutils literal notranslate"><span class="pre">monitor_conf_dir_inotify_handler</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="bexchange.server.html#bexchange.server.backend.monitor_conf_dir_inotify_handler.FILE_PATTERN"><code class="docutils literal notranslate"><span class="pre">monitor_conf_dir_inotify_handler.FILE_PATTERN</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="bexchange.server.html#bexchange.server.backend.monitor_conf_dir_inotify_handler.MASK"><code class="docutils literal notranslate"><span class="pre">monitor_conf_dir_inotify_handler.MASK</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="bexchange.server.html#bexchange.server.backend.monitor_conf_dir_inotify_handler.match_file"><code class="docutils literal notranslate"><span class="pre">monitor_conf_dir_inotify_handler.match_file()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="bexchange.server.html#bexchange.server.backend.monitor_conf_dir_inotify_handler.process_IN_CLOSE_WRITE"><code class="docutils literal notranslate"><span class="pre">monitor_conf_dir_inotify_handler.process_IN_CLOSE_WRITE()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="bexchange.server.html#bexchange.server.backend.monitor_conf_dir_inotify_handler.process_IN_DELETE"><code class="docutils literal notranslate"><span class="pre">monitor_conf_dir_inotify_handler.process_IN_DELETE()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="bexchange.server.html#bexchange.server.backend.monitor_conf_dir_inotify_handler.process_IN_MOVED_FROM"><code class="docutils literal notranslate"><span class="pre">monitor_conf_dir_inotify_handler.process_IN_MOVED_FROM()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="bexchange.server.html#bexchange.server.backend.monitor_conf_dir_inotify_handler.process_IN_MOVED_TO"><code class="docutils literal notranslate"><span class="pre">monitor_conf_dir_inotify_handler.process_IN_MOVED_TO()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="bexchange.server.html#bexchange.server.backend.monitor_conf_dir_inotify_handler.run"><code class="docutils literal notranslate"><span class="pre">monitor_conf_dir_inotify_handler.run()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="bexchange.server.html#bexchange.server.backend.monitor_conf_dir_inotify_handler.start"><code class="docutils literal notranslate"><span class="pre">monitor_conf_dir_inotify_handler.start()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bexchange.server.html#bexchange.server.backend.monitor_conf_dir_file_watcher"><code class="docutils literal notranslate"><span class="pre">monitor_conf_dir_file_watcher</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.server.html#bexchange.server.backend.monitor_conf_dir_file_watcher.FILE_PATTERN"><code class="docutils literal notranslate"><span class="pre">monitor_conf_dir_file_watcher.FILE_PATTERN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.server.html#bexchange.server.backend.monitor_conf_dir_file_watcher.match_file"><code class="docutils literal notranslate"><span class="pre">monitor_conf_dir_file_watcher.match_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.server.html#bexchange.server.backend.monitor_conf_dir_file_watcher.on_closed"><code class="docutils literal notranslate"><span class="pre">monitor_conf_dir_file_watcher.on_closed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.server.html#bexchange.server.backend.monitor_conf_dir_file_watcher.on_created"><code class="docutils literal notranslate"><span class="pre">monitor_conf_dir_file_watcher.on_created()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.server.html#bexchange.server.backend.monitor_conf_dir_file_watcher.on_deleted"><code class="docutils literal notranslate"><span class="pre">monitor_conf_dir_file_watcher.on_deleted()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.server.html#bexchange.server.backend.monitor_conf_dir_file_watcher.start"><code class="docutils literal notranslate"><span class="pre">monitor_conf_dir_file_watcher.start()</span></code></a></li>
 </ul>
 </li>
 </ul>
