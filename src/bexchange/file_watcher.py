@@ -89,12 +89,6 @@ if BACKEND == "watchdog":
             except:
                 logger.exception("Exception in on_modified")
 
-        def on_moved(self, event):
-            try:
-                self._handler.on_moved(event)
-            except:
-                logger.exception("Exception in on_moved")
-
 else:
     class _PyinotifyEvent:
         """Normalize pyinotify event to look like a watchdog event."""
