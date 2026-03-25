@@ -8,11 +8,10 @@ REQUIRED_PACKAGES= [
     "baltradcrypto",
     "baltrad.bdbcommon",
     "baltrad.bdbclient",
-    "pyinotify",
+    "watchdog >= 3.0.0",
     "python-daemon >= 1.6",
     "werkzeug >= 2.0.2",
     "sqlalchemy >= 2.0",
-    "alembic >= 1.13.1",
     "cherrypy >= 18.6.1",
     "paramiko >= 2.9.3, < 3.0",
     "scp >= 0.13.0, < 0.15"

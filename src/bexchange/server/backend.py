@@ -41,7 +41,6 @@ import time, datetime
 import threading
 import os,stat,sys
 import uuid
-import pyinotify
 from threading import Thread
 import re
 
@@ -59,6 +58,7 @@ from baltrad.bdbcommon.oh5 import (
 from bexchange.net.publishers import publisher_manager
 from builtins import issubclass
 from bexchange.util import message_aware
+from bexchange.file_watcher import FileWatcherEventHandler, FileWatcher
 
 logger = logging.getLogger("bexchange.server.backend")
 
@@ -86,96 +86,67 @@ class HandledFiles(object):
                 self._handled.pop()
         return True
 
-class monitor_conf_dir_inotify_handler(pyinotify.ProcessEvent):
+class monitor_conf_dir_file_watcher(FileWatcherEventHandler):
     """Helper class to monitor a list of folders containing configuration files. Only will process
     files ending with .json. Both added and removed events will be forwarded.
     """
     FILE_PATTERN=".+.json$"
-    MASK=pyinotify.IN_CLOSE_WRITE | pyinotify.IN_MOVED_TO | pyinotify.IN_DELETE | pyinotify.IN_MOVED_FROM
     def __init__(self, folders, fn_file_written, fn_file_removed):
-        self._folders = folders
+        super().__init__()
         self._fn_file_written = fn_file_written
         self._fn_file_removed = fn_file_removed
-        self._wm = pyinotify.WatchManager()
-        self._notifier = pyinotify.Notifier(self._wm, self)
-
-    def run(self):
-        """The runner for the thread. Starts the inotify notifier loop
-        """
-        try:
-            self._notifier.loop()
-        finally:
-            logger.error("Leaving loop")
-
+        self._filewatcher = FileWatcher(folders, self)
+    
     def match_file(self, filename):
         """Matches the file so that it is following the wanted pattern. Typically *.json.
         :param filename: the filename that should be verified.
         """
         bname = os.path.basename(filename)
         return re.match(self.FILE_PATTERN, bname) != None
-
-    def process_IN_CLOSE_WRITE(self, event):
-        """Will be called by the inotify notifier when file event occurs.
+    
+    def on_closed(self, event):
+        """Will be called by the file watcher when file event occurs.
         :param event: The file event
         """
-        logger.debug("IN_CLOSE_WRITE: %s"%event.pathname)
+        logger.debug("on_closed: %s"%event.src_path)
         try:
-            if not self.match_file(event.pathname):
+            if not self.match_file(event.src_path):
                 return
             if self._fn_file_written:
-                self._fn_file_written(event.pathname)
+                self._fn_file_written(event.src_path)
         except:
-            logger.exception("Failure in IN_CLOSE_WRITE")
-
-    def process_IN_MOVED_TO(self, event):
-        """Will be called by the inotify notifier when file event occurs.
+            logger.exception("Failure in on_closed")
+    
+    def on_created(self, event):
+        """Will be called by the file watcher when file event occurs.
         :param event: The file event
         """
-        logger.debug("IN_MOVED_TO: %s"%event.pathname)
+        logger.debug("on_created: %s"%event.src_path)
         try:
-            if not self.match_file(event.pathname):
+            if not self.match_file(event.src_path):
                 return
             if self._fn_file_written:
-                self._fn_file_written(event.pathname)
+                self._fn_file_written(event.src_path)
         except:
-            logger.exception("Failure in IN_MOVED_TO")
-
-    def process_IN_MOVED_FROM(self, event):
-        """Will be called by the inotify notifier when file event occurs.
+            logger.exception("Failure in on_created")
+    
+    def on_deleted(self, event):
+        """Will be called by the file watcher when file event occurs.
         :param event: The file event
         """
-        logger.debug("IN_MOVED_FROM: %s"%event.pathname)
+        logger.debug("on_deleted: %s"%event.src_path)
         try:
-            if not self.match_file(event.pathname):
+            if not self.match_file(event.src_path):
                 return
             if self._fn_file_removed:
-                self._fn_file_removed(event.pathname)
+                self._fn_file_removed(event.src_path)
         except:
-            logger.exception("Failure in IN_MOVED_FROM")
-
-    def process_IN_DELETE(self, event):
-        """Will be called by the inotify notifier when file event occurs.
-        :param event: The file event
-        """
-        logger.debug("IN_DELETE: %s"%event.pathname)
-        try:
-            if not self.match_file(event.pathname):
-                return
-            if self._fn_file_removed:
-                self._fn_file_removed(event.pathname)
-        except:
-            logger.exception("Failure in IN_DELETE")
-
+            logger.exception("Failure in on_deleted")
+    
     def start(self):
         """Starts the configuration file monitor
         """
-        for folder in self._folders:
-            logger.info("monitor_conf_dir_inotify_handler watching '%s'"%(folder))
-            self._wm.add_watch(folder, self.MASK)
-
-        self._thread = Thread(target=self.run)
-        self._thread.daemon = True
-        self._thread.start()
+        self._filewatcher.start()
 
 class config_handler(object):
     """Helper class that is registered for all configuration files so that it is possible
@@ -245,8 +216,7 @@ class SimpleBackend(backend.Backend):
 
         logger.info("Starting configuration file monitoring")
 
-        self.conf_monitor = monitor_conf_dir_inotify_handler(self.confdirs, self.conf_file_written, self.conf_file_removed)
-
+        self.conf_monitor = monitor_conf_dir_file_watcher(self.confdirs, self.conf_file_written, self.conf_file_removed)
         self.conf_monitor.start()
 
         logger.info("System initialized")
