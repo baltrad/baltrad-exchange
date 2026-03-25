@@ -290,6 +290,109 @@ class test_matcher(unittest.TestCase):
 
         self.assertEqual(False, self._matcher.match(meta, ifilter.to_xpr()))
 
+    def test_match_partly_in_1(self):
+        meta = Metadata();
+        meta.add_node("/", Group("what"))
+        meta.add_node("/what", Attribute("source", "WMO:02606"))
+        meta.add_node("/what", Attribute("date", datetime.date(2000, 1, 2)))
+        meta.add_node("/what", Attribute("time", datetime.time(12, 5)))
+        meta.add_node("/what", Attribute("object", "pvol"))
+        meta.add_node("/", Group("dataset1"))
+        meta.add_node("/dataset1", Group("how"))
+        meta.add_node("/dataset1/how", Attribute("malfunc", "False"))
+        meta.add_node("/", Group("dataset2"))
+        meta.add_node("/dataset2", Group("how"))
+        meta.add_node("/dataset2/how", Attribute("malfunc", "True"))
+
+        v = {"filter_type": "attribute_filter",  "name": "how/malfunc", "operation": "in", "value_type": "string", "value": ["False"]}
+
+        ifilter = self._manager.from_value(v)
+
+        self.assertEqual(True, self._matcher.match(meta, ifilter.to_xpr()))
+
+    def test_match_partly_in_2(self):
+        meta = Metadata();
+        meta.add_node("/", Group("what"))
+        meta.add_node("/what", Attribute("source", "WMO:02606"))
+        meta.add_node("/what", Attribute("date", datetime.date(2000, 1, 2)))
+        meta.add_node("/what", Attribute("time", datetime.time(12, 5)))
+        meta.add_node("/what", Attribute("object", "pvol"))
+        meta.add_node("/", Group("dataset1"))
+        meta.add_node("/dataset1", Group("how"))
+        meta.add_node("/dataset1/how", Attribute("malfunc", "True"))
+        meta.add_node("/", Group("dataset2"))
+        meta.add_node("/dataset2", Group("how"))
+        meta.add_node("/dataset2/how", Attribute("malfunc", "True"))
+
+        v = {"filter_type": "attribute_filter",  "name": "how/malfunc", "operation": "in", "value_type": "string", "value": ["False"]}
+
+        ifilter = self._manager.from_value(v)
+
+        self.assertEqual(False, self._matcher.match(meta, ifilter.to_xpr()))
+
+    def test_match_partly_not_in_1(self):
+        meta = Metadata();
+        meta.add_node("/", Group("what"))
+        meta.add_node("/what", Attribute("source", "WMO:02606"))
+        meta.add_node("/what", Attribute("date", datetime.date(2000, 1, 2)))
+        meta.add_node("/what", Attribute("time", datetime.time(12, 5)))
+        meta.add_node("/what", Attribute("object", "pvol"))
+        meta.add_node("/", Group("dataset1"))
+        meta.add_node("/dataset1", Group("how"))
+        meta.add_node("/dataset1/how", Attribute("malfunc", "False"))
+        meta.add_node("/", Group("dataset2"))
+        meta.add_node("/dataset2", Group("how"))
+        meta.add_node("/dataset2/how", Attribute("malfunc", "True"))
+
+        v = {"filter_type": "attribute_filter",  "name": "how/malfunc", "operation": "not_in", "value_type": "string", "value": ["True"]}
+
+        ifilter = self._manager.from_value(v)
+
+        self.assertEqual(False, self._matcher.match(meta, ifilter.to_xpr()))
+
+    def test_match_partly_not_in_2(self):
+        meta = Metadata();
+        meta.add_node("/", Group("what"))
+        meta.add_node("/what", Attribute("source", "WMO:02606"))
+        meta.add_node("/what", Attribute("date", datetime.date(2000, 1, 2)))
+        meta.add_node("/what", Attribute("time", datetime.time(12, 5)))
+        meta.add_node("/what", Attribute("object", "pvol"))
+        meta.add_node("/", Group("dataset1"))
+        meta.add_node("/dataset1", Group("how"))
+        meta.add_node("/dataset1/how", Attribute("malfunc", "False"))
+        meta.add_node("/", Group("dataset2"))
+        meta.add_node("/dataset2", Group("how"))
+        meta.add_node("/dataset2/how", Attribute("malfunc", "False"))
+
+        v = {"filter_type": "attribute_filter",  "name": "how/malfunc", "operation": "not_in", "value_type": "string", "value": ["True"]}
+
+        ifilter = self._manager.from_value(v)
+
+        self.assertEqual(True, self._matcher.match(meta, ifilter.to_xpr()))
+
+    def test_match_eq(self):
+        meta = Metadata();
+        meta.add_node("/", Group("what"))
+        meta.add_node("/what", Attribute("source", "WMO:02606"))
+        meta.add_node("/what", Attribute("date", datetime.date(2000, 1, 2)))
+        meta.add_node("/what", Attribute("time", datetime.time(12, 5)))
+        meta.add_node("/what", Attribute("object", "pvol"))
+        meta.add_node("/", Group("dataset1"))
+        meta.add_node("/dataset1", Group("how"))
+        meta.add_node("/dataset1/how", Attribute("malfunc", "False"))
+        meta.add_node("/", Group("dataset2"))
+        meta.add_node("/dataset2", Group("how"))
+        meta.add_node("/dataset2/how", Attribute("malfunc", "True"))
+
+        v = {"filter_type": "attribute_filter",  "name": "/dataset1/how/malfunc", "operation": "=", "value_type": "string", "value": ["False"]}
+        ifilter = self._manager.from_value(v)
+        self.assertEqual(True, self._matcher.match(meta, ifilter.to_xpr()))
+
+        v = {"filter_type": "attribute_filter",  "name": "/dataset2/how/malfunc", "operation": "=", "value_type": "string", "value": ["True"]}
+        ifilter = self._manager.from_value(v)
+        self.assertEqual(True, self._matcher.match(meta, ifilter.to_xpr()))
+
+
     def test_notfilter(self):
         meta = Metadata();
         meta.add_node("/", Group("what"))

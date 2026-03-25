@@ -62,6 +62,7 @@ class metadata_matcher:
         evaluator.add_procedure("not", operator.not_)
         evaluator.add_procedure("like", self.like)
         evaluator.add_procedure("in", self.in_)
+        evaluator.add_procedure("not_in", self.notin)
         evaluator.add_procedure("date", lambda *args: datetime.date(*args))
         evaluator.add_procedure("time", lambda *args: datetime.time(*args))
         evaluator.add_procedure(
@@ -124,9 +125,10 @@ class metadata_matcher:
         """
         node_split_path = nodepath.split("/")
         from_index = len(node_split_path) - len(split_path)
-        if from_index < 0:
-            return False
-        return split_path == node_split_path[from_index:]
+        result = False
+        if from_index >= 0:
+            result = split_path == node_split_path[from_index:]
+        return result
 
     def in_(self, lhs, rhs):
         """Matches if items in lhs exists in the rhs.
@@ -135,6 +137,14 @@ class metadata_matcher:
         :return: True or False
         """
         return any(item in rhs for item in lhs)
+
+    def notin(self, lhs, rhs):
+        """Matches if items in lhs exists in the rhs.
+        :param lhs: Left hand side which is a list of values
+        :param rhs: Right hand side which is matched against
+        :return: True or False
+        """
+        return not any(item in rhs for item in lhs)
 
     def eq(self, lhs, rhs):
         return operator.eq(lhs, rhs)
@@ -178,7 +188,7 @@ class metadata_matcher:
             self.meta = metadata
             try:
                 result = self.evaluator.evaluate(xpr);
-                return result;
+                return result
             finally:
                 self.evaluator.add_procedure("attr", None)
                 self.meta = None
