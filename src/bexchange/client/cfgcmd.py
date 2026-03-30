@@ -97,7 +97,7 @@ class Command(object):
         :raise: :class:`LookupError` if not found
         """
         try:
-            return pkg_resources.load_entry_point(
+            return resources.load_entry_point(
                 "bexchange",
                 "bexchange.config.commands",
                 name
