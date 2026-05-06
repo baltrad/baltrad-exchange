@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<radar-db author="Daniel Michelson">
+  <fi CCCC="EFKL" org="86">
+    <fivan plc="Vantaa" rad="FI42" wmo="02975"></fivan>
+    <fiika plc="Ikaalinen" rad="FI43" wmo="02941"></fiika>
+    <fianj plc="Anjalankoski" rad="FI44" wmo="02954"></fianj>
+    <fikuo plc="Kuopio" rad="FI45" wmo="02918"></fikuo>
+    <fikor plc="Korpo" rad="FI46" wmo="02933"></fikor>
+    <fiuta plc="Utajärvi" rad="FI47" wmo="02870"></fiuta>
+    <filuo plc="Luosto" rad="FI48" wmo="02840"></filuo>
+    <fivim plc="Vimpeli" rad="FI49" wmo="02925"></fivim>
+    <fikes plc="Kesälahti" rad="FI50" wmo="02995"></fikes>
+    <fipet plc="Petäjävesi" rad="FI51" wmo="02775"></fipet>
+    <finur plc="Nurmes" rad="FI52" wmo="00000"></finur>
+    <fivih plc="Vihti" rad="FI53" wmo="00000"></fivih>
+    <fikan plc="Kankaanpää" rad="FI54" wmo="00000"></fikan>
+    <fikau plc="Kaunispää" rad="FI55" wmo="00000"></fikau>
+  </fi>
+  <se CCCC="ESWI" org="82">
+    <sekrn plc="Kiruna" rad="SE40" wmo="02032" wigos="0-20000-0-2032"></sekrn>
+    <sella plc="Luleå" rad="SE41" wmo="02092" wigos="0-20000-0-2092"></sella>
+    <seosd plc="Östersund" rad="SE42" wmo="02200" wigos="0-20000-0-2200"></seosd>
+    <seoer plc="Örnsköldsvik" rad="SE43" wmo="02262" wigos="0-20000-0-2262"></seoer>
+    <sehuv plc="Hudiksvall" rad="SE44" wmo="02334" wigos="0-20000-0-2334"></sehuv>
+    <selek plc="Leksand" rad="SE45" wmo="02430" wigos="0-20000-0-2430"></selek>
+    <sehem plc="Hemse (Ase)" rad="SE47" wmo="02588" wigos="0-20000-0-2588"></sehem>
+    <seatv plc="Åtvidaberg (Vilebo)" rad="SE48" wmo="02570" wigos="0-20000-0-2570"></seatv>
+    <sevax plc="Vara" rad="SE49" wmo="02600" wigos="0-20000-0-2600"></sevax>
+    <seang plc="Ängelholm" rad="SE50" wmo="02606" wigos="0-20000-0-2606"></seang>
+    <sekaa plc="Karlskrona" rad="SE51" wmo="02666" wigos="0-20000-0-2666"></sekaa>
+    <sebaa plc="Bålsta" rad="SE52" wmo="00000" wigos="0-21010-0-724"></sebaa>
+  </se>
+</radar-db>

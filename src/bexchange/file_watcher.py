@@ -71,23 +71,11 @@ if BACKEND == "watchdog":
             except:
                 logger.exception("Exception in on_closed")
 
-        def on_created(self, event):
-            try:
-                self._handler.on_created(event)
-            except:
-                logger.exception("Exception in on_created")
-        
         def on_deleted(self, event):
             try:
                 self._handler.on_deleted(event)
             except:
                 logger.exception("Exception in on_deleted")
-
-        def on_modified(self, event):
-            try:
-                self._handler.on_modified(event)
-            except:
-                logger.exception("Exception in on_modified")
 
 else:
     class _PyinotifyEvent:
@@ -108,24 +96,12 @@ else:
             except:
                 logger.exception("Exception in process_IN_CLOSE_WRITE")
 
-        def process_IN_CREATE(self, event):
-            try:
-                self._handler.on_created(_PyinotifyEvent(event))
-            except:
-                logger.exception("Exception in process_IN_CREATE")
-
         def process_IN_DELETE(self, event):
             try:
                 self._handler.on_deleted(_PyinotifyEvent(event))
             except:
                 logger.exception("Exception in process_IN_DELETE")
 
-        def process_IN_MODIFY(self, event):
-            try:
-                self._handler.on_modified(_PyinotifyEvent(event))
-            except:
-                logger.exception("Exception in process_IN_MODIFY")
-            
         def process_IN_MOVED_TO(self, event):
             try:
                 self._handler.on_created(_PyinotifyEvent(event))

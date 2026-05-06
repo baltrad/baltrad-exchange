@@ -4,7 +4,10 @@
     "name":"rotating_file_storage",
     "arguments": {
       "folder":"/tmp/rotating",
-      "number_of_files":50
+      "number_of_files":50,
+      "fail_on_missing_placeholder":true,
+      "keep_missing_placeholder":false,
+      "replace_slash_in_placeholder":false
     }
   }
 }

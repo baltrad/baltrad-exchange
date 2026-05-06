@@ -35,6 +35,10 @@ from pathlib import Path
 from bexchange.naming import namer
 logger = logging.getLogger("bexchange.server.backend")
 
+class StorageError(Exception):
+    """problem
+    """
+
 class storage(object):
     """Base class for all storages
     """
@@ -82,7 +86,7 @@ class none_storage(storage):
         return self._name
 
 class file_store:
-    def __init__(self, path, name_pattern, naming_operations=[], simulate=False, keep_same_name=False):
+    def __init__(self, path, name_pattern, naming_operations=[], simulate=False, keep_same_name=False, fail_on_missing_placeholder = False, keep_missing_placeholder = True, replace_slash_in_placeholder = True):
         self.path = path
         self.name_pattern = name_pattern
         self.namer = namer.metadata_namer(self.name_pattern)
@@ -90,9 +94,15 @@ class file_store:
             self.namer.register_operation(no.tag(), no)
         self._simulate = simulate
         self._keep_same_name = keep_same_name
+        self._fail_on_missing_placeholder = fail_on_missing_placeholder
+        self._keep_missing_placeholder = keep_missing_placeholder
+        self._replace_slash_in_placeholder = replace_slash_in_placeholder
     
     def store(self, path, meta):
-        oname = "%s/%s"%(self.path, self.namer.name(meta))
+        try:
+            oname = "%s/%s"%(self.path, self.namer.name(meta, self._fail_on_missing_placeholder, self._keep_missing_placeholder, self._replace_slash_in_placeholder))
+        except namer.NamerError as e:
+            raise StorageError("Failed naming") from e
         if self._simulate:
             logger.info("[SIMULATE]: Stored file:  %s"%oname)
             return
@@ -129,6 +139,10 @@ class file_storage(storage):
         self._name = name
         self._backend = backend
         self._simulate = False
+        self._fail_on_missing_placeholder = True
+        self._keep_missing_placeholder = False
+        self._replace_slash_in_placeholder = False
+
         self.structures = {}
         if not "structure" in kwargs:
             raise Exception("Missing key 'structure' in configuration")
@@ -136,6 +150,13 @@ class file_storage(storage):
 
         if "simulate" in kwargs and isinstance(kwargs["simulate"], bool):
             self._simulate = kwargs["simulate"]
+        if "fail_on_missing_placeholder" in kwargs and isinstance(kwargs["fail_on_missing_placeholder"], bool):
+            self._fail_on_missing_placeholder = kwargs["fail_on_missing_placeholder"]
+        if "keep_missing_placeholder" in kwargs and isinstance(kwargs["keep_missing_placeholder"], bool):
+            self._keep_missing_placeholder = kwargs["keep_missing_placeholder"]
+        if "replace_slash_in_placeholder" in kwargs and isinstance(kwargs["replace_slash_in_placeholder"], bool):
+            self._replace_slash_in_placeholder = kwargs["replace_slash_in_placeholder"]
+
         
         naming_operations = []
         if "naming_operations" in kwargs:
@@ -144,9 +165,9 @@ class file_storage(storage):
 
         for s in self.structure_d:
             if ("object" in s and not s["object"]) or "object" not in s:
-                self.structures["default"]=file_store(s["path"],s["name_pattern"], naming_operations, self._simulate)
+                self.structures["default"]=file_store(s["path"],s["name_pattern"], naming_operations, self._simulate, False, self._fail_on_missing_placeholder, self._keep_missing_placeholder, self._replace_slash_in_placeholder)
             else:
-                self.structures[s["object"]]=file_store(s["path"],s["name_pattern"], naming_operations, self._simulate)
+                self.structures[s["object"]]=file_store(s["path"],s["name_pattern"], naming_operations, self._simulate, False, self._fail_on_missing_placeholder, self._keep_missing_placeholder, self._replace_slash_in_placeholder)
 
     def get_attribute_value(self, name, meta):
         """
@@ -196,8 +217,18 @@ class simple_rotating_file_storage(storage):
         self._backend = backend
         self._number_of_files = 100
         self._folder = kwargs["folder"]
-        self._scanstore = file_store(self._folder, "${_baltrad/source_name}_scan_${/dataset1/where/elangle}_${/what/date}T${/what/time}.h5", [], False, True)
-        self._otherstore = file_store(self._folder, "${_baltrad/source_name}_${/what/object}.tolower()_${/what/date}T${/what/time}.h5", [], False, True)
+        self._fail_on_missing_placeholder = True
+        self._keep_missing_placeholder = False
+        self._replace_slash_in_placeholder = False        
+        if "fail_on_missing_placeholder" in kwargs and isinstance(kwargs["fail_on_missing_placeholder"], bool):
+            self._fail_on_missing_placeholder = kwargs["fail_on_missing_placeholder"]
+        if "keep_missing_placeholder" in kwargs and isinstance(kwargs["keep_missing_placeholder"], bool):
+            self._keep_missing_placeholder = kwargs["keep_missing_placeholder"]
+        if "replace_slash_in_placeholder" in kwargs and isinstance(kwargs["replace_slash_in_placeholder"], bool):
+            self._replace_slash_in_placeholder = kwargs["replace_slash_in_placeholder"]
+
+        self._scanstore = file_store(self._folder, "${_baltrad/source_name}_scan_${/dataset1/where/elangle}_${/what/date}T${/what/time}.h5", [], False, True, self._fail_on_missing_placeholder, self._keep_missing_placeholder, self._replace_slash_in_placeholder)
+        self._otherstore = file_store(self._folder, "${_baltrad/source_name}_${/what/object}.tolower()_${/what/date}T${/what/time}.h5", [], False, True, self._fail_on_missing_placeholder, self._keep_missing_placeholder, self._replace_slash_in_placeholder)
 
         self.lock = threading.Lock()
 

@@ -22,7 +22,7 @@
 ## @author Anders Henja, SMHI
 ## @date 2021-08-18
 import unittest
-from bexchange.naming.namer import metadata_namer, opera_filename_namer
+from bexchange.naming.namer import metadata_namer, opera_filename_namer, NamerError
 from baltrad.bdbcommon import oh5
 from baltrad.bdbcommon.oh5 import Source
 from baltrad.bdbcommon.oh5.node import Attribute, Group
@@ -178,6 +178,52 @@ class test_namer(unittest.TestCase):
 
         assert("2000/01/01/12/15/undefined_20000101T120000Z_Pvol_DBZH_200001011215.h5" == namer.name(meta))
     
+    def test_scan_name_missing_elangle(self):
+        meta = oh5.Metadata()
+        meta.add_node("/", Group("what"))
+        meta.add_node("/what", Attribute("date", datetime.date(2000, 1, 1)))
+        meta.add_node("/what", Attribute("time", datetime.time(12, 0)))
+
+        meta.add_node("/", Group("dataset1"))
+        meta.add_node("/dataset1", Group("where"))
+        #meta.add_node("/dataset1/where", Attribute("elangle", 0.5))
+
+        meta.bdb_source = "NOD:setst,WMO:12345,RAD:SE52,WIGOS:12345"
+        meta.what_source = "NOD:setst,WMO:12345,RAD:SE52"
+        meta.bdb_source_name = "setst"
+
+        namer = metadata_namer("${_baltrad/source_name}_scan_${/dataset1/where/elangle}_${/what/date}T${/what/time}.h5")
+        self.assertEqual("setst_scan_${/dataset1/where/elangle}_20000101T120000.h5", namer.name(meta))
+        self.assertEqual("setst_scan__20000101T120000.h5", namer.name(meta, keep_missing_placeholder=False))        
+        self.assertEqual("setst_scan_${|dataset1|where|elangle}_20000101T120000.h5", namer.name(meta, replace_slash_in_placeholder=True))
+
+        try:
+            namer.name(meta, fail_on_missing_placeholder=True)
+            self.fail("Expected an exception")
+        except NamerError:
+            pass
+
+    def test_scan_name(self):
+        meta = oh5.Metadata()
+        meta.add_node("/", Group("what"))
+        meta.add_node("/what", Attribute("date", datetime.date(2000, 1, 1)))
+        meta.add_node("/what", Attribute("time", datetime.time(12, 0)))
+
+        meta.add_node("/", Group("dataset1"))
+        meta.add_node("/dataset1", Group("where"))
+        meta.add_node("/dataset1/where", Attribute("elangle", 0.5))
+
+        meta.bdb_source = "NOD:setst,WMO:12345,RAD:SE52,WIGOS:12345"
+        meta.what_source = "NOD:setst,WMO:12345,RAD:SE52"
+        meta.bdb_source_name = "setst"
+
+        namer = metadata_namer("${_baltrad/source_name}_scan_${/dataset1/where/elangle}_${/what/date}T${/what/time}.h5")
+        self.assertEqual("setst_scan_0.5_20000101T120000.h5", namer.name(meta))
+        self.assertEqual("setst_scan_0.5_20000101T120000.h5", namer.name(meta, keep_missing_placeholder=False))        
+        self.assertEqual("setst_scan_0.5_20000101T120000.h5", namer.name(meta, replace_slash_in_placeholder=True))
+
+        namer.name(meta, fail_on_missing_placeholder=True)
+
     def create_metadata(self, year, month, day, hour, minute):
         meta = oh5.Metadata()
         meta.add_node("/", Group("what"))

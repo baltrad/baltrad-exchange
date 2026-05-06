@@ -48,6 +48,10 @@ BALTRAD_DATETIMEU_PATTERN=re.compile("^_baltrad/datetime_u:([0-9]{2})(:[A-Za-z0-
 
 BALTRAD_DATETIMEL_PATTERN=re.compile("^_baltrad/datetime_l:([0-9]{2})(:[A-Za-z0-9\\-/: _%]+)?$", flags=re.IGNORECASE)
 
+class NamerError(Exception):
+    """problem
+    """
+
 class suboperation_helper:
     """Used to simplify suboperation execution in a name pattern. Each suboperation is implemented as a method in this function and called by eval upon execution
     """
@@ -255,7 +259,7 @@ class metadata_namer:
         """
         return self.tmpl
 
-    def name(self, meta):
+    def name(self, meta, fail_on_missing_placeholder=False, keep_missing_placeholder=True, replace_slash_in_placeholder=False):
         """
         :param meta: the metadata to create the name from
         :return: the created string
@@ -329,6 +333,13 @@ class metadata_namer:
                     replacement_value = suboperation_helper(replacement_value,suboperation).eval()
             else:
                 replacement_value = parsed_tmpl[span[0]:span[1]]
+                if fail_on_missing_placeholder:
+                    raise NamerError("No placeholder '%s'"%replacement_value)
+                elif keep_missing_placeholder == False:
+                    replacement_value = ""
+                elif replace_slash_in_placeholder:
+                    replacement_value = replacement_value.replace('/', '|')
+
             if isinstance(replacement_value,float):
                 buffer.write("%g"%replacement_value)
             elif isinstance(replacement_value,int):

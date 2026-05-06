@@ -504,6 +504,9 @@ class SimpleBackend(backend.Backend):
 
         return backend
 
+    def create_fileid_from_meta(self, meta):
+        return util.create_fileid_from_meta(meta)
+
     def store_file(self, path, nid):
         """handles an incomming file and determines if it should be managed by the subscriptions or not.
         :param path: the full path to the file to be handled
@@ -521,7 +524,7 @@ class SimpleBackend(backend.Backend):
 
         metadataTime = time.time()
 
-        logger.info("store_file: Received file from %s: ID:'%s'" % (nid, util.create_fileid_from_meta(meta)))
+        logger.info("store_file: Received file from %s: ID:'%s'" % (nid, self.create_fileid_from_meta(meta)))
         
         if self.statistics_incomming:
             self.get_statistics_manager().increment("server-incomming", nid, meta, self.statistics_add_entries, optime=int((metadataTime - startTime)*1000), optime_info="metadata")
@@ -549,20 +552,29 @@ class SimpleBackend(backend.Backend):
                 continue
             
             if subscription.filter_matching(meta):
-                logger.debug("store_file: filter matching for subscription with id: %s, ID:'%s'"%(subscription.id(), util.create_fileid_from_meta(meta)))
+                logger.debug("store_file: filter matching for subscription with id: %s, ID:'%s'"%(subscription.id(), self.create_fileid_from_meta(meta)))
                 for storage in subscription.storages():
-                    self.storage_manager.store(storage, path, meta)
+                    try:
+                        self.storage_manager.store(storage, path, meta)
+                    except:
+                        logger.exception(f"Failed to store file using {storage}")
 
                 for statplugin in subscription.get_statistics_plugins():
                     statplugin.increment(nid, meta)
 
-                self.publish(subscription.id(), path, meta)
-                    
-                self.processor_manager.process(path, meta)
+                try:
+                    self.publish(subscription.id(), path, meta)
+                except:
+                    logger.exception("Failure during publishing")
+
+                try:
+                    self.processor_manager.process(path, meta)
+                except:
+                    logger.exception("Failure during processing")
         
         finishedTime = time.time()
 
-        logger.info("store_file: Total processing time of file from %s, ID:'%s', %d ms" % (nid, util.create_fileid_from_meta(meta), int((finishedTime - startTime)*1000)))
+        logger.info("store_file: Total processing time of file from %s, ID:'%s', %d ms" % (nid, self.create_fileid_from_meta(meta), int((finishedTime - startTime)*1000)))
 
         if self.statistics_file_handling:
             self.get_statistics_manager().increment("server-filehandling", nid, meta, True, False, optime=int((finishedTime - startTime)*1000), optime_info="total")
@@ -579,6 +591,9 @@ class SimpleBackend(backend.Backend):
             if isinstance(r, message_aware):
                 r.handle_message(json_message, nodename)
 
+    def create_matcher(self):
+        return metadata_matcher.metadata_matcher()
+
     def publish(self, sid, path, meta):
         """publishes the file on each interested publisher
         :param sid: The subscription id if any
@@ -586,12 +601,15 @@ class SimpleBackend(backend.Backend):
         :param meta: meta of file to be published
         """
         for publication in self.publications:
-            matcher = metadata_matcher.metadata_matcher()
+            matcher = self.create_matcher()
             origin = publication.origin()
             if len(origin) == 0 or (len(publication.origin()) > 0 and sid in publication.origin()):
                 if publication.active() and matcher.match(meta, publication.filter().to_xpr()):
                     logger.debug("publish: publishing file using: %s %s"%(publication.name(), publication))
-                    publication.publish(path, meta)
+                    try:
+                        publication.publish(path, meta)
+                    except:
+                        logger.exception(f"Failed to publish using publisher {publication.name()}")
     
     def metadata_from_file(self, path):
         """creates metadata from the file
