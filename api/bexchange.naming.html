@@ -52,6 +52,13 @@
 </section>
 <section id="module-bexchange.naming.namer">
 <span id="bexchange-naming-namer-module"></span><h2>bexchange.naming.namer module<a class="headerlink" href="#module-bexchange.naming.namer" title="Link to this heading">¶</a></h2>
+<dl class="py exception">
+<dt class="sig sig-object py" id="bexchange.naming.namer.NamerError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.naming.namer.</span></span><span class="sig-name descname"><span class="pre">NamerError</span></span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#NamerError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.NamerError" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>problem</p>
+</dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.naming.namer.metadata_namer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.naming.namer.</span></span><span class="sig-name descname"><span class="pre">metadata_namer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tmpl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#metadata_namer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.metadata_namer" title="Link to this definition">¶</a></dt>
@@ -91,7 +98,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.naming.namer.metadata_namer.name">
-<span class="sig-name descname"><span class="pre">name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#metadata_namer.name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.metadata_namer.name" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fail_on_missing_placeholder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_missing_placeholder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace_slash_in_placeholder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/naming/namer.html#metadata_namer.name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.naming.namer.metadata_namer.name" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>meta</strong> – the metadata to create the name from</p>
@@ -364,6 +371,7 @@ a subset is changed.
 <li><a class="reference internal" href="#">bexchange.naming package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-bexchange.naming.namer">bexchange.naming.namer module</a><ul>
+<li><a class="reference internal" href="#bexchange.naming.namer.NamerError"><code class="docutils literal notranslate"><span class="pre">NamerError</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.naming.namer.metadata_namer"><code class="docutils literal notranslate"><span class="pre">metadata_namer</span></code></a><ul>
 <li><a class="reference internal" href="#bexchange.naming.namer.metadata_namer.get_attribute_value"><code class="docutils literal notranslate"><span class="pre">metadata_namer.get_attribute_value()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.naming.namer.metadata_namer.get_property"><code class="docutils literal notranslate"><span class="pre">metadata_namer.get_property()</span></code></a></li>

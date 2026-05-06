@@ -643,6 +643,12 @@
         <span class="k">return</span> <span class="n">backend</span></div>
 
 
+<div class="viewcode-block" id="SimpleBackend.create_fileid_from_meta">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.create_fileid_from_meta">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_fileid_from_meta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="SimpleBackend.store_file">
 <a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.store_file">[docs]</a>
     <span class="k">def</span> <span class="nf">store_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">nid</span><span class="p">):</span>
@@ -662,7 +668,7 @@
 
         <span class="n">metadataTime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;store_file: Received file from </span><span class="si">%s</span><span class="s2">: ID:&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">nid</span><span class="p">,</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;store_file: Received file from </span><span class="si">%s</span><span class="s2">: ID:&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">nid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)))</span>
         
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">statistics_incomming</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">get_statistics_manager</span><span class="p">()</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="s2">&quot;server-incomming&quot;</span><span class="p">,</span> <span class="n">nid</span><span class="p">,</span> <span class="n">meta</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">statistics_add_entries</span><span class="p">,</span> <span class="n">optime</span><span class="o">=</span><span class="nb">int</span><span class="p">((</span><span class="n">metadataTime</span> <span class="o">-</span> <span class="n">startTime</span><span class="p">)</span><span class="o">*</span><span class="mi">1000</span><span class="p">),</span> <span class="n">optime_info</span><span class="o">=</span><span class="s2">&quot;metadata&quot;</span><span class="p">)</span>
@@ -690,20 +696,29 @@
                 <span class="k">continue</span>
             
             <span class="k">if</span> <span class="n">subscription</span><span class="o">.</span><span class="n">filter_matching</span><span class="p">(</span><span class="n">meta</span><span class="p">):</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;store_file: filter matching for subscription with id: </span><span class="si">%s</span><span class="s2">, ID:&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">subscription</span><span class="o">.</span><span class="n">id</span><span class="p">(),</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)))</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;store_file: filter matching for subscription with id: </span><span class="si">%s</span><span class="s2">, ID:&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">subscription</span><span class="o">.</span><span class="n">id</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)))</span>
                 <span class="k">for</span> <span class="n">storage</span> <span class="ow">in</span> <span class="n">subscription</span><span class="o">.</span><span class="n">storages</span><span class="p">():</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">storage_manager</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">storage</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">storage_manager</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">storage</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>
+                    <span class="k">except</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to store file using </span><span class="si">{</span><span class="n">storage</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
                 <span class="k">for</span> <span class="n">statplugin</span> <span class="ow">in</span> <span class="n">subscription</span><span class="o">.</span><span class="n">get_statistics_plugins</span><span class="p">():</span>
                     <span class="n">statplugin</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="n">nid</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>
 
-                <span class="bp">self</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">subscription</span><span class="o">.</span><span class="n">id</span><span class="p">(),</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>
-                    
-                <span class="bp">self</span><span class="o">.</span><span class="n">processor_manager</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">subscription</span><span class="o">.</span><span class="n">id</span><span class="p">(),</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Failure during publishing&quot;</span><span class="p">)</span>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">processor_manager</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Failure during processing&quot;</span><span class="p">)</span>
         
         <span class="n">finishedTime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;store_file: Total processing time of file from </span><span class="si">%s</span><span class="s2">, ID:&#39;</span><span class="si">%s</span><span class="s2">&#39;, </span><span class="si">%d</span><span class="s2"> ms&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">nid</span><span class="p">,</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">),</span> <span class="nb">int</span><span class="p">((</span><span class="n">finishedTime</span> <span class="o">-</span> <span class="n">startTime</span><span class="p">)</span><span class="o">*</span><span class="mi">1000</span><span class="p">)))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;store_file: Total processing time of file from </span><span class="si">%s</span><span class="s2">, ID:&#39;</span><span class="si">%s</span><span class="s2">&#39;, </span><span class="si">%d</span><span class="s2"> ms&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">nid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">),</span> <span class="nb">int</span><span class="p">((</span><span class="n">finishedTime</span> <span class="o">-</span> <span class="n">startTime</span><span class="p">)</span><span class="o">*</span><span class="mi">1000</span><span class="p">)))</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">statistics_file_handling</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">get_statistics_manager</span><span class="p">()</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="s2">&quot;server-filehandling&quot;</span><span class="p">,</span> <span class="n">nid</span><span class="p">,</span> <span class="n">meta</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">optime</span><span class="o">=</span><span class="nb">int</span><span class="p">((</span><span class="n">finishedTime</span> <span class="o">-</span> <span class="n">startTime</span><span class="p">)</span><span class="o">*</span><span class="mi">1000</span><span class="p">),</span> <span class="n">optime_info</span><span class="o">=</span><span class="s2">&quot;total&quot;</span><span class="p">)</span>
@@ -724,6 +739,12 @@
                 <span class="n">r</span><span class="o">.</span><span class="n">handle_message</span><span class="p">(</span><span class="n">json_message</span><span class="p">,</span> <span class="n">nodename</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="SimpleBackend.create_matcher">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.create_matcher">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_matcher</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">metadata_matcher</span><span class="o">.</span><span class="n">metadata_matcher</span><span class="p">()</span></div>
+
+
 <div class="viewcode-block" id="SimpleBackend.publish">
 <a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.backend.SimpleBackend.publish">[docs]</a>
     <span class="k">def</span> <span class="nf">publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sid</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
@@ -733,12 +754,15 @@
 <span class="sd">        :param meta: meta of file to be published</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">publication</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">publications</span><span class="p">:</span>
-            <span class="n">matcher</span> <span class="o">=</span> <span class="n">metadata_matcher</span><span class="o">.</span><span class="n">metadata_matcher</span><span class="p">()</span>
+            <span class="n">matcher</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_matcher</span><span class="p">()</span>
             <span class="n">origin</span> <span class="o">=</span> <span class="n">publication</span><span class="o">.</span><span class="n">origin</span><span class="p">()</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">origin</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">publication</span><span class="o">.</span><span class="n">origin</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">sid</span> <span class="ow">in</span> <span class="n">publication</span><span class="o">.</span><span class="n">origin</span><span class="p">()):</span>
                 <span class="k">if</span> <span class="n">publication</span><span class="o">.</span><span class="n">active</span><span class="p">()</span> <span class="ow">and</span> <span class="n">matcher</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span> <span class="n">publication</span><span class="o">.</span><span class="n">filter</span><span class="p">()</span><span class="o">.</span><span class="n">to_xpr</span><span class="p">()):</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;publish: publishing file using: </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">publication</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="n">publication</span><span class="p">))</span>
-                    <span class="n">publication</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span></div>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">publication</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>
+                    <span class="k">except</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to publish using publisher </span><span class="si">{</span><span class="n">publication</span><span class="o">.</span><span class="n">name</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
     
 <div class="viewcode-block" id="SimpleBackend.metadata_from_file">
