@@ -15,15 +15,9 @@
        "senders":[
         { 
           "id":"localhost.exchange.sender",
-          "class":"bexchange.net.senders.rest_sender",
+          "class":"bexchange.net.senders.storage_sender",
           "arguments": {
-            "address":"http://localhost:8089",
-            "protocol_version":"1.0",
-            "crypto":{
-              "libname":"crypto",
-              "nodename":"anders-silent",
-              "privatekey":"/projects/baltrad/baltrad-exchange/etc/exchange-keys/anders-silent.private"
-            }        
+            "file_storage":["default_storage"]
           }
         },
         { 

@@ -35,6 +35,7 @@ import uuid
 import paramiko
 import ftplib
 import shutil
+import time
 import re
 from paramiko import SSHClient
 from scp import SCPClient
@@ -448,16 +449,19 @@ class sftp_sender(baseuri_sender):
         """        
         publishedname = self.name(meta)
         logger.debug("sftp_adapter: connecting to: host=%s, port=%d, user='%s'"%(self.hostname(), self.port(), self.username()))
-
+        startts = time.perf_counter()
         c = self.client()
         try:
             c.connect()
+            connectionts = time.perf_counter()
+
             bdir = os.path.dirname(publishedname)
             fname = os.path.basename(publishedname)
             logger.debug("Connected to %s"%self.hostname())
             if self.create_missing_directories():
                 c.makedirs(bdir)
             c.chdir(bdir)
+            dirts = time.perf_counter()
 
             if self._tmppattern:
                 tfname = fname
@@ -470,8 +474,12 @@ class sftp_sender(baseuri_sender):
             else:
                 logger.info("sftp_sender: address:%s, basename:%s uploaded ID:'%s'" % (self.hostname(), fname, util.create_fileid_from_meta(meta)))
                 c.put(path, fname, confirm=self._confirm_upload)
+            transferts = time.perf_counter()
         finally:
             c.disconnect()
+            disconnectts = time.perf_counter()
+
+            logger.info("sftp_sender: host=%s: timing connection=%.6f, dircreation=%.6f, transfer=%.6f, disconnect = %.6f total = %.6f fname = %s ID:'%s'" % (self.hostname(), (connectionts - startts), (dirts - connectionts), (transferts - dirts), (disconnectts - transferts), (disconnectts - startts), fname, util.create_fileid_from_meta(meta)))
 
 class scp_sender(baseuri_sender):
     """Publishes files over scp

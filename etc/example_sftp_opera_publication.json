@@ -46,12 +46,7 @@
         "name": "/what/object", 
         "operation": "=", 
         "value_type": "string", 
-        "value": ["PVOL"]},
-  	   {"filter_type": "attribute_filter", 
-        "name": "how/malfunc", 
-        "operation": "!=", 
-        "value_type": "string", 
-        "value": ["True"]}
+        "value": ["SCAN"]}
     ]
   },
   "__decorators":[
