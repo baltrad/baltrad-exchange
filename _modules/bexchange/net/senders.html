@@ -73,6 +73,7 @@
 <span class="kn">import</span> <span class="nn">paramiko</span>
 <span class="kn">import</span> <span class="nn">ftplib</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">from</span> <span class="nn">paramiko</span> <span class="kn">import</span> <span class="n">SSHClient</span>
 <span class="kn">from</span> <span class="nn">scp</span> <span class="kn">import</span> <span class="n">SCPClient</span>
@@ -550,16 +551,19 @@
 <span class="sd">        &quot;&quot;&quot;</span>        
         <span class="n">publishedname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;sftp_adapter: connecting to: host=</span><span class="si">%s</span><span class="s2">, port=</span><span class="si">%d</span><span class="s2">, user=&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">()))</span>
-
+        <span class="n">startts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
         <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">c</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+            <span class="n">connectionts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+
             <span class="n">bdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">publishedname</span><span class="p">)</span>
             <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">publishedname</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Connected to </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">())</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_missing_directories</span><span class="p">():</span>
                 <span class="n">c</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">bdir</span><span class="p">)</span>
             <span class="n">c</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">bdir</span><span class="p">)</span>
+            <span class="n">dirts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tmppattern</span><span class="p">:</span>
                 <span class="n">tfname</span> <span class="o">=</span> <span class="n">fname</span>
@@ -572,8 +576,12 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;sftp_sender: address:</span><span class="si">%s</span><span class="s2">, basename:</span><span class="si">%s</span><span class="s2"> uploaded ID:&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">(),</span> <span class="n">fname</span><span class="p">,</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)))</span>
                 <span class="n">c</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">confirm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_confirm_upload</span><span class="p">)</span>
+            <span class="n">transferts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
         <span class="k">finally</span><span class="p">:</span>
-            <span class="n">c</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span></div>
+            <span class="n">c</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+            <span class="n">disconnectts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;sftp_sender: host=</span><span class="si">%s</span><span class="s2">: timing connection=</span><span class="si">%.6f</span><span class="s2">, dircreation=</span><span class="si">%.6f</span><span class="s2">, transfer=</span><span class="si">%.6f</span><span class="s2">, disconnect = </span><span class="si">%.6f</span><span class="s2"> total = </span><span class="si">%.6f</span><span class="s2"> fname = </span><span class="si">%s</span><span class="s2"> ID:&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">(),</span> <span class="p">(</span><span class="n">connectionts</span> <span class="o">-</span> <span class="n">startts</span><span class="p">),</span> <span class="p">(</span><span class="n">dirts</span> <span class="o">-</span> <span class="n">connectionts</span><span class="p">),</span> <span class="p">(</span><span class="n">transferts</span> <span class="o">-</span> <span class="n">dirts</span><span class="p">),</span> <span class="p">(</span><span class="n">disconnectts</span> <span class="o">-</span> <span class="n">transferts</span><span class="p">),</span> <span class="p">(</span><span class="n">disconnectts</span> <span class="o">-</span> <span class="n">startts</span><span class="p">),</span> <span class="n">fname</span><span class="p">,</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)))</span></div>
 </div>
 
 
