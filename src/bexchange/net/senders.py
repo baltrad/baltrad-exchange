@@ -122,9 +122,15 @@ class noop_sender(sender):
         """
         super(noop_sender, self).__init__(backend, aid)
         self._return_value = True
+        self._sleep = None
         if "return_value" in arguments:
             self._return_value = arguments["return_value"]
-    
+
+        if "sleep" in arguments:
+            self._sleep = arguments["sleep"]
+
+        logger.info("noop_sender: %s"%str(self._sleep))
+
     def send(self, file, meta):
         """Sends the file on all storages associated with self
         :param file: path to file that should be sent
@@ -133,6 +139,8 @@ class noop_sender(sender):
         aid = self.id()
         return_value = self._return_value
         fileid = util.create_fileid_from_meta(meta)
+        if self._sleep:
+            time.sleep(self._sleep)
         logger.info(f"{aid} has been suppressed using noop_sender, returning {return_value} for {fileid}")
         return return_value
 

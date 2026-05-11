@@ -23,8 +23,13 @@
 ## @date 2021-12-01
 from bexchange.net.senders import sender_manager
 from bexchange import util
+from queue import Full, Empty
+from threading import Thread
+
 import logging
 import importlib
+from tempfile import NamedTemporaryFile
+import shutil
 
 logger = logging.getLogger("bexchange.net.connections")
 
@@ -49,6 +54,11 @@ class publisher_connection(object):
         """Returns the backend
         """
         return self._backend
+
+    def stop(self):
+        """Stops the connection
+        """
+        pass
 
 class simple_connection(publisher_connection):
     """Simple connection, only parsing arguments according to. sender class + arguments. 
@@ -129,6 +139,7 @@ class backup_connection(publisher_connection):
             except Exception as e:
                 logger.exception("Failed to send file to %s, ID:'%s'"%(sender.id(), util.create_fileid_from_meta(meta)))
 
+
 class distributed_connection(publisher_connection):
     """Distributed connection, expects a list of senders in arguments. Where all senders are run. This is the same
     behavior as the backup connection but it's here for readability.
@@ -149,6 +160,135 @@ class distributed_connection(publisher_connection):
                 logger.info("Successfully sent file to %s, ID:'%s'"%(sender.id(), util.create_fileid_from_meta(meta)))
             except Exception as e:
                 logger.exception("Failed to send file to %s, ID:'%s'"%(sender.id(), util.create_fileid_from_meta(meta)))
+
+
+class parallel_connection_sender(object):
+    """ Wraps a sender into an object that is handled by the parallel connection
+    """
+    def __init__(self, sender, queue_size):
+        """ Constructor
+        :param sender: the sender
+        :param queue_size: the queue size this instance should allow before throwing new items
+        """
+        self._sender = sender
+        self._queue = util.jobQueue(queue_size)
+        self._thread = None
+        self._running = False
+
+    def send(self, path, meta):
+        """ Puts a message into the message queue
+        :param path: the path to the physical file
+        :param meta: the meta information
+        """
+        tmpfile = NamedTemporaryFile(dir=self._sender.backend().get_tmp_folder())
+        with open(path, "rb") as fp:
+            shutil.copyfileobj(fp, tmpfile)
+        tmpfile.flush()        
+
+        try:
+            self._queue.put((tmpfile, meta))
+        except Full as e:
+            logger.exception("Queue for sender '%s' is full, dropping message with ID:'%s'"%(self.id(), util.create_fileid_from_meta(meta)))
+            try:
+                tmpfile.close()
+            except:
+                pass
+
+    def consumer(self):
+        """ The consumer called by the thread. Will grab one entry from the queue and pass it on to the connections.
+        """
+        tmpfile = None
+        logger.info("Entered consumer")
+        while self._running:
+            meta = None
+            try:
+                 # In 3.13 there will be support for shutdown. So we need to use nowait and instead use _event.wait for notification purposes
+                tmpfile, meta = self._queue.get()
+                self._sender.send(tmpfile, meta)
+
+                self._queue.task_done()
+
+                logger.info("Successfully sent file to %s using threaded sender, ID:'%s'"%(self._sender.id(), util.create_fileid_from_meta(meta)))
+            except Exception:
+                if meta:
+                    logger.exception("Failed to send file to %s, ID:'%s'"%(self._sender.id(), util.create_fileid_from_meta(meta)))
+                else:
+                    logger.exception("Failed to send unknown item to %s" % self._sender.id())
+
+                if not self._running:
+                    break
+            finally:
+                if tmpfile:
+                    try:
+                        tmpfile.close()
+                    except:
+                        pass
+        logger.info("Left consumer")
+
+    def start(self):
+        """ Starts all consumer threads as daemon threads
+        """
+        self._running = True        
+        self._thread = Thread(target=self.consumer)
+        self._thread.daemon = True
+        self._thread.start() 
+
+    def stop(self):
+        """Joins the threads
+        """
+        logger.info("Stopping publisher")
+        self._running = False
+        self._queue.shutdown()
+        self._thread.join()
+        logger.info("Publisher stopped")
+
+    def id(self):
+        """Returns the senders id
+        """
+        return self._sender.id()
+
+class parallel_connection(publisher_connection):
+    """ This is similar to the distributed connection but it will create a thread for each added sender so that
+    the messages are sent without affecting each other. If for example the first sender takes a long time to execute 
+    it won't affect the other senders in this connection.
+    The queue size for each sender is default 100 and it can be configured by using "queue_size" in arguments.
+    """
+    def __init__(self, backend, arguments):
+        """ Constructor
+        :param backend: the backend
+        :param arguments: two attributes are supported in the arguments
+          {"queue_size":100,
+           "senders":[...]}
+           and at least one sender is mandatory in the list of senders.
+        """
+        super(parallel_connection, self).__init__(backend)
+        queue_size=100
+        if "queue_size" in arguments:
+            queue_size = arguments["queue_size"]
+
+        self._senders = []
+        if "senders" in arguments:
+            for sender_conf in arguments["senders"]:
+                sender = parallel_connection_sender(sender_manager.from_conf(backend, sender_conf), queue_size)
+                sender.start()
+                self._senders.append(sender)
+        else:
+            raise Exception("Requires 'senders' in arguments")
+        
+    def publish(self, path, meta):
+        for sender in self._senders:
+            try:
+                sender.send(path, meta)
+                logger.debug("Successfully passed file to threaded %s, ID:'%s'"%(sender.id(), util.create_fileid_from_meta(meta)))
+            except Exception as e:
+                logger.exception("Failed to pass file to threaded %s, ID:'%s'"%(sender.id(), util.create_fileid_from_meta(meta)))
+
+    def stop(self):
+        for sender in self._senders:
+            try:
+                sender.stop()
+            except:
+                pass    
 
 class combined_connection(publisher_connection):
     """Combined connection is a way to combine different connection types into one so that you for example can

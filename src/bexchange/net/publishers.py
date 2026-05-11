@@ -346,6 +346,12 @@ class standard_publisher(publisher):
         for t in self._threads:
             t.join()
 
+        for c in self._connections:
+            try:
+                c.stop()
+            except:
+                pass
+
         logger.info("Publisher stopped")
 
 class publisher_manager:

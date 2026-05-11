@@ -22,6 +22,8 @@
 ## @author Anders Henja, SMHI
 ## @date 2021-08-18
 from abc import ABC, abstractmethod
+from queue import Queue #, Full, Empty
+from threading import Condition #Thread, 
 import datetime
 
 class abstractclassmethod(classmethod):
@@ -68,3 +70,60 @@ def create_fileid_from_meta(meta):
         return "nod:%s, object:%s, time:%s, elangle:%s, hash:%s"%(source, file_object, file_datetime.strftime("%Y-%m-%dT%H:%M:%SZ"), file_elangle, meta.bdb_metadata_hash)
     else:
         return "nod:%s, object:%s, time:%s, hash:%s"%(source, file_object, file_datetime.strftime("%Y-%m-%dT%H:%M:%SZ"), meta.bdb_metadata_hash)
+
+class jobQueueShutdown(Exception):
+    """thrown to indicate that an entry already exists
+    """
+
+class jobQueue:
+    """Wrapper around queue.Queue to be able to shutdown. This will be supported in python 3.13 but for now
+    this will be enough.
+    """
+    def __init__(self, qs):
+        """Constructor
+        :param qs: max queue size
+        """
+        self._queue = Queue(qs)
+        self._shutdown = False
+        self._condition = Condition()
+
+    def put(self, item):
+        """Puts an item into the queue without blocking.
+        If queue is shutdown, the item will not be added to the queue and this will be done silently
+        :param item: the item to add to the queue
+        """
+        with self._condition:
+            try:
+                if not self._shutdown:
+                    self._queue.put(item, block=False)
+            finally:
+                self._condition.notify_all()
+ 
+    def get(self, waittime=10):
+        """Returns an item from the queue. The wait time is the time in seconds the
+        thread should wait in the condition until checking for any new item in the queue.
+        This condition will be notified whenever put or shutdown is called.
+        :param waittime: The time to wait in seconds inside the condition
+        :return: Will always return an item
+        :throws: pubQueueShutdown
+        """
+        with self._condition:
+            while not self._shutdown:
+                try:
+                    return self._queue.get_nowait()
+                except:
+                    if not self._shutdown:
+                        self._condition.wait(waittime)
+            raise jobQueueShutdown()
+
+    def task_done(self):
+        """Call this when task grabbed from queue is finished
+        """
+        self._queue.task_done()
+
+    def shutdown(self):
+        """Shuts down the queue.
+        """
+        with self._condition:
+            self._shutdown = True
+            self._condition.notify_all()
