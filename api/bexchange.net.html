@@ -134,6 +134,69 @@ an exception will be thrown.
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="bexchange.net.connections.parallel_connection">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.connections.</span></span><span class="sig-name descname"><span class="pre">parallel_connection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#parallel_connection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.parallel_connection" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bexchange.net.connections.publisher_connection" title="bexchange.net.connections.publisher_connection"><code class="xref py py-class docutils literal notranslate"><span class="pre">publisher_connection</span></code></a></p>
+<p>This is similar to the distributed connection but it will create a thread for each added sender so that
+the messages are sent without affecting each other. If for example the first sender takes a long time to execute
+it won’t affect the other senders in this connection.
+The queue size for each sender is default 100 and it can be configured by using “queue_size” in arguments.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.net.connections.parallel_connection.publish">
+<span class="sig-name descname"><span class="pre">publish</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#parallel_connection.publish"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.parallel_connection.publish" title="Link to this definition">¶</a></dt>
+<dd><p>Publishes a file in some way using the underlying implementation
+:param path: The path to the file
+:param meta: The metadata of the file</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.net.connections.parallel_connection.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#parallel_connection.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.parallel_connection.stop" title="Link to this definition">¶</a></dt>
+<dd><p>Stops the connection</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bexchange.net.connections.parallel_connection_sender">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.connections.</span></span><span class="sig-name descname"><span class="pre">parallel_connection_sender</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sender</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queue_size</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#parallel_connection_sender"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.parallel_connection_sender" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Wraps a sender into an object that is handled by the parallel connection</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.net.connections.parallel_connection_sender.consumer">
+<span class="sig-name descname"><span class="pre">consumer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#parallel_connection_sender.consumer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.parallel_connection_sender.consumer" title="Link to this definition">¶</a></dt>
+<dd><p>The consumer called by the thread. Will grab one entry from the queue and pass it on to the connections.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.net.connections.parallel_connection_sender.id">
+<span class="sig-name descname"><span class="pre">id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#parallel_connection_sender.id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.parallel_connection_sender.id" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the senders id</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.net.connections.parallel_connection_sender.send">
+<span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#parallel_connection_sender.send"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.parallel_connection_sender.send" title="Link to this definition">¶</a></dt>
+<dd><p>Puts a message into the message queue
+:param path: the path to the physical file
+:param meta: the meta information</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.net.connections.parallel_connection_sender.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#parallel_connection_sender.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.parallel_connection_sender.start" title="Link to this definition">¶</a></dt>
+<dd><p>Starts all consumer threads as daemon threads</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.net.connections.parallel_connection_sender.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#parallel_connection_sender.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.parallel_connection_sender.stop" title="Link to this definition">¶</a></dt>
+<dd><p>Joins the threads</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="bexchange.net.connections.publisher_connection">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.connections.</span></span><span class="sig-name descname"><span class="pre">publisher_connection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#publisher_connection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.publisher_connection" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -151,6 +214,12 @@ Each (or most) publisher_connection is associated with one or more senders.</p>
 <dd><p>Publishes a file in some way using the underlying implementation
 :param path: The path to the file
 :param meta: The metadata of the file</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.net.connections.publisher_connection.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/connections.html#publisher_connection.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.connections.publisher_connection.stop" title="Link to this definition">¶</a></dt>
+<dd><p>Stops the connection</p>
 </dd></dl>
 
 </dd></dl>
@@ -1007,9 +1076,23 @@ with NamedTemporaryFile() as fp: c.getfo(”….”, fp)</p>
 <li><a class="reference internal" href="#bexchange.net.connections.failover_connection.publish"><code class="docutils literal notranslate"><span class="pre">failover_connection.publish()</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#bexchange.net.connections.parallel_connection"><code class="docutils literal notranslate"><span class="pre">parallel_connection</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.net.connections.parallel_connection.publish"><code class="docutils literal notranslate"><span class="pre">parallel_connection.publish()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.connections.parallel_connection.stop"><code class="docutils literal notranslate"><span class="pre">parallel_connection.stop()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.net.connections.parallel_connection_sender"><code class="docutils literal notranslate"><span class="pre">parallel_connection_sender</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.net.connections.parallel_connection_sender.consumer"><code class="docutils literal notranslate"><span class="pre">parallel_connection_sender.consumer()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.connections.parallel_connection_sender.id"><code class="docutils literal notranslate"><span class="pre">parallel_connection_sender.id()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.connections.parallel_connection_sender.send"><code class="docutils literal notranslate"><span class="pre">parallel_connection_sender.send()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.connections.parallel_connection_sender.start"><code class="docutils literal notranslate"><span class="pre">parallel_connection_sender.start()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.connections.parallel_connection_sender.stop"><code class="docutils literal notranslate"><span class="pre">parallel_connection_sender.stop()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#bexchange.net.connections.publisher_connection"><code class="docutils literal notranslate"><span class="pre">publisher_connection</span></code></a><ul>
 <li><a class="reference internal" href="#bexchange.net.connections.publisher_connection.backend"><code class="docutils literal notranslate"><span class="pre">publisher_connection.backend()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.net.connections.publisher_connection.publish"><code class="docutils literal notranslate"><span class="pre">publisher_connection.publish()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.connections.publisher_connection.stop"><code class="docutils literal notranslate"><span class="pre">publisher_connection.stop()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#bexchange.net.connections.simple_connection"><code class="docutils literal notranslate"><span class="pre">simple_connection</span></code></a><ul>

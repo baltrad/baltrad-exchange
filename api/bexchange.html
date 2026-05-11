@@ -475,9 +475,23 @@
 <li class="toctree-l4"><a class="reference internal" href="bexchange.net.html#bexchange.net.connections.failover_connection.publish"><code class="docutils literal notranslate"><span class="pre">failover_connection.publish()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="bexchange.net.html#bexchange.net.connections.parallel_connection"><code class="docutils literal notranslate"><span class="pre">parallel_connection</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.net.html#bexchange.net.connections.parallel_connection.publish"><code class="docutils literal notranslate"><span class="pre">parallel_connection.publish()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.net.html#bexchange.net.connections.parallel_connection.stop"><code class="docutils literal notranslate"><span class="pre">parallel_connection.stop()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="bexchange.net.html#bexchange.net.connections.parallel_connection_sender"><code class="docutils literal notranslate"><span class="pre">parallel_connection_sender</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.net.html#bexchange.net.connections.parallel_connection_sender.consumer"><code class="docutils literal notranslate"><span class="pre">parallel_connection_sender.consumer()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.net.html#bexchange.net.connections.parallel_connection_sender.id"><code class="docutils literal notranslate"><span class="pre">parallel_connection_sender.id()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.net.html#bexchange.net.connections.parallel_connection_sender.send"><code class="docutils literal notranslate"><span class="pre">parallel_connection_sender.send()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.net.html#bexchange.net.connections.parallel_connection_sender.start"><code class="docutils literal notranslate"><span class="pre">parallel_connection_sender.start()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.net.html#bexchange.net.connections.parallel_connection_sender.stop"><code class="docutils literal notranslate"><span class="pre">parallel_connection_sender.stop()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="bexchange.net.html#bexchange.net.connections.publisher_connection"><code class="docutils literal notranslate"><span class="pre">publisher_connection</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="bexchange.net.html#bexchange.net.connections.publisher_connection.backend"><code class="docutils literal notranslate"><span class="pre">publisher_connection.backend()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="bexchange.net.html#bexchange.net.connections.publisher_connection.publish"><code class="docutils literal notranslate"><span class="pre">publisher_connection.publish()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="bexchange.net.html#bexchange.net.connections.publisher_connection.stop"><code class="docutils literal notranslate"><span class="pre">publisher_connection.stop()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="bexchange.net.html#bexchange.net.connections.simple_connection"><code class="docutils literal notranslate"><span class="pre">simple_connection</span></code></a><ul>
@@ -1423,6 +1437,52 @@ the following extra options types:</p>
 <dd></dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="bexchange.util.jobQueue">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.util.</span></span><span class="sig-name descname"><span class="pre">jobQueue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/util.html#jobQueue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.util.jobQueue" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Wrapper around queue.Queue to be able to shutdown. This will be supported in python 3.13 but for now
+this will be enough.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.util.jobQueue.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">waittime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/util.html#jobQueue.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.util.jobQueue.get" title="Link to this definition">¶</a></dt>
+<dd><p>Returns an item from the queue. The wait time is the time in seconds the
+thread should wait in the condition until checking for any new item in the queue.
+This condition will be notified whenever put or shutdown is called.
+:param waittime: The time to wait in seconds inside the condition
+:return: Will always return an item
+:throws: pubQueueShutdown</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.util.jobQueue.put">
+<span class="sig-name descname"><span class="pre">put</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/util.html#jobQueue.put"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.util.jobQueue.put" title="Link to this definition">¶</a></dt>
+<dd><p>Puts an item into the queue without blocking.
+If queue is shutdown, the item will not be added to the queue and this will be done silently
+:param item: the item to add to the queue</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.util.jobQueue.shutdown">
+<span class="sig-name descname"><span class="pre">shutdown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/util.html#jobQueue.shutdown"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.util.jobQueue.shutdown" title="Link to this definition">¶</a></dt>
+<dd><p>Shuts down the queue.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.util.jobQueue.task_done">
+<span class="sig-name descname"><span class="pre">task_done</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/util.html#jobQueue.task_done"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.util.jobQueue.task_done" title="Link to this definition">¶</a></dt>
+<dd><p>Call this when task grabbed from queue is finished</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="bexchange.util.jobQueueShutdown">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.util.</span></span><span class="sig-name descname"><span class="pre">jobQueueShutdown</span></span><a class="reference internal" href="../_modules/bexchange/util.html#jobQueueShutdown"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.util.jobQueueShutdown" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>thrown to indicate that an entry already exists</p>
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="bexchange.util.message_aware">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.util.</span></span><span class="sig-name descname"><span class="pre">message_aware</span></span><a class="reference internal" href="../_modules/bexchange/util.html#message_aware"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.util.message_aware" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
@@ -1532,6 +1592,14 @@ the following extra options types:</p>
 <li><a class="reference internal" href="#module-bexchange.util">bexchange.util module</a><ul>
 <li><a class="reference internal" href="#bexchange.util.abstractclassmethod"><code class="docutils literal notranslate"><span class="pre">abstractclassmethod</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.util.create_fileid_from_meta"><code class="docutils literal notranslate"><span class="pre">create_fileid_from_meta()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.util.jobQueue"><code class="docutils literal notranslate"><span class="pre">jobQueue</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.util.jobQueue.get"><code class="docutils literal notranslate"><span class="pre">jobQueue.get()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.util.jobQueue.put"><code class="docutils literal notranslate"><span class="pre">jobQueue.put()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.util.jobQueue.shutdown"><code class="docutils literal notranslate"><span class="pre">jobQueue.shutdown()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.util.jobQueue.task_done"><code class="docutils literal notranslate"><span class="pre">jobQueue.task_done()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bexchange.util.jobQueueShutdown"><code class="docutils literal notranslate"><span class="pre">jobQueueShutdown</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.util.message_aware"><code class="docutils literal notranslate"><span class="pre">message_aware</span></code></a><ul>
 <li><a class="reference internal" href="#bexchange.util.message_aware.handle_message"><code class="docutils literal notranslate"><span class="pre">message_aware.handle_message()</span></code></a></li>
 </ul>

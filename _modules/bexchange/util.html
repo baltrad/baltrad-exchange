@@ -60,6 +60,8 @@
 <span class="c1">## @author Anders Henja, SMHI</span>
 <span class="c1">## @date 2021-08-18</span>
 <span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">queue</span> <span class="kn">import</span> <span class="n">Queue</span> <span class="c1">#, Full, Empty</span>
+<span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Condition</span> <span class="c1">#Thread, </span>
 <span class="kn">import</span> <span class="nn">datetime</span>
 
 <div class="viewcode-block" id="abstractclassmethod">
@@ -117,6 +119,81 @@
         <span class="k">return</span> <span class="s2">&quot;nod:</span><span class="si">%s</span><span class="s2">, object:</span><span class="si">%s</span><span class="s2">, time:</span><span class="si">%s</span><span class="s2">, elangle:</span><span class="si">%s</span><span class="s2">, hash:</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">file_object</span><span class="p">,</span> <span class="n">file_datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">T%H:%M:%SZ&quot;</span><span class="p">),</span> <span class="n">file_elangle</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">bdb_metadata_hash</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">&quot;nod:</span><span class="si">%s</span><span class="s2">, object:</span><span class="si">%s</span><span class="s2">, time:</span><span class="si">%s</span><span class="s2">, hash:</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">file_object</span><span class="p">,</span> <span class="n">file_datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">T%H:%M:%SZ&quot;</span><span class="p">),</span> <span class="n">meta</span><span class="o">.</span><span class="n">bdb_metadata_hash</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="jobQueueShutdown">
+<a class="viewcode-back" href="../../api/bexchange.html#bexchange.util.jobQueueShutdown">[docs]</a>
+<span class="k">class</span> <span class="nc">jobQueueShutdown</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;thrown to indicate that an entry already exists</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="jobQueue">
+<a class="viewcode-back" href="../../api/bexchange.html#bexchange.util.jobQueue">[docs]</a>
+<span class="k">class</span> <span class="nc">jobQueue</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrapper around queue.Queue to be able to shutdown. This will be supported in python 3.13 but for now</span>
+<span class="sd">    this will be enough.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="sd">        :param qs: max queue size</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">(</span><span class="n">qs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_shutdown</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_condition</span> <span class="o">=</span> <span class="n">Condition</span><span class="p">()</span>
+
+<div class="viewcode-block" id="jobQueue.put">
+<a class="viewcode-back" href="../../api/bexchange.html#bexchange.util.jobQueue.put">[docs]</a>
+    <span class="k">def</span> <span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Puts an item into the queue without blocking.</span>
+<span class="sd">        If queue is shutdown, the item will not be added to the queue and this will be done silently</span>
+<span class="sd">        :param item: the item to add to the queue</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_condition</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shutdown</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">block</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">finally</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_condition</span><span class="o">.</span><span class="n">notify_all</span><span class="p">()</span></div>
+
+ 
+<div class="viewcode-block" id="jobQueue.get">
+<a class="viewcode-back" href="../../api/bexchange.html#bexchange.util.jobQueue.get">[docs]</a>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">waittime</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns an item from the queue. The wait time is the time in seconds the</span>
+<span class="sd">        thread should wait in the condition until checking for any new item in the queue.</span>
+<span class="sd">        This condition will be notified whenever put or shutdown is called.</span>
+<span class="sd">        :param waittime: The time to wait in seconds inside the condition</span>
+<span class="sd">        :return: Will always return an item</span>
+<span class="sd">        :throws: pubQueueShutdown</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_condition</span><span class="p">:</span>
+            <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shutdown</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">get_nowait</span><span class="p">()</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shutdown</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_condition</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">waittime</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">jobQueueShutdown</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="jobQueue.task_done">
+<a class="viewcode-back" href="../../api/bexchange.html#bexchange.util.jobQueue.task_done">[docs]</a>
+    <span class="k">def</span> <span class="nf">task_done</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Call this when task grabbed from queue is finished</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">task_done</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="jobQueue.shutdown">
+<a class="viewcode-back" href="../../api/bexchange.html#bexchange.util.jobQueue.shutdown">[docs]</a>
+    <span class="k">def</span> <span class="nf">shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Shuts down the queue.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_condition</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_shutdown</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_condition</span><span class="o">.</span><span class="n">notify_all</span><span class="p">()</span></div>
+</div>
 
 </pre></div>
 

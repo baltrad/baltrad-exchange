@@ -180,9 +180,15 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">noop_sender</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">aid</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_return_value</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sleep</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="s2">&quot;return_value&quot;</span> <span class="ow">in</span> <span class="n">arguments</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_return_value</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;return_value&quot;</span><span class="p">]</span>
-    
+
+        <span class="k">if</span> <span class="s2">&quot;sleep&quot;</span> <span class="ow">in</span> <span class="n">arguments</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sleep</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;sleep&quot;</span><span class="p">]</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;noop_sender: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sleep</span><span class="p">))</span>
+
 <div class="viewcode-block" id="noop_sender.send">
 <a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.senders.noop_sender.send">[docs]</a>
     <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
@@ -193,6 +199,8 @@
         <span class="n">aid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">()</span>
         <span class="n">return_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_return_value</span>
         <span class="n">fileid</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sleep</span><span class="p">:</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sleep</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">aid</span><span class="si">}</span><span class="s2"> has been suppressed using noop_sender, returning </span><span class="si">{</span><span class="n">return_value</span><span class="si">}</span><span class="s2"> for </span><span class="si">{</span><span class="n">fileid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">return_value</span></div>
 </div>

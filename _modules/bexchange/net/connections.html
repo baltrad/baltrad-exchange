@@ -61,8 +61,13 @@
 <span class="c1">## @date 2021-12-01</span>
 <span class="kn">from</span> <span class="nn">bexchange.net.senders</span> <span class="kn">import</span> <span class="n">sender_manager</span>
 <span class="kn">from</span> <span class="nn">bexchange</span> <span class="kn">import</span> <span class="n">util</span>
+<span class="kn">from</span> <span class="nn">queue</span> <span class="kn">import</span> <span class="n">Full</span><span class="p">,</span> <span class="n">Empty</span>
+<span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Thread</span>
+
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">importlib</span>
+<span class="kn">from</span> <span class="nn">tempfile</span> <span class="kn">import</span> <span class="n">NamedTemporaryFile</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;bexchange.net.connections&quot;</span><span class="p">)</span>
 
@@ -94,6 +99,14 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the backend</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span></div>
+
+
+<div class="viewcode-block" id="publisher_connection.stop">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.publisher_connection.stop">[docs]</a>
+    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the connection</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
 </div>
 
 
@@ -194,6 +207,7 @@
 </div>
 
 
+
 <div class="viewcode-block" id="distributed_connection">
 <a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.distributed_connection">[docs]</a>
 <span class="k">class</span> <span class="nc">distributed_connection</span><span class="p">(</span><span class="n">publisher_connection</span><span class="p">):</span>
@@ -218,6 +232,162 @@
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Successfully sent file to </span><span class="si">%s</span><span class="s2">, ID:&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">sender</span><span class="o">.</span><span class="n">id</span><span class="p">(),</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)))</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Failed to send file to </span><span class="si">%s</span><span class="s2">, ID:&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">sender</span><span class="o">.</span><span class="n">id</span><span class="p">(),</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)))</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="parallel_connection_sender">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.parallel_connection_sender">[docs]</a>
+<span class="k">class</span> <span class="nc">parallel_connection_sender</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Wraps a sender into an object that is handled by the parallel connection</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">,</span> <span class="n">queue_size</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Constructor</span>
+<span class="sd">        :param sender: the sender</span>
+<span class="sd">        :param queue_size: the queue size this instance should allow before throwing new items</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sender</span> <span class="o">=</span> <span class="n">sender</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">jobQueue</span><span class="p">(</span><span class="n">queue_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="parallel_connection_sender.send">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.parallel_connection_sender.send">[docs]</a>
+    <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Puts a message into the message queue</span>
+<span class="sd">        :param path: the path to the physical file</span>
+<span class="sd">        :param meta: the meta information</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tmpfile</span> <span class="o">=</span> <span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_sender</span><span class="o">.</span><span class="n">backend</span><span class="p">()</span><span class="o">.</span><span class="n">get_tmp_folder</span><span class="p">())</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copyfileobj</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">tmpfile</span><span class="p">)</span>
+        <span class="n">tmpfile</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>        
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="n">tmpfile</span><span class="p">,</span> <span class="n">meta</span><span class="p">))</span>
+        <span class="k">except</span> <span class="n">Full</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Queue for sender &#39;</span><span class="si">%s</span><span class="s2">&#39; is full, dropping message with ID:&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">(),</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)))</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">tmpfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="parallel_connection_sender.consumer">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.parallel_connection_sender.consumer">[docs]</a>
+    <span class="k">def</span> <span class="nf">consumer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; The consumer called by the thread. Will grab one entry from the queue and pass it on to the connections.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tmpfile</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Entered consumer&quot;</span><span class="p">)</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running</span><span class="p">:</span>
+            <span class="n">meta</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">try</span><span class="p">:</span>
+                 <span class="c1"># In 3.13 there will be support for shutdown. So we need to use nowait and instead use _event.wait for notification purposes</span>
+                <span class="n">tmpfile</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_sender</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">task_done</span><span class="p">()</span>
+
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Successfully sent file to </span><span class="si">%s</span><span class="s2"> using threaded sender, ID:&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sender</span><span class="o">.</span><span class="n">id</span><span class="p">(),</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)))</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">meta</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Failed to send file to </span><span class="si">%s</span><span class="s2">, ID:&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sender</span><span class="o">.</span><span class="n">id</span><span class="p">(),</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Failed to send unknown item to </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sender</span><span class="o">.</span><span class="n">id</span><span class="p">())</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running</span><span class="p">:</span>
+                    <span class="k">break</span>
+            <span class="k">finally</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">tmpfile</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">tmpfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                    <span class="k">except</span><span class="p">:</span>
+                        <span class="k">pass</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Left consumer&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="parallel_connection_sender.start">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.parallel_connection_sender.start">[docs]</a>
+    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Starts all consumer threads as daemon threads</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="kc">True</span>        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">consumer</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> </div>
+
+
+<div class="viewcode-block" id="parallel_connection_sender.stop">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.parallel_connection_sender.stop">[docs]</a>
+    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Joins the threads</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Stopping publisher&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Publisher stopped&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="parallel_connection_sender.id">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.parallel_connection_sender.id">[docs]</a>
+    <span class="k">def</span> <span class="nf">id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the senders id</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sender</span><span class="o">.</span><span class="n">id</span><span class="p">()</span></div>
+</div>
+
+
+<div class="viewcode-block" id="parallel_connection">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.parallel_connection">[docs]</a>
+<span class="k">class</span> <span class="nc">parallel_connection</span><span class="p">(</span><span class="n">publisher_connection</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; This is similar to the distributed connection but it will create a thread for each added sender so that</span>
+<span class="sd">    the messages are sent without affecting each other. If for example the first sender takes a long time to execute </span>
+<span class="sd">    it won&#39;t affect the other senders in this connection.</span>
+<span class="sd">    The queue size for each sender is default 100 and it can be configured by using &quot;queue_size&quot; in arguments.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Constructor</span>
+<span class="sd">        :param backend: the backend</span>
+<span class="sd">        :param arguments: two attributes are supported in the arguments</span>
+<span class="sd">          {&quot;queue_size&quot;:100,</span>
+<span class="sd">           &quot;senders&quot;:[...]}</span>
+<span class="sd">           and at least one sender is mandatory in the list of senders.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">parallel_connection</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">backend</span><span class="p">)</span>
+        <span class="n">queue_size</span><span class="o">=</span><span class="mi">100</span>
+        <span class="k">if</span> <span class="s2">&quot;queue_size&quot;</span> <span class="ow">in</span> <span class="n">arguments</span><span class="p">:</span>
+            <span class="n">queue_size</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;queue_size&quot;</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_senders</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="s2">&quot;senders&quot;</span> <span class="ow">in</span> <span class="n">arguments</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">sender_conf</span> <span class="ow">in</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;senders&quot;</span><span class="p">]:</span>
+                <span class="n">sender</span> <span class="o">=</span> <span class="n">parallel_connection_sender</span><span class="p">(</span><span class="n">sender_manager</span><span class="o">.</span><span class="n">from_conf</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">sender_conf</span><span class="p">),</span> <span class="n">queue_size</span><span class="p">)</span>
+                <span class="n">sender</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_senders</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sender</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Requires &#39;senders&#39; in arguments&quot;</span><span class="p">)</span>
+        
+<div class="viewcode-block" id="parallel_connection.publish">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.parallel_connection.publish">[docs]</a>
+    <span class="k">def</span> <span class="nf">publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">sender</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_senders</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">sender</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Successfully passed file to threaded </span><span class="si">%s</span><span class="s2">, ID:&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">sender</span><span class="o">.</span><span class="n">id</span><span class="p">(),</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)))</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Failed to pass file to threaded </span><span class="si">%s</span><span class="s2">, ID:&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">sender</span><span class="o">.</span><span class="n">id</span><span class="p">(),</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)))</span></div>
+
+
+<div class="viewcode-block" id="parallel_connection.stop">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.connections.parallel_connection.stop">[docs]</a>
+    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">sender</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_senders</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">sender</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">pass</span>    </div>
 </div>
 
 
