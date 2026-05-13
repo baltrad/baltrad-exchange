@@ -7,7 +7,7 @@
   	 "threads":1,
   	 "queue_size":50
    },
-   "active":false,
+   "active":true,
    "connection":{
      "_comment_":"This is a connection used when publishing files to sftp server without any failover",
      "class":"bexchange.net.connections.simple_connection",
@@ -16,6 +16,7 @@
           "arguments": {
             "uri":"sftp://sftpuploader:secret@localhost/tmp/primary_sftp/${_baltrad/opera_filename}.h5",
             "create_missing_directories":true,
+            "max_transfers_per_connection":5,
             "naming_operations": [
               {
                 "tag":"_baltrad/opera_filename",

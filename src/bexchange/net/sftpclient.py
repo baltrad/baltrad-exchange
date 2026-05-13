@@ -72,7 +72,16 @@ class sftpclient(object):
         :return the password
         """
         return self._password
-        
+
+    def isconnected(self):
+        if self._sftp:
+            try:
+                self._sftp.stat(".")
+                return True
+            except (paramiko.SSHException, OSError, AttributeError):
+                pass
+        return False
+
     def disconnect(self):
         """ Disconnects from the sftp server
         """

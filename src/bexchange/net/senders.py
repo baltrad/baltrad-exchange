@@ -432,9 +432,13 @@ class sftp_sender(baseuri_sender):
         super(sftp_sender, self).__init__(backend, aid, arguments)
         self._confirm_upload = False
         self._tmppattern = None
+        self._max_transfers_per_connection = None
+        self._nr_connection_transfers = 0
+        self._client = None
 
         if "confirm_upload" in arguments:
             self._confirm_upload = arguments["confirm_upload"]
+
         if "tmppattern" in arguments:
             if isinstance(arguments["tmppattern"], list) and len(arguments["tmppattern"]) > 0 and len(arguments["tmppattern"])%2==0:
                 self._tmppattern = arguments["tmppattern"]
@@ -442,13 +446,17 @@ class sftp_sender(baseuri_sender):
                 pass
             else:
                 raise ValueError("Not a valid tmppattern. Should be a list with length evenly divided by two where first value is match pattern and second value is replacement pattern")
-
+        
+        if "max_transfers_per_connection" in arguments:
+            self._max_transfers_per_connection = arguments["max_transfers_per_connection"]
 
     def client(self):
         """
         :returns: a sftpclient instance with hostname, port, username and password set
         """
-        return sftpclient(self.hostname(), port=self.port(), username=self.username(), password=self.password())
+        if not self._client:
+            self._client = sftpclient(self.hostname(), port=self.port(), username=self.username(), password=self.password())
+        return self._client
 
     def send(self, path, meta):
         """Sends the file using sftp.
@@ -456,16 +464,17 @@ class sftp_sender(baseuri_sender):
         :param meta: the meta object for all metadata of file
         """        
         publishedname = self.name(meta)
-        logger.debug("sftp_adapter: connecting to: host=%s, port=%d, user='%s'"%(self.hostname(), self.port(), self.username()))
+        logger.debug("sftp_sender: sending message to: host=%s, port=%d, user='%s'"%(self.hostname(), self.port(), self.username()))
         startts = time.perf_counter()
         c = self.client()
         try:
-            c.connect()
+            if not c.isconnected():
+                c.connect()
+                logger.debug("Connected to %s"%self.hostname())
             connectionts = time.perf_counter()
 
             bdir = os.path.dirname(publishedname)
             fname = os.path.basename(publishedname)
-            logger.debug("Connected to %s"%self.hostname())
             if self.create_missing_directories():
                 c.makedirs(bdir)
             c.chdir(bdir)
@@ -482,9 +491,19 @@ class sftp_sender(baseuri_sender):
             else:
                 logger.info("sftp_sender: address:%s, basename:%s uploaded ID:'%s'" % (self.hostname(), fname, util.create_fileid_from_meta(meta)))
                 c.put(path, fname, confirm=self._confirm_upload)
+            self._nr_connection_transfers += 1
             transferts = time.perf_counter()
+        except:
+            try:
+                c.disconnect()
+            except:
+                pass
+            self._nr_connection_transfers = 0
+            raise
         finally:
-            c.disconnect()
+            if not self._max_transfers_per_connection or (self._max_transfers_per_connection and self._nr_connection_transfers >= self._max_transfers_per_connection):
+                c.disconnect()
+                self._nr_connection_transfers = 0
             disconnectts = time.perf_counter()
 
             logger.info("sftp_sender: host=%s: timing connection=%.6f, dircreation=%.6f, transfer=%.6f, disconnect = %.6f total = %.6f fname = %s ID:'%s'" % (self.hostname(), (connectionts - startts), (dirts - connectionts), (transferts - dirts), (disconnectts - transferts), (disconnectts - startts), fname, util.create_fileid_from_meta(meta)))
