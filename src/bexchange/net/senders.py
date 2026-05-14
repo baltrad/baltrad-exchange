@@ -50,6 +50,10 @@ from baltradcrypto.crypto.keyczarcrypto import keyczar_signer
 
 logger = logging.getLogger("bexchange.net.senders")
 
+class SenderError(Exception):
+    """thrown to indicate that something went wrong within the sender
+    """
+
 class sender(object):
     """Base sender. All classes implementing this should send the specified file path to a recipient over a specific protocol. 
     """
@@ -435,6 +439,7 @@ class sftp_sender(baseuri_sender):
         self._max_transfers_per_connection = None
         self._nr_connection_transfers = 0
         self._client = None
+        self._homedir = None
 
         if "confirm_upload" in arguments:
             self._confirm_upload = arguments["confirm_upload"]
@@ -468,15 +473,30 @@ class sftp_sender(baseuri_sender):
         startts = time.perf_counter()
         c = self.client()
         try:
+            # When connecting we need to get hold of the home directory to know how to handle
+            # when the connection is kept open so that we always try to create an absolute path.
+            # If no home can be found and the published name isn't absolute (i.e. starts with /),
+            # then we will not allow the user to create any sort of directory.
             if not c.isconnected():
                 c.connect()
+                self._homedir = c.gethome()
                 logger.debug("Connected to %s"%self.hostname())
+            
             connectionts = time.perf_counter()
 
             bdir = os.path.dirname(publishedname)
+            if bdir != "" and not bdir.startswith("/") and self._homedir and self._max_transfers_per_connection: # Rel path, use homedir
+                bdir = "%s/%s"%(self._homedir, bdir)
             fname = os.path.basename(publishedname)
-            if self.create_missing_directories():
-                c.makedirs(bdir)
+
+            # If missing directories should be created, and connection is kept open, then
+            # only allow absolute paths.
+            if bdir != "" and self.create_missing_directories():
+                if bdir.startswith("/") or not self._max_transfers_per_connection:
+                    c.makedirs(bdir)
+                elif self._max_transfers_per_connection:
+                    raise SenderError("Can't create missing directories when keeping connection alive and not specifying an absolute directory path")
+
             c.chdir(bdir)
             dirts = time.perf_counter()
 
@@ -506,7 +526,7 @@ class sftp_sender(baseuri_sender):
                 self._nr_connection_transfers = 0
             disconnectts = time.perf_counter()
 
-            logger.info("sftp_sender: host=%s: timing connection=%.6f, dircreation=%.6f, transfer=%.6f, disconnect = %.6f total = %.6f fname = %s ID:'%s'" % (self.hostname(), (connectionts - startts), (dirts - connectionts), (transferts - dirts), (disconnectts - transferts), (disconnectts - startts), fname, util.create_fileid_from_meta(meta)))
+        logger.info("sftp_sender: host=%s: timing connection=%.6f, dircreation=%.6f, transfer=%.6f, disconnect = %.6f total = %.6f fname = %s ID:'%s'" % (self.hostname(), (connectionts - startts), (dirts - connectionts), (transferts - dirts), (disconnectts - transferts), (disconnectts - startts), fname, util.create_fileid_from_meta(meta)))
 
 class scp_sender(baseuri_sender):
     """Publishes files over scp

@@ -48,7 +48,7 @@ class sftpclient(object):
         self._banner_timeout = banner_timeout
         self._sftp = None
         self._client = None
-
+        
     def hostname(self):
         """
         :return the hostname
@@ -162,6 +162,30 @@ class sftpclient(object):
         """
         self._sftp.chdir(dirname)
     
+    def gethome(self):
+        """ Tries to identify the home directory when connecting to a server so that
+        it is possible to change into a "absolute" path when needed.
+        """
+        homedir=None
+        try:
+            homedir = self._sftp.normalize(".")
+        except:
+            pass
+        
+        if not homedir:
+            try:
+                self._sftp.chdir(".")
+                homedir = self._sftp.getcwd() 
+            except:
+                pass
+
+        return homedir
+
+    def getcwd(self):
+        """ Returns current remote working directory
+        """
+        return self._sftp.getcwd()
+
     def listdir(self, dirname):
         """Lists files and directories in the directory
         :param dirname: The directory to list

@@ -26,12 +26,13 @@ from unittest import mock
 from unittest.mock import patch
 from bexchange.naming.namer import metadata_namer, opera_filename_namer
 from bexchange.net import senders
+from bexchange.net.senders import SenderError
 import bexchange.net.sftpclient
 from baltrad.bdbcommon import oh5
 from baltrad.bdbcommon.oh5 import Source
 from baltrad.bdbcommon.oh5.node import Attribute, Group
 
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, call
 
 import datetime, os
 
@@ -157,3 +158,297 @@ class test_senders(unittest.TestCase):
         sftpobj.makedirs.assert_not_called()
         sftpobj.chdir.assert_called_with("data")
         sftpobj.put.assert_called_with("thisfile.h5", "sella.h5", confirm=False)
+
+
+    def test_sftp_sender_one_max_transfer_sequences(self):
+        backend = MagicMock()
+        meta = self.create_meta()
+        arguments = {
+            "create_missing_directories":True,
+            "max_transfers_per_connection":3,
+            "confirm_upload":False,
+            "uri":"sftp://username:password@localhost:1234//tmp/data/${_baltrad/source:NOD}.h5"
+        }
+        sender = senders.sftp_sender(backend, "aid", arguments)
+        sftpobj = MagicMock()
+        sender.client = MagicMock(return_value=sftpobj)
+
+        sftpobj.isconnected.side_effect = [False, True, True]
+        sftpobj.gethome.return_value = None
+
+        # Run test
+        sender.send("thisfile.h5", meta)
+        sender.send("otherfile.h5", meta)
+        sender.send("thirdfile.h5", meta)
+
+        # Verify
+        sftpobj.connect.assert_called_once()
+        sftpobj.makedirs.assert_called_with("/tmp/data")
+        sftpobj.chdir.assert_called_with("/tmp/data")
+        sftpobj.put.assert_has_calls([
+            call("thisfile.h5", "sella.h5", confirm=False), 
+            call("otherfile.h5", "sella.h5", confirm=False),
+            call("thirdfile.h5", "sella.h5", confirm=False)])
+        sftpobj.disconnect.assert_called_once()
+
+    def test_sftp_sender_two_max_transfer_sequence(self):
+        backend = MagicMock()
+        meta = self.create_meta()
+        arguments = {
+            "create_missing_directories":True,
+            "max_transfers_per_connection":3,
+            "confirm_upload":False,
+            "uri":"sftp://username:password@localhost:1234//tmp/data/${_baltrad/source:NOD}.h5"
+        }
+        sender = senders.sftp_sender(backend, "aid", arguments)
+        sftpobj = MagicMock()
+        sender.client = MagicMock(return_value=sftpobj)
+
+        sftpobj.isconnected.side_effect = [False, True, True, False, True, True]
+        sftpobj.gethome.return_value = None
+
+        # Run test
+        sender.send("thisfile.h5", meta)
+        sender.send("otherfile.h5", meta)
+        sender.send("thirdfile.h5", meta)
+        sender.send("fourthfile.h5", meta)
+        sender.send("fifthfile.h5", meta)
+        sender.send("sixthfile.h5", meta)
+
+        # Verify
+        assert(sftpobj.connect.call_count == 2)
+        sftpobj.makedirs.assert_called_with("/tmp/data")
+        sftpobj.chdir.assert_called_with("/tmp/data")
+        sftpobj.put.assert_has_calls([
+            call("thisfile.h5", "sella.h5", confirm=False), 
+            call("otherfile.h5", "sella.h5", confirm=False),
+            call("thirdfile.h5", "sella.h5", confirm=False),
+            call("fourthfile.h5", "sella.h5", confirm=False), 
+            call("fifthfile.h5", "sella.h5", confirm=False),
+            call("sixthfile.h5", "sella.h5", confirm=False)])
+        assert(sftpobj.disconnect.call_count == 2)
+
+    def test_sftp_sender_failure_during_max_transfer_sequence(self):
+        backend = MagicMock()
+        meta = self.create_meta()
+        arguments = {
+            "create_missing_directories":True,
+            "max_transfers_per_connection":3,
+            "confirm_upload":False,
+            "uri":"sftp://username:password@localhost:1234//tmp/data/${_baltrad/source:NOD}.h5"
+        }
+        sender = senders.sftp_sender(backend, "aid", arguments)
+        sftpobj = MagicMock()
+        sender.client = MagicMock(return_value=sftpobj)
+
+        sftpobj.isconnected.side_effect = [False, True, False, True, True]
+        sftpobj.gethome.return_value = None
+        sftpobj.put.side_effect = [None, IOError(), None, None, None, None]
+
+        # Run test
+        sender.send("thisfile.h5", meta)
+        try:
+            sender.send("otherfile.h5", meta)
+            self.fail("Expected IOError")
+        except IOError:
+            pass
+        sender.send("thirdfile.h5", meta)
+        sender.send("fourthfile.h5", meta)
+        sender.send("fifthfile.h5", meta)
+
+        # Verify
+        assert(sftpobj.connect.call_count == 2)
+        sftpobj.makedirs.assert_called_with("/tmp/data")
+        sftpobj.chdir.assert_called_with("/tmp/data")
+        sftpobj.put.assert_has_calls([
+            call("thisfile.h5", "sella.h5", confirm=False), 
+            call("otherfile.h5", "sella.h5", confirm=False),
+            call("thirdfile.h5", "sella.h5", confirm=False),
+            call("fourthfile.h5", "sella.h5", confirm=False), 
+            call("fifthfile.h5", "sella.h5", confirm=False)])
+        assert(sftpobj.disconnect.call_count == 2)
+
+    def test_sftp_sender_relpath_2_calls(self):
+        backend = MagicMock()
+        meta = self.create_meta()
+        arguments = {
+            "create_missing_directories":True,
+            "max_transfers_per_connection":3,
+            "confirm_upload":False,
+            "uri":"sftp://username:password@localhost:1234/data/${_baltrad/source:NOD}.h5"
+        }
+        sender = senders.sftp_sender(backend, "aid", arguments)
+        sftpobj = MagicMock()
+        sender.client = MagicMock(return_value=sftpobj)
+
+        sftpobj.isconnected.side_effect = [False, True]
+        sftpobj.gethome.return_value = "/home/user"
+
+        # Run test
+        sender.send("thisfile.h5", meta)
+        sender.send("otherfile.h5", meta)
+
+        # Verify
+        sftpobj.connect.assert_called_once()
+        sftpobj.makedirs.assert_called_with("/home/user/data")
+        sftpobj.chdir.assert_called_with("/home/user/data")
+        sftpobj.put.assert_has_calls([
+            call("thisfile.h5", "sella.h5", confirm=False), 
+            call("otherfile.h5", "sella.h5", confirm=False)])
+        
+    def test_sftp_sender_relpath_calls_nohome(self):
+        backend = MagicMock()
+        meta = self.create_meta()
+        arguments = {
+            "create_missing_directories":True,
+            "max_transfers_per_connection":3,
+            "confirm_upload":False,
+            "uri":"sftp://username:password@localhost:1234/data/${_baltrad/source:NOD}.h5"
+        }
+        sender = senders.sftp_sender(backend, "aid", arguments)
+        sftpobj = MagicMock()
+        sender.client = MagicMock(return_value=sftpobj)
+
+        sftpobj.isconnected.side_effect = [False, True]
+        sftpobj.gethome.return_value = None
+
+        # Run test
+        try:
+            sender.send("thisfile.h5", meta)
+            self.fail("Expected Exception")
+        except SenderError:
+            pass
+
+        # Verify
+        sftpobj.connect.assert_called_once()
+        sftpobj.makedirs.assert_not_called()
+        sftpobj.chdir.assert_not_called()
+        
+
+    def test_sftp_sender_abspath_2_calls(self):
+        backend = MagicMock()
+        meta = self.create_meta()
+        arguments = {
+            "create_missing_directories":True,
+            "max_transfers_per_connection":3,
+            "confirm_upload":False,
+            "uri":"sftp://username:password@localhost:1234//tmp/data/${_baltrad/source:NOD}.h5"
+        }
+        sender = senders.sftp_sender(backend, "aid", arguments)
+        sftpobj = MagicMock()
+        sender.client = MagicMock(return_value=sftpobj)
+
+        sftpobj.isconnected.side_effect = [False, True]
+        sftpobj.gethome.return_value = "/home/user"
+
+        # Run test
+        sender.send("thisfile.h5", meta)
+        sender.send("otherfile.h5", meta)
+
+        # Verify
+        sftpobj.connect.assert_called_once()
+        sftpobj.makedirs.assert_called_with("/tmp/data")
+        sftpobj.chdir.assert_called_with("/tmp/data")
+        sftpobj.put.assert_has_calls([
+            call("thisfile.h5", "sella.h5", confirm=False), 
+            call("otherfile.h5", "sella.h5", confirm=False)])
+
+    def test_sftp_sender_abspath_2_calls_nohome(self):
+        backend = MagicMock()
+        meta = self.create_meta()
+        arguments = {
+            "create_missing_directories":True,
+            "max_transfers_per_connection":3,
+            "confirm_upload":False,
+            "uri":"sftp://username:password@localhost:1234//tmp/data/${_baltrad/source:NOD}.h5"
+        }
+        sender = senders.sftp_sender(backend, "aid", arguments)
+        sftpobj = MagicMock()
+        sender.client = MagicMock(return_value=sftpobj)
+
+        sftpobj.isconnected.side_effect = [False, True]
+        sftpobj.gethome.return_value = None
+
+        # Run test
+        sender.send("thisfile.h5", meta)
+        sender.send("otherfile.h5", meta)
+
+        # Verify
+        sftpobj.connect.assert_called_once()
+        sftpobj.makedirs.assert_called_with("/tmp/data")
+        sftpobj.chdir.assert_called_with("/tmp/data")
+        sftpobj.put.assert_has_calls([
+            call("thisfile.h5", "sella.h5", confirm=False), 
+            call("otherfile.h5", "sella.h5", confirm=False)])
+
+    def test_sftp_sender_no_max_transfer_sequence(self):
+        backend = MagicMock()
+        meta = self.create_meta()
+        arguments = {
+            "create_missing_directories":True,
+            "confirm_upload":False,
+            "uri":"sftp://username:password@localhost:1234/tmp/data/${_baltrad/source:NOD}.h5"
+        }
+        sender = senders.sftp_sender(backend, "aid", arguments)
+        sftpobj = MagicMock()
+        sender.client = MagicMock(return_value=sftpobj)
+
+        sftpobj.isconnected.side_effect = [False, False, False, False, False, False]
+        sftpobj.gethome.return_value = "/home/slask"
+
+        # Run test
+        sender.send("thisfile.h5", meta)
+        sender.send("otherfile.h5", meta)
+        sender.send("thirdfile.h5", meta)
+        sender.send("fourthfile.h5", meta)
+        sender.send("fifthfile.h5", meta)
+        sender.send("sixthfile.h5", meta)
+
+        # Verify
+        assert(sftpobj.connect.call_count == 6)
+        sftpobj.makedirs.assert_called_with("tmp/data")
+        sftpobj.chdir.assert_called_with("tmp/data")
+        sftpobj.put.assert_has_calls([
+            call("thisfile.h5", "sella.h5", confirm=False), 
+            call("otherfile.h5", "sella.h5", confirm=False),
+            call("thirdfile.h5", "sella.h5", confirm=False),
+            call("fourthfile.h5", "sella.h5", confirm=False), 
+            call("fifthfile.h5", "sella.h5", confirm=False),
+            call("sixthfile.h5", "sella.h5", confirm=False)])
+        assert(sftpobj.disconnect.call_count == 6)
+
+    def test_sftp_sender_no_max_transfer_sequence_abspath(self):
+        backend = MagicMock()
+        meta = self.create_meta()
+        arguments = {
+            "create_missing_directories":True,
+            "confirm_upload":False,
+            "uri":"sftp://username:password@localhost:1234//tmp/data/${_baltrad/source:NOD}.h5"
+        }
+        sender = senders.sftp_sender(backend, "aid", arguments)
+        sftpobj = MagicMock()
+        sender.client = MagicMock(return_value=sftpobj)
+
+        sftpobj.isconnected.side_effect = [False, False, False, False, False, False]
+        sftpobj.gethome.return_value = "/home/slask"
+
+        # Run test
+        sender.send("thisfile.h5", meta)
+        sender.send("otherfile.h5", meta)
+        sender.send("thirdfile.h5", meta)
+        sender.send("fourthfile.h5", meta)
+        sender.send("fifthfile.h5", meta)
+        sender.send("sixthfile.h5", meta)
+
+        # Verify
+        assert(sftpobj.connect.call_count == 6)
+        sftpobj.makedirs.assert_called_with("/tmp/data")
+        sftpobj.chdir.assert_called_with("/tmp/data")
+        sftpobj.put.assert_has_calls([
+            call("thisfile.h5", "sella.h5", confirm=False), 
+            call("otherfile.h5", "sella.h5", confirm=False),
+            call("thirdfile.h5", "sella.h5", confirm=False),
+            call("fourthfile.h5", "sella.h5", confirm=False), 
+            call("fifthfile.h5", "sella.h5", confirm=False),
+            call("sixthfile.h5", "sella.h5", confirm=False)])
+        assert(sftpobj.disconnect.call_count == 6)        

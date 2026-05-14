@@ -14,7 +14,7 @@
      "arguments":{
        "sender": { "class":"bexchange.net.senders.sftp_sender",
           "arguments": {
-            "uri":"sftp://sftpuploader:secret@localhost/tmp/primary_sftp/${_baltrad/opera_filename}.h5",
+            "uri":"sftp://sftpuploader:secret@localhost//tmp/primary_sftp/${_baltrad/opera_filename}.h5",
             "create_missing_directories":true,
             "max_transfers_per_connection":5,
             "naming_operations": [
