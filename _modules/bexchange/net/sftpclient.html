@@ -88,7 +88,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_banner_timeout</span> <span class="o">=</span> <span class="n">banner_timeout</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_sftp</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_client</span> <span class="o">=</span> <span class="kc">None</span>
-
+        
 <div class="viewcode-block" id="sftpclient.hostname">
 <a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.sftpclient.sftpclient.hostname">[docs]</a>
     <span class="k">def</span> <span class="nf">hostname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -235,6 +235,36 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_sftp</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">dirname</span><span class="p">)</span></div>
 
     
+<div class="viewcode-block" id="sftpclient.gethome">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.sftpclient.sftpclient.gethome">[docs]</a>
+    <span class="k">def</span> <span class="nf">gethome</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tries to identify the home directory when connecting to a server so that</span>
+<span class="sd">        it is possible to change into a &quot;absolute&quot; path when needed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">homedir</span><span class="o">=</span><span class="kc">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">homedir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sftp</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">homedir</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_sftp</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+                <span class="n">homedir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sftp</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span> 
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+        <span class="k">return</span> <span class="n">homedir</span></div>
+
+
+<div class="viewcode-block" id="sftpclient.getcwd">
+<a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.sftpclient.sftpclient.getcwd">[docs]</a>
+    <span class="k">def</span> <span class="nf">getcwd</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns current remote working directory</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sftp</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span></div>
+
+
 <div class="viewcode-block" id="sftpclient.listdir">
 <a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.sftpclient.sftpclient.listdir">[docs]</a>
     <span class="k">def</span> <span class="nf">listdir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dirname</span><span class="p">):</span>

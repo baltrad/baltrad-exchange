@@ -647,6 +647,13 @@ If queue is shutdown, the item will not be added to the queue and this will be d
 </section>
 <section id="module-bexchange.net.senders">
 <span id="bexchange-net-senders-module"></span><h2>bexchange.net.senders module<a class="headerlink" href="#module-bexchange.net.senders" title="Link to this heading">¶</a></h2>
+<dl class="py exception">
+<dt class="sig sig-object py" id="bexchange.net.senders.SenderError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.senders.</span></span><span class="sig-name descname"><span class="pre">SenderError</span></span><a class="reference internal" href="../_modules/bexchange/net/senders.html#SenderError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.SenderError" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>thrown to indicate that something went wrong within the sender</p>
+</dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="bexchange.net.senders.baseuri_sender">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.net.senders.</span></span><span class="sig-name descname"><span class="pre">baseuri_sender</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/senders.html#baseuri_sender"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.senders.baseuri_sender" title="Link to this definition">¶</a></dt>
@@ -938,6 +945,12 @@ which currently supports DSA &amp; RSA keys. DSA uses DSS, RSA uses pkcs1_15.</p
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="bexchange.net.sftpclient.sftpclient.getcwd">
+<span class="sig-name descname"><span class="pre">getcwd</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/sftpclient.html#sftpclient.getcwd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.sftpclient.sftpclient.getcwd" title="Link to this definition">¶</a></dt>
+<dd><p>Returns current remote working directory</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="bexchange.net.sftpclient.sftpclient.getfo">
 <span class="sig-name descname"><span class="pre">getfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">remotepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/sftpclient.html#sftpclient.getfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.sftpclient.sftpclient.getfo" title="Link to this definition">¶</a></dt>
 <dd><p>Copies the file (remotepath) from the server and writes to an open file.
@@ -951,6 +964,13 @@ with NamedTemporaryFile() as fp: c.getfo(”….”, fp)</p>
 </ul>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.net.sftpclient.sftpclient.gethome">
+<span class="sig-name descname"><span class="pre">gethome</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/net/sftpclient.html#sftpclient.gethome"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.net.sftpclient.sftpclient.gethome" title="Link to this definition">¶</a></dt>
+<dd><p>Tries to identify the home directory when connecting to a server so that
+it is possible to change into a “absolute” path when needed.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1194,6 +1214,7 @@ with NamedTemporaryFile() as fp: c.getfo(”….”, fp)</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-bexchange.net.senders">bexchange.net.senders module</a><ul>
+<li><a class="reference internal" href="#bexchange.net.senders.SenderError"><code class="docutils literal notranslate"><span class="pre">SenderError</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.net.senders.baseuri_sender"><code class="docutils literal notranslate"><span class="pre">baseuri_sender</span></code></a><ul>
 <li><a class="reference internal" href="#bexchange.net.senders.baseuri_sender.create_missing_directories"><code class="docutils literal notranslate"><span class="pre">baseuri_sender.create_missing_directories()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.net.senders.baseuri_sender.hostname"><code class="docutils literal notranslate"><span class="pre">baseuri_sender.hostname()</span></code></a></li>
@@ -1259,7 +1280,9 @@ with NamedTemporaryFile() as fp: c.getfo(”….”, fp)</p>
 <li><a class="reference internal" href="#bexchange.net.sftpclient.sftpclient.connect"><code class="docutils literal notranslate"><span class="pre">sftpclient.connect()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.net.sftpclient.sftpclient.disconnect"><code class="docutils literal notranslate"><span class="pre">sftpclient.disconnect()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.net.sftpclient.sftpclient.get"><code class="docutils literal notranslate"><span class="pre">sftpclient.get()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.sftpclient.sftpclient.getcwd"><code class="docutils literal notranslate"><span class="pre">sftpclient.getcwd()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.net.sftpclient.sftpclient.getfo"><code class="docutils literal notranslate"><span class="pre">sftpclient.getfo()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.net.sftpclient.sftpclient.gethome"><code class="docutils literal notranslate"><span class="pre">sftpclient.gethome()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.net.sftpclient.sftpclient.hostname"><code class="docutils literal notranslate"><span class="pre">sftpclient.hostname()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.net.sftpclient.sftpclient.isconnected"><code class="docutils literal notranslate"><span class="pre">sftpclient.isconnected()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.net.sftpclient.sftpclient.isdir"><code class="docutils literal notranslate"><span class="pre">sftpclient.isdir()</span></code></a></li>
