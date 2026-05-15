@@ -28,7 +28,7 @@ import math
 import json
 import os
 from io import StringIO
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from bexchange import config
 from baltrad.bdbcommon.oh5 import (
     Source,
@@ -47,6 +47,9 @@ BALTRAD_DATETIME_PATTERN=re.compile("^_baltrad/datetime(:[A-Za-z0-9\\-/: _%]+)?$
 BALTRAD_DATETIMEU_PATTERN=re.compile("^_baltrad/datetime_u:([0-9]{2})(:[A-Za-z0-9\\-/: _%]+)?$", flags=re.IGNORECASE)
 
 BALTRAD_DATETIMEL_PATTERN=re.compile("^_baltrad/datetime_l:([0-9]{2})(:[A-Za-z0-9\\-/: _%]+)?$", flags=re.IGNORECASE)
+
+CURRENT_DATETIME_PATTERN=re.compile("^_baltrad/currentdt(:[A-Za-z0-9\\-/: _%]+)?$", flags=re.IGNORECASE)
+
 
 class NamerError(Exception):
     """problem
@@ -311,6 +314,7 @@ class metadata_namer:
                 dt = dt + timedelta(minutes=nminute - meta.what_time.minute)
                     
                 replacement_value = dt.strftime(t)
+
             elif BALTRAD_DATETIMEL_PATTERN.search(placeholder):
                 m = BALTRAD_DATETIMEL_PATTERN.match(placeholder)
                 i = int(m.group(1))
@@ -325,6 +329,17 @@ class metadata_namer:
                 dt = dt - timedelta(minutes=nminute)
                     
                 replacement_value = dt.strftime(t)
+
+            elif CURRENT_DATETIME_PATTERN.search(placeholder):
+                m = CURRENT_DATETIME_PATTERN.match(placeholder)
+                t = m.group(1)
+                if t and t.find(":") >= 0:
+                    t = t[t.find(":")+1:]
+                if not t:
+                    t = "%Y%m%d%H%M%S"
+                dt = datetime.now(timezone.utc)
+                replacement_value = dt.strftime(t)
+
             else:
                 replacement_value = self.get_attribute_value(placeholder, meta)
 

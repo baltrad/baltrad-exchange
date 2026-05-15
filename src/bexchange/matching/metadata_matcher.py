@@ -92,6 +92,16 @@ class metadata_matcher:
             nowdt = datetime.datetime.now(datetime.timezone.utc)
             seconds = (nowdt - whatdt).seconds
             result =seconds
+        elif name.startswith("_exchange/time"):
+            xstr = name[len("_exchange/time"):]
+            if xstr == ":hour":
+                return ["%02d"%self.meta.what_time.hour]
+            elif xstr == ":minute":
+                return ["%02d"%self.meta.what_time.minute]
+            elif xstr == ":second":
+                return ["%02d"%self.meta.what_time.second]
+            else:
+                return ["%02d%02d%02d"%(self.meta.what_time.hour, self.meta.what_time.minute, self.meta.what_time.second)]
         else:
             result = self.find_plain(name, ttype)
         return result

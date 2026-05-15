@@ -29,7 +29,7 @@ from bexchange.decorators.decorator import decorator as basedecorator
 
 import _raveio, _rave, _polarvolume, _polarscan, _verticalprofile, _odimsources
 from tempfile import NamedTemporaryFile
-import shutil, logging, importlib, struct, math
+import shutil, logging, importlib, struct, math, re
 from datetime import timedelta, datetime, timezone
 
 logger = logging.getLogger("bexchange.decorators.rave")
@@ -167,6 +167,37 @@ class scan_volume_parameter_remover(object_modifier):
         if _polarscan.isPolarScan(obj) or _polarvolume.isPolarVolume(obj):
             obj.removeParametersExcept(self._quantities_to_keep)
 
+class volume_elevation_remover(object_modifier):
+    """ Removes elevations angles from a volume.
+    """
+    def __init__(self, backend, elevations_to_keep=None, elevations_to_remove=None, remove_malfunc=False):
+        """ Constructor
+        :param backend: the backend
+        :param elevations_to_keep: the elevations to keep
+        """
+        super(volume_elevation_remover, self).__init__(backend)
+        self._elevations_to_keep = elevations_to_keep
+        self._elevations_to_remove = elevations_to_remove
+        self._remove_malfunc = remove_malfunc
+
+    def modify(self, obj, meta, **kw):
+        """ Removes elevations from a volume 
+        :param obj: the rave object
+        :param meta: the metadata
+        :return None
+        """
+        if _polarvolume.isPolarVolume(obj):
+            for s in reversed(range(obj.getNumberOfScans())):
+                scan = obj.getScan(s)
+                elangle = scan.elangle * 180.0 / math.pi
+                if self._elevations_to_keep and not any(math.isclose(elangle, x, abs_tol=0.009) for x in self._elevations_to_keep):
+                    obj.removeScan(s)
+                elif self._elevations_to_remove and any(math.isclose(elangle, x, abs_tol=0.009) for x in self._elevations_to_remove):
+                    obj.removeScan(s)
+                elif self._remove_malfunc and scan.hasAttribute("how/malfunc") and scan.getAttribute("how/malfunc").lower() == "true":
+                    obj.removeScan(s)
+
+
 class what_source_setter(object_modifier):
     """ Sets a specific what/source in a file
     """
@@ -202,14 +233,22 @@ class what_source_setter(object_modifier):
 class what_source_updater(object_modifier):
     """ Updates the what/source with wanted members
     """
-    def __init__(self, backend, config, sources):
+    def __init__(self, backend, config, sources, overrides=None):
         """ Constructor
         :param backend: the backend
         :param sources: a mapping between source and a list of what/source attributes
+        :param overrides: if a source need to have individual values set to something specific that's not in the odim_source, like WMO:12121
         """
         super(what_source_updater, self).__init__(backend)
+        import atexit
         self._config = _odimsources.load(config)
         self._sources = sources
+        self._overrides = overrides
+        atexit.register(self.cleanup)  # For some reason, this instance isn't destroyed when exiting interpreter.
+
+    def cleanup(self):
+        self._config = None
+        self._sources = None
 
     def create_source(self, nodname, source, sources_to_update):
         result = source
@@ -248,6 +287,16 @@ class what_source_updater(object_modifier):
                     obj.source = src_to_set
             except:
                 logger.exception("Failure when updating source")
+
+        if meta.bdb_source_name in self._overrides:
+            src_to_set = obj.source
+            nod_overrides = self._overrides[meta.bdb_source_name]
+            for k in nod_overrides:
+                src_to_set = self.replace_source_key_value(src_to_set, k, nod_overrides[k])
+            obj.source = src_to_set
+
+    def replace_source_key_value(self, src, key, value):
+        return re.sub(rf"(?<={key}:)[^,]+", value, src)
 
 class rave_inmemory_manager:
     """The manager for creating inmemory_operations used within bexchange. 
