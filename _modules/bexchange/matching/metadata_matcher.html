@@ -178,6 +178,18 @@
         <span class="n">split_path</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">iternodes</span><span class="p">():</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">match_path</span><span class="p">(</span><span class="n">split_path</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">path</span><span class="p">()):</span>
+                <span class="k">if</span> <span class="n">ttype</span> <span class="o">==</span> <span class="s2">&quot;double&quot;</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">literal</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="p">)))</span>
+                        <span class="k">continue</span>
+                    <span class="k">except</span><span class="p">:</span>
+                        <span class="k">pass</span>
+                <span class="k">elif</span> <span class="n">ttype</span> <span class="o">==</span> <span class="s2">&quot;int&quot;</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">literal</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="p">)))</span>
+                        <span class="k">continue</span> 
+                    <span class="k">except</span><span class="p">:</span>
+                        <span class="k">pass</span>
                 <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">literal</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">value_str</span><span class="p">()))</span> 
         <span class="k">return</span> <span class="n">result</span></div>
 
@@ -203,6 +215,7 @@
 <span class="sd">        :param rhs: Right hand side which is matched against</span>
 <span class="sd">        :return: True or False</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#print(&quot;in_&quot;, lhs, rhs, any(item in rhs for item in lhs))</span>
         <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">item</span> <span class="ow">in</span> <span class="n">rhs</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">lhs</span><span class="p">)</span></div>
 
 

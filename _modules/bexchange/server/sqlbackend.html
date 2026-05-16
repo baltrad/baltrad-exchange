@@ -194,7 +194,10 @@
             <span class="n">source</span> <span class="o">=</span> <span class="n">get_source_by_id</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">source_id</span><span class="p">)</span>
             <span class="n">source</span><span class="o">.</span><span class="n">parent_object</span> <span class="o">=</span> <span class="kc">None</span>            
             <span class="k">if</span> <span class="n">add_parent_object</span><span class="p">:</span>
-                <span class="n">source</span><span class="o">.</span><span class="n">parent_object</span> <span class="o">=</span> <span class="n">get_source_by_id</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">get_parent_source_id</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">source</span><span class="o">.</span><span class="n">parent</span><span class="p">))</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">source</span><span class="o">.</span><span class="n">parent_object</span> <span class="o">=</span> <span class="n">get_source_by_id</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">get_parent_source_id</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">source</span><span class="o">.</span><span class="n">parent</span><span class="p">))</span>
+                <span class="k">except</span> <span class="ne">LookupError</span><span class="p">:</span>
+                    <span class="k">pass</span>
 
         <span class="c1"># We must add file information to the metadata</span>
         <span class="n">msources</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">source</span><span class="p">()</span>
