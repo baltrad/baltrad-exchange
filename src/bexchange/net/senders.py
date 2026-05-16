@@ -674,7 +674,13 @@ class copy_sender(sender):
          }
         """
         super(copy_sender, self).__init__(backend, aid)
-        self._path = arguments["path"]
+        if "properties" in arguments:
+            pnamer = property_metadata_namer(arguments["path"])
+            pnamer.set_properties(arguments["properties"])
+            self._path = pnamer.name(None)
+        else:
+            self._path = arguments["path"]
+
         self._create_missing_directories = True
         if "create_missing_directories" in arguments:
             self._create_missing_directories = arguments["create_missing_directories"]
