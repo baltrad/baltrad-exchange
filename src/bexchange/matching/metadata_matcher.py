@@ -127,6 +127,18 @@ class metadata_matcher:
         split_path = name.split("/")
         for node in self.meta.iternodes():
             if self.match_path(split_path, node.path()):
+                if ttype == "double":
+                    try:
+                        result.append(expr.literal(float(node.value)))
+                        continue
+                    except:
+                        pass
+                elif ttype == "int":
+                    try:
+                        result.append(expr.literal(int(node.value)))
+                        continue 
+                    except:
+                        pass
                 result.append(expr.literal(node.value_str())) 
         return result
   
@@ -146,6 +158,7 @@ class metadata_matcher:
         :param rhs: Right hand side which is matched against
         :return: True or False
         """
+        #print("in_", lhs, rhs, any(item in rhs for item in lhs))
         return any(item in rhs for item in lhs)
 
     def notin(self, lhs, rhs):

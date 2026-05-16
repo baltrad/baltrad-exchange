@@ -143,7 +143,10 @@ class SqlAlchemySourceManager(object):
             source = get_source_by_id(conn, source_id)
             source.parent_object = None            
             if add_parent_object:
-                source.parent_object = get_source_by_id(conn, get_parent_source_id(conn, source.parent))
+                try:
+                    source.parent_object = get_source_by_id(conn, get_parent_source_id(conn, source.parent))
+                except LookupError:
+                    pass
 
         # We must add file information to the metadata
         msources = meta.source()

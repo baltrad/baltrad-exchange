@@ -298,6 +298,41 @@ class what_source_updater(object_modifier):
     def replace_source_key_value(self, src, key, value):
         return re.sub(rf"(?<={key}:)[^,]+", value, src)
 
+class attribute_setter(object_modifier):
+    """ Sets a specific what/source in a file
+    """
+    def __init__(self, backend, objects):
+        """ Constructor
+        :param backend: the backend
+        :param objects: a list of different mappings that should be applied. the mapping consist of two items
+           {"getter": "getImage(0)",
+            "attributes": {"prodname":"xyz}
+           }
+           The getter is optional and can be used to get specific objects from the object for example if getting a image from a cvol.
+        """
+        super(attribute_setter, self).__init__(backend)
+        self._objects = objects
+
+    def modify(self, obj, meta, **kw):
+        """ Modifies top level attributes in scans 
+        :param obj: the rave object
+        :param meta: the metadata
+        :return None
+        """
+        for o in self._objects:
+            modobj = obj
+            if "getter" in o and o["getter"]:
+                try:
+                    modobj = eval("obj.%s"%o["getter"])
+                except:
+                    logger.exception("Failure")
+                    continue
+
+            for a in o["attributes"]:
+                if hasattr(modobj, a):
+                    setattr(modobj, a, o["attributes"][a])   
+
+
 class rave_inmemory_manager:
     """The manager for creating inmemory_operations used within bexchange. 
     """
@@ -395,7 +430,7 @@ class decorator(basedecorator):
         :return: a decorated file if applicable
         """
         try:
-            if meta.what_object == "SCAN" or meta.what_object == "PVOL" or meta.what_object == "VP":
+            if meta.what_object in ["PVOL", "CVOL", "SCAN", "RAY", "AZIM", "ELEV", "IMAGE", "COMP", "XSEC", "VP", "PIC"]:
                 rin = _raveio.open(inf.name)
 
                 wanted_version = self.get_wanted_version(rin.read_version)
@@ -411,7 +446,6 @@ class decorator(basedecorator):
 
                 if self._additionalmeta:
                     rio.extras=self._additionalmeta
-
                 rio.save(newf.name)
                 newf.flush()
                 return newf
