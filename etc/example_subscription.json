@@ -6,6 +6,7 @@
   "active":true,
   "storage":["default_storage"],
   "statdef": [{"id":"stat-subscription-1", "type": "count"}],
+  "__source_barrier":{"operation":"allow", "type":"dir", "value":"/tmp/blocked"},
   "__filter":{
     "filter_type": "and_filter", 
     "value": [

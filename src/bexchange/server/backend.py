@@ -551,6 +551,10 @@ class SimpleBackend(backend.Backend):
             if len(subscription.allowed_ids()) > 0 and nid not in subscription.allowed_ids():
                 continue
             
+            if subscription.source_barrier() and not subscription.source_barrier().is_allowed(meta.bdb_source_name):
+                logger.info("store_file: Blocked source (%s) for subscription with id: %s, ID:'%s'!"%(meta.bdb_source_name, subscription.id(), self.create_fileid_from_meta(meta)))
+                continue
+
             if subscription.filter_matching(meta):
                 logger.debug("store_file: filter matching for subscription with id: %s, ID:'%s'"%(subscription.id(), self.create_fileid_from_meta(meta)))
                 for storage in subscription.storages():

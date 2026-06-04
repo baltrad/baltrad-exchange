@@ -21,6 +21,7 @@
 ## @file
 ## @author Anders Henja, SMHI
 ## @date 2022-10-25
+import os
 from bexchange.matching import filters
 from bexchange.matching.filters import filter_manager
 from bexchange.matching import filters, metadata_matcher
@@ -30,12 +31,66 @@ import logging
 
 logger = logging.getLogger("bexchange.server.subscription")
 
+class source_barrier(object):
+    def __init__(self, operation, t, v):
+        """ Constructor
+        """
+        if operation not in ["block", "allow"]:
+            raise Exception("Only valid operation are block or allow")
+        if t not in ["dir", "list"]:
+            raise Exception("Only valid type are dir or list")
+        if t == "dir" and not isinstance(v, str) or \
+           t == "list" and not isinstance(v, list):
+            raise Exception("Only valid type are dir specified as a string or list specified as a list of source names")
+        self._operation = operation
+        self._type = t
+        self._value = v
+    
+    @classmethod
+    def from_conf(self, config):
+        """ Creates a source barrier from the configuration
+            {"operation":"block", 
+             "type":"dir", 
+             "value":"/tmp/blocked"}
+            operation can be either block or allow, type can be dir or list, value is either a string (dir) or a list (list)
+        """
+        if "operation" not in config or "type" not in config or "value" not in config:
+            raise Exception("Must provide operation, type and value")
+        return source_barrier(config["operation"], config["type"], config["value"])
+
+    def is_allowed(self, bdb_source_name):
+        """ Returns True if the source should be allowed through the barrier or not
+        :param bdb_source_name: the source name for the file
+        :return: True if allowed passage, otherwise False
+        """
+        if self._operation == "block":
+            if self.exists(bdb_source_name):
+                return False
+            return True
+        elif self._operation == "allow":
+            if self.exists(bdb_source_name):
+                return True
+            return False
+        return True
+
+    def exists(self, source_name):
+        """ Returns if the source_name exists in the set of blocked/allowed nodes
+        :param source_name: The source
+        :return: If source name exists
+        """
+        if self._type == "dir":
+            return os.path.exists("%s/%s"%(self._value, source_name))
+        elif self._type == "list":
+            return source_name in self._value
+        return False
+
 class subscription(object):
-    def __init__(self, storages, subscription_id=None, active=True, ifilter=None, allow_duplicates=False, allowed_ids=[]):
+    def __init__(self, storages, subscription_id=None, active=True, source_barrier=None, ifilter=None, allow_duplicates=False, allowed_ids=[]):
         """Constructor
         :param storages: List of storage names
         :param subscription_id: Id this subscription should be identified if tunneling
         :param active: If this subscription is active or not
+        :param source_barrier: If this is set it can either be defined for blocking or allowing specific sources
         :param ifilter: A filter instance
         :param allow_duplicates: If duplicates should be allowed or not
         :param allowed_ids: A list of nodenames that should be allowed. 
@@ -43,6 +98,7 @@ class subscription(object):
         self._subscription_id = subscription_id
         self._storages = storages
         self._active = active
+        self._source_barrier = source_barrier
         self._filter = ifilter
         self._allow_duplicates = allow_duplicates
         self._allowed_ids = allowed_ids
@@ -72,6 +128,13 @@ class subscription(object):
         """
         self._active = active
     
+    def source_barrier(self):
+        """
+        :return the source_barrier
+        """
+        return self._source_barrier
+        
+
     def filter(self):
         """
         :return the filter
@@ -117,16 +180,17 @@ class subscription_manager:
         pass
 
     @classmethod
-    def create_subscription(self, storages, subscription_id, active, ifilter, allow_duplicates, allowed_ids):
+    def create_subscription(self, storages, subscription_id, active, source_barrier, ifilter, allow_duplicates, allowed_ids):
         """Creates a subscription instance
         :param storages: List of storage names
         :param subscription_id: Subscription id
         :param active: If subscription should be set to active or not
+        :param source_barrier: A barrier for sources
         :param ifilter: A filter instances
         :param allow_duplicate: If duplicates should be allowed or not
         :param allowed_ids: A list of ids that should be allowed for this subscription
         """
-        return subscription(storages, subscription_id, active, ifilter, allow_duplicates, allowed_ids)
+        return subscription(storages, subscription_id, active, source_barrier, ifilter, allow_duplicates, allowed_ids)
     
     @classmethod
     def from_conf(self, config, backend):
@@ -134,6 +198,7 @@ class subscription_manager:
         storages=[]
         subscription_id=None
         active=True
+        barrier=None
         ifilter = None
         allow_duplicates=False
         statplugins=[]
@@ -154,6 +219,9 @@ class subscription_manager:
         if not active:
             return None
 
+        if "source_barrier" in config and config["source_barrier"]:
+            barrier = source_barrier.from_conf(config["source_barrier"])
+
         if "statdef" in config:
             statplugins = statistics_manager.plugins_from_conf(config["statdef"], backend.get_statistics_manager())
 
@@ -173,6 +241,6 @@ class subscription_manager:
                 if nodename not in allowed_ids:
                     allowed_ids.append(nodename)
 
-        s = self.create_subscription(storages, subscription_id, active, ifilter, allow_duplicates, allowed_ids)
+        s = self.create_subscription(storages, subscription_id, active, barrier, ifilter, allow_duplicates, allowed_ids)
         s.set_statistics_plugins(statplugins)
         return s
