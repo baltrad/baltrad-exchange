@@ -500,8 +500,42 @@ files ending with .json. Both added and removed events will be forwarded.</p>
 <section id="module-bexchange.server.subscription">
 <span id="bexchange-server-subscription-module"></span><h2>bexchange.server.subscription module<a class="headerlink" href="#module-bexchange.server.subscription" title="Link to this heading">¶</a></h2>
 <dl class="py class">
+<dt class="sig sig-object py" id="bexchange.server.subscription.source_barrier">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.server.subscription.</span></span><span class="sig-name descname"><span class="pre">source_barrier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#source_barrier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.source_barrier" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.server.subscription.source_barrier.exists">
+<span class="sig-name descname"><span class="pre">exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#source_barrier.exists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.source_barrier.exists" title="Link to this definition">¶</a></dt>
+<dd><p>Returns if the source_name exists in the set of blocked/allowed nodes
+:param source_name: The source
+:return: If source name exists</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.server.subscription.source_barrier.from_conf">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_conf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#source_barrier.from_conf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.source_barrier.from_conf" title="Link to this definition">¶</a></dt>
+<dd><p>Creates a source barrier from the configuration
+{“operation”:”block”,</p>
+<blockquote>
+<div><p>“type”:”dir”,
+“value”:”/tmp/blocked”}</p>
+</div></blockquote>
+<p>operation can be either block or allow, type can be dir or list, value is either a string (dir) or a list (list)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.server.subscription.source_barrier.is_allowed">
+<span class="sig-name descname"><span class="pre">is_allowed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bdb_source_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#source_barrier.is_allowed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.source_barrier.is_allowed" title="Link to this definition">¶</a></dt>
+<dd><p>Returns True if the source should be allowed through the barrier or not
+:param bdb_source_name: the source name for the file
+:return: True if allowed passage, otherwise False</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="bexchange.server.subscription.subscription">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.server.subscription.</span></span><span class="sig-name descname"><span class="pre">subscription</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storages</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subscription_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifilter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_duplicates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allowed_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#subscription"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.subscription" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.server.subscription.</span></span><span class="sig-name descname"><span class="pre">subscription</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storages</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subscription_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_barrier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifilter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_duplicates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allowed_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#subscription"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.subscription" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.subscription.subscription.allow_duplicates">
@@ -560,6 +594,12 @@ files ending with .json. Both added and removed events will be forwarded.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="bexchange.server.subscription.subscription.source_barrier">
+<span class="sig-name descname"><span class="pre">source_barrier</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#subscription.source_barrier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.subscription.source_barrier" title="Link to this definition">¶</a></dt>
+<dd><p>:return the source_barrier</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.subscription.subscription.storages">
 <span class="sig-name descname"><span class="pre">storages</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#subscription.storages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.subscription.storages" title="Link to this definition">¶</a></dt>
 <dd><p>:return the storage names</p>
@@ -573,11 +613,12 @@ files ending with .json. Both added and removed events will be forwarded.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.server.subscription.subscription_manager.create_subscription">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_subscription</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storages</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subscription_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifilter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_duplicates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allowed_ids</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#subscription_manager.create_subscription"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.subscription_manager.create_subscription" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_subscription</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storages</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subscription_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_barrier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifilter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_duplicates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allowed_ids</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/server/subscription.html#subscription_manager.create_subscription"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.server.subscription.subscription_manager.create_subscription" title="Link to this definition">¶</a></dt>
 <dd><p>Creates a subscription instance
 :param storages: List of storage names
 :param subscription_id: Subscription id
 :param active: If subscription should be set to active or not
+:param source_barrier: A barrier for sources
 :param ifilter: A filter instances
 :param allow_duplicate: If duplicates should be allowed or not
 :param allowed_ids: A list of ids that should be allowed for this subscription</p>
@@ -683,6 +724,12 @@ files ending with .json. Both added and removed events will be forwarded.</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-bexchange.server.subscription">bexchange.server.subscription module</a><ul>
+<li><a class="reference internal" href="#bexchange.server.subscription.source_barrier"><code class="docutils literal notranslate"><span class="pre">source_barrier</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.server.subscription.source_barrier.exists"><code class="docutils literal notranslate"><span class="pre">source_barrier.exists()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.subscription.source_barrier.from_conf"><code class="docutils literal notranslate"><span class="pre">source_barrier.from_conf()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.subscription.source_barrier.is_allowed"><code class="docutils literal notranslate"><span class="pre">source_barrier.is_allowed()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#bexchange.server.subscription.subscription"><code class="docutils literal notranslate"><span class="pre">subscription</span></code></a><ul>
 <li><a class="reference internal" href="#bexchange.server.subscription.subscription.allow_duplicates"><code class="docutils literal notranslate"><span class="pre">subscription.allow_duplicates()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.server.subscription.subscription.allowed_ids"><code class="docutils literal notranslate"><span class="pre">subscription.allowed_ids()</span></code></a></li>
@@ -693,6 +740,7 @@ files ending with .json. Both added and removed events will be forwarded.</p>
 <li><a class="reference internal" href="#bexchange.server.subscription.subscription.isactive"><code class="docutils literal notranslate"><span class="pre">subscription.isactive()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.server.subscription.subscription.set_statistics_plugins"><code class="docutils literal notranslate"><span class="pre">subscription.set_statistics_plugins()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.server.subscription.subscription.setactive"><code class="docutils literal notranslate"><span class="pre">subscription.setactive()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.server.subscription.subscription.source_barrier"><code class="docutils literal notranslate"><span class="pre">subscription.source_barrier()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.server.subscription.subscription.storages"><code class="docutils literal notranslate"><span class="pre">subscription.storages()</span></code></a></li>
 </ul>
 </li>

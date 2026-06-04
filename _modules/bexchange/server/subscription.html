@@ -59,6 +59,7 @@
 <span class="c1">## @file</span>
 <span class="c1">## @author Anders Henja, SMHI</span>
 <span class="c1">## @date 2022-10-25</span>
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">bexchange.matching</span> <span class="kn">import</span> <span class="n">filters</span>
 <span class="kn">from</span> <span class="nn">bexchange.matching.filters</span> <span class="kn">import</span> <span class="n">filter_manager</span>
 <span class="kn">from</span> <span class="nn">bexchange.matching</span> <span class="kn">import</span> <span class="n">filters</span><span class="p">,</span> <span class="n">metadata_matcher</span>
@@ -68,14 +69,80 @@
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;bexchange.server.subscription&quot;</span><span class="p">)</span>
 
+<div class="viewcode-block" id="source_barrier">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.subscription.source_barrier">[docs]</a>
+<span class="k">class</span> <span class="nc">source_barrier</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Constructor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">operation</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;block&quot;</span><span class="p">,</span> <span class="s2">&quot;allow&quot;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Only valid operation are block or allow&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">t</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;dir&quot;</span><span class="p">,</span> <span class="s2">&quot;list&quot;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Only valid type are dir or list&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="s2">&quot;dir&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> \
+           <span class="n">t</span> <span class="o">==</span> <span class="s2">&quot;list&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Only valid type are dir specified as a string or list specified as a list of source names&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_operation</span> <span class="o">=</span> <span class="n">operation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_type</span> <span class="o">=</span> <span class="n">t</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="n">v</span>
+    
+<div class="viewcode-block" id="source_barrier.from_conf">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.subscription.source_barrier.from_conf">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_conf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Creates a source barrier from the configuration</span>
+<span class="sd">            {&quot;operation&quot;:&quot;block&quot;, </span>
+<span class="sd">             &quot;type&quot;:&quot;dir&quot;, </span>
+<span class="sd">             &quot;value&quot;:&quot;/tmp/blocked&quot;}</span>
+<span class="sd">            operation can be either block or allow, type can be dir or list, value is either a string (dir) or a list (list)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;operation&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">config</span> <span class="ow">or</span> <span class="s2">&quot;type&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">config</span> <span class="ow">or</span> <span class="s2">&quot;value&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Must provide operation, type and value&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">source_barrier</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;operation&quot;</span><span class="p">],</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">],</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="source_barrier.is_allowed">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.subscription.source_barrier.is_allowed">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_allowed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bdb_source_name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns True if the source should be allowed through the barrier or not</span>
+<span class="sd">        :param bdb_source_name: the source name for the file</span>
+<span class="sd">        :return: True if allowed passage, otherwise False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_operation</span> <span class="o">==</span> <span class="s2">&quot;block&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">bdb_source_name</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_operation</span> <span class="o">==</span> <span class="s2">&quot;allow&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">bdb_source_name</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="source_barrier.exists">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.subscription.source_barrier.exists">[docs]</a>
+    <span class="k">def</span> <span class="nf">exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns if the source_name exists in the set of blocked/allowed nodes</span>
+<span class="sd">        :param source_name: The source</span>
+<span class="sd">        :return: If source name exists</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_type</span> <span class="o">==</span> <span class="s2">&quot;dir&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">,</span> <span class="n">source_name</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_type</span> <span class="o">==</span> <span class="s2">&quot;list&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">source_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+</div>
+
+
 <div class="viewcode-block" id="subscription">
 <a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.subscription.subscription">[docs]</a>
 <span class="k">class</span> <span class="nc">subscription</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">storages</span><span class="p">,</span> <span class="n">subscription_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ifilter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">allow_duplicates</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allowed_ids</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">storages</span><span class="p">,</span> <span class="n">subscription_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">source_barrier</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ifilter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">allow_duplicates</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allowed_ids</span><span class="o">=</span><span class="p">[]):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
 <span class="sd">        :param storages: List of storage names</span>
 <span class="sd">        :param subscription_id: Id this subscription should be identified if tunneling</span>
 <span class="sd">        :param active: If this subscription is active or not</span>
+<span class="sd">        :param source_barrier: If this is set it can either be defined for blocking or allowing specific sources</span>
 <span class="sd">        :param ifilter: A filter instance</span>
 <span class="sd">        :param allow_duplicates: If duplicates should be allowed or not</span>
 <span class="sd">        :param allowed_ids: A list of nodenames that should be allowed. </span>
@@ -83,6 +150,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_subscription_id</span> <span class="o">=</span> <span class="n">subscription_id</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_storages</span> <span class="o">=</span> <span class="n">storages</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_active</span> <span class="o">=</span> <span class="n">active</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_source_barrier</span> <span class="o">=</span> <span class="n">source_barrier</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_filter</span> <span class="o">=</span> <span class="n">ifilter</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_allow_duplicates</span> <span class="o">=</span> <span class="n">allow_duplicates</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_allowed_ids</span> <span class="o">=</span> <span class="n">allowed_ids</span>
@@ -124,6 +192,16 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_active</span> <span class="o">=</span> <span class="n">active</span></div>
 
     
+<div class="viewcode-block" id="subscription.source_barrier">
+<a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.subscription.subscription.source_barrier">[docs]</a>
+    <span class="k">def</span> <span class="nf">source_barrier</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return the source_barrier</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_source_barrier</span></div>
+
+        
+
 <div class="viewcode-block" id="subscription.filter">
 <a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.subscription.subscription.filter">[docs]</a>
     <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -192,16 +270,17 @@
 <div class="viewcode-block" id="subscription_manager.create_subscription">
 <a class="viewcode-back" href="../../../api/bexchange.server.html#bexchange.server.subscription.subscription_manager.create_subscription">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">create_subscription</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">storages</span><span class="p">,</span> <span class="n">subscription_id</span><span class="p">,</span> <span class="n">active</span><span class="p">,</span> <span class="n">ifilter</span><span class="p">,</span> <span class="n">allow_duplicates</span><span class="p">,</span> <span class="n">allowed_ids</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">create_subscription</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">storages</span><span class="p">,</span> <span class="n">subscription_id</span><span class="p">,</span> <span class="n">active</span><span class="p">,</span> <span class="n">source_barrier</span><span class="p">,</span> <span class="n">ifilter</span><span class="p">,</span> <span class="n">allow_duplicates</span><span class="p">,</span> <span class="n">allowed_ids</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a subscription instance</span>
 <span class="sd">        :param storages: List of storage names</span>
 <span class="sd">        :param subscription_id: Subscription id</span>
 <span class="sd">        :param active: If subscription should be set to active or not</span>
+<span class="sd">        :param source_barrier: A barrier for sources</span>
 <span class="sd">        :param ifilter: A filter instances</span>
 <span class="sd">        :param allow_duplicate: If duplicates should be allowed or not</span>
 <span class="sd">        :param allowed_ids: A list of ids that should be allowed for this subscription</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">subscription</span><span class="p">(</span><span class="n">storages</span><span class="p">,</span> <span class="n">subscription_id</span><span class="p">,</span> <span class="n">active</span><span class="p">,</span> <span class="n">ifilter</span><span class="p">,</span> <span class="n">allow_duplicates</span><span class="p">,</span> <span class="n">allowed_ids</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">subscription</span><span class="p">(</span><span class="n">storages</span><span class="p">,</span> <span class="n">subscription_id</span><span class="p">,</span> <span class="n">active</span><span class="p">,</span> <span class="n">source_barrier</span><span class="p">,</span> <span class="n">ifilter</span><span class="p">,</span> <span class="n">allow_duplicates</span><span class="p">,</span> <span class="n">allowed_ids</span><span class="p">)</span></div>
 
     
 <div class="viewcode-block" id="subscription_manager.from_conf">
@@ -212,6 +291,7 @@
         <span class="n">storages</span><span class="o">=</span><span class="p">[]</span>
         <span class="n">subscription_id</span><span class="o">=</span><span class="kc">None</span>
         <span class="n">active</span><span class="o">=</span><span class="kc">True</span>
+        <span class="n">barrier</span><span class="o">=</span><span class="kc">None</span>
         <span class="n">ifilter</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">allow_duplicates</span><span class="o">=</span><span class="kc">False</span>
         <span class="n">statplugins</span><span class="o">=</span><span class="p">[]</span>
@@ -232,6 +312,9 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">active</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
 
+        <span class="k">if</span> <span class="s2">&quot;source_barrier&quot;</span> <span class="ow">in</span> <span class="n">config</span> <span class="ow">and</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;source_barrier&quot;</span><span class="p">]:</span>
+            <span class="n">barrier</span> <span class="o">=</span> <span class="n">source_barrier</span><span class="o">.</span><span class="n">from_conf</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;source_barrier&quot;</span><span class="p">])</span>
+
         <span class="k">if</span> <span class="s2">&quot;statdef&quot;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
             <span class="n">statplugins</span> <span class="o">=</span> <span class="n">statistics_manager</span><span class="o">.</span><span class="n">plugins_from_conf</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;statdef&quot;</span><span class="p">],</span> <span class="n">backend</span><span class="o">.</span><span class="n">get_statistics_manager</span><span class="p">())</span>
 
@@ -251,7 +334,7 @@
                 <span class="k">if</span> <span class="n">nodename</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">allowed_ids</span><span class="p">:</span>
                     <span class="n">allowed_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nodename</span><span class="p">)</span>
 
-        <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_subscription</span><span class="p">(</span><span class="n">storages</span><span class="p">,</span> <span class="n">subscription_id</span><span class="p">,</span> <span class="n">active</span><span class="p">,</span> <span class="n">ifilter</span><span class="p">,</span> <span class="n">allow_duplicates</span><span class="p">,</span> <span class="n">allowed_ids</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_subscription</span><span class="p">(</span><span class="n">storages</span><span class="p">,</span> <span class="n">subscription_id</span><span class="p">,</span> <span class="n">active</span><span class="p">,</span> <span class="n">barrier</span><span class="p">,</span> <span class="n">ifilter</span><span class="p">,</span> <span class="n">allow_duplicates</span><span class="p">,</span> <span class="n">allowed_ids</span><span class="p">)</span>
         <span class="n">s</span><span class="o">.</span><span class="n">set_statistics_plugins</span><span class="p">(</span><span class="n">statplugins</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">s</span></div>
 </div>
