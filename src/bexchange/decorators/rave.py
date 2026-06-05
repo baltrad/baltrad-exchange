@@ -243,7 +243,10 @@ class what_source_updater(object_modifier):
         import atexit
         self._config = _odimsources.load(config)
         self._sources = sources
-        self._overrides = overrides
+        if isinstance(overrides, dict):
+            self._overrides = overrides
+        else:
+            self._overrides = {}
         atexit.register(self.cleanup)  # For some reason, this instance isn't destroyed when exiting interpreter.
 
     def cleanup(self):
