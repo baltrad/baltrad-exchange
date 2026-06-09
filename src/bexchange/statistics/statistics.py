@@ -178,6 +178,12 @@ class statistics_manager:
         maxage = now - datetime.timedelta(hours=age)
         self._sqldatabase.cleanup_statentries(maxage)
 
+    def vacuum(self, retries, retrysec):
+        try:
+            self._sqldatabase.vacuum(retries, retrysec)
+        except:
+            logger.exception("Failed to run vacuum")
+
     def increment(self, spid, origin, meta, save_post=False, increment_counter=True, optime=0, optime_info=None):
         """ Increments a counter that is defined by:
         :param spid: The id used to identify this statistics post

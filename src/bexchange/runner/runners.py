@@ -26,6 +26,7 @@ import logging
 import os, re
 from os import listdir
 from os.path import isfile, join
+import datetime
 import time
 
 from threading import Thread, Event
@@ -195,125 +196,6 @@ class inotify_runner(runner):
         logger.info("Stopping watcher")
         self._watcher.stop()
 
-# class inotify_runner_event_handler(pyinotify.ProcessEvent):
-#     def __init__(self, inotify_runner):
-#         """Constructor
-#         :param inotify_runner: The inotify runner that will be called
-#         """
-#         self._runner = inotify_runner
-    
-#     def process_IN_CLOSE_WRITE(self, event):
-#         """Will be called by the inotify notifier when file event occurs.
-#         :param event: The file event
-#         """
-#         logger.debug("IN_CLOSE_WRITE: %s"%event.pathname)
-#         if not self._runner.is_ignored(event.pathname):  # avoid temporary file
-#             self._runner.handle_file(event.pathname)
-
-#     def process_IN_MOVED_TO(self, event):
-#         """Will be called by the inotify notifier when file event occurs.
-#         :param event: The file event
-#         """
-#         logger.debug("IN_MOVED_WRITE: %s"%event.pathname)
-#         if not self._runner.is_ignored(event.pathname):  # avoid temporary file
-#             self._runner.handle_file(event.pathname)
-
-# class inotify_runner(runner):
-#     """The inotify runner is used to monitor folders and trigger "store" events. It is run in a separate thread instead of 
-#     beeing created as a daemon-thread since all initiation is performed in the main thread before server is started.
-#     """
-#     MASK = pyinotify.IN_CLOSE_WRITE | pyinotify.IN_MOVED_TO
-    
-#     def __init__(self, backend, active, **args):
-#         """Constructor
-#         :param backend: The backend
-#         :param active: If this runner is active or not. NOT USED
-#         :param **args: A number of arguments can be provided
-#           folders        - a list of folder names to monitor
-#           ignore-pattern - If files matching the provided pattern should be ignored or not
-#           pattern        - The pattern to check for files to ignore
-#           name           - The name this inotify runner should be using
-#         """
-#         super(inotify_runner, self).__init__(backend, active)
-#         self._name = "inotify-runner"
-#         self._folders = args["folders"]
-#         self._ignore_pattern = True
-#         self._process_pending_files = False
-#         self._pattern = ""
-#         if "ignore-pattern" in args:
-#             self._ignore_pattern = args["ignore-pattern"]
-#         if "pattern" in args:
-#             self._pattern = args["pattern"]
-#         if "name" in args:
-#             self._name = args["name"]
-#         if "process-pending-files" in args:
-#             self._process_pending_files=args["process-pending-files"]
-
-#         self._wm = pyinotify.WatchManager()
-#         self._notifier = pyinotify.Notifier(self._wm, inotify_runner_event_handler(self))
-
-#     def is_ignored(self, filename):
-#         """Checks if the specified file should be ignored or not, for example when a tmpfile is written.
-#         the check is performed on basename.
-#         :param filename: The filename to be checked
-#         :return True if file should be ignored otherwise False
-#         """
-#         if self._ignore_pattern:
-#             return False
-#         bname = os.path.basename(filename)
-#         return re.match(self._pattern, bname) != None
-    
-#     def handle_file(self, filename):
-#         """Handles the file (by sending it to the backend using the name given to this runner
-#         :param filename: The filename to handle
-#         """
-#         self._backend.store_file(filename, self._name)
-#         os.unlink(filename)
-
-#     def run(self):
-#         """The runner for the thread. Starts the inotify notifier loop
-#         """
-#         self._notifier.loop()
-
-#     def pending_run(self, pending_filenames):
-#         if pending_filenames:
-#             for filename in pending_filenames:
-#                 self.handle_file(filename)
-#                 time.sleep(0.1) # Just to not starve real time data handling
-
-#     def get_pending_files(self, folder):
-#         """Lists all files in specified folder
-#         """
-#         result=[]
-#         files = [f for f in listdir(folder) if isfile(join(folder, f))]
-#         for f in files:
-#             filename = join(folder, f)
-#             if not self.is_ignored(filename):
-#                 result.append(filename)
-#         return result
-
-#     def start(self):
-#         """Starts this runner by adding the watched folders and then starting a daemonized thread.
-#         """
-#         pending_files=[]
-#         for folder in self._folders:
-#             logger.info("inotify_runner(%s) watching '%s'"%(self._name, folder))
-#             pending_files.extend(self.get_pending_files(folder))
-#             self._wm.add_watch(folder, self.MASK)
-
-#         if len(pending_files) > 0 and self._process_pending_files:
-#             self._pending_thread = Thread(target=self.pending_run, args=(pending_files,))
-#             self._pending_thread.daemon = True
-#             self._pending_thread.start()
-
-#         self._thread = Thread(target=self.run)
-#         self._thread.daemon = True
-#         self._thread.start()
-
-#     def stop(self):
-#         logger.info("Stopping inotifier")
-#         self._notifier.stop()
-
 class triggered_fetch_runner(runner, message_aware):
     """A triggered runner. This runner implements 'message_aware' so that a json-message
     can be handled. This runner is actually triggered from the WSGI-process and as such
@@ -412,6 +294,115 @@ class statistics_cleanup_runner(runner):
             self._thread.join()
         logger.info("Stopped cleanup runner")
 
+VACUUM_HOUR_MINUTE_PATTERN = re.compile(r"^(\*|\d{2}):(\*|\d{2})$")
+
+class statistics_vacuum_runner(runner):
+    """Runs vacuum on the statistics database
+    """
+    def __init__(self, backend, active, **args):
+        """Constructor
+        :param backend: The backend
+        :param active: If this runner is active or not
+        :param args: Dictionary containing "name", "interval", "retries", "retrysec"
+        """
+        super(statistics_vacuum_runner, self).__init__(backend, active)
+        self._name = "statistics_cleanup_runner"
+        self._at = ["*:00"]
+        self._retries = 5
+        self._retrysec = 5
+        self._manager = self.backend().get_statistics_manager()
+        self._event = Event()
+        self._running = False
+
+        if "name" in args:
+            self._name = args["name"]
+        
+        if "at" in args:
+            self._at = args["at"]
+            if not isinstance(self._at, list):
+                raise AttributeError("at should be a list of strings containing HH:mm or *:mm")
+
+            if not self.validate_at(self._at):
+                raise AttributeError("at should be a list of strings containing HH:mm")
+
+        if "retries" in args:
+            self._retries = args["retries"]
+            if not isinstance(self._retries, int):
+                raise AttributeError("retries should be an integer")
+
+        if "retrysec" in args:
+            self._retrysec = args["retrysec"]
+            if not isinstance(self._retrysec, int) and not isinstance(self._retrysec, float):
+                raise AttributeError("retrysec should be a float or integer")
+            self._retrysec = float(self._retrysec)
+
+    def validate_at(self, times):
+        for t in times:
+            if not bool(VACUUM_HOUR_MINUTE_PATTERN.match(t)):
+                return False
+            hh,mm = t.split(":")
+            if not ((hh=="*" or (int(hh) >= 0 and int(hh) < 24)) and (mm=="*" or (int(mm) >= 0 and int(mm) < 60))):
+                return False
+
+        return True
+
+    def getnow(self):
+        return datetime.datetime.now(datetime.timezone.utc)
+
+    def get_closest_wait_time(self):
+        wait_seconds = 26*60*60   # Since we only support hours and minutes 26 hours will be more than enough to be max
+
+        now = self.getnow()
+        for t in self._at:
+            hh,mm = t.split(":")
+            if hh=="*" and mm=="*":
+                target = now.replace(second=0, microsecond=0) + datetime.timedelta(minutes=1)
+            elif hh == "*":
+                target = now.replace(minute=int(mm), second=0, microsecond=0)
+                if target <= now:
+                    target += datetime.timedelta(hours=1)
+            elif mm == "*":
+                if now.hour != int(hh):
+                    target = now.replace(hour=int(hh), minute=0, second=0, microsecond=0)
+                else:
+                    target = now.replace(second=0, microsecond=0)
+                    target += datetime.timedelta(minutes=1)
+            else:
+                target = now.replace(hour=int(hh), minute=int(mm), second=0, microsecond=0)
+                if target <= now:
+                    target += datetime.timedelta(days=1)
+            seconds = (target - now).total_seconds()
+            if seconds < wait_seconds:
+                wait_seconds = seconds
+        
+        return wait_seconds
+
+    def run(self):
+        """The runner for the thread. Will trigger a wait for
+        """
+        while self._running:
+            waitsec = self.get_closest_wait_time()
+            logger.debug("Waiting for %d seconds to run VACUUM"%waitsec)
+            if waitsec > 0.0:
+                self._event.wait(waitsec)
+            logger.debug("Running VACUUM")
+            self._manager.vacuum(self._retries, self._retrysec)
+            logger.debug("VACUUM finished")
+
+    def start(self):
+        """Starts this runner by starting a daemonized thread.
+        """
+        self._running = True
+        self._thread = Thread(target=self.run)
+        self._thread.daemon = True
+        self._thread.start()
+
+    def stop(self):
+        self._running = False
+        if self._thread:
+            self._event.set()
+            self._thread.join()
+        logger.info("Stopped vacuum runner")
 
 class runner_manager:
     """ The runner manager. Will create and register the runner

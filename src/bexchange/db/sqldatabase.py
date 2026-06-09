@@ -27,7 +27,7 @@ from __future__ import absolute_import
 import contextlib
 import datetime
 import logging
-
+import time
 from sqlalchemy import asc,desc,func,text
 from sqlalchemy import engine, event, exc as sqlexc, sql
 from sqlalchemy.orm import registry, sessionmaker
@@ -326,6 +326,24 @@ class SqlAlchemyDatabase(object):
         with self.get_connection() as conn:
             conn.execute(q)
             conn.commit()
+
+    def vacuum(self, retries, nrseconds):
+        """ Executes the vacuum call on the database.
+        :param retries: Number of retries the code should atempt to get hold of the database for vacuuming
+        :param nrseconds: Seconds between each retry
+        """
+        for i in range(retries):
+            try:
+                with self._engine.connect().execution_options(isolation_level="AUTOCOMMIT") as conn:
+                    conn.execute(text("VACUUM"))
+                return
+            except Exception as e:
+                if "database is locked" in str(e):
+                    logger.debug(f"VACUUM attempt {i+1} failed, retrying in {nrseconds}s...")
+                    time.sleep(nrseconds)
+            else:
+                raise
+        raise RuntimeError("VACUUM failed")        
 
     def increment_statistics(self, spid, origin, source):
         with self.get_session() as session:
