@@ -65,7 +65,7 @@
 <span class="kn">import</span> <span class="nn">contextlib</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-
+<span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">asc</span><span class="p">,</span><span class="n">desc</span><span class="p">,</span><span class="n">func</span><span class="p">,</span><span class="n">text</span>
 <span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">engine</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">exc</span> <span class="k">as</span> <span class="n">sqlexc</span><span class="p">,</span> <span class="n">sql</span>
 <span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="kn">import</span> <span class="n">registry</span><span class="p">,</span> <span class="n">sessionmaker</span>
@@ -413,6 +413,27 @@
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_connection</span><span class="p">()</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
             <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
             <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="SqlAlchemyDatabase.vacuum">
+<a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.SqlAlchemyDatabase.vacuum">[docs]</a>
+    <span class="k">def</span> <span class="nf">vacuum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">retries</span><span class="p">,</span> <span class="n">nrseconds</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Executes the vacuum call on the database.</span>
+<span class="sd">        :param retries: Number of retries the code should atempt to get hold of the database for vacuuming</span>
+<span class="sd">        :param nrseconds: Seconds between each retry</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">retries</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_engine</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span><span class="o">.</span><span class="n">execution_options</span><span class="p">(</span><span class="n">isolation_level</span><span class="o">=</span><span class="s2">&quot;AUTOCOMMIT&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
+                    <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">text</span><span class="p">(</span><span class="s2">&quot;VACUUM&quot;</span><span class="p">))</span>
+                <span class="k">return</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s2">&quot;database is locked&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;VACUUM attempt </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> failed, retrying in </span><span class="si">{</span><span class="n">nrseconds</span><span class="si">}</span><span class="s2">s...&quot;</span><span class="p">)</span>
+                    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">nrseconds</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;VACUUM failed&quot;</span><span class="p">)</span>        </div>
 
 
 <div class="viewcode-block" id="SqlAlchemyDatabase.increment_statistics">

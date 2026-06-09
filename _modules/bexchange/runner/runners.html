@@ -64,6 +64,7 @@
 <span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">re</span>
 <span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">listdir</span>
 <span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">isfile</span><span class="p">,</span> <span class="n">join</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
 <span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Thread</span><span class="p">,</span> <span class="n">Event</span>
@@ -281,125 +282,6 @@
 </div>
 
 
-<span class="c1"># class inotify_runner_event_handler(pyinotify.ProcessEvent):</span>
-<span class="c1">#     def __init__(self, inotify_runner):</span>
-<span class="c1">#         &quot;&quot;&quot;Constructor</span>
-<span class="c1">#         :param inotify_runner: The inotify runner that will be called</span>
-<span class="c1">#         &quot;&quot;&quot;</span>
-<span class="c1">#         self._runner = inotify_runner</span>
-    
-<span class="c1">#     def process_IN_CLOSE_WRITE(self, event):</span>
-<span class="c1">#         &quot;&quot;&quot;Will be called by the inotify notifier when file event occurs.</span>
-<span class="c1">#         :param event: The file event</span>
-<span class="c1">#         &quot;&quot;&quot;</span>
-<span class="c1">#         logger.debug(&quot;IN_CLOSE_WRITE: %s&quot;%event.pathname)</span>
-<span class="c1">#         if not self._runner.is_ignored(event.pathname):  # avoid temporary file</span>
-<span class="c1">#             self._runner.handle_file(event.pathname)</span>
-
-<span class="c1">#     def process_IN_MOVED_TO(self, event):</span>
-<span class="c1">#         &quot;&quot;&quot;Will be called by the inotify notifier when file event occurs.</span>
-<span class="c1">#         :param event: The file event</span>
-<span class="c1">#         &quot;&quot;&quot;</span>
-<span class="c1">#         logger.debug(&quot;IN_MOVED_WRITE: %s&quot;%event.pathname)</span>
-<span class="c1">#         if not self._runner.is_ignored(event.pathname):  # avoid temporary file</span>
-<span class="c1">#             self._runner.handle_file(event.pathname)</span>
-
-<span class="c1"># class inotify_runner(runner):</span>
-<span class="c1">#     &quot;&quot;&quot;The inotify runner is used to monitor folders and trigger &quot;store&quot; events. It is run in a separate thread instead of </span>
-<span class="c1">#     beeing created as a daemon-thread since all initiation is performed in the main thread before server is started.</span>
-<span class="c1">#     &quot;&quot;&quot;</span>
-<span class="c1">#     MASK = pyinotify.IN_CLOSE_WRITE | pyinotify.IN_MOVED_TO</span>
-    
-<span class="c1">#     def __init__(self, backend, active, **args):</span>
-<span class="c1">#         &quot;&quot;&quot;Constructor</span>
-<span class="c1">#         :param backend: The backend</span>
-<span class="c1">#         :param active: If this runner is active or not. NOT USED</span>
-<span class="c1">#         :param **args: A number of arguments can be provided</span>
-<span class="c1">#           folders        - a list of folder names to monitor</span>
-<span class="c1">#           ignore-pattern - If files matching the provided pattern should be ignored or not</span>
-<span class="c1">#           pattern        - The pattern to check for files to ignore</span>
-<span class="c1">#           name           - The name this inotify runner should be using</span>
-<span class="c1">#         &quot;&quot;&quot;</span>
-<span class="c1">#         super(inotify_runner, self).__init__(backend, active)</span>
-<span class="c1">#         self._name = &quot;inotify-runner&quot;</span>
-<span class="c1">#         self._folders = args[&quot;folders&quot;]</span>
-<span class="c1">#         self._ignore_pattern = True</span>
-<span class="c1">#         self._process_pending_files = False</span>
-<span class="c1">#         self._pattern = &quot;&quot;</span>
-<span class="c1">#         if &quot;ignore-pattern&quot; in args:</span>
-<span class="c1">#             self._ignore_pattern = args[&quot;ignore-pattern&quot;]</span>
-<span class="c1">#         if &quot;pattern&quot; in args:</span>
-<span class="c1">#             self._pattern = args[&quot;pattern&quot;]</span>
-<span class="c1">#         if &quot;name&quot; in args:</span>
-<span class="c1">#             self._name = args[&quot;name&quot;]</span>
-<span class="c1">#         if &quot;process-pending-files&quot; in args:</span>
-<span class="c1">#             self._process_pending_files=args[&quot;process-pending-files&quot;]</span>
-
-<span class="c1">#         self._wm = pyinotify.WatchManager()</span>
-<span class="c1">#         self._notifier = pyinotify.Notifier(self._wm, inotify_runner_event_handler(self))</span>
-
-<span class="c1">#     def is_ignored(self, filename):</span>
-<span class="c1">#         &quot;&quot;&quot;Checks if the specified file should be ignored or not, for example when a tmpfile is written.</span>
-<span class="c1">#         the check is performed on basename.</span>
-<span class="c1">#         :param filename: The filename to be checked</span>
-<span class="c1">#         :return True if file should be ignored otherwise False</span>
-<span class="c1">#         &quot;&quot;&quot;</span>
-<span class="c1">#         if self._ignore_pattern:</span>
-<span class="c1">#             return False</span>
-<span class="c1">#         bname = os.path.basename(filename)</span>
-<span class="c1">#         return re.match(self._pattern, bname) != None</span>
-    
-<span class="c1">#     def handle_file(self, filename):</span>
-<span class="c1">#         &quot;&quot;&quot;Handles the file (by sending it to the backend using the name given to this runner</span>
-<span class="c1">#         :param filename: The filename to handle</span>
-<span class="c1">#         &quot;&quot;&quot;</span>
-<span class="c1">#         self._backend.store_file(filename, self._name)</span>
-<span class="c1">#         os.unlink(filename)</span>
-
-<span class="c1">#     def run(self):</span>
-<span class="c1">#         &quot;&quot;&quot;The runner for the thread. Starts the inotify notifier loop</span>
-<span class="c1">#         &quot;&quot;&quot;</span>
-<span class="c1">#         self._notifier.loop()</span>
-
-<span class="c1">#     def pending_run(self, pending_filenames):</span>
-<span class="c1">#         if pending_filenames:</span>
-<span class="c1">#             for filename in pending_filenames:</span>
-<span class="c1">#                 self.handle_file(filename)</span>
-<span class="c1">#                 time.sleep(0.1) # Just to not starve real time data handling</span>
-
-<span class="c1">#     def get_pending_files(self, folder):</span>
-<span class="c1">#         &quot;&quot;&quot;Lists all files in specified folder</span>
-<span class="c1">#         &quot;&quot;&quot;</span>
-<span class="c1">#         result=[]</span>
-<span class="c1">#         files = [f for f in listdir(folder) if isfile(join(folder, f))]</span>
-<span class="c1">#         for f in files:</span>
-<span class="c1">#             filename = join(folder, f)</span>
-<span class="c1">#             if not self.is_ignored(filename):</span>
-<span class="c1">#                 result.append(filename)</span>
-<span class="c1">#         return result</span>
-
-<span class="c1">#     def start(self):</span>
-<span class="c1">#         &quot;&quot;&quot;Starts this runner by adding the watched folders and then starting a daemonized thread.</span>
-<span class="c1">#         &quot;&quot;&quot;</span>
-<span class="c1">#         pending_files=[]</span>
-<span class="c1">#         for folder in self._folders:</span>
-<span class="c1">#             logger.info(&quot;inotify_runner(%s) watching &#39;%s&#39;&quot;%(self._name, folder))</span>
-<span class="c1">#             pending_files.extend(self.get_pending_files(folder))</span>
-<span class="c1">#             self._wm.add_watch(folder, self.MASK)</span>
-
-<span class="c1">#         if len(pending_files) &gt; 0 and self._process_pending_files:</span>
-<span class="c1">#             self._pending_thread = Thread(target=self.pending_run, args=(pending_files,))</span>
-<span class="c1">#             self._pending_thread.daemon = True</span>
-<span class="c1">#             self._pending_thread.start()</span>
-
-<span class="c1">#         self._thread = Thread(target=self.run)</span>
-<span class="c1">#         self._thread.daemon = True</span>
-<span class="c1">#         self._thread.start()</span>
-
-<span class="c1">#     def stop(self):</span>
-<span class="c1">#         logger.info(&quot;Stopping inotifier&quot;)</span>
-<span class="c1">#         self._notifier.stop()</span>
-
 <div class="viewcode-block" id="triggered_fetch_runner">
 <a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.triggered_fetch_runner">[docs]</a>
 <span class="k">class</span> <span class="nc">triggered_fetch_runner</span><span class="p">(</span><span class="n">runner</span><span class="p">,</span> <span class="n">message_aware</span><span class="p">):</span>
@@ -521,6 +403,136 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Stopped cleanup runner&quot;</span><span class="p">)</span></div>
 </div>
 
+
+<span class="n">VACUUM_HOUR_MINUTE_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^(\*|\d</span><span class="si">{2}</span><span class="s2">):(\*|\d</span><span class="si">{2}</span><span class="s2">)$&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="statistics_vacuum_runner">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.statistics_vacuum_runner">[docs]</a>
+<span class="k">class</span> <span class="nc">statistics_vacuum_runner</span><span class="p">(</span><span class="n">runner</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Runs vacuum on the statistics database</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">active</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor</span>
+<span class="sd">        :param backend: The backend</span>
+<span class="sd">        :param active: If this runner is active or not</span>
+<span class="sd">        :param args: Dictionary containing &quot;name&quot;, &quot;interval&quot;, &quot;retries&quot;, &quot;retrysec&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">statistics_vacuum_runner</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">active</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="s2">&quot;statistics_cleanup_runner&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_at</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;*:00&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_retries</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_retrysec</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="p">()</span><span class="o">.</span><span class="n">get_statistics_manager</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_event</span> <span class="o">=</span> <span class="n">Event</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="s2">&quot;name&quot;</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+        
+        <span class="k">if</span> <span class="s2">&quot;at&quot;</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_at</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;at&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_at</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;at should be a list of strings containing HH:mm or *:mm&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate_at</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_at</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;at should be a list of strings containing HH:mm&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s2">&quot;retries&quot;</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_retries</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;retries&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_retries</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;retries should be an integer&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s2">&quot;retrysec&quot;</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_retrysec</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;retrysec&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_retrysec</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_retrysec</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;retrysec should be a float or integer&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_retrysec</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_retrysec</span><span class="p">)</span>
+
+<div class="viewcode-block" id="statistics_vacuum_runner.validate_at">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.statistics_vacuum_runner.validate_at">[docs]</a>
+    <span class="k">def</span> <span class="nf">validate_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">times</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">times</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">bool</span><span class="p">(</span><span class="n">VACUUM_HOUR_MINUTE_PATTERN</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">t</span><span class="p">)):</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="n">hh</span><span class="p">,</span><span class="n">mm</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">((</span><span class="n">hh</span><span class="o">==</span><span class="s2">&quot;*&quot;</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">hh</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span><span class="n">hh</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">24</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="n">mm</span><span class="o">==</span><span class="s2">&quot;*&quot;</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">mm</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span><span class="n">mm</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">60</span><span class="p">))):</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="statistics_vacuum_runner.getnow">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.statistics_vacuum_runner.getnow">[docs]</a>
+    <span class="k">def</span> <span class="nf">getnow</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="statistics_vacuum_runner.get_closest_wait_time">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.statistics_vacuum_runner.get_closest_wait_time">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_closest_wait_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">wait_seconds</span> <span class="o">=</span> <span class="mi">26</span><span class="o">*</span><span class="mi">60</span><span class="o">*</span><span class="mi">60</span>   <span class="c1"># Since we only support hours and minutes 26 hours will be more than enough to be max</span>
+
+        <span class="n">now</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getnow</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_at</span><span class="p">:</span>
+            <span class="n">hh</span><span class="p">,</span><span class="n">mm</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">hh</span><span class="o">==</span><span class="s2">&quot;*&quot;</span> <span class="ow">and</span> <span class="n">mm</span><span class="o">==</span><span class="s2">&quot;*&quot;</span><span class="p">:</span>
+                <span class="n">target</span> <span class="o">=</span> <span class="n">now</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">second</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">microsecond</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">hh</span> <span class="o">==</span> <span class="s2">&quot;*&quot;</span><span class="p">:</span>
+                <span class="n">target</span> <span class="o">=</span> <span class="n">now</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">minute</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">mm</span><span class="p">),</span> <span class="n">second</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">microsecond</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">target</span> <span class="o">&lt;=</span> <span class="n">now</span><span class="p">:</span>
+                    <span class="n">target</span> <span class="o">+=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">mm</span> <span class="o">==</span> <span class="s2">&quot;*&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">now</span><span class="o">.</span><span class="n">hour</span> <span class="o">!=</span> <span class="nb">int</span><span class="p">(</span><span class="n">hh</span><span class="p">):</span>
+                    <span class="n">target</span> <span class="o">=</span> <span class="n">now</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">hour</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">hh</span><span class="p">),</span> <span class="n">minute</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">microsecond</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">target</span> <span class="o">=</span> <span class="n">now</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">second</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">microsecond</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">target</span> <span class="o">+=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">target</span> <span class="o">=</span> <span class="n">now</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">hour</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">hh</span><span class="p">),</span> <span class="n">minute</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">mm</span><span class="p">),</span> <span class="n">second</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">microsecond</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">target</span> <span class="o">&lt;=</span> <span class="n">now</span><span class="p">:</span>
+                    <span class="n">target</span> <span class="o">+=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">seconds</span> <span class="o">=</span> <span class="p">(</span><span class="n">target</span> <span class="o">-</span> <span class="n">now</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">seconds</span> <span class="o">&lt;</span> <span class="n">wait_seconds</span><span class="p">:</span>
+                <span class="n">wait_seconds</span> <span class="o">=</span> <span class="n">seconds</span>
+        
+        <span class="k">return</span> <span class="n">wait_seconds</span></div>
+
+
+<div class="viewcode-block" id="statistics_vacuum_runner.run">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.statistics_vacuum_runner.run">[docs]</a>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The runner for the thread. Will trigger a wait for</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running</span><span class="p">:</span>
+            <span class="n">waitsec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_closest_wait_time</span><span class="p">()</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Waiting for </span><span class="si">%d</span><span class="s2"> seconds to run VACUUM&quot;</span><span class="o">%</span><span class="n">waitsec</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">waitsec</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_event</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">waitsec</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Running VACUUM&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_manager</span><span class="o">.</span><span class="n">vacuum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_retries</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_retrysec</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;VACUUM finished&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="statistics_vacuum_runner.start">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.statistics_vacuum_runner.start">[docs]</a>
+    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Starts this runner by starting a daemonized thread.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="statistics_vacuum_runner.stop">
+<a class="viewcode-back" href="../../../api/bexchange.runner.html#bexchange.runner.runners.statistics_vacuum_runner.stop">[docs]</a>
+    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_event</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Stopped vacuum runner&quot;</span><span class="p">)</span></div>
+</div>
 
 
 <div class="viewcode-block" id="runner_manager">

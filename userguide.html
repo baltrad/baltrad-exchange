@@ -755,6 +755,29 @@ The interval is specified in minutes telling the system how often the routine sh
 <span class="p">}</span>
 </pre></div>
 </div>
+<dl>
+<dt><strong>bexchange.runner.runners.statistics_vacuum_runner</strong></dt><dd><p>The statistics vacuum runner is used for ensuring that the statistics data tables are cleanedup. The configuration of the cleanup runner is done using three attributes, at, retries and retrysec.
+The at is a list of entries in the format HH:mm where HH is hour between 0 and 23 and mm is minute between 0 and 59. It is also possible to specify * for hour and minute which means that the entry
+can look like <em>:01, which means that every hour at one minute past the vacuum is run. If entry has *:</em> it means to run once every minute. However, this is probably way to often in a runtime environment.</p>
+<p><strong>retries</strong> is the number of retries the vacuum routine should be atempted before failing. This is due to vacuum requiring some exclusivity and to get it, it will do a number of atempts acquiring it.</p>
+<p><strong>retrysec</strong> is the number of seconds before each retry.</p>
+</dd>
+</dl>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="nt">&quot;runner&quot;</span><span class="p">:{</span>
+<span class="w">  </span><span class="nt">&quot;_comment_&quot;</span><span class="p">:</span><span class="s2">&quot;Vacuum of statistics database run as a runner.&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;active&quot;</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;bexchange.runner.runners.statistics_vacuum_runner&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;extra_arguments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;statistics_vacuum_runner&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;at&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;01:01&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;13:01&quot;</span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;retries&quot;</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;retrysec&quot;</span><span class="p">:</span><span class="mi">5</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </section>
 <section id="processors-processor">
 <h3>Processors (processor)<a class="headerlink" href="#processors-processor" title="Link to this heading">¶</a></h3>

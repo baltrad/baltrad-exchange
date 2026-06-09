@@ -128,6 +128,14 @@
 <span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/db/sqldatabase.html#SqlAlchemyDatabase.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.db.sqldatabase.SqlAlchemyDatabase.update" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.db.sqldatabase.SqlAlchemyDatabase.vacuum">
+<span class="sig-name descname"><span class="pre">vacuum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">retries</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nrseconds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/db/sqldatabase.html#SqlAlchemyDatabase.vacuum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.db.sqldatabase.SqlAlchemyDatabase.vacuum" title="Link to this definition">¶</a></dt>
+<dd><p>Executes the vacuum call on the database.
+:param retries: Number of retries the code should atempt to get hold of the database for vacuuming
+:param nrseconds: Seconds between each retry</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py function">
@@ -281,6 +289,7 @@
 <li><a class="reference internal" href="#bexchange.db.sqldatabase.SqlAlchemyDatabase.list_statentry_ids"><code class="docutils literal notranslate"><span class="pre">SqlAlchemyDatabase.list_statentry_ids()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.db.sqldatabase.SqlAlchemyDatabase.list_statistic_ids"><code class="docutils literal notranslate"><span class="pre">SqlAlchemyDatabase.list_statistic_ids()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.db.sqldatabase.SqlAlchemyDatabase.update"><code class="docutils literal notranslate"><span class="pre">SqlAlchemyDatabase.update()</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.db.sqldatabase.SqlAlchemyDatabase.vacuum"><code class="docutils literal notranslate"><span class="pre">SqlAlchemyDatabase.vacuum()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#bexchange.db.sqldatabase.force_sqlite_foreign_keys"><code class="docutils literal notranslate"><span class="pre">force_sqlite_foreign_keys()</span></code></a></li>

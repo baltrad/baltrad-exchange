@@ -794,6 +794,32 @@ Currently, there are two runners implemented in the exchange server but like wit
   }
   }
 
+**bexchange.runner.runners.statistics_vacuum_runner**
+  The statistics vacuum runner is used for ensuring that the statistics data tables are cleanedup. The configuration of the cleanup runner is done using three attributes, at, retries and retrysec.
+  The at is a list of entries in the format HH:mm where HH is hour between 0 and 23 and mm is minute between 0 and 59. It is also possible to specify * for hour and minute which means that the entry
+  can look like *:01, which means that every hour at one minute past the vacuum is run. If entry has *:* it means to run once every minute. However, this is probably way to often in a runtime environment.
+
+  **retries** is the number of retries the vacuum routine should be atempted before failing. This is due to vacuum requiring some exclusivity and to get it, it will do a number of atempts acquiring it.
+  
+  **retrysec** is the number of seconds before each retry. 
+
+.. code-block:: json
+
+  {
+  "runner":{
+    "_comment_":"Vacuum of statistics database run as a runner.",
+    "active":true,
+    "class":"bexchange.runner.runners.statistics_vacuum_runner",
+    "extra_arguments": {
+      "name":"statistics_vacuum_runner",
+      "at": ["01:01", "13:01"],
+      "retries":5,
+      "retrysec":5
+    } 
+  }
+  }
+
+
 Processors (processor)
 ======================
 

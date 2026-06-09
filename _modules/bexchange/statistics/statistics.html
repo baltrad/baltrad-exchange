@@ -242,6 +242,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_sqldatabase</span><span class="o">.</span><span class="n">cleanup_statentries</span><span class="p">(</span><span class="n">maxage</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="statistics_manager.vacuum">
+<a class="viewcode-back" href="../../../api/bexchange.statistics.html#bexchange.statistics.statistics.statistics_manager.vacuum">[docs]</a>
+    <span class="k">def</span> <span class="nf">vacuum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">retries</span><span class="p">,</span> <span class="n">retrysec</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sqldatabase</span><span class="o">.</span><span class="n">vacuum</span><span class="p">(</span><span class="n">retries</span><span class="p">,</span> <span class="n">retrysec</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Failed to run vacuum&quot;</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="statistics_manager.increment">
 <a class="viewcode-back" href="../../../api/bexchange.statistics.html#bexchange.statistics.statistics.statistics_manager.increment">[docs]</a>
     <span class="k">def</span> <span class="nf">increment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spid</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">meta</span><span class="p">,</span> <span class="n">save_post</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">increment_counter</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">optime</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">optime_info</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
