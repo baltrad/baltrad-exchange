@@ -323,9 +323,8 @@ class SqlAlchemyDatabase(object):
         logger.info("Cleanup of statentries older than %s"%maxagedt.strftime("%Y-%m-%d %H:%M"))
         q = db_statentry.delete().where(db_statentry.c.entrytime < maxagedt.strftime("%Y-%m-%d %H:%M"))
         logger.debug("Query: %s"%q)
-        with self.get_connection() as conn:
+        with self._engine.begin() as conn:
             conn.execute(q)
-            conn.commit()
 
     def vacuum(self, retries, nrseconds):
         """ Executes the vacuum call on the database.

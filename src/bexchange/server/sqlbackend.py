@@ -105,7 +105,7 @@ class SqlAlchemySourceManager(object):
         """Adds the sources to the source database
         :param srclist: a list of bdbcommon.oh5.Sources
         """
-        with self.get_connection() as conn:
+        with self._engine.begin() as conn:
             count = conn.execute(sql.select(sql.func.count()).select_from(sources)).scalar()
             if count > 0:
                 return True
@@ -121,9 +121,8 @@ class SqlAlchemySourceManager(object):
                     ).inserted_primary_key[0]
                 except sqlexc.IntegrityError:
                     raise RuntimeError("duplicate of source.name")
-        
+
                 self.insert_source_values(conn, source_id, source)
-            conn.commit()
     
     def get_source(self, meta, add_parent_object=False):
         """
