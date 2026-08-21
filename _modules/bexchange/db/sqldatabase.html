@@ -230,6 +230,35 @@
         <span class="n">dbapi_con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;pragma foreign_keys=ON&quot;</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="force_sqlite_wal">
+<a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.force_sqlite_wal">[docs]</a>
+<span class="k">def</span> <span class="nf">force_sqlite_wal</span><span class="p">(</span><span class="n">dbapi_con</span><span class="p">,</span> <span class="n">con_record</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">sqlite3</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="c1"># built without sqlite support</span>
+        <span class="k">return</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dbapi_con</span><span class="p">,</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Connection</span><span class="p">):</span>
+        <span class="c1"># setting journal_mode is persisted but it&#39;s a </span>
+        <span class="c1"># lot easier setting it for each connection and</span>
+        <span class="c1"># overhead is negligable</span>
+        <span class="n">dbapi_con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;pragma journal_mode=WAL&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="force_sqlite_synchronous_normal">
+<a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.force_sqlite_synchronous_normal">[docs]</a>
+<span class="k">def</span> <span class="nf">force_sqlite_synchronous_normal</span><span class="p">(</span><span class="n">dbapi_con</span><span class="p">,</span> <span class="n">con_record</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">sqlite3</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="c1"># built without sqlite support</span>
+        <span class="k">return</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dbapi_con</span><span class="p">,</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Connection</span><span class="p">):</span>
+        <span class="c1"># NORMAL is the recommended setting with WAL. Must be set for each</span>
+        <span class="c1"># connection since it&#39;s not persisted.</span>
+        <span class="n">dbapi_con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;pragma synchronous=NORMAL&quot;</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="SqlAlchemyDatabase">
 <a class="viewcode-back" href="../../../api/bexchange.db.html#bexchange.db.sqldatabase.SqlAlchemyDatabase">[docs]</a>
 <span class="k">class</span> <span class="nc">SqlAlchemyDatabase</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -241,6 +270,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_engine</span> <span class="o">=</span> <span class="n">dbutil</span><span class="o">.</span><span class="n">create_engine_from_url</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">poolsize</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_engine</span><span class="o">.</span><span class="n">driver</span> <span class="o">==</span> <span class="s2">&quot;pysqlite&quot;</span><span class="p">:</span>
             <span class="n">event</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_engine</span><span class="p">,</span> <span class="s2">&quot;connect&quot;</span><span class="p">,</span> <span class="n">force_sqlite_foreign_keys</span><span class="p">)</span>
+            <span class="n">event</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_engine</span><span class="p">,</span> <span class="s2">&quot;connect&quot;</span><span class="p">,</span> <span class="n">force_sqlite_wal</span><span class="p">)</span>
+            <span class="n">event</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_engine</span><span class="p">,</span> <span class="s2">&quot;connect&quot;</span><span class="p">,</span> <span class="n">force_sqlite_synchronous_normal</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">init_tables</span><span class="p">()</span>
         <span class="n">dbmeta</span><span class="o">.</span><span class="n">bind</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_engine</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Session</span> <span class="o">=</span> <span class="n">sessionmaker</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_engine</span><span class="p">)</span>
