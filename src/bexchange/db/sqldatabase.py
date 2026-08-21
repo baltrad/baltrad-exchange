@@ -174,6 +174,29 @@ def force_sqlite_foreign_keys(dbapi_con, con_record):
     if isinstance(dbapi_con, sqlite3.Connection):
         dbapi_con.execute("pragma foreign_keys=ON")
 
+def force_sqlite_wal(dbapi_con, con_record):
+    try:
+        import sqlite3
+    except ImportError:
+        # built without sqlite support
+        return
+    if isinstance(dbapi_con, sqlite3.Connection):
+        # setting journal_mode is persisted but it's a 
+        # lot easier setting it for each connection and
+        # overhead is negligable
+        dbapi_con.execute("pragma journal_mode=WAL")
+
+def force_sqlite_synchronous_normal(dbapi_con, con_record):
+    try:
+        import sqlite3
+    except ImportError:
+        # built without sqlite support
+        return
+    if isinstance(dbapi_con, sqlite3.Connection):
+        # NORMAL is the recommended setting with WAL. Must be set for each
+        # connection since it's not persisted.
+        dbapi_con.execute("pragma synchronous=NORMAL")
+
 class SqlAlchemyDatabase(object):
     def __init__(self, uri="sqlite:///tmp/baltrad-exchange.db", poolsize=10):
         """Constructor
@@ -183,6 +206,8 @@ class SqlAlchemyDatabase(object):
         self._engine = dbutil.create_engine_from_url(uri, poolsize)
         if self._engine.driver == "pysqlite":
             event.listen(self._engine, "connect", force_sqlite_foreign_keys)
+            event.listen(self._engine, "connect", force_sqlite_wal)
+            event.listen(self._engine, "connect", force_sqlite_synchronous_normal)
         self.init_tables()
         dbmeta.bind = self._engine
         self.Session = sessionmaker(bind=self._engine)

@@ -24,8 +24,8 @@
 from __future__ import absolute_import
 
 import unittest
-from unittest.mock import MagicMock
-import logging, os
+from unittest.mock import MagicMock, patch
+import logging, os, sqlite3
 from datetime import datetime
 from tempfile import NamedTemporaryFile
 from bexchange.db import sqldatabase
@@ -129,4 +129,58 @@ class TestSqlDatabase(unittest.TestCase):
 
         entries = self._database.find_statentries("abcd", [], [], hashid=None, filters=[["delay","<", 2], ["datetime",">", datetime(2023,11,27,1,15,0)]], object_type=None)
         self.assertEqual(0, len(entries))
+
+    def test_force_sqlite_wal_sets_pragma(self):
+        conn = sqlite3.connect(":memory:")
+        con_record = MagicMock()
+
+        sqldatabase.force_sqlite_wal(conn, con_record)
+
+        conn.close()
+        with NamedTemporaryFile(suffix=".db") as f:
+            fileconn = sqlite3.connect(f.name)
+            sqldatabase.force_sqlite_wal(fileconn, con_record)
+            self.assertEqual("wal", fileconn.execute("pragma journal_mode").fetchone()[0])
+            fileconn.close()
+
+    def test_force_sqlite_wal_ignores_non_sqlite_connection(self):
+        dbapi_con = MagicMock()
+        con_record = MagicMock()
+
+        sqldatabase.force_sqlite_wal(dbapi_con, con_record)
+
+        dbapi_con.execute.assert_not_called()
+
+    def test_force_sqlite_synchronous_normal_sets_pragma(self):
+        conn = sqlite3.connect(":memory:")
+        con_record = MagicMock()
+
+        sqldatabase.force_sqlite_synchronous_normal(conn, con_record)
+
+        self.assertEqual(1, conn.execute("pragma synchronous").fetchone()[0]) # 1 == NORMAL
+        conn.close()
+
+    def test_force_sqlite_synchronous_normal_ignores_non_sqlite_connection(self):
+        dbapi_con = MagicMock()
+        con_record = MagicMock()
+
+        sqldatabase.force_sqlite_synchronous_normal(dbapi_con, con_record)
+
+        dbapi_con.execute.assert_not_called()
+
+    def test_sqlalchemydatabase_wires_up_sqlite_pragma_listeners(self):
+        # Verifies that SqlAlchemyDatabase registers all three pragma listeners on the
+        # sqlalchemy engine's "connect" event when running against sqlite.
+        with patch("bexchange.db.sqldatabase.event.listen") as listen_mock:
+            sqldatabase.SqlAlchemyDatabase("sqlite:///:memory:")
+
+        registered_listeners = [call.args[2] for call in listen_mock.call_args_list]
+        self.assertIn(sqldatabase.force_sqlite_foreign_keys, registered_listeners)
+        self.assertIn(sqldatabase.force_sqlite_wal, registered_listeners)
+        self.assertIn(sqldatabase.force_sqlite_synchronous_normal, registered_listeners)
+
+    def test_database_connection_has_wal_synchronous_normal_and_foreign_keys(self):
+        with self._database._engine.connect() as c:
+            self.assertEqual(1, c.exec_driver_sql("pragma synchronous").scalar())
+            self.assertEqual(1, c.exec_driver_sql("pragma foreign_keys").scalar())
 
