@@ -505,12 +505,12 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running</span><span class="p">:</span>
             <span class="n">waitsec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_closest_wait_time</span><span class="p">()</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Waiting for </span><span class="si">%d</span><span class="s2"> seconds to run VACUUM&quot;</span><span class="o">%</span><span class="n">waitsec</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Waiting for </span><span class="si">%d</span><span class="s2"> seconds to run VACUUM&quot;</span><span class="o">%</span><span class="n">waitsec</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">waitsec</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_event</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">waitsec</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Running VACUUM&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Running VACUUM&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_manager</span><span class="o">.</span><span class="n">vacuum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_retries</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_retrysec</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;VACUUM finished&quot;</span><span class="p">)</span></div>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;VACUUM finished&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="statistics_vacuum_runner.start">
