@@ -382,12 +382,12 @@ class statistics_vacuum_runner(runner):
         """
         while self._running:
             waitsec = self.get_closest_wait_time()
-            logger.debug("Waiting for %d seconds to run VACUUM"%waitsec)
+            logger.info("Waiting for %d seconds to run VACUUM"%waitsec)
             if waitsec > 0.0:
                 self._event.wait(waitsec)
-            logger.debug("Running VACUUM")
+            logger.info("Running VACUUM")
             self._manager.vacuum(self._retries, self._retrysec)
-            logger.debug("VACUUM finished")
+            logger.info("VACUUM finished")
 
     def start(self):
         """Starts this runner by starting a daemonized thread.
