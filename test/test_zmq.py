@@ -113,7 +113,7 @@ class test_publisher(unittest.TestCase):
         self._publisher._socket = MagicMock()
         self._publisher._socket.send = MagicMock()
 
-        self._publisher.do_publish(tmpfile, meta)
+        self._publisher.do_publish(tmpfile, meta, 123456, 123459)
 
         self._publisher.create_hmac.assert_called_with(bytearray(metafilename + b'12345'))
 

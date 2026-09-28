@@ -134,7 +134,7 @@ class publisher(publishers.standard_publisher):
         """
         return hmac.new(self._hmackey, b_payload, hashlib.sha1).digest()
 
-    def do_publish(self, tmpfile, meta):
+    def do_publish(self, tmpfile, meta, startTime, queueInsertTime):
         """Publishes files over the data transporter zero mq layer.
         :param tmpfile: The temporary file containing the data to be sent
         :param meta: The metadata describing the file content
