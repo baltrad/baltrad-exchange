@@ -95,6 +95,22 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">headers</span> <span class="o">=</span> <span class="n">headers</span></div>
 
 
+<div class="viewcode-block" id="Response">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.Response">[docs]</a>
+<span class="k">class</span> <span class="nc">Response</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A response where the body has already been read and the connection has been closed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">body</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">status</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_body</span> <span class="o">=</span> <span class="n">body</span>
+
+<div class="viewcode-block" id="Response.read">
+<a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.Response.read">[docs]</a>
+    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_body</span></div>
+</div>
+
+
 <div class="viewcode-block" id="RestfulServer">
 <a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.RestfulServer">[docs]</a>
 <span class="k">class</span> <span class="nc">RestfulServer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -287,8 +303,11 @@
 <div class="viewcode-block" id="RestfulServer.execute_request">
 <a class="viewcode-back" href="../../../api/bexchange.client.html#bexchange.client.rest.RestfulServer.execute_request">[docs]</a>
     <span class="k">def</span> <span class="nf">execute_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Exececutes the actual rest request over http or https. Will also add credentials to the request</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Exececutes the actual rest request over http or https. Will also add credentials to the request.</span>
+<span class="sd">        The response body is always read and the connection is always closed before returning, since closing</span>
+<span class="sd">        a socket with unread data makes the tcp stack send RST instead of FIN.</span>
 <span class="sd">        :param req: The REST request</span>
+<span class="sd">        :return: a :class:`Response` with status and the already read body</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">conn</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_server_url</span><span class="o">.</span><span class="n">scheme</span> <span class="o">==</span> <span class="s2">&quot;https&quot;</span><span class="p">:</span>
@@ -300,8 +319,8 @@
             <span class="n">conn</span> <span class="o">=</span> <span class="n">httplibclient</span><span class="o">.</span><span class="n">HTTPConnection</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_server_url</span><span class="o">.</span><span class="n">hostname</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_server_url</span><span class="o">.</span><span class="n">port</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_auth</span><span class="o">.</span><span class="n">add_credentials</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_auth</span><span class="o">.</span><span class="n">add_credentials</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
             <span class="n">basepath</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span>
             <span class="n">subpath</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">path</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_server_url</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
@@ -309,12 +328,16 @@
             <span class="k">if</span> <span class="n">subpath</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">):</span>
                 <span class="n">subpath</span><span class="o">=</span><span class="n">subpath</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
             <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">basepath</span><span class="p">,</span> <span class="n">subpath</span><span class="p">)</span>
-            <span class="n">conn</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">method</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">req</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">req</span><span class="o">.</span><span class="n">headers</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">socket</span><span class="o">.</span><span class="n">error</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-                <span class="s2">&quot;Could not send request to </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_server_url_str</span>
-            <span class="p">)</span>
-        <span class="k">return</span> <span class="n">conn</span><span class="o">.</span><span class="n">getresponse</span><span class="p">()</span></div>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">conn</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">method</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">req</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">req</span><span class="o">.</span><span class="n">headers</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">socket</span><span class="o">.</span><span class="n">error</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                    <span class="s2">&quot;Could not send request to </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_server_url_str</span>
+                <span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">getresponse</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 </div>
 
 

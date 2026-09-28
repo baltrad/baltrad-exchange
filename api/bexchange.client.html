@@ -617,6 +617,18 @@ entry point.</p>
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="bexchange.client.rest.Response">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.client.rest.</span></span><span class="sig-name descname"><span class="pre">Response</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/client/rest.html#Response"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.client.rest.Response" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A response where the body has already been read and the connection has been closed.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bexchange.client.rest.Response.read">
+<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/client/rest.html#Response.read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.client.rest.Response.read" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="bexchange.client.rest.RestfulServer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bexchange.client.rest.</span></span><span class="sig-name descname"><span class="pre">RestfulServer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">server_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auth</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/client/rest.html#RestfulServer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.client.rest.RestfulServer" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -624,8 +636,11 @@ entry point.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bexchange.client.rest.RestfulServer.execute_request">
 <span class="sig-name descname"><span class="pre">execute_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">req</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bexchange/client/rest.html#RestfulServer.execute_request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bexchange.client.rest.RestfulServer.execute_request" title="Link to this definition">¶</a></dt>
-<dd><p>Exececutes the actual rest request over http or https. Will also add credentials to the request
-:param req: The REST request</p>
+<dd><p>Exececutes the actual rest request over http or https. Will also add credentials to the request.
+The response body is always read and the connection is always closed before returning, since closing
+a socket with unread data makes the tcp stack send RST instead of FIN.
+:param req: The REST request
+:return: a <a class="reference internal" href="#bexchange.client.rest.Response" title="bexchange.client.rest.Response"><code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code></a> with status and the already read body</p>
 </dd></dl>
 
 <dl class="py method">
@@ -841,6 +856,10 @@ entry point.</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#bexchange.client.rest.Request"><code class="docutils literal notranslate"><span class="pre">Request</span></code></a></li>
+<li><a class="reference internal" href="#bexchange.client.rest.Response"><code class="docutils literal notranslate"><span class="pre">Response</span></code></a><ul>
+<li><a class="reference internal" href="#bexchange.client.rest.Response.read"><code class="docutils literal notranslate"><span class="pre">Response.read()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#bexchange.client.rest.RestfulServer"><code class="docutils literal notranslate"><span class="pre">RestfulServer</span></code></a><ul>
 <li><a class="reference internal" href="#bexchange.client.rest.RestfulServer.execute_request"><code class="docutils literal notranslate"><span class="pre">RestfulServer.execute_request()</span></code></a></li>
 <li><a class="reference internal" href="#bexchange.client.rest.RestfulServer.file_arrival"><code class="docutils literal notranslate"><span class="pre">RestfulServer.file_arrival()</span></code></a></li>

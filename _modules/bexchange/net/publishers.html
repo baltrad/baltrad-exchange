@@ -68,7 +68,7 @@
 <span class="kn">import</span> <span class="nn">ftplib</span>
 <span class="kn">import</span> <span class="nn">urllib.parse</span> <span class="k">as</span> <span class="nn">urlparse</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">datetime</span><span class="o">,</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">base64</span>
 <span class="kn">import</span> <span class="nn">importlib</span>
 <span class="kn">from</span> <span class="nn">bexchange.matching</span> <span class="kn">import</span> <span class="n">filters</span>
@@ -337,6 +337,8 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Publisher is going down, will not handle more files&quot;</span><span class="p">)</span>
             <span class="k">return</span>
 
+        <span class="n">startTime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
         <span class="n">tmpfile</span> <span class="o">=</span> <span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="p">()</span><span class="o">.</span><span class="n">get_tmp_folder</span><span class="p">())</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
             <span class="n">shutil</span><span class="o">.</span><span class="n">copyfileobj</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">tmpfile</span><span class="p">)</span>
@@ -367,8 +369,9 @@
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">d</span><span class="o">.</span><span class="n">can_return_invalid_file_content</span><span class="p">():</span>
                         <span class="k">raise</span>
 
+        <span class="n">queueInsertTime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="n">tmpfile</span><span class="p">,</span> <span class="n">meta</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="n">tmpfile</span><span class="p">,</span> <span class="n">meta</span><span class="p">,</span> <span class="n">startTime</span><span class="p">,</span> <span class="n">queueInsertTime</span><span class="p">))</span>
         <span class="k">except</span> <span class="n">Full</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Queue for publisher &#39;</span><span class="si">%s</span><span class="s2">&#39; is full, dropping message with ID:&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)))</span>
             <span class="k">try</span><span class="p">:</span>
@@ -383,24 +386,32 @@
 
 <div class="viewcode-block" id="standard_publisher.do_publish">
 <a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.standard_publisher.do_publish">[docs]</a>
-    <span class="k">def</span> <span class="nf">do_publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tmpfile</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">do_publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tmpfile</span><span class="p">,</span> <span class="n">meta</span><span class="p">,</span> <span class="n">startTime</span><span class="p">,</span> <span class="n">queueInsertTime</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Passes a file to all connections</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">queuePopTime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connections</span><span class="p">:</span>
             <span class="n">c</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">tmpfile</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>
-        <span class="n">tmpfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+        <span class="n">tmpfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">publishedTime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+        <span class="n">totalTime</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">publishedTime</span> <span class="o">-</span> <span class="n">startTime</span><span class="p">)</span><span class="o">*</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="n">queueTime</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">queuePopTime</span> <span class="o">-</span> <span class="n">queueInsertTime</span><span class="p">)</span><span class="o">*</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="n">transferTime</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">publishedTime</span> <span class="o">-</span> <span class="n">queuePopTime</span><span class="p">)</span><span class="o">*</span><span class="mi">1000</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Publisher: &#39;</span><span class="si">%s</span><span class="s2">&#39; file with ID:&#39;</span><span class="si">%s</span><span class="s2">&#39; sent. Total time: </span><span class="si">%d</span><span class="s2"> ms, queue time: </span><span class="si">%d</span><span class="s2">, transfer time: </span><span class="si">%d</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="n">util</span><span class="o">.</span><span class="n">create_fileid_from_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">),</span> <span class="n">totalTime</span><span class="p">,</span> <span class="n">queueTime</span><span class="p">,</span> <span class="n">transferTime</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="standard_publisher.handle_consumer_file">
 <a class="viewcode-back" href="../../../api/bexchange.net.html#bexchange.net.publishers.standard_publisher.handle_consumer_file">[docs]</a>
-    <span class="k">def</span> <span class="nf">handle_consumer_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tmpfile</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">handle_consumer_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tmpfile</span><span class="p">,</span> <span class="n">meta</span><span class="p">,</span> <span class="n">startTime</span><span class="p">,</span> <span class="n">queueInsertTime</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Will handle the file that the consumer retrieved from the queue</span>
 <span class="sd">        :param self: self</span>
 <span class="sd">        :param tmpfile: the tmp file</span>
 <span class="sd">        :param meta: the meta data</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">do_publish</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">do_publish</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">,</span> <span class="n">meta</span><span class="p">,</span> <span class="n">startTime</span><span class="p">,</span> <span class="n">queueInsertTime</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_statistics_ok_plugin</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_statistics_ok_plugin</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="n">meta</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -417,9 +428,9 @@
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                  <span class="c1"># In 3.13 there will be support for shutdown. So we need to use nowait and instead use _event.wait for notification purposes</span>
-                <span class="n">tmpfile</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+                <span class="n">tmpfile</span><span class="p">,</span> <span class="n">meta</span><span class="p">,</span> <span class="n">startTime</span><span class="p">,</span> <span class="n">queueInsertTime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
 
-                <span class="bp">self</span><span class="o">.</span><span class="n">handle_consumer_file</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">handle_consumer_file</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">,</span> <span class="n">meta</span><span class="p">,</span> <span class="n">startTime</span><span class="p">,</span> <span class="n">queueInsertTime</span><span class="p">)</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">task_done</span><span class="p">()</span>
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
