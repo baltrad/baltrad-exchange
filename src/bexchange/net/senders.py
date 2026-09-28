@@ -323,15 +323,23 @@ class rest_sender(sender):
         """
         auth = rest.CryptoAuth(self._privatekey, self._nodename)
         server = rest.RestfulServer(self._address, auth)
+        startTime = time.time()
         try:
+            filesize = os.path.getsize(path)
             with open(path, "rb") as data:
                 entry = server.store(data)
-                logger.info("rest_sender: address:%s published ID:'%s'" % (self._address, util.create_fileid_from_meta(meta)))
+                stopTime = time.time()
+                transferTimeMs = int((stopTime - startTime)*1000)
+                if transferTimeMs == 0:
+                    transferTimeMs = 1
+                kb_per_s = filesize / transferTimeMs
+                mb_per_s = kb_per_s / 1024
+                logger.info("rest_sender: address:%s published ID:'%s'. Transfer: time=%d ms, size=%d bytes, speed=%d mb/s" % (self._address, util.create_fileid_from_meta(meta), transferTimeMs, filesize, mb_per_s))
         except DuplicateException:
-            logger.warn("rest_sender: address:%s failed to publish ID:'%s' CONFLICT!" % (self._address, util.create_fileid_from_meta(meta)))
+            logger.warning("rest_sender: address:%s failed to publish ID:'%s' CONFLICT!" % (self._address, util.create_fileid_from_meta(meta)))
             raise
         except:
-            logger.warn("rest_sender: address:%s failed to publish ID:'%s'" % (self._address, util.create_fileid_from_meta(meta)))
+            logger.warning("rest_sender: address:%s failed to publish ID:'%s'" % (self._address, util.create_fileid_from_meta(meta)))
             raise
 
 class baseuri_sender(sender):

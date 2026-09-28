@@ -30,7 +30,7 @@ import http.client as httplib
 import ftplib
 import urllib.parse as urlparse
 import logging
-import datetime
+import datetime, time
 import base64
 import importlib
 from bexchange.matching import filters
@@ -241,6 +241,8 @@ class standard_publisher(publisher):
             logger.info("Publisher is going down, will not handle more files")
             return
 
+        startTime = time.time()
+
         tmpfile = NamedTemporaryFile(dir=self.backend().get_tmp_folder())
         with open(file, "rb") as fp:
             shutil.copyfileobj(fp, tmpfile)
@@ -271,8 +273,9 @@ class standard_publisher(publisher):
                     if not d.can_return_invalid_file_content():
                         raise
 
+        queueInsertTime = time.time()
         try:
-            self._queue.put((tmpfile, meta))
+            self._queue.put((tmpfile, meta, startTime, queueInsertTime))
         except Full as e:
             logger.exception("Queue for publisher '%s' is full, dropping message with ID:'%s'"%(self.name(), util.create_fileid_from_meta(meta)))
             try:
@@ -284,21 +287,29 @@ class standard_publisher(publisher):
                 self._statistics_error_plugin.increment(self.name(), meta)
 
 
-    def do_publish(self, tmpfile, meta):
+    def do_publish(self, tmpfile, meta, startTime, queueInsertTime):
         """Passes a file to all connections
         """
+        queuePopTime = time.time()
         for c in self._connections:
             c.publish(tmpfile.name, meta)
         tmpfile.close()
+        publishedTime = time.time()
 
-    def handle_consumer_file(self, tmpfile, meta):
+        totalTime = int((publishedTime - startTime)*1000)
+        queueTime = int((queuePopTime - queueInsertTime)*1000)
+        transferTime = int((publishedTime - queuePopTime)*1000)
+
+        logger.info("Publisher: '%s' file with ID:'%s' sent. Total time: %d ms, queue time: %d, transfer time: %d"%(self.name(), util.create_fileid_from_meta(meta), totalTime, queueTime, transferTime))
+
+    def handle_consumer_file(self, tmpfile, meta, startTime, queueInsertTime):
         """ Will handle the file that the consumer retrieved from the queue
         :param self: self
         :param tmpfile: the tmp file
         :param meta: the meta data
         """
         try:
-            self.do_publish(tmpfile, meta)
+            self.do_publish(tmpfile, meta, startTime, queueInsertTime)
             if self._statistics_ok_plugin:
                 self._statistics_ok_plugin.increment(self.name(), meta)
         except Exception as e:
@@ -312,9 +323,9 @@ class standard_publisher(publisher):
         while self._running:
             try:
                  # In 3.13 there will be support for shutdown. So we need to use nowait and instead use _event.wait for notification purposes
-                tmpfile, meta = self._queue.get()
+                tmpfile, meta, startTime, queueInsertTime = self._queue.get()
 
-                self.handle_consumer_file(tmpfile, meta)
+                self.handle_consumer_file(tmpfile, meta, startTime, queueInsertTime)
 
                 self._queue.task_done()
             except Exception:

@@ -54,6 +54,16 @@ class Request(object):
         self.data = data
         self.headers = headers
 
+class Response(object):
+    """A response where the body has already been read and the connection has been closed.
+    """
+    def __init__(self, status, body):
+        self.status = status
+        self._body = body
+
+    def read(self):
+        return self._body
+
 class RestfulServer(object):
     """Access database over the RESTful interface
     """
@@ -218,8 +228,11 @@ class RestfulServer(object):
         return response
 
     def execute_request(self, req):
-        """Exececutes the actual rest request over http or https. Will also add credentials to the request
+        """Exececutes the actual rest request over http or https. Will also add credentials to the request.
+        The response body is always read and the connection is always closed before returning, since closing
+        a socket with unread data makes the tcp stack send RST instead of FIN.
         :param req: The REST request
+        :return: a :class:`Response` with status and the already read body
         """
         conn = None
         if self._server_url.scheme == "https":
@@ -231,8 +244,8 @@ class RestfulServer(object):
             conn = httplibclient.HTTPConnection(
                 self._server_url.hostname,
                 self._server_url.port)
-        self._auth.add_credentials(req)
         try:
+            self._auth.add_credentials(req)
             basepath = "/"
             subpath = req.path
             if self._server_url.path:
@@ -240,12 +253,16 @@ class RestfulServer(object):
             if subpath.startswith("/"):
                 subpath=subpath[1:]
             path = os.path.join(basepath, subpath)
-            conn.request(req.method, path, req.data, req.headers)
-        except socket.error:
-            raise RuntimeError(
-                "Could not send request to %s" % self._server_url_str
-            )
-        return conn.getresponse()
+            try:
+                conn.request(req.method, path, req.data, req.headers)
+            except socket.error:
+                raise RuntimeError(
+                    "Could not send request to %s" % self._server_url_str
+                )
+            response = conn.getresponse()
+            return Response(response.status, response.read())
+        finally:
+            conn.close()
 
 class Auth(object):
     __meta__ = abc.ABCMeta
