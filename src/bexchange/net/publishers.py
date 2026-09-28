@@ -300,7 +300,7 @@ class standard_publisher(publisher):
         queueTime = int((queuePopTime - queueInsertTime)*1000)
         transferTime = int((publishedTime - queuePopTime)*1000)
 
-        logger.info("Publisher: '%s' file with ID:'%s' sent. Total time: %d ms, queue time: %d, transfer time: %d"%(self.name(), util.create_fileid_from_meta(meta), totalTime, queueTime, transferTime))
+        logger.info("Publisher: '%s' file with ID:'%s' sent. Total time: %d ms, queue time: %d ms, transfer time: %d ms"%(self.name(), util.create_fileid_from_meta(meta), totalTime, queueTime, transferTime))
 
     def handle_consumer_file(self, tmpfile, meta, startTime, queueInsertTime):
         """ Will handle the file that the consumer retrieved from the queue
