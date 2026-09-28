@@ -333,8 +333,7 @@ class rest_sender(sender):
                 if transferTimeMs == 0:
                     transferTimeMs = 1
                 kb_per_s = filesize / transferTimeMs
-                mb_per_s = kb_per_s / 1024
-                logger.info("rest_sender: address:%s published ID:'%s'. Transfer: time=%d ms, size=%d bytes, speed=%d mb/s" % (self._address, util.create_fileid_from_meta(meta), transferTimeMs, filesize, mb_per_s))
+                logger.info("rest_sender: address:%s published ID:'%s'. Transfer: time=%d ms, size=%d bytes, speed=%d kb/s" % (self._address, util.create_fileid_from_meta(meta), transferTimeMs, filesize, kb_per_s))
         except DuplicateException:
             logger.warning("rest_sender: address:%s failed to publish ID:'%s' CONFLICT!" % (self._address, util.create_fileid_from_meta(meta)))
             raise
